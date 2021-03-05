@@ -1,0 +1,282 @@
+
+#### SKALENHANDBUCH-FUNKTION ####
+
+# Erstellung des Tex-Skripts für das gesamte Skalenhandbuch
+SHtotal <- function( varue.info ,
+                     varue.missings,
+                     varue.gliederung,
+                     skalen.info,
+                     varue.reg,
+                     make.reg=NULL,
+                     Gesamtdatensatz,
+                     Kennwertedatensatz,
+                     variablen,
+                     id,
+                     fbshort,
+                     fblong,
+                     deckblatt,
+                     intro,
+                     literatur,
+                     abkuerzverz,
+                     hintmod,
+                     lastpage) {
+
+  # INPUT:
+  #	varue.info:				Liste mit data.frames der Übersichten der Variableninformationen
+  #	varue.missings:			Liste mit data.frames der Übersichten der Werteinformationen
+  #	varue.gliederung:		Liste mit data.frames der Übersichten der Gliederungsinformationen
+  #	skalen.info:			data.frame, Skaleninformationen über alle Fragebogen
+  #	varue.reg:				Liste mit data.frames der Übersichten der Registerinformationen
+  #	Gesamtdatensatz:		Liste mit data.frames der Datensätze
+  #	Kennwertedatensatz: 	Liste mit data.frames der Kennwertedatensätze
+  #	variablen:				Liste mit character-Vektoren der zu berichtenden Variablen
+  #	fbshort:				Character-Vektor, Fragebogenkürzel
+  #	fblong:					Character-Vektor, Namen der Fragebogen, wie sie im Skalenhandbuch ausformuliert genannt werden
+  #	breaks:					Character.Vektor, Zeilen im Latex-Skript, an denen ein neues Kapitel, Abschnitt, o.ä. stattfindet
+  #							und nach denen ein Seitenumbruch im Inhaltsverzeichnis eingefügt werden soll.
+  #							Default ist NULL --> keine Umbrüch werden eingefügt.
+  #	intro:					Character-Vektor, Einleitung
+  #	literatur:				Character-Vektor, Literaturverzeichnis
+  #	abkuerzverz:			Character-Vekotr, Tabelle Abkürzungsverzeichnis
+  #	hintmod:				Character-Vektor, Tabelle Hintergrundmodell
+  #	lastpage:				Character-Vektor, Letzte Seite
+
+
+  # OUTPUT:
+  #	skript: 				Character-vektor, Skript, das das gesamte Latex-Skript zum Skalenhandbuch erzeugt
+
+
+  cat(paste0("ERSTELLE SKRIPT ZUM SKALENHANDBUCH.\n\n"))
+  flush.console()
+
+  if(any(is.null(fbshort))){
+    stop("Das übergebene Argument \"fbshort\" besitzt mindestens einmal den Eintrag NULL. Dieses Argument muss ein Character-Vektor mit einzigartigen Einträgen sein, mit dem die übergebenen Objekte (varue.info, Gesamtdatensatz etc.) identifiziert werden können.\n\n")
+  }
+
+  ### names anpassen (zur Sicherheit) ###
+  if( length(Gesamtdatensatz)>length(fbshort)){
+    stop(" Es gibt mehr Einträge beim Objekt \"Gesamtdatensatz\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else if( length(Gesamtdatensatz)<length(fbshort)){
+    stop(" Es gibt weniger Einträge beim Objekt \"Gesamtdatensatz\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else {
+    if( ! all(names(Gesamtdatensatz) %in% fbshort)){
+      cat(" Die Einträge von \"names(Gesamtdatensatz)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
+      flush.console()
+      names(Gesamtdatensatz) <- fbshort
+    }
+  }
+
+  if( length(varue.info)>length(fbshort)){
+    stop(" Es gibt mehr Einträge beim Objekt \"varue.info\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else if( length(varue.info)<length(fbshort)){
+    stop(" Es gibt weniger Einträge beim Objekt \"varue.info\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else {
+    if( ! all(names(varue.info) %in% fbshort)){
+      cat(" Die Einträge von \"names(varue.info)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
+      flush.console()
+      names(varue.info) <- fbshort
+    }
+  }
+
+  if( length(varue.missings)>length(fbshort)){
+    stop(" Es gibt mehr Einträge beim Objekt \"varue.missings\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else if( length(varue.missings)<length(fbshort)){
+    stop(" Es gibt weniger Einträge beim Objekt \"varue.missings\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else {
+    if( ! all(names(varue.missings) %in% fbshort)){
+      cat(" Die Einträge von \"names(varue.missings)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
+      flush.console()
+      names(varue.missings) <- fbshort
+    }
+  }
+
+  if( length(varue.gliederung)>length(fbshort)){
+    stop(" Es gibt mehr Einträge beim Objekt \"varue.gliederung\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else if( length(varue.gliederung)<length(fbshort)){
+    stop(" Es gibt weniger Einträge beim Objekt \"varue.gliederung\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else {
+    if( ! all(names(varue.gliederung) %in% fbshort)){
+      cat(" Die Einträge von \"names(varue.gliederung)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
+      flush.console()
+      names(varue.gliederung) <- fbshort
+    }
+  }
+
+  if( length(varue.reg)>length(fbshort)){
+    stop(" Es gibt mehr Einträge beim Objekt \"varue.reg\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else if( length(varue.reg)<length(fbshort)){
+    stop(" Es gibt weniger Einträge beim Objekt \"varue.reg\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else {
+    if( ! all(names(varue.reg) %in% fbshort)){
+      cat(" Die Einträge von \"names(varue.reg)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
+      flush.console()
+      names(varue.reg) <- fbshort
+    }
+  }
+
+  if( length(Kennwertedatensatz)>length(fbshort)){
+    stop(" Es gibt mehr Einträge beim Objekt \"Kennwertedatensatz\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else if( length(Kennwertedatensatz)<length(fbshort)){
+    stop(" Es gibt weniger Einträge beim Objekt \"Kennwertedatensatz\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else {
+    if( ! all(names(Kennwertedatensatz) %in% fbshort)){
+      cat(" Die Einträge von \"names(Kennwertedatensatz)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
+      flush.console()
+      names(Kennwertedatensatz) <- fbshort
+    }
+  }
+
+  if( length(variablen)>length(fbshort)){
+    stop(" Es gibt mehr Einträge beim Objekt \"variablen\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else if( length(variablen)<length(fbshort)){
+    stop(" Es gibt weniger Einträge beim Objekt \"variablen\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else {
+    if( ! all(names(variablen) %in% fbshort)){
+      cat(" Die Einträge von \"names(variablen)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
+      flush.console()
+      names(variablen) <- fbshort
+    }
+  }
+
+  if( length(fblong)>length(fbshort)){
+    stop(" Es gibt mehr Einträge beim Objekt \"fblong\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else if( length(fblong)<length(fbshort)){
+    stop(" Es gibt weniger Einträge beim Objekt \"fblong\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
+  } else {
+    if( ! all(names(fblong) %in% fbshort)){
+      cat(" Die Einträge von \"names(fblong)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
+      flush.console()
+      names(fblong) <- fbshort
+    }
+  }
+
+
+  #### Skript erstellen ####
+  # Doppelte Variablen
+  double.vars <- unname(unlist(variablen))
+  double.vars <- names( table(double.vars)[table(double.vars)>1])
+
+  # TRUE/FALSE pro Instrument, ob Register erstellt werden soll (falls nicht schon übergeben)
+  if(is.null(make.reg)){
+    make.reg <- unlist(lapply( fbshort , function(d) {
+      bool <- all(sapply( names(varue.reg[[d]]) , function(k) all(is.null(varue.reg[[d]][[k]])) ) )
+      bool <- bool |  all(sapply( names(varue.reg[[d]]) , function(k) all( gsub("\\s" , "" , varue.reg[[d]][[k]]) %in% "" ) ) )
+      return(!bool)
+    } ) )
+
+    names(make.reg) <- fbshort
+  } else if( ! class(make.reg)=="boolean"){
+    make.reg <- unlist(lapply( fbshort , function(d) {
+      bool <- all(sapply( names(varue.reg[[d]]) , function(k) all(is.null(varue.reg[[d]][[k]])) ) )
+      bool <- bool |  all(sapply( names(varue.reg[[d]]) , function(k) all( gsub("\\s" , "" , varue.reg[[d]][[k]]) %in% "" ) ) )
+      return(!bool)
+    } ) )
+
+    names(make.reg) <- fbshort
+  } else if( ! length(make.reg)==length(fbshort)) {
+    make.reg <- unlist(lapply( fbshort , function(d) {
+      bool <- all(sapply( names(varue.reg[[d]]) , function(k) all(is.null(varue.reg[[d]][[k]])) ) )
+      bool <- bool |  all(sapply( names(varue.reg[[d]]) , function(k) all( gsub("\\s" , "" , varue.reg[[d]][[k]]) %in% "" ) ) )
+      return(!bool)
+    } ) )
+
+    names(make.reg) <- fbshort
+  }
+
+
+  # Praeambel
+  alleEbenen <- unique(unlist(sapply(1:length(fbshort) , function(d) {
+    g <- paste0(varue.info[[d]]$Gliederung[ varue.info[[d]]$in.DS.und.SH %in% c("ja","sh") ] )
+    r <- varue.info[[d]]$Reihenfolge[varue.info[[d]]$in.DS.und.SH %in% c("ja","sh")]
+
+    r[ r %in% "-"] <- 0
+
+    return(paste0(g, ".", r))
+  } ) ) )
+
+  alleEbenen <- list( "Chapter"=as.character(as.roman(1:(length(fbshort)+1))),
+                      "Section"=unique(unlist(sapply( alleEbenen , function(d) paste0(unlist(strsplit(d , ""))[ 1:(which(unlist(strsplit(d , "")) %in% ".")[1]-1) ]  , collapse="")
+                      ) ) ),
+                      "SubSection"=unique(sapply( alleEbenen , function(d) {
+                        if( length(which(unlist(strsplit(d , "")) %in% ".")) <2){
+                          return(d)
+                        } else {
+                          return(paste0(unlist(strsplit(d , ""))[ 1:(which(unlist(strsplit(d , "")) %in% ".")[2]-1) ] , collapse="") )
+                        } } ) ),
+                      "SubSubSection"=unique(sapply( alleEbenen , function(d) {
+                        if( length(which(unlist(strsplit(d , "")) %in% "."))<3){
+                          return(d)
+                        } else {
+                          return(paste0(unlist(strsplit(d , ""))[ 1:(which(unlist(strsplit(d , "")) %in% ".")[3]-1) ] , collapse="") )
+                        } } ) ) )
+
+  max.Chap <- paste0(rep("X",max(nchar(alleEbenen[["Chapter"]]) ) ) , collapse="")
+  max.Sec <- paste0(gsub("\\d" , "0" , alleEbenen[["Section"]][which.max(sapply(alleEbenen[["Section"]] , function(d) length(unlist(strsplit(d , ""))) ))] ) , "0")
+  max.Subsec <-paste0(gsub("\\d" , "0" , alleEbenen[["SubSection"]][which.max(sapply(alleEbenen[["SubSection"]] , function(d) length(unlist(strsplit(d , ""))) ))] ) , "0")
+  max.Subsubsec <- paste0(gsub("\\d" , "0" , alleEbenen[["SubSubSection"]][which.max(sapply(alleEbenen[["SubSubSection"]] , function(d) length(unlist(strsplit(d , ""))) ))] ) , "0")
+
+  layout.prae.ges <- layout.prae(variablen , fbshort=fbshort , double.vars=double.vars , deckblatt=deckblatt , makeCounter=make.reg,maxLength.Chap=max.Chap, maxLength.Sec=max.Sec,maxLength.Subsec=max.Subsec, maxLength.Subsubsec=max.Subsubsec)
+
+  all_length <- c(max.Chap , max.Sec , max.Subsec ,max.Subsubsec)
+
+  # Skript der Variablen erstellen
+  skript.fb <- lapply( fbshort , function(d) {
+    #												lastcountervar <- varue.info[[d]]$Var.Name[ varue.info[[d]]$in.DS.und.SH %in% c("ja","sh") ][length( varue.info[[d]]$Var.Name[varue.info[[d]]$in.DS.und.SH %in% c("ja","sh")] )]
+    cat(toupper(paste0("\n Erstelle Layout-Skripte für: ", d, "\n")))
+    flush.console()
+    ret. <- c( "\\phantomsection" ,
+               paste0("\\chapter{",fblong[d],"}"),
+               paste0("\\setcounter{sec",toupper(d),"}{\\thepage}"),
+               unlist( sapply( variablen[[d]], function(v)
+                 layout.var( name=v,
+                             fb=tolower(d),
+                             id=id[d],
+                             kennwerte.var = unlist(Kennwertedatensatz[[d]][ names(Kennwertedatensatz[[d]]) %in% v] , recursive=FALSE),
+                             varue.info=varue.info[[d]],
+                             varue.missings=varue.missings[[d]],
+                             Gesamtdatensatz=Gesamtdatensatz[[d]],
+                             skalen.info=skalen.info[ skalen.info$Quelle %in% d,],
+                             varue.gliederung=varue.gliederung[[d]],
+                             double.vars=double.vars,
+                             makeCounter=make.reg[d],
+                             all_length=all_length))
+               )
+               #,paste0( "\\setcounter{", numtolet( lastcountervar , fb=tolower(d) ,double.vars=double.vars ) ,"}{\\thepage }" )
+    )
+
+    return(ret.)
+  } )
+
+
+
+  register.fb <- lapply( fbshort , function(d) {
+    if(! make.reg[d]) {
+      return(NULL)
+    } else {
+      cat(toupper(paste0("\n Erstelle Register: ", d , "\n")))
+      flush.console()
+      return(register.ges( fb.akt=d , varue.reg=varue.reg[[d]] , double.vars=double.vars) )
+    }
+  } )
+
+
+  # Formatieren
+  skript.fb <- unname(unlist(skript.fb))
+  register.fb <- unname(unlist(register.fb))
+
+
+  # Gesamter Anhang
+  if(all( unname( sapply( list(literatur, register.fb, abkuerzverz, hintmod, lastpage) , is.null) ) ) ){
+    anhang <- NULL
+    skript.fb[length(skript.fb)] <- sub("\\clearpage" , "" , skript.fb[length(skript.fb)] , fixed=TRUE)
+  } else {
+    anhang <- c("\\pagebreak","\\chapter{Anhang}" , literatur, register.fb, abkuerzverz, hintmod, lastpage)
+  }
+
+  # Gesamtes Skript
+  skript <- c(layout.prae.ges, intro, skript.fb, anhang, "\\end{document}")
+
+  #### Output ####
+  return(skript)
+}
+
