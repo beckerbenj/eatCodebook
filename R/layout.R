@@ -23,8 +23,6 @@
 # table.frequencies: Häufigkeitstabelle für einzelne Variablen
 # table.frequencies.items: Häufigkeitstabelle für Items, die zu einer Skala gehören
 
-cat(paste0(" LADE LAYOUT-FUNKTIONEN.\n"))
-flush.console()
 table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ  , skala.items=NULL , Gesamtdatensatz=NULL , werte=NULL, show.kategorien=TRUE, gepoolt=FALSE){
   cat(paste0("   Skript für Tabelle \'Beschreibung der Variable/Items\'.\n"))
   flush.console()
