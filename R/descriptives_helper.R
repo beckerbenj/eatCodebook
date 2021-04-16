@@ -114,67 +114,62 @@ kennwerte.metrisch <- function(x, value_table) {
 }
 
 
-###### move on from here
 # how to integrate variable sets (items of scales?)
-
-kennwerte.skala <- function(name,varue.missings,Gesamtdatensatz,skalen.info) {
+### kennwerte.skala(dat=dat, scaleCol = "DM_erfahrung", c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
+kennwerte.skala <- function(dat,scaleCol, variableCols, missingValues = NULL) {
+  # erzeugt denselben output wie die originale kennwerte.skala
   # INPUT
-  #	name: Name der Variable, wie sie in der Varue erscheint
-  #	varue.missings: Variablenübersicht der Werteinformationen
-  #	Gesamtdatensatz: Datensatz des Fragebogens
-  #	skalen.info: Übersicht der Skaleninformationen
+  #	dat: Datensatz (data.frame)
+  #	scaleCol: Spaltennummer oder Name der Variable, die die Skalenwerte enthaelt
+  #	variableCols: Spaltennummern oder Namen der Einzelitems der Skala
+  #	missingValues: optional, Vektor aus numerischen Werten, die missings bezeichnen sollen
   # OUTPUT:
   #	ret.var: Liste mit zwei Einträgen:
   #			 Erster Listeneintrag ist ein Vektor mit den metrischen Kennwerten der Skala (M, SD, Min, Max, Cronbachs Alpha)
   #			 Zweiter Listeneintrag ist ein data.frame mit den ordinalen Kennwerten der
+# erstmal keine checks, die passieren auf hoeherer Ebene
+  allVar<- list(sc = scaleCol, vc = variableCols)
+  allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
 
-  #### Vorbereitung ####
-  # Identifikation der Items aus Skaleninfo in Varue
-  skala.items	 <- sub( "^\\s*", "", unlist( strsplit( skalen.info[ tolower( skalen.info$Var.Name ) %in% tolower( name ), "Items.der.Skala" ], ",", fixed = TRUE ) ) )
-
-  # Reduzierte Varue für Items
-  varue.missings.items <- varue.missings[varue.missings$Var.name %in% skala.items,]
-
-  # Identifikation derjenigen Fälle, die auf allen Items valide Angaben haben
-  x <- sapply ( skala.items , function (d) ! Gesamtdatensatz [ , d ] %in% varue.missings.items$Wert[varue.missings.items$missing %in% "ja" & varue.missings.items$Var.name %in% d])
-  y <- sapply ( 1:length(Gesamtdatensatz[,1]) , function (d) all( x[d,] ) )
-
-
-  #### Berechnung der metrischen Kennwerte ####
-
-  # Kennwerte der Skala
-  skala.kennwerte <- as.data.frame( c( kennwerte.metrisch( name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz ), sub( ".*(\\..*)", "\\1", formatC( cronbach( Gesamtdatensatz[ y , skala.items] )$alpha[1] , format="f", digits=2) ) ) , optional = TRUE)
-  names( skala.kennwerte ) <- name
-
-  skala.kennwerte[,1] <- as.character(skala.kennwerte[,1])
-  rownames( skala.kennwerte )[length(skala.kennwerte[,1])] <- "alpha"
-
-  # Kennwerte der Items
-  items.kennwerte <- lapply ( skala.items , kennwerte.ordinal.skala ,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz )
-  names(items.kennwerte) <- skala.items
-  vals <- unique(unname(unlist(lapply(skala.items , function(d) names(items.kennwerte[[d]])))))
-  for(i in skala.items){
-    if( any(!vals %in% names(items.kennwerte[[i]]))){
-      w <- vals[which(!vals %in% names(items.kennwerte[[i]]))]
-      k <- rep("\\multic{--}" , length(w))
-      names(k) <- w
-      items.kennwerte[[i]] <- c(items.kennwerte[[i]] , k)
-    }
-    items.kennwerte[[i]] <- items.kennwerte[[i]][vals]
+### 1. Itemkennwerte umkodieren, falls noetig
+  # wenn missing values gegeben sind, daten umkodieren!
+  if(!is.null(missingValues)) {
+     for ( j in allNam[["vc"]] ) {
+         if (any(missingValues %in% dat[,j])) {
+             dat[which(dat[,j] %in% missingValues),j] <- NA
+         }
+     }
   }
-  items.kennwerte <- do.call("cbind" , items.kennwerte)
 
-  cor.valid <- sub("^.*(\\..*)" , "\\1" , formatC( alpha( Gesamtdatensatz[ y , skala.items ] )$item.stats$r.drop , format = "f" , digits = 2 ) )
-  names ( cor.valid ) <- skala.items
-  items.kennwerte <- rbind ( items.kennwerte, cor.valid )
+### 2. Skalenkennwerte (erstes Objekt der zurueckgegebenen Liste)
+### Rueckgabe sind alles character-Werte mit unterschiedlicher Stellenanzahl, auf die gerundet wird
+### wenn rundung etwas ganzzahliges ergibt, soll trotzdem 4.0 angezeigt werden statt 4
+  ret <- list(data.frame ( v1 = as.character(c(length(na.omit(dat[,allNam[["sc"]]])),
+                                 format(round(mean( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 2), nsmall = 2),
+                                 format(round(sd( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 2),nsmall = 2),
+                                 format(round(min( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 1),nsmall = 1),
+                                 format(round(max( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 1),nsmall = 1),
+                                 length(which(is.na(dat[,allNam[["sc"]]]))),
+                                 format(round(psy::cronbach(dat[,allNam[["vc"]]])[["alpha"]], digits = 2), nsmall = 2))), stringsAsFactors = FALSE))
+  colnames(ret[[1]]) <- allNam[["sc"]]
+  rownames(ret[[1]]) <- c("N.valid", "mean.valid", "sd.valid", "min.valid", "max.valid", "sysmis.totalabs", "alpha")
 
-
-  #### Output ####
-
-  ret.var <- list( skala.kennwerte , items.kennwerte )
-  return( ret.var )
-
-}
+### 3. Itemkennwerte (zweites Objekt der zurueckgegebenen Liste)
+  ret2<- lapply(allNam[["vc"]], FUN = function ( vname ) {
+         data.frame ( v1 = as.character(c(length(na.omit(dat[,vname])), length(dat[,vname]),
+                                 format(round(mean( dat[,vname], na.rm=TRUE),digits = 2), nsmall = 2),
+                                 format(round(sd( dat[,vname], na.rm=TRUE),digits = 2),nsmall = 2),
+                                 format(round(length(which(is.na(dat[,vname]))) / nrow(dat),digits = 1),nsmall = 1),
+                                 length(which(is.na(dat[,vname]))),
+                                 format(round(cor(dat[,c(vname, allNam[["sc"]])], use="pair")[1,2],digits = 2), nsmall = 2))),stringsAsFactors = FALSE)})
+  ret2<- do.call("cbind", ret2)
+  colnames(ret2) <- allNam[["vc"]]
+  rownames(ret2) <- c("N.valid", "N.total", "mean.valid", "sd.valid", "sysmis.total", "sysmis.totalabs", "cor.valid")
+  ret2 <- as.matrix(ret2)                                                       ### urspruengliche Struktur von Felix replizieren
+  
+### 4. Rueckgabeobjet bauen
+  ret[[2]] <- ret2
+  return(ret)}
 
 
 kennwerte.skala.fake <- function(name,varue.missings,Gesamtdatensatz,skalen.info) {

@@ -138,3 +138,20 @@ test_that("descriptives dummy", {
                             stringsAsFactors = FALSE)
   out <- kennwerte.ordinal.skala("v1", value_table, df)
 })
+
+# test fuer kennwerte.skala
+load("out.rda")
+load("dat.rda")
+test_that("descriptives scale", {
+  skalen.info <- data.frame ( Var.Name = "DM_erfahrung", Quelle = "sfb", Items.der.Skala = paste("Semz19_", letters[1:4], sep="", collapse=", ") , stringsAsFactors = FALSE)
+  value_table <- data.frame(value = c(1, 2, 3, 4, -98, -99),
+                            missings = c("valid", "valid", "valid", "valid", "miss", "miss"),
+                            stringsAsFactors = FALSE)
+  varue_missings <- data.frame ( "Var.name" = paste("Semz19_", letters[1:4], sep="", collapse=", "), Wert = rep(c(-98, -99), 3), missing = "ja", stringsAsFactors = FALSE)
+  out1 <- kennwerte.skala (name="v1", varue.missings=varue_missings, Gesamtdatensatz=dat,skalen.info=skalen.info)
+  expect_equal(out, out1)
+})
+
+
+
+
