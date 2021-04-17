@@ -140,16 +140,20 @@ test_that("descriptives dummy", {
 })
 
 # test fuer kennwerte.skala
+# originalobjekt mit felix alter syntax erzeugt
 load("out.rda")
 load("dat.rda")
+load("kennwerte.skala.fake.rda")
 test_that("descriptives scale", {
   skalen.info <- data.frame ( Var.Name = "DM_erfahrung", Quelle = "sfb", Items.der.Skala = paste("Semz19_", letters[1:4], sep="", collapse=", ") , stringsAsFactors = FALSE)
   value_table <- data.frame(value = c(1, 2, 3, 4, -98, -99),
                             missings = c("valid", "valid", "valid", "valid", "miss", "miss"),
                             stringsAsFactors = FALSE)
   varue_missings <- data.frame ( "Var.name" = paste("Semz19_", letters[1:4], sep="", collapse=", "), Wert = rep(c(-98, -99), 3), missing = "ja", stringsAsFactors = FALSE)
-  out1 <- kennwerte.skala (name="v1", varue.missings=varue_missings, Gesamtdatensatz=dat,skalen.info=skalen.info)
+  out1 <- kennwerte.skala(dat=dat, scaleCol = "DM_erfahrung", c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
   expect_equal(out, out1)
+  out2 <- kennwerte.skala.fake(dat=dat, variableCols = c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
+  expect_equal(out2, ret2)
 })
 
 

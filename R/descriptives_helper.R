@@ -130,7 +130,6 @@ kennwerte.skala <- function(dat,scaleCol, variableCols, missingValues = NULL) {
 # erstmal keine checks, die passieren auf hoeherer Ebene
   allVar<- list(sc = scaleCol, vc = variableCols)
   allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
-
 ### 1. Itemkennwerte umkodieren, falls noetig
   # wenn missing values gegeben sind, daten umkodieren!
   if(!is.null(missingValues)) {
@@ -140,7 +139,6 @@ kennwerte.skala <- function(dat,scaleCol, variableCols, missingValues = NULL) {
          }
      }
   }
-
 ### 2. Skalenkennwerte (erstes Objekt der zurueckgegebenen Liste)
 ### Rueckgabe sind alles character-Werte mit unterschiedlicher Stellenanzahl, auf die gerundet wird
 ### wenn rundung etwas ganzzahliges ergibt, soll trotzdem 4.0 angezeigt werden statt 4
@@ -153,7 +151,6 @@ kennwerte.skala <- function(dat,scaleCol, variableCols, missingValues = NULL) {
                                  format(round(psy::cronbach(dat[,allNam[["vc"]]])[["alpha"]], digits = 2), nsmall = 2))), stringsAsFactors = FALSE))
   colnames(ret[[1]]) <- allNam[["sc"]]
   rownames(ret[[1]]) <- c("N.valid", "mean.valid", "sd.valid", "min.valid", "max.valid", "sysmis.totalabs", "alpha")
-
 ### 3. Itemkennwerte (zweites Objekt der zurueckgegebenen Liste)
   ret2<- lapply(allNam[["vc"]], FUN = function ( vname ) {
          data.frame ( v1 = as.character(c(length(na.omit(dat[,vname])), length(dat[,vname]),
@@ -166,52 +163,50 @@ kennwerte.skala <- function(dat,scaleCol, variableCols, missingValues = NULL) {
   colnames(ret2) <- allNam[["vc"]]
   rownames(ret2) <- c("N.valid", "N.total", "mean.valid", "sd.valid", "sysmis.total", "sysmis.totalabs", "cor.valid")
   ret2 <- as.matrix(ret2)                                                       ### urspruengliche Struktur von Felix replizieren
-  
 ### 4. Rueckgabeobjet bauen
   ret[[2]] <- ret2
   return(ret)}
 
 
-kennwerte.skala.fake <- function(name,varue.missings,Gesamtdatensatz,skalen.info) {
+### kennwerte.skala.fake(dat=dat, variableCols = c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
+kennwerte.skala.fake <- function(dat,variableCols, missingValues = NULL) {
   # INPUT
-  #	name: Name der Variable, wie sie in der Varue erscheint
-  #	varue.missings: Variablenübersicht der Werteinformationen
-  #	Gesamtdatensatz: Datensatz des Fragebogens
-  #	skalen.info: Übersicht der Skaleninformationen
-  # OUTPUT:
-  #	ret.var: Liste mit zwei Einträgen:
-  #			 Erster Listeneintrag ist ein Vektor mit den metrischen Kennwerten der Skala (M, SD, Min, Max, Cronbachs Alpha)
-  #			 Zweiter Listeneintrag ist ein data.frame mit den ordinalen Kennwerten der
-
-  #### Vorbereitung ####
-  # Identifikation der Items aus Skaleninfo in Varue
-  skala.items	 <- gsub( "\\s", "", unlist( strsplit( skalen.info[ tolower( skalen.info$Var.Name ) %in% tolower( name ), "Items.der.Skala" ], ",", fixed = TRUE ) ) )
-
-  skala.items <- skala.items[skala.items %in% varue.info$Var.Name[varue.info$in.DS.und.SH %in% c("ja" , "sh", "ds")]]
-
-  #### Berechnung der metrischen Kennwerte ####
-
-  # Kennwerte der Items
-  items.kennwerte <-  lapply ( skala.items , kennwerte.ordinal.skala ,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz )
-  names(items.kennwerte) <- skala.items
-  vals <- unique(unname(unlist(lapply(skala.items , function(d) names(items.kennwerte[[d]])))))
-  for(i in skala.items){
-    if( any(!vals %in% names(items.kennwerte[[i]]))){
-      w <- vals[which(!vals %in% names(items.kennwerte[[i]]))]
-      k <- rep("\\multic{--}" , length(w))
-      names(k) <- w
-      items.kennwerte[[i]] <- c(items.kennwerte[[i]] , k)
-    }
-    items.kennwerte[[i]] <- items.kennwerte[[i]][vals]
+  #	dat: Datensatz (data.frame)
+  #	scaleCol: Spaltennummer oder Name der Variable, die die Skalenwerte enthaelt
+  #	variableCols: Spaltennummern oder Namen der Einzelitems der Skala
+  #	missingValues: optional, Vektor aus numerischen Werten, die missings bezeichnen sollen
+  allVar<- list(vc = variableCols)
+  allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
+### 1. Itemkennwerte umkodieren, falls noetig
+  # wenn missing values gegeben sind, daten umkodieren!
+  if(!is.null(missingValues)) {
+     for ( j in allNam[["vc"]] ) {
+         if (any(missingValues %in% dat[,j])) {
+             dat[which(dat[,j] %in% missingValues),j] <- NA
+         }
+     }
   }
-  items.kennwerte <- do.call("cbind" , items.kennwerte)
+### 2. Itemkennwerte zurueckgeben
+  allValues <- names(eatTools::tableUnlist(dat[,allNam[["vc"]]]))
+  ret2<- lapply(allNam[["vc"]], FUN = function ( vname ) {
+         tab     <- eatTools::tablePattern(dat[,vname], pattern = allValues)
+         results <- data.frame ( v1 = as.character(c(length(na.omit(dat[,vname])), length(dat[,vname]),
+                                 format(round(mean( dat[,vname], na.rm=TRUE),digits = 2), nsmall = 2),
+                                 format(round(sd( dat[,vname], na.rm=TRUE),digits = 2),nsmall = 2),
+                                 eatTools::crop(format(round( 100*as.vector(tab/sum(tab)) ,digits = 2),nsmall = 2)),
+                                 eatTools::crop(format(round(100*length(which(is.na(dat[,vname]))) / nrow(dat),digits = 2),nsmall = 2)),
+                                 as.vector(tab),
+                                 length(which(is.na(dat[,vname]))))),stringsAsFactors = FALSE)
+         return(results)})
+  ret2<- do.call("cbind", ret2)
+  colnames(ret2) <- allNam[["vc"]]
+  rowNames       <- c("N.valid", "N.total", "mean.valid", "sd.valid", paste(allValues, "total", sep="."), "sysmis.total", paste(allValues, "totalabs", sep="."), "sysmis.totalabs")
+  stopifnot(length(rowNames) == nrow(ret2))
+  rownames(ret2) <- rowNames
+  ret2 <- list(as.matrix(ret2))                                                 ### urspruengliche Struktur von Felix replizieren (Liste mit einem Objekt, einer character-Matrix)
+  return(ret2)}
 
-  #### Output ####
-
-  return( list(items.kennwerte) )
-}
-
-
+## weiter ab hier
 kennwerte.gepoolt.metrisch <- function( name , id.fb , Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Name der Variable, wie sie in der Varue erscheint
