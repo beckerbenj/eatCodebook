@@ -1,6 +1,4 @@
-#### SONSTIGE FUNKTIONEN ####
-cat(paste0(" LADE SONSTIGE FUNKTIONEN.\n"))
-flush.console()
+
 ### LATEX-FUNKTIONEN
 # Funktion, um Breite von Wörtern in Latex zu erhalten
 

@@ -1,7 +1,4 @@
 #### CHECK-FUNKTIONEN ####
-cat(paste0(" LADE CHECK-FUNKTIONEN.\n"))
-flush.console()
-
 valid.entry <- function(cols){
   bool <- any(is.na(cols))
   bool <- bool | any(is.null(cols))
