@@ -1,7 +1,25 @@
-# Funktion zum erstellen des Kennwertedatensatzes
+#### Apply Change Meta data
+#############################################################################
+#' Calculate descriptive statistics.
+#'
+#' Calculate descriptive statistics which should be included in the codebook.
+#'
+#'
+#'@param fbshort Data set name.
+#'@param varue.info Varue info.
+#'@param varue.missings Missing codes.
+#'@param skalen.info Scale informations.
+#'@param ds Data set.
+#'@param variablen. further arguments passed to or from other methods.
+#'@param id ID variable in ds.
+#'
+#'@return Returns a list of descriptive statistics.
+#'
+#'@examples
+#'# tbd
+#'
+#'@export
 kds.erstellen <- function( fbshort, varue.info, varue.missings , skalen.info, ds , variablen., id) {
-  # OUTPUT
-  #	Kennwertedatensatz: data.frame
 
   Kennwertedatensatz <- sapply ( variablen. , function(v) {
     kennwerte( v , id.fb=id, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=ds,
@@ -12,8 +30,6 @@ kds.erstellen <- function( fbshort, varue.info, varue.missings , skalen.info, ds
 }
 
 
-#### ZUSAMMENFÜHRUNG ALLER KENNWERTE-FUNKTIONEN ####
-
 kennwerte <- function(name, id.fb, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Name der Variable, wie sie in der Varue erscheint
@@ -22,8 +38,6 @@ kennwerte <- function(name, id.fb, varue.info, varue.missings, Gesamtdatensatz, 
   #	varue.missings: Variablenübersicht der Werteinformationen
   #	Gesamtdatensatz: Datensatz des Fragebogens
   #	skalen.info: Übersicht der Skaleninformationen
-  # OUTPUT:
-  #	Aufruf der zu name zugehörigen Kennwerte-Funktion
 
   #### Vorbereitung ####
   # Identifikation des Layout-Typs
