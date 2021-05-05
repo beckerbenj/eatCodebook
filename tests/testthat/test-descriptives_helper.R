@@ -140,9 +140,10 @@ test_that("descriptives dummy", {
 })
 
 # test fuer kennwerte.skala
-# originalobjekt mit felix alter syntax erzeugt
+# originalobjekte mit felix alter syntax erzeugt und im Paketverzeichnis unter tests/testthat gespeichert
 load("out.rda")
 load("dat.rda")
+load("results_gepoolt_metrisch.rda")
 load("kennwerte.skala.fake.rda")
 test_that("descriptives scale", {
   skalen.info <- data.frame ( Var.Name = "DM_erfahrung", Quelle = "sfb", Items.der.Skala = paste("Semz19_", letters[1:4], sep="", collapse=", ") , stringsAsFactors = FALSE)
@@ -154,6 +155,8 @@ test_that("descriptives scale", {
   expect_equal(out, out1)
   out2 <- kennwerte.skala.fake(dat=dat, variableCols = c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
   expect_equal(out2, ret2)
+  out3 <- kennwerte.gepoolt.metrisch ( name="DM_erfahrung" , id.fb="IDSTUD" , Gesamtdatensatz=dat, skalen.info=skalen.info)
+  expect_equal(out3, results.gepoolt.metrisch)
 })
 
 

@@ -206,220 +206,85 @@ kennwerte.skala.fake <- function(dat,variableCols, missingValues = NULL) {
   ret2 <- list(as.matrix(ret2))                                                 ### urspruengliche Struktur von Felix replizieren (Liste mit einem Objekt, einer character-Matrix)
   return(ret2)}
 
-## weiter ab hier
-kennwerte.gepoolt.metrisch <- function( name , id.fb , Gesamtdatensatz, skalen.info) {
+## check:
+## load("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/tests/testthat/dat.rda")
+## kennwerte.gepoolt.metrisch(datWide = dat, imputedVariableCols = 3:6)
+kennwerte.gepoolt.metrisch <- function( datWide, imputedVariableCols) {
   # INPUT
-  #	name: Name der Variable, wie sie in der Varue erscheint
-  #	id.fb: Name der Identifikiationsvariable im Datensatz
-  #	Gesamtdatensatz: Datensatz des Fragebogens
-  #	skalen.info: Übersicht der Skaleninformationen
-  # OUTPUT:
-  #	ret.var: Vektor mit metrischen Kennwerten
+  # datWide: Datensatz im Wideformat (!!)
+  #          in diesem datensatz muss zwingend jede zeile einer person entsprechen!
+  #          in diesem Fall braucht man keine ID-variable, die wird spaeter kuenstlich erzeugt
+  #	imputedVariableCols: Spaltennummern oder Namen der Imputationen der Variablen
+### ACHTUNG! da es sich hier um imputierte Variablen handelt, findet KEIN missing handling mehr statt!
+### Funktion repliziert den Output von Felix Originalfunktion
+### um es gegenzuchecken, 't:/Sebastian/sh_functions.r' sourcen und folgendes aufrufen:
+### load("T:/sebastian/dat.rda")
+### skalen.info <- data.frame ( Var.Name = "DM_erfahrung", Quelle = "sfb", Items.der.Skala = paste("Semz19_", letters[1:4], sep="", collapse=", ") , stringsAsFactors = FALSE)
+### kennwerte.gepoolt.metrisch ( name="DM_erfahrung" , id.fb="IDSTUD" , Gesamtdatensatz=dat, skalen.info=skalen.info)
+  allVar<- list(vc = imputedVariableCols)
+  allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
+### check, ob es numerisch ist
+  stopifnot(length(setdiff(sapply(dat[,allNam[["vc"]]], class), c("numeric", "integer")))==0)
+### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
+  dat[,"id"] <- paste0("P", 1:nrow(dat))
+### long format datensatz
+  z <- reshape2::melt( data=dat , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=TRUE)
+
+### Berechnung der gepoolten Kennwerte
+  means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  na.rm = TRUE )
+  resM  <- eatRep::report(means, exclude = "var")
+  
+# Minimum - kleinster Wert aller aufsummierten Imputationswerte einer Person
+  min.valid <- formatC ( min( rowSums(dat[, allNam[["vc"]]] , na.rm = FALSE )/length(allNam[["vc"]]) , na.rm=TRUE), format = "f" , digits = 1 )
+
+# Maximum - groesster Wert aller aufsummierten Imputationswerte einer Person
+  max.valid <- formatC ( max( rowSums(dat[, allNam[["vc"]]] , na.rm = FALSE )/length(allNam[["vc"]]) , na.rm=TRUE), format = "f" , digits = 1 )
+
+### rueckgabeobjekt bauen (genamter Vektor)
+  ret <- c(N.valid= as.character(resM[which(resM[,"parameter"] == "NcasesValid"),"est"]),
+           mean.valid = formatC(resM[which(resM[,"parameter"] == "mean"),"est"], format="f", digits =2),
+           sd.valid =  formatC(resM[which(resM[,"parameter"] == "sd"),"est"], format="f", digits =2),
+           max.valid =max.valid,  min.valid=min.valid,
+           sysmis.totalabs = as.character(nrow(dat) - resM[which(resM[,"parameter"] == "NcasesValid"),"est"]))
+  return(ret)}
 
 
-  #### Vorbereitung ####
-
-  # Identifikation der Items aus Skaleninfo in Varue
-  skala.items	<- gsub( "\\s*", "", unlist( strsplit( skalen.info[ tolower( skalen.info$Var.Name ) %in% tolower( name ), "Items.der.Skala" ], ",", fixed = TRUE ) ) )
-
-  # Reduzierter Gesamtdatensatz x
-  x <- Gesamtdatensatz[,c(id.fb, skala.items)]
-  x <- as.data.frame( sapply ( names(x) , function(d) as.numeric ( x[,d] ) ) )
-
-  # Erstellung eines Datensatzes im Longformat - Grundlage fürs Poolen
-  z <- melt( data=x , id.vars = id.fb, measure.vars = skala.items)
-
-  # Zusätzliche Variable, die die Imputation angibt --> siehe Erläuterung zu Beginn der Funktion
-  df_imp <- data.frame("Variable"=skala.items , "Imp"=1:length(skala.items))
-  z[,"imp"] <- as.numeric(sapply(as.character(z[,"variable"]) , function(d) df_imp$Imp[df_imp$Variable %in% d] , USE.NAMES=FALSE))
-  #z[,"imp"] <- as.numeric(unlist(lapply(strsplit(as.character(z[,"variable"]),"\\."), FUN = function ( l ) { l[2]})))
-
-  # "Value"-Spalte numerisch
-  z[,"value"] <- as.numeric(z[,"value"])
-
-
-  #### Berechnung der gepoolten Kennwerte ####
-
-  # Berechnung der metrischen Kennwerte über jk2.mean
-  means <- jk2.mean( datL=z, ID = id.fb , dependent = "value" ,  imp = "imp",  na.rm = TRUE )
-
-  #### Achtung, Fix Benjamin & Johanna (13.03.2019, da sich eatRep Ergbnisstruktur geändert hat)
-  means <- means$resT$noTrend
-
-  # Valide Fallzahl
-  N.valid <- means$value[means$parameter %in% "NcasesValid" & means$coefficient %in% "est"]
-
-  # Arithmetisches Mittel
-  mean.valid <- formatC ( means$value[means$parameter %in% "mean" & means$coefficient %in% "est"]  , format = "f" , digits = 2 )
-
-  # Standardabweichung
-  sd.valid <- formatC ( means$value[means$parameter %in% "sd" & means$coefficient %in% "est"] , format = "f" , digits = 2 )
-
-  # Minimum - kleinster Wert aller aufsummierten Imputationswerte einer Person
-  min.valid <- formatC ( min( rowSums(Gesamtdatensatz[, skala.items] , na.rm = FALSE )/length(skala.items) , na.rm=TRUE), format = "f" , digits = 1 )
-
-  # Maximum - größter Wert aller aufsummierten Imputationswerte einer Person
-  max.valid <- formatC ( max( rowSums(Gesamtdatensatz[, skala.items] , na.rm = FALSE )/length(skala.items) , na.rm=TRUE), format = "f" , digits = 1 )
-
-  # Sysmis Zahl
-  sysmis.totalabs <- length(Gesamtdatensatz[,1]) - as.numeric(N.valid)
-
-  # Names
-  names(N.valid) <- "N.valid"
-  names(mean.valid) <- "mean.valid"
-  names(sd.valid) <- "sd.valid"
-  names(max.valid) <- "max.valid"
-  names(min.valid)<- "min.valid"
-  names(sysmis.totalabs) <- "sysmis.totalabs"
-
+## load("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/tests/testthat/dat.rda")
+## kennwerte.gepoolt.kategorial ( datWide=dat, imputedVariableCols=3:6 )
+kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
+### wie mit benjamin besprochen: Funktion erlaubt nur NAs als missings, keine -98 etc.
+  # INPUT
+  # datWide: Datensatz im Wideformat (!!)
+  #          in diesem datensatz muss zwingend jede zeile einer person entsprechen!
+  #          in diesem Fall braucht man keine ID-variable, die wird spaeter kuenstlich erzeugt
+  #	imputedVariableCols: Spaltennummern oder Namen der Imputationen der Variablen
+  allVar<- list(vc = imputedVariableCols)
+  allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
+### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
+  dat[,"id"] <- paste0("P", 1:nrow(dat))
+### long format datensatz
+  z <- reshape2::melt( data=dat , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE)
+### nur valide werte
+  res  <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = FALSE, na.rm=TRUE )
+  ret  <- eatRep::report(res)
+  retA <- formatC(100*ret[,"est"], format="f", digits=1)                        ### aufbereiten
+  names(retA) <- paste(ret[,"parameter"], "valid", sep=".")
+### alle Werte
+  if(any(is.na(z[,"value"]))) {
+      res1 <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE, na.rm=FALSE, forceTable=TRUE )
+      ret1 <- eatRep::report(res1)
+      weg  <- match(".NA.", ret1[,"parameter"])                                 ### Ergebnisse aufbereiten, in der richtigen Reihenfolge
+      ret1A<- formatC(100* c(ret1[-weg,"est"],ret1[weg,"est"]), format="f", digits=1)
+      names(ret1A) <- c(paste(ret1[-weg,"parameter"], "total", sep="."),"sysmis.total")
+  }  else  {
+      ret1A <- NULL
+  }
+### Fallzahlen (etwas effizienter)
+  bool<- !is.na(datWide[,allNam[["vc"]]])
+  N.valid<- length(which(rowSums(bool) == length(allNam[["vc"]])))
   #### Output ####
 
-  ret.var <- c( N.valid , mean.valid , sd.valid , max.valid , min.valid ,sysmis.totalabs)
-  return( ret.var )
-}
-
-
-kennwerte.gepoolt.kategorial <- function( name , id.fb, varue.missings, Gesamtdatensatz, skalen.info ) {
-  # YRNTCSH! - Anpassung der Identifikation der Imputation: Der Datenatz z wird im longformat erstellt und benötigt für die weiteren Analysen die Spalte "imp". Diese Spalte wird über den Befehl strplit erzeugt, indem die Variablennamen der Imputationen übergeben werden und nach einer passenden Zeichenfolge aufgespalten werden. Die Spalte "imp" wird also auf Grundlage der Variablennamen der Imputationen erkannt. Im LV12 endeten die Imputationsnamen einheitlich auf ".NR", im LV15 auf "_NR". Für den LV12 wurde daher "imp" über strsplit(as.character(z[,"variable"]),"\\.") gebildet, im LV15 über strsplit(as.character(z[,"variable"]),"\\_").
-
-
-  # INPUT
-  #	name: Name der Variable, wie sie in der Varue erscheint
-  #	id.fb: Name der Identifikiationsvariable im Datensatz
-  #	name: Name der Variable, wie sie in der Varue erscheint
-  #	varue.missings: Variablenübersicht der Werteinformationen
-  #	Gesamtdatensatz: Datensatz des Fragebogens
-  #	skalen.info: Übersicht der Skaleninformationen
-  # OUTPUT:
-  #	ret.var: Vektor mit metrischen Kennwerten
-
-  #### Vorbereitung ####
-
-  # Identifikation der Items aus Skaleninfo in Varue
-  skala.items	<- gsub( "\\s*", "", unlist( strsplit( skalen.info[ tolower( skalen.info$Var.Name ) %in% tolower( name ), "Items.der.Skala" ], ",", fixed = TRUE ) ) )
-
-  # Kategorien/ Werte
-  kat <- varue.missings$Wert[ varue.missings$Var.name %in% name ]
-
-  cat(paste0("  Aufbereitung des Datensatzes: Reduktion+Longformat+Identifikation der Imputationen.\n"))
-  flush.console()
-  # Reduzierter Gesamtdatensatz
-  x <- Gesamtdatensatz[,c(id.fb, skala.items)]
-
-  # Erstellung eines Datensatzes im Longformat - Grundlage fürs Poolen
-  z <- melt( data=x , id.vars = id.fb, measure.vars = skala.items)
-
-  # Zusätzliche Variable, die die Imputation angibt --> siehe Erläuterung zu Beginn der Funktion
-  df_imp <- data.frame("Variable"=skala.items , "Imp"=1:length(skala.items))
-  z[,"imp"] <- as.numeric(sapply(as.character(z[,"variable"]) , function(d) df_imp$Imp[df_imp$Variable %in% d] , USE.NAMES=FALSE))
-  #z[,"imp"] <- as.numeric(unlist(lapply(strsplit(as.character(z[,"variable"]),"\\_"), FUN = function ( l ) { l[2]})))
-
-  # "Value"-Spalte numerisch
-  #z[,"value"] <- as.numeric(z[,"value"])
-
-  # Long-Datensatz für valide relative Häufigkeiten
-  zR <- z[!is.na(z[,"value"]),]
-
-
-  #### Berechnung der gepoolten Häufigkeiten ####
-  #if(name == "buecher_gepoolt") browser()
-  ### Relative, totale Häufigkeiten (mit Missing Indikator (workaround, funktion macht seltsame dinge))
-  cat(paste0("  Poolen über alle Kategorien (inkl. Missing).\n"))
-  flush.console()
-  total <- jk2.table( datL=z, ID = id.fb , dependent = "value" ,  imp = "imp", doCheck = FALSE, separate.missing.indicator = TRUE )
-
-  #### Achtung, Fix Benjamin & Johanna (28.03.2019, da sich eatRep Ergbnisstruktur geändert hat)
-  total <- total$resT$noTrend
-
-  # Falsch gelabelte NAs richtig benennen
-  if( ".NA." %in% total$parameter ) {
-    if( "NA" %in% total$parameter ) {
-      total <- total[ !total$parameter %in% "NA",]
-      total$parameter[total$parameter %in% ".NA."] <- "NA"
-      total <- rbind(total[ ! total$parameter %in% "NA" ,] , total[ total$parameter %in% "NA" ,])
-    } else {
-      total$parameter[total$parameter %in% ".NA."] <- "NA"
-      total <- rbind(total[ ! total$parameter %in% "NA" ,] , total[ total$parameter %in% "NA" ,])
-    }
-  }
-
-  if( any( grepl("^\\.*$" , total$parameter) ) ) {
-    if( "NA" %in% total$parameter ) {
-      total <- total[ !total$parameter %in% "NA",]
-      total$parameter[ which(grepl("^\\.*$" , total$parameter)) ] <- "NA"
-      total <- rbind(total[ ! total$parameter %in% "NA" ,] , total[ total$parameter %in% "NA" ,])
-    } else {
-      total$parameter[ which(grepl("^\\.*$" , total$parameter)) ] <- "NA"
-      total <- rbind(total[ ! total$parameter %in% "NA" ,] , total[ total$parameter %in% "NA" ,])
-    }
-  }
-
-  # Fallzahlen
-  cat(paste0("  Berechne valide Fallzahl.\n"))
-  flush.console()
-  bool <- sapply( 1:length(x[,1]) , function(d) all( ! is.na(x[d, 2:(length(skala.items)+1)] ) ) )
-  N.total <- length( Gesamtdatensatz[, id.fb] )
-  N.valid <- length( which(bool) )
-  names(N.total) <- "N.total"
-  names(N.valid) <- "N.valid"
-
-
-  # Parameter aufbereiten --> bei nicht-numerischen Variablen werden Punkte angefügt
-  for( k in kat){
-    total$parameter[grepl(paste0("^\\.*",k,"\\.*$") , total$parameter)] <- k
-  }
-
-
-  # Relative, totale Häufigkeiten formatieren
-  werte.total.frq <- formatC ( 100*total$value[ total$parameter %in% c( kat, "NA" ) & total$coefficient %in% "est"] , format = "f" , digits = 1 )
-
-  ### 02.04.19: Missings aussortieren (neu: auch in gepoolten Variablen jetzt Missings!)
-  if(length(name) > 1) stop("Benjamin hat hier nen Fehler gemacht, an ihn wenden.")
-  missings <- varue.missings[varue.missings$Var.name == name & varue.missings$missing == "ja", "Wert"]
-  zR_noMiss <- zR
-  zR_noMiss[zR_noMiss$value %in% missings, "value"] <- NA
-  ### Relative, valide Häufigkeiten (ohne Missing Indikator (workaround, funktion macht seltsame dinge));
-  # forceTable um Probleme mit Werteset c(0, 1) zu vermeiden, da sonst jk2.mean gecalled wird (Benjamin & Sebastian, 28.03.2019)
-  cat(paste0("  Poolen über valide Kategorien (exkl. Missing).\n"))
-  flush.console()
-  valid <- jk2.table( datL=zR_noMiss, ID = id.fb , dependent = "value" ,  imp = "imp", doCheck = FALSE, separate.missing.indicator = FALSE,
-                      forceTable = TRUE)
-
-  #### Achtung, Fix Benjamin & Johanna (13.03.2019, da sich eatRep Ergbnisstruktur geändert hat)
-  valid <- valid$resT$noTrend
-
-  if( any(grepl("^\\.*$" , valid$parameter))) valid$parameter[ grepl("^\\.*$" , valid$parameter) ] <- "NA"
-  valid <- rbind(valid[ ! valid$parameter %in% "NA" ,] , valid[ valid$parameter %in% "NA" ,])
-
-  # Parameter aufbereiten --> bei nicht-numerischen Variablen werden Punkte angefügt
-  for( k in kat){
-    valid$parameter[grepl(paste0("^\\.*",k,"\\.*$") , valid$parameter)] <- k
-  }
-
-  # Valide Häufigkeiten formatieren
-  werte.valid.frq <- formatC ( 100*valid$value[ valid$parameter %in% kat & valid$coefficient %in% "est"] , format = "f" , digits = 1 )
-
-
-  ### Absolute Häufigkeiten - berechnet aus rel. Hfg., da jk2.table abs. Hfg. nicht berechnet
-  werte.total.abs <- formatC ( total$value[ total$parameter %in% c( kat, "NA" ) & total$coefficient %in% "est" ]*N.total  , format = "f" , digits = 0 )
-
-  # Names der totalen Werte
-  names( werte.total.frq ) <- paste0( c( kat , "sysmis" ) , ".total" )
-
-  # if(identical(name, "TR_NOTE_DEU_gepoolt")) browser()
-  ## Names der validen Werte (02.04., Benjamin: Kategorienamen angepasst, da missings ja wegfallen und leere Zellen bekommen sollen)
-  kat_noMiss <- kat[!kat %in% missings]
-  kat_Miss <- kat[kat %in% missings]
-  miss_cols <- rep("\\multic{--}" , 1+length(kat_Miss))
-  werte.valid.frq <- c( werte.valid.frq , miss_cols )
-  names( werte.valid.frq ) <- paste0( c( kat_noMiss , kat_Miss, "sysmis" ) , ".valid" )
-
-  # Names der absoluten Werte
-  names( werte.total.abs ) <- paste0( c(kat , "sysmis" ) , ".totalabs" )
-
-  #### Output ####
-
-  ret.var <- c( N.valid , N.total , werte.valid.frq , werte.total.frq, werte.total.abs )
+  ret.var <- c( N.valid=as.character(N.valid) , N.total=as.character(nrow(datWide)) , retA, sysmis.valid = "\\multic{..}", ret1A)
   return( ret.var )
 }
 
