@@ -1,81 +1,14 @@
 # Funktion zum erstellen des Kennwertedatensatzes
-kds.erstellen <- function( fbshort, varue.info, varue.missings , skalen.info, ds , variablen., id , ds.file , folder.data, do.save=TRUE) {
-  # INPUT
-  #	d: Character, Fragebogenküzel aus fbshort
-  #	do.save: Boolean, Angabe, ob Kennwertedatensatz gespeichert wird
-
+kds.erstellen <- function( fbshort, varue.info, varue.missings , skalen.info, ds , variablen., id) {
   # OUTPUT
-  #	Kennwertedatensatz: data.frame, eingelesener oder erstellter Kennwertedatensatz
+  #	Kennwertedatensatz: data.frame
 
-  cat (paste0("\nKENNWERTEDATENSATZ ERSTELLEN/EINLESEN: ",fbshort,"\n"))
-  flush.console()
+  Kennwertedatensatz <- sapply ( variablen. , function(v) {
+    kennwerte( v , id.fb=id, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=ds,
+               skalen.info=skalen.info[ skalen.info$Quelle %in% fbshort ,] )
+    })
 
-  if(is.null(folder.data) |  is.null(ds.file)){
-    cat (paste0(" Es wurden keine Pfade für die Datensatz-Dateien und/oder den Kennwerte-Ordner angegeben.\n"))
-    flush.console()
-    cat (paste0(" Kennwertedatensatz für " , fbshort , " wird erstellt.\n"))
-    flush.console()
-    Kennwertedatensatz <- sapply ( variablen. , function(v) kennwerte( v , id.fb=id, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=ds, skalen.info=skalen.info[ skalen.info$Quelle %in% fbshort ,] ) )
-    if(do.save) {
-      save.file <- file.path( getwd() , paste0("Kennwerte_",fbshort,".rdata") )
-      cat (paste0(" Speicher Kennwertedatensatz unter " , save.file , ".\n"))
-      flush.console()
-      save( Kennwertedatensatz, file = save.file )
-    }
-  } else if(!file.exists(folder.data) | ! file.exists(ds.file)){
-    cat (paste0(" Mindestens einer der angegebenen Pfade (", paste0(folder.data , ds.file , collapse="; "), ") existiert nicht.\n"))
-    flush.console()
-    cat (paste0(" Kennwertedatensatz für " , fbshort , " wird erstellt.\n"))
-    flush.console()
-    Kennwertedatensatz <- sapply ( variablen. , function(v) kennwerte( v , id.fb=id, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=ds, skalen.info=skalen.info[ skalen.info$Quelle %in% fbshort ,] ) )
-    if(do.save) {
-      save.file <- file.path(  getwd()  , paste0("Kennwerte_",fbshort,".rdata") )
-
-      cat (paste0(" Speicher Kennwertedatensatz unter " , save.file , ".\n"))
-      flush.console()
-      save( Kennwertedatensatz, file = save.file )
-    }
-  } else {
-    kennwerte.file.aktuell <- file.path( folder.data , dir(folder.data)[ grepl( tolower( paste0("_", fbshort) ) , tolower(dir(folder.data))) ] )
-
-    if ( length( kennwerte.file.aktuell ) >0 ) {
-      finf <- file.info(c(kennwerte.file.aktuell ,  ds.file) , extra_cols=FALSE)
-
-      cat (paste0(" Datum des Original-Datensatzes: " , finf[2,"mtime"] , "\n Datum des vorliegenden Kennwertedatensatzes: " , finf[1,"mtime"],".\n"))
-      flush.console()
-
-      if ( difftime(finf[1,"mtime"], finf[2,"mtime"], units = "secs") < 0) {
-
-        cat (paste0(" Original-Datensatz ist neueren Datums als der vorliegende Kennwertedatensatz: Berechne Kennwertedatensatz neu.\n"))
-        flush.console()
-        Kennwertedatensatz <- sapply ( variablen. , function(v) kennwerte( v , id.fb=id, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=ds, skalen.info=skalen.info[ skalen.info$Quelle %in% fbshort ,] ) )
-        if(do.save) {
-          save.file <- file.path( folder.data , paste0("Kennwerte_",fbshort,".rdata") )
-
-          cat (paste0(" Speicher Kennwertedatensatz unter " , save.file , ".\n"))
-          flush.console()
-          save( Kennwertedatensatz, file = save.file )
-        }
-      } else {
-        cat (paste0(" Lade Kennwertedatensatz.\n"))
-        flush.console()
-        kd.char <- load( file = kennwerte.file.aktuell , verbose = TRUE)
-        Kennwertedatensatz <- get(kd.char)
-      }
-    } else {
-      cat (paste0(" Berechne Kennwertedatensatz.\n"))
-      flush.console()
-      Kennwertedatensatz <- sapply ( variablen. , function(v) kennwerte( v , id.fb=id, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=ds, skalen.info=skalen.info[ skalen.info$Quelle %in% fbshort ,] ) )
-      if(do.save) {
-        save.file <- file.path( folder.data , paste0("Kennwerte_",fbshort,".rdata") )
-
-        cat (paste0(" Speicher Kennwertedatensatz unter " , save.file , ".\n"))
-        flush.console()
-        save( Kennwertedatensatz, file = save.file )
-      }
-    }
-  }
-  return( Kennwertedatensatz )
+  Kennwertedatensatz
 }
 
 
@@ -134,7 +67,7 @@ kennwerte <- function(name, id.fb, varue.info, varue.missings, Gesamtdatensatz, 
   }
 
   #### Output ####
-  return (kennwerte.var)
+  kennwerte.var
 }
 
 
