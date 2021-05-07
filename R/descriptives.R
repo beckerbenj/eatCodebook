@@ -1,3 +1,11 @@
+# englische namen, keine punkte in Variablennamen
+# spss-Datensatz nehmen, daraus gads-dat objekt erzeugen,
+#   importSPSS nehmen
+#   kleine spss-Datei, wo aber alles drin ist, kategorial, metrisch, wenige zeilen reichen (vielleicht 10)
+#   zusaetzliche tabelle mit zwei spalten, die angibt, welche imputationen zu welcher gemeinsamen variablen gehoeren
+# welche infos braucht kds.erstellen, die nicht im gads-.dat objekt enthalten sind
+# man braucht zusaetzlche info, welche imputationen zu einer gemeinsamen variable gehoeren (momentan: skalen.info)
+
 #### Apply Change Meta data
 #############################################################################
 #' Calculate descriptive statistics.
