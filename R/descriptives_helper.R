@@ -16,7 +16,7 @@ kennwerte.kategorial <- function(x, value_table) {
   if(length(not_labeled_values) > 0) stop("The following values are not labeled: ",
                                           paste(not_labeled_values, collapse = ", "))
 
-  #### Berechnung der Häufigkeiten ####
+  #### Berechnung der Haeufigkeiten ####
   werte.valid <- x[!x %in% missings  & ! is.na(x)]
   werte.total <- x
   if(!is.numeric(x)){
@@ -36,13 +36,13 @@ kennwerte.kategorial <- function(x, value_table) {
   N.valid <- c("N.valid" = length(werte.valid))
   N.total	<- c("N.total" = length(werte.total))
 
-  # absolute Häufigkeiten
+  # absolute Haeufigkeiten
   werte.total.abs <- as.numeric(table(factor(werte.total, levels = unique_values) , useNA = "always"))
 
-  # relative Häufigkeiten (alle Fälle)
+  # relative Haeufigkeiten (alle Fälle)
   werte.total.frq	<- 100* as.numeric(table(factor(werte.total, levels = unique_values) , useNA = "always")) / N.total
 
-  # relative Häufigkeiten (valide Fälle)
+  # relative Haeufigkeiten (valide Fälle)
   if(N.valid==0){
     werte.valid.frq <- as.numeric(table(factor(werte.total, levels = unique_values), useNA = "always"))
   } else {
@@ -222,30 +222,30 @@ kennwerte.gepoolt.metrisch <- function( datWide, imputedVariableCols) {
 ### skalen.info <- data.frame ( Var.Name = "DM_erfahrung", Quelle = "sfb", Items.der.Skala = paste("Semz19_", letters[1:4], sep="", collapse=", ") , stringsAsFactors = FALSE)
 ### kennwerte.gepoolt.metrisch ( name="DM_erfahrung" , id.fb="IDSTUD" , Gesamtdatensatz=dat, skalen.info=skalen.info)
   allVar<- list(vc = imputedVariableCols)
-  allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
+  allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = datWide, variable=ii)})
 ### check, ob es numerisch ist
-  stopifnot(length(setdiff(sapply(dat[,allNam[["vc"]]], class), c("numeric", "integer")))==0)
+  stopifnot(length(setdiff(sapply(datWide[,allNam[["vc"]]], class), c("numeric", "integer")))==0)
 ### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
-  dat[,"id"] <- paste0("P", 1:nrow(dat))
+  datWide[,"id"] <- paste0("P", 1:nrow(datWide))
 ### long format datensatz
-  z <- reshape2::melt( data=dat , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=TRUE)
+  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=TRUE)
 
 ### Berechnung der gepoolten Kennwerte
   means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  na.rm = TRUE )
   resM  <- eatRep::report(means, exclude = "var")
   
 # Minimum - kleinster Wert aller aufsummierten Imputationswerte einer Person
-  min.valid <- formatC ( min( rowSums(dat[, allNam[["vc"]]] , na.rm = FALSE )/length(allNam[["vc"]]) , na.rm=TRUE), format = "f" , digits = 1 )
+  min.valid <- formatC ( min( rowSums(datWide[, allNam[["vc"]]] , na.rm = FALSE )/length(allNam[["vc"]]) , na.rm=TRUE), format = "f" , digits = 1 )
 
 # Maximum - groesster Wert aller aufsummierten Imputationswerte einer Person
-  max.valid <- formatC ( max( rowSums(dat[, allNam[["vc"]]] , na.rm = FALSE )/length(allNam[["vc"]]) , na.rm=TRUE), format = "f" , digits = 1 )
+  max.valid <- formatC ( max( rowSums(datWide[, allNam[["vc"]]] , na.rm = FALSE )/length(allNam[["vc"]]) , na.rm=TRUE), format = "f" , digits = 1 )
 
 ### rueckgabeobjekt bauen (genamter Vektor)
   ret <- c(N.valid= as.character(resM[which(resM[,"parameter"] == "NcasesValid"),"est"]),
            mean.valid = formatC(resM[which(resM[,"parameter"] == "mean"),"est"], format="f", digits =2),
            sd.valid =  formatC(resM[which(resM[,"parameter"] == "sd"),"est"], format="f", digits =2),
            max.valid =max.valid,  min.valid=min.valid,
-           sysmis.totalabs = as.character(nrow(dat) - resM[which(resM[,"parameter"] == "NcasesValid"),"est"]))
+           sysmis.totalabs = as.character(nrow(datWide) - resM[which(resM[,"parameter"] == "NcasesValid"),"est"]))
   return(ret)}
 
 
@@ -259,11 +259,11 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
   #          in diesem Fall braucht man keine ID-variable, die wird spaeter kuenstlich erzeugt
   #	imputedVariableCols: Spaltennummern oder Namen der Imputationen der Variablen
   allVar<- list(vc = imputedVariableCols)
-  allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
+  allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = datWide, variable=ii)})
 ### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
-  dat[,"id"] <- paste0("P", 1:nrow(dat))
+  datWide[,"id"] <- paste0("P", 1:nrow(datWide))
 ### long format datensatz
-  z <- reshape2::melt( data=dat , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE)
+  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE)
 ### nur valide werte
   res  <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = FALSE, na.rm=TRUE )
   ret  <- eatRep::report(res)

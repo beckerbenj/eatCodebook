@@ -4,7 +4,13 @@
 #   kleine spss-Datei, wo aber alles drin ist, kategorial, metrisch, wenige zeilen reichen (vielleicht 10)
 #   zusaetzliche tabelle mit zwei spalten, die angibt, welche imputationen zu welcher gemeinsamen variablen gehoeren
 # welche infos braucht kds.erstellen, die nicht im gads-.dat objekt enthalten sind
-# man braucht zusaetzlche info, welche imputationen zu einer gemeinsamen variable gehoeren (momentan: skalen.info)
+# man braucht zusaetzliche info, welche imputationen zu einer gemeinsamen variable gehoeren (momentan: skalen.info)
+#
+# check:
+# library(eatGADS); gd <- import_spss("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/inst/extdata/example1.sav")
+# load("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/inst/extdata/example1_varinfo.rda")
+# cds(gd, varinfo)
+
 
 #### Apply Change Meta data
 #############################################################################
@@ -13,13 +19,8 @@
 #' Calculate descriptive statistics which should be included in the codebook.
 #'
 #'
-#'@param fbshort Data set name.
-#'@param varue.info Varue info.
-#'@param varue.missings Missing codes.
-#'@param skalen.info Scale informations.
-#'@param ds Data set.
-#'@param variablen. further arguments passed to or from other methods.
-#'@param id ID variable in ds.
+#'@param GADSdat.obj Object of class GADSdat, created by import_spss from the eatGADS package, for example
+#'@param varinfo data frame with variable information
 #'
 #'@return Returns a list of descriptive statistics.
 #'
@@ -27,47 +28,47 @@
 #'# tbd
 #'
 #'@export
-kds.erstellen <- function( fbshort, varue.info, varue.missings , skalen.info, ds , variablen., id) {
-
-  Kennwertedatensatz <- sapply ( variablen. , function(v) {
-    kennwerte( v , id.fb=id, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=ds,
-               skalen.info=skalen.info[ skalen.info$Quelle %in% fbshort ,] )
-    })
-
-  Kennwertedatensatz
+cds <- function( GADSdat.obj, varinfo, verbose = TRUE) {
+  by(data = varinfo, INDICES = varinfo[,"group"], FUN = function (v) {varStats(gd, v, verbose)})
 }
 
 
-kennwerte <- function(name, id.fb, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
-  # INPUT
-  #	name: Name der Variable, wie sie in der Varue erscheint
-  #	id.fb: Name der Identifikationsvariable im Datensatz
-  #	varue.info: Variablenübersicht der Variableninformationen
-  #	varue.missings: Variablenübersicht der Werteinformationen
-  #	Gesamtdatensatz: Datensatz des Fragebogens
-  #	skalen.info: Übersicht der Skaleninformationen
-
-  #### Vorbereitung ####
-  # Identifikation des Layout-Typs
-
-  i <- varue.info$Layout[varue.info$Var.Name %in% name]
-
-  if(is.null(i)){
-    stop(" Layout-Typ fehlt (NULL)\n")
+varStats <- function(GADSdat.obj, sub.varinfo, verbose) {
+  dat <- eatGADS::extractData(GADSdat.obj, convertLabels ="numeric")
+### checks
+  if ( !all(sub.varinfo[,"var"] %in% colnames(dat)) ) {
+       message("Following variables from the 'varinfo' missed in GADSdat.obj: '",paste(setdiff(sub.varinfo[,"var"],colnames(dat)), collapse="', '"), "'.\nSkip collecting variable statistics for '",sub.varinfo[1,"group"],"'.")
+       return(NULL)
   }
-  if(is.na(i)){
-    stop(" Layout-Typ fehlt (NA)\n")
+### Ausgabe des Variablennames auf der Konsole
+  if(verbose) { cat ( paste0 ( "Compute variable statistics for '",sub.varinfo[1,"group"],"'.\n")); flush.console()}
+
+### Berechnung der Kennwerte
+  if(nrow(sub.varinfo)>1) {
+     if ( isTRUE(sub.varinfo[1,"imp"])) {
+         if ( sub.varinfo[1,"scale"] == "numeric") {
+             stats <- kennwerte.gepoolt.metrisch(datWide=dat, imputedVariableCols = sub.varinfo[,"var"])
+         }  else  {
+             stats <- kennwerte.gepoolt.kategorial(datWide=dat, imputedVariableCols = sub.varinfo[,"var"])
+         }
+     }  else  {
+### differenzieren, ob es skala (es gibt eine separate skalenvariale) oder fake.skala (es gibt keine separate skalenvariale) ist
+         if ( "scale" %in% sub.varinfo[,"type"] ) {
+             stopifnot(length(which("scale" == sub.varinfo[,"type"])) == 1)
+             stats <- kennwerte.skala (dat=dat,scaleCol=sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"var"], variableCols=sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"], missingValues = NULL)
+         }  else  {
+             stats <- kennwerte.skala.fake (dat=dat,variableCols=sub.varinfo[,"var"], missingValues = NULL)
+         }
+     }
+  }  else  {
+     if (sub.varinfo[,"scale"] == "nominal") {
+# hier gibt es einen fehler
+         stats <- kennwerte.kategorial(x=dat[,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),c("value", "missings")])
+     }
   }
 
-  if(length(which(varue.info$Var.Name %in% name))>1 ){
-    stop(paste0(" Die Variable " , name , " ist mehr als einmal in der Varue.\n"))
-  }
 
-  # Ausgabe des Variablennames auf der Konsole
-  cat ( paste0 ( " Berechne Kennwerte der Variable: ", name , "\n" ) )
-  flush.console()
 
-  #### Berechnung der Kennwerte ####
   if( all( varue.missings[varue.missings$Var.name %in% name, "missing" ] %in% "ja" ) & i==2 ) {
     kennwerte.var <- kennwerte.kategorial.variation(name=name, varue.missings=varue.missings , Gesamtdatensatz=Gesamtdatensatz)
   } else if (i %in% c(0,1,8)) {
