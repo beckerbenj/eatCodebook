@@ -1,4 +1,4 @@
 library(testthat)
-library(eatGADS)
+library(eatCodebook)
 
-test_check("eatGADS")
+test_check("eatCodebook")
