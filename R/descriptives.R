@@ -29,7 +29,31 @@
 #'
 #'@export
 cds <- function( GADSdat.obj, varinfo, verbose = TRUE) {
-  by(data = varinfo, INDICES = varinfo[,"group"], FUN = function (v) {varStats(gd, v, verbose)})
+### checks, dass varinfo korrekt spezifiziert
+  fehlend <- setdiff (c( "var",   "group", "type",  "scale", "imp"), colnames(varinfo))
+  if ( length(fehlend)>0) { stop("Column(s) '",paste(fehlend, collapse="', '"), "' missed in 'varinfo'.")}
+  if(!length(unique(varinfo[,"var"])) == length(varinfo[,"var"])) {stop("'var' column in 'varinfo' must be unique.")}
+  not_allowed1 <- setdiff(c("variable", "scale"), varinfo[,"type"])
+  if ( length(not_allowed1)>0) { stop("Invalid entries in 'type' column of 'varinfo': '",paste(not_allowed1, collapse="', '"), "'")}
+  not_allowed2 <- setdiff(c("nominal", "ordinal", "numeric"), varinfo[,"scale"])
+  if ( length(not_allowed2)>0) { stop("Invalid entries in 'scale' column of 'varinfo': '",paste(not_allowed2, collapse="', '"), "'")}
+  not_allowed3 <- setdiff (c("FALSE", "TRUE"), varinfo[,"imp"])
+  if ( length(not_allowed3)>0) { stop("'imp' column in 'varinfo' must only contain 'FALSE' or 'TRUE'")}
+### welche variablen werden ignoriert?
+  vars <- c("type",  "scale", "imp")
+  mis  <- lapply(vars, FUN = function ( v ) { which(is.na(varinfo[,v]))})
+  anz  <- unlist(lapply(mis, length))
+  mis  <- unique(unlist(mis))
+  if ( any(anz>0) ) {
+      message("Following variables will be ignored due to missing entries in 'type', 'scale' or 'imp' column of 'varinfo': '",paste(varinfo[mis,"var"]), "'")
+      varinfo <- varinfo[-mis,]
+      if(nrow(varinfo)==0) {
+         message("No valid entries in 'varinfo'.")
+         return(NULL)
+      }
+  }
+  ret <- by(data = varinfo, INDICES = varinfo[,"group"], FUN = function (v) {varStats(gd, v, verbose)})
+  return(ret)
 }
 
 
@@ -62,35 +86,38 @@ varStats <- function(GADSdat.obj, sub.varinfo, verbose) {
      }
   }  else  {
      if (sub.varinfo[,"scale"] == "nominal") {
-# hier gibt es einen fehler
-         stats <- kennwerte.kategorial(x=dat[,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),c("value", "missings")])
+         stats <- kennwerte.kategorial(x=dat[,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),])
+     }
+     if (sub.varinfo[,"scale"] == "numeric") {
+         stats <- kennwerte.metrisch(x=dat[,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),])
+     }
+     if (sub.varinfo[,"scale"] == "ordinal") {
+         stats <- kennwerte.ordinal(x=dat[,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),])
      }
   }
 
-
-
-  if( all( varue.missings[varue.missings$Var.name %in% name, "missing" ] %in% "ja" ) & i==2 ) {
-    kennwerte.var <- kennwerte.kategorial.variation(name=name, varue.missings=varue.missings , Gesamtdatensatz=Gesamtdatensatz)
-  } else if (i %in% c(0,1,8)) {
-    kennwerte.var <- NULL
-  } else if (i==2) {
-    kennwerte.var <-  kennwerte.kategorial(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz)
-  } else if (i==3) {
-    kennwerte.var <-  kennwerte.ordinal(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz)
-  } else if (i==4) {
-    kennwerte.var <- kennwerte.metrisch(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz)
-  } else if (i==5) {
-    kennwerte.var <- kennwerte.skala(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
-  } else if (i==6) {
-    kennwerte.var <- kennwerte.gepoolt.metrisch(name=name,id.fb=id.fb,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
-  } else if (i==7) {
-    kennwerte.var <- kennwerte.gepoolt.kategorial(name=name,id.fb=id.fb,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
-  } else if (i==9) {
-    kennwerte.var <- kennwerte.skala.fake(name=name,varue.info=varue.info,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
-  }
+#  if( all( varue.missings[varue.missings$Var.name %in% name, "missing" ] %in% "ja" ) & i==2 ) {
+#    kennwerte.var <- kennwerte.kategorial.variation(name=name, varue.missings=varue.missings , Gesamtdatensatz=Gesamtdatensatz)
+#  } else if (i %in% c(0,1,8)) {
+#    kennwerte.var <- NULL
+#  } else if (i==2) {
+#    kennwerte.var <-  kennwerte.kategorial(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz)
+#  } else if (i==3) {
+#    kennwerte.var <-  kennwerte.ordinal(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz)
+#  } else if (i==4) {
+#    kennwerte.var <- kennwerte.metrisch(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz)
+#  } else if (i==5) {
+#    kennwerte.var <- kennwerte.skala(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
+#  } else if (i==6) {
+#    kennwerte.var <- kennwerte.gepoolt.metrisch(name=name,id.fb=id.fb,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
+#  } else if (i==7) {
+#    kennwerte.var <- kennwerte.gepoolt.kategorial(name=name,id.fb=id.fb,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
+#  } else if (i==9) {
+#    kennwerte.var <- kennwerte.skala.fake(name=name,varue.info=varue.info,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
+#  }
 
   #### Output ####
-  kennwerte.var
-}
+#  kennwerte.var
+return(stats)}
 
 

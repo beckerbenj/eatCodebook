@@ -5,44 +5,48 @@
 
 
 kennwerte.kategorial <- function(x, value_table) {
-  missings <- value_table[value_table$missings == "miss", "value"]
-  unique_values <- value_table$value
+  missings <- na.omit(value_table[value_table$missings == "miss", "value"])
+  unique_values <- value_table[c(which(is.na(value_table[,"missings"])),which(value_table[,"missings"] == "valid")),"value"]
+  
+### wenn unique_values nicht aus dem labels-objekt ausgelesen werden koennen (etwa weil sie in der SPSS-datei nicht definiert waren)
+### muessen sie aus den Daten ausgelesen werden
+  uvd  <- sort(setdiff(na.omit(unique(x)), missings))
+  if(!identical(unique_values, uvd)) {
+      warning("Variable '",value_table[["varName"]],"': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. \n    'GADSdat' object: '",paste(unique_values, collapse="', '"), "'\n                data: '",paste(uvd,collapse="', '"), "'\n  Value definition from the data is used.")
+      unique_values <- uvd
+  }
 
-  # formerly a separate function ("variation") -> if no value labels are used
-  if(length(unique_values) == length(missings)) unique_values <- c(sort(unique(x[!x %in% missings  & ! is.na(x)])),
-                                                                   missings)
+### schauen, ob fuer alle empirisch vorhandenen Werte auch wertelabels vorhanden sind
+  not_labeled_values <- setdiff(unique_values, value_table[,"value"])
+  if ( length(not_labeled_values)>0) {
+      warning("Variable '",value_table[["varName"]],"': Following values are not labeled in the 'labels' sheet of the 'GADSdat' object: '", paste(not_labeled_values, collapse="', '"), "'. Values will be used as labels.")
+  }
 
-  not_labeled_values <- unique(x[!x %in% unique_values & !is.na(x)])
-  if(length(not_labeled_values) > 0) stop("The following values are not labeled: ",
-                                          paste(not_labeled_values, collapse = ", "))
-
-  #### Berechnung der Haeufigkeiten ####
+### Berechnung der Haeufigkeiten
   werte.valid <- x[!x %in% missings  & ! is.na(x)]
   werte.total <- x
-  if(!is.numeric(x)){
-    for(k in unique_values){
+  if(is.numeric(x)) {
+      warning("Original function only allows for non-numeric values.")
+  }
+  for(k in unique_values){
       werte.valid[grepl(paste0("^\\s*",k,"\\s*$") , werte.valid)] <- k
       werte.total[grepl(paste0("^\\s*",k,"\\s*$") , werte.total)] <- k
     }
-    werte.valid[grepl("^\\s*$" , werte.valid)] <- NA
-    werte.valid <- werte.valid[! werte.valid %in% missings  & ! is.na( werte.valid )]
-    werte.total[grepl("^\\s*$" , werte.total)] <- NA
-  } #else {
-  #  werte.valid <- as.numeric(gsub("\\s" , "" , x[!x %in% missings  & !is.na(x)]))
-  #  werte.total <- as.numeric(gsub("\\s" , "" , x))
-  #}
+  werte.valid[grepl("^\\s*$" , werte.valid)] <- NA
+  werte.valid <- werte.valid[! werte.valid %in% missings  & ! is.na( werte.valid )]
+  werte.total[grepl("^\\s*$" , werte.total)] <- NA
 
   # Valide und totale Fallzahlen
-  N.valid <- c("N.valid" = length(werte.valid))
-  N.total	<- c("N.total" = length(werte.total))
+  N.valid <- length(werte.valid)
+  N.total	<- length(werte.total)
 
   # absolute Haeufigkeiten
   werte.total.abs <- as.numeric(table(factor(werte.total, levels = unique_values) , useNA = "always"))
 
-  # relative Haeufigkeiten (alle Fälle)
+  # relative Haeufigkeiten (alle Faelle)
   werte.total.frq	<- 100* as.numeric(table(factor(werte.total, levels = unique_values) , useNA = "always")) / N.total
 
-  # relative Haeufigkeiten (valide Fälle)
+  # relative Haeufigkeiten (valide Faelle)
   if(N.valid==0){
     werte.valid.frq <- as.numeric(table(factor(werte.total, levels = unique_values), useNA = "always"))
   } else {
@@ -63,14 +67,16 @@ kennwerte.kategorial <- function(x, value_table) {
   werte.total.abs <- formatC(werte.total.abs, format = "f", digits = 0 )
   names(werte.total.abs) <- paste0(c(unique_values, "sysmis" ), ".totalabs" )
 
-  c(N.valid, N.total, werte.valid.frq, werte.total.frq, werte.total.abs)
+  ret <- c(N.valid, N.total, werte.valid.frq, werte.total.frq, werte.total.abs)
+  names(ret)[1:2] <- c("N.valid", "N.total")
+  return(ret)
 }
 
 
 kennwerte.ordinal <- function(x, value_table) {
   cat_values <- kennwerte.kategorial(x, value_table)
 
-  missings <- value_table[value_table$missings == "miss", "value"]
+  missings <- na.omit(value_table[value_table[,"missings"] == "miss", "value"])
   werte.valid <- x[!x %in% missings  & ! is.na(x)]
 
   #### Berechnung der metrischen Kennwerte ####
@@ -97,9 +103,7 @@ kennwerte.ordinal.skala <- function(x, value_table) {
 
 
 kennwerte.metrisch <- function(x, value_table) {
-  missings <- value_table[value_table$missings == "miss", "value"]
-  unique_values <- value_table$value
-
+  missings <- na.omit(value_table[value_table$missings == "miss", "value"])
   werte.valid <- x[!x %in% missings  & ! is.na(x)]
 
   N.valid <- length(werte.valid)
