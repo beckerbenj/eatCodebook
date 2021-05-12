@@ -41,24 +41,24 @@ cds <- function( GADSdat.obj, varinfo, verbose = TRUE) {
   if ( length(not_allowed3)>0) { stop("'imp' column in 'varinfo' must only contain 'FALSE' or 'TRUE'")}
 ### welche variablen werden ignoriert?
   vars <- c("type",  "scale", "imp")
-  mis  <- lapply(vars, FUN = function ( v ) { which(is.na(varinfo[,v]))})
+  mis  <- lapply(vars, FUN = function ( v ) { c(which(is.na(varinfo[,v])), which(varinfo[,v] == "")) })
   anz  <- unlist(lapply(mis, length))
   mis  <- unique(unlist(mis))
   if ( any(anz>0) ) {
-      message("Following variables will be ignored due to missing entries in 'type', 'scale' or 'imp' column of 'varinfo': '",paste(varinfo[mis,"var"]), "'")
+      message("Following variables will be ignored due to missing entries in 'type', 'scale' or 'imp' column of 'varinfo': '",paste(varinfo[mis,"var"], collapse="', '"), "'")
       varinfo <- varinfo[-mis,]
       if(nrow(varinfo)==0) {
          message("No valid entries in 'varinfo'.")
          return(NULL)
       }
   }
-  ret <- by(data = varinfo, INDICES = varinfo[,"group"], FUN = function (v) {varStats(GADSdat.obj, v, verbose)})
+  dat <- eatGADS::extractData(GADSdat.obj, convertLabels ="numeric")
+  ret <- by(data = varinfo, INDICES = varinfo[,"group"], FUN = function (v) {varStats(GADSdat.obj=GADSdat.obj, dat=dat, sub.varinfo=v, verbose=verbose)})
   return(ret)
 }
 
 
-varStats <- function(GADSdat.obj, sub.varinfo, verbose) {
-  dat <- eatGADS::extractData(GADSdat.obj, convertLabels ="numeric")
+varStats <- function(GADSdat.obj, dat, sub.varinfo, verbose) {
 ### checks
   if ( !all(sub.varinfo[,"var"] %in% colnames(dat)) ) {
        message("Following variables from the 'varinfo' missed in GADSdat.obj: '",paste(setdiff(sub.varinfo[,"var"],colnames(dat)), collapse="', '"), "'.\nSkip collecting variable statistics for '",sub.varinfo[1,"group"],"'.")

@@ -11,6 +11,11 @@ kennwerte.kategorial <- function(x, value_table) {
 ### wenn unique_values nicht aus dem labels-objekt ausgelesen werden koennen (etwa weil sie in der SPSS-datei nicht definiert waren)
 ### muessen sie aus den Daten ausgelesen werden
   uvd  <- sort(setdiff(na.omit(unique(x)), missings))
+  
+### check, ob es sich um freie antwortfelder handelt
+  if( !"numeric" %in% class(x) && length(uvd)>50) {
+      warning("Variable '",unique(value_table[,"varName"]), "' has class '",class(x),"' with ",length(uvd)," unique values. '",unique(value_table[,"varName"]), "' seems to stem from an open answer box in the questionnaire. Calculating descriptive statistics seems questionable.")
+  }
   if(!identical(unique_values, uvd)) {
       warning("Variable '",value_table[["varName"]],"': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. \n    'GADSdat' object: '",paste(unique_values, collapse="', '"), "'\n                data: '",paste(uvd,collapse="', '"), "'\n  Value definition from the data is used.")
       unique_values <- uvd
@@ -19,7 +24,7 @@ kennwerte.kategorial <- function(x, value_table) {
 ### schauen, ob fuer alle empirisch vorhandenen Werte auch wertelabels vorhanden sind
   not_labeled_values <- setdiff(unique_values, value_table[,"value"])
   if ( length(not_labeled_values)>0) {
-      warning("Variable '",value_table[["varName"]],"': Following values are not labeled in the 'labels' sheet of the 'GADSdat' object: '", paste(not_labeled_values, collapse="', '"), "'. Values will be used as labels.")
+      warning("Variable '",unique(value_table[["varName"]]),"': Following values are not labeled in the 'labels' sheet of the 'GADSdat' object: '", paste(not_labeled_values, collapse="', '"), "'. Values will be used as labels.")
   }
 
 ### Berechnung der Haeufigkeiten
@@ -28,9 +33,10 @@ kennwerte.kategorial <- function(x, value_table) {
   if(is.numeric(x)) {
       warning("Original function only allows for non-numeric values.")
   }
+
   for(k in unique_values){
-      werte.valid[grepl(paste0("^\\s*",k,"\\s*$") , werte.valid)] <- k
-      werte.total[grepl(paste0("^\\s*",k,"\\s*$") , werte.total)] <- k
+      if(inherits(try(werte.valid[grepl(paste0("^\\s*",k,"\\s*$") , werte.valid)] <- k ),"try-error"))  {warning("Regular expression failed for category '",k,"' of variable '",unique(value_table[["varName"]]),"'.")}
+      if(inherits(try(werte.total[grepl(paste0("^\\s*",k,"\\s*$") , werte.total)] <- k ),"try-error"))  {warning("Regular expression failed for category '",k,"' of variable '",unique(value_table[["varName"]]),"'.")}
     }
   werte.valid[grepl("^\\s*$" , werte.valid)] <- NA
   werte.valid <- werte.valid[! werte.valid %in% missings  & ! is.na( werte.valid )]
