@@ -52,7 +52,7 @@ cds <- function( GADSdat.obj, varinfo, verbose = TRUE) {
          return(NULL)
       }
   }
-  ret <- by(data = varinfo, INDICES = varinfo[,"group"], FUN = function (v) {varStats(gd, v, verbose)})
+  ret <- by(data = varinfo, INDICES = varinfo[,"group"], FUN = function (v) {varStats(GADSdat.obj, v, verbose)})
   return(ret)
 }
 
