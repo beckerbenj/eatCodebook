@@ -34,13 +34,13 @@ kennwerte.kategorial <- function(x, value_table) {
       warning("Original function only allows for non-numeric values.")
   }
 
-  for(k in unique_values){
-      if(inherits(try(werte.valid[grepl(paste0("^\\s*",k,"\\s*$") , werte.valid)] <- k ),"try-error"))  {warning("Regular expression failed for category '",k,"' of variable '",unique(value_table[["varName"]]),"'.")}
-      if(inherits(try(werte.total[grepl(paste0("^\\s*",k,"\\s*$") , werte.total)] <- k ),"try-error"))  {warning("Regular expression failed for category '",k,"' of variable '",unique(value_table[["varName"]]),"'.")}
-    }
-  werte.valid[grepl("^\\s*$" , werte.valid)] <- NA
-  werte.valid <- werte.valid[! werte.valid %in% missings  & ! is.na( werte.valid )]
-  werte.total[grepl("^\\s*$" , werte.total)] <- NA
+#  for(k in unique_values){
+#      if(inherits(try(werte.valid[grepl(paste0("^\\s*",k,"\\s*$") , werte.valid)] <- k ),"try-error"))  {warning("Regular expression failed for category '",k,"' of variable '",unique(value_table[["varName"]]),"'.")}
+#      if(inherits(try(werte.total[grepl(paste0("^\\s*",k,"\\s*$") , werte.total)] <- k ),"try-error"))  {warning("Regular expression failed for category '",k,"' of variable '",unique(value_table[["varName"]]),"'.")}
+#    }
+#  werte.valid[grepl("^\\s*$" , werte.valid)] <- NA
+#  werte.valid <- werte.valid[! werte.valid %in% missings  & ! is.na( werte.valid )]
+#  werte.total[grepl("^\\s*$" , werte.total)] <- NA
 
   # Valide und totale Fallzahlen
   N.valid <- length(werte.valid)
