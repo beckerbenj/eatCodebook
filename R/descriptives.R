@@ -33,11 +33,11 @@ cds <- function( GADSdat.obj, varinfo, verbose = TRUE) {
   fehlend <- setdiff (c( "var",   "group", "type",  "scale", "imp"), colnames(varinfo))
   if ( length(fehlend)>0) { stop("Column(s) '",paste(fehlend, collapse="', '"), "' missed in 'varinfo'.")}
   if(!length(unique(varinfo[,"var"])) == length(varinfo[,"var"])) {stop("'var' column in 'varinfo' must be unique.")}
-  not_allowed1 <- setdiff(c("variable", "scale"), varinfo[,"type"])
+  not_allowed1 <- setdiff(varinfo[,"type"], c("variable", "scale"))
   if ( length(not_allowed1)>0) { stop("Invalid entries in 'type' column of 'varinfo': '",paste(not_allowed1, collapse="', '"), "'")}
-  not_allowed2 <- setdiff(c("nominal", "ordinal", "numeric"), varinfo[,"scale"])
+  not_allowed2 <- setdiff(varinfo[,"scale"], c("nominal", "ordinal", "numeric") )
   if ( length(not_allowed2)>0) { stop("Invalid entries in 'scale' column of 'varinfo': '",paste(not_allowed2, collapse="', '"), "'")}
-  not_allowed3 <- setdiff (c("FALSE", "TRUE"), varinfo[,"imp"])
+  not_allowed3 <- setdiff (varinfo[,"imp"], c("FALSE", "TRUE") )
   if ( length(not_allowed3)>0) { stop("'imp' column in 'varinfo' must only contain 'FALSE' or 'TRUE'")}
 ### welche variablen werden ignoriert?
   vars <- c("type",  "scale", "imp")

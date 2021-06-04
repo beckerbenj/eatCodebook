@@ -17,8 +17,8 @@ kennwerte.kategorial <- function(x, value_table) {
       warning("Variable '",unique(value_table[,"varName"]), "' has class '",class(x),"' with ",length(uvd)," unique values. '",unique(value_table[,"varName"]), "' seems to stem from an open answer box in the questionnaire. Calculating descriptive statistics seems questionable.")
   }
   if(!identical(unique_values, uvd)) {
-      warning("Variable '",value_table[["varName"]],"': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. \n    'GADSdat' object: '",paste(unique_values, collapse="', '"), "'\n                data: '",paste(uvd,collapse="', '"), "'\n  Value definition from the data is used.")
-      unique_values <- uvd
+      warning("Variable '",value_table[["varName"]],"': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. \n    'GADSdat' object: '",paste(unique_values, collapse="', '"), "'\n                data: '",paste(uvd,collapse="', '"), "'")
+      unique_values <- sort(unique(c(uvd, unique_values)))
   }
 
 ### schauen, ob fuer alle empirisch vorhandenen Werte auch wertelabels vorhanden sind
@@ -47,10 +47,10 @@ kennwerte.kategorial <- function(x, value_table) {
   N.total	<- length(werte.total)
 
   # absolute Haeufigkeiten
-  werte.total.abs <- as.numeric(table(factor(werte.total, levels = unique_values) , useNA = "always"))
+  werte.total.abs <- as.numeric(table(factor(werte.total, levels = c(unique_values, missings)) , useNA = "always"))
 
   # relative Haeufigkeiten (alle Faelle)
-  werte.total.frq	<- 100* as.numeric(table(factor(werte.total, levels = unique_values) , useNA = "always")) / N.total
+  werte.total.frq	<- 100* as.numeric(table(factor(werte.total, levels = c(unique_values, missings)) , useNA = "always")) / N.total
 
   # relative Haeufigkeiten (valide Faelle)
   if(N.valid==0){
@@ -67,11 +67,11 @@ kennwerte.kategorial <- function(x, value_table) {
 
   # Formatierung und Names der totalen Werte
   werte.total.frq <- formatC(werte.total.frq, format = "f", digits = 1 )
-  names(werte.total.frq) <- paste0(c(unique_values , "sysmis" ) , ".total" )
+  names(werte.total.frq) <- paste0(c(unique_values ,missings, "sysmis" ) , ".total" )
 
   # Formatierung und Names der absoluten Werte
   werte.total.abs <- formatC(werte.total.abs, format = "f", digits = 0 )
-  names(werte.total.abs) <- paste0(c(unique_values, "sysmis" ), ".totalabs" )
+  names(werte.total.abs) <- paste0(c(unique_values, missings, "sysmis" ), ".totalabs" )
 
   ret <- c(N.valid, N.total, werte.valid.frq, werte.total.frq, werte.total.abs)
   names(ret)[1:2] <- c("N.valid", "N.total")
