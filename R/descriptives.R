@@ -28,16 +28,18 @@
 #'# tbd
 #'
 #'@export
-cds <- function( GADSdat.obj, varinfo, verbose = TRUE) {
+
+### showCallOnly: nur zum checken, welche Funktion gecalled wird
+cds <- function( GADSdat.obj, varinfo, verbose = TRUE, showCallOnly = FALSE) {
 ### checks, dass varinfo korrekt spezifiziert
   fehlend <- setdiff (c( "var",   "group", "type",  "scale", "imp"), colnames(varinfo))
   if ( length(fehlend)>0) { stop("Column(s) '",paste(fehlend, collapse="', '"), "' missed in 'varinfo'.")}
   if(!length(unique(varinfo[,"var"])) == length(varinfo[,"var"])) {stop("'var' column in 'varinfo' must be unique.")}
-  not_allowed1 <- setdiff(varinfo[,"type"], c("variable", "scale"))
+  not_allowed1 <- setdiff(na.omit(varinfo[,"type"]), c("variable", "scale", ""))
   if ( length(not_allowed1)>0) { stop("Invalid entries in 'type' column of 'varinfo': '",paste(not_allowed1, collapse="', '"), "'")}
-  not_allowed2 <- setdiff(varinfo[,"scale"], c("nominal", "ordinal", "numeric") )
+  not_allowed2 <- setdiff(na.omit(varinfo[,"scale"]), c("nominal", "ordinal", "numeric", "") )
   if ( length(not_allowed2)>0) { stop("Invalid entries in 'scale' column of 'varinfo': '",paste(not_allowed2, collapse="', '"), "'")}
-  not_allowed3 <- setdiff (varinfo[,"imp"], c("FALSE", "TRUE") )
+  not_allowed3 <- setdiff (na.omit(varinfo[,"imp"]), c("FALSE", "TRUE", "") )
   if ( length(not_allowed3)>0) { stop("'imp' column in 'varinfo' must only contain 'FALSE' or 'TRUE'")}
 ### welche variablen werden ignoriert?
   vars <- c("type",  "scale", "imp")
@@ -52,55 +54,61 @@ cds <- function( GADSdat.obj, varinfo, verbose = TRUE) {
          return(NULL)
       }
   }
-  dat <- eatGADS::extractData(GADSdat.obj, convertLabels ="numeric")
-  ret <- by(data = varinfo, INDICES = varinfo[,"group"], FUN = function (v) {varStats(GADSdat.obj=GADSdat.obj, dat=dat, sub.varinfo=v, verbose=verbose)})
+  ret <- by(data = varinfo, INDICES = varinfo[,"group"], FUN = function (v) {varStats(GADSdat.obj=GADSdat.obj, sub.varinfo=v, verbose=verbose, showCallOnly=showCallOnly)})
   return(ret)
 }
 
 
 ### showCallOnly: nur zum checken, welche Funktion gecalled wird
-varStats <- function(GADSdat.obj, dat, sub.varinfo, verbose, showCallOnly = FALSE) {
+varStats <- function(GADSdat.obj, sub.varinfo, verbose, showCallOnly = FALSE) {
 ### checks
-  if ( isFALSE(showCallOnly) && !all(sub.varinfo[,"var"] %in% colnames(dat)) ) {
-       message("Following variables from the 'varinfo' missed in GADSdat.obj: '",paste(setdiff(sub.varinfo[,"var"],colnames(dat)), collapse="', '"), "'.\nSkip collecting variable statistics for '",sub.varinfo[1,"group"],"'.")
+  if ( isFALSE(showCallOnly) && !all(sub.varinfo[,"var"] %in% colnames(GADSdat.obj[["dat"]])) ) {
+       message("Following variables from the 'varinfo' missed in GADSdat.obj: '",paste(setdiff(sub.varinfo[,"var"],colnames(GADSdat.obj[["dat"]])), collapse="', '"), "'.\nSkip collecting variable statistics for '",sub.varinfo[1,"group"],"'.")
        return(NULL)
   }
 ### Ausgabe des Variablennames auf der Konsole
-  if(isFALSE(showCallOnly) && verbose) { cat ( paste0 ( "Compute variable statistics for '",sub.varinfo[1,"group"],"'.\n")); flush.console()}
+  if(isFALSE(showCallOnly) && verbose) { cat ( paste0 ( "Compute variable statistics for '",sub.varinfo[1,"group"],"': ")); flush.console()}
 
 ### Berechnung der Kennwerte
   if(nrow(sub.varinfo)>1) {
      if ( isTRUE(sub.varinfo[1,"imp"])) {
          if ( sub.varinfo[1,"scale"] == "numeric") {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.metrisch")}
-             stats <- kennwerte.gepoolt.metrisch(datWide=dat, imputedVariableCols = sub.varinfo[,"var"])
+             if ( verbose) {cat("Use function 'kennwerte.gepoolt.metrisch'.\n")}
+             stats <- kennwerte.gepoolt.metrisch(datWide=GADSdat.obj[["dat"]], imputedVariableCols = sub.varinfo[,"var"])
          }  else  {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.kategorial")}
-             stats <- kennwerte.gepoolt.kategorial(datWide=dat, imputedVariableCols = sub.varinfo[,"var"])
+             if ( verbose) {cat("Use function 'kennwerte.gepoolt.kategorial'.\n")}
+             stats <- kennwerte.gepoolt.kategorial(datWide=GADSdat.obj[["dat"]], imputedVariableCols = sub.varinfo[,"var"])
          }
      }  else  {
 ### differenzieren, ob es skala (es gibt eine separate skalenvariale) oder fake.skala (es gibt keine separate skalenvariale) ist
          if ( "scale" %in% sub.varinfo[,"type"] ) {
              stopifnot(length(which("scale" == sub.varinfo[,"type"])) == 1)
              if ( isTRUE(showCallOnly) ) {return("kennwerte.skala")}
-             stats <- kennwerte.skala (dat=dat,scaleCol=sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"var"], variableCols=sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"], missingValues = NULL)
+             if ( verbose) {cat("Use function 'kennwerte.skala'.\n")}
+             stats <- kennwerte.skala (dat=GADSdat.obj[["dat"]],scaleCol=sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"var"], variableCols=sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"], missingValues = NULL)
          }  else  {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.skala.fake")}
-             stats <- kennwerte.skala.fake (dat=dat,variableCols=sub.varinfo[,"var"], missingValues = NULL)
+             if ( verbose) {cat("Use function 'kennwerte.skala.fake'.\n")}
+             stats <- kennwerte.skala.fake (dat=GADSdat.obj[["dat"]],variableCols=sub.varinfo[,"var"], missingValues = NULL)
          }
      }
   }  else  {
      if (sub.varinfo[,"scale"] == "nominal") {
          if ( isTRUE(showCallOnly) ) {return("kennwerte.kategorial")}
-         stats <- kennwerte.kategorial(x=dat[,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),])
+         if ( verbose) {cat("Use function 'kennwerte.kategorial'.\n")}
+         stats <- kennwerte.kategorial(x=GADSdat.obj[["dat"]][,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),])
      }
      if (sub.varinfo[,"scale"] == "numeric") {
          if ( isTRUE(showCallOnly) ) {return("kennwerte.metrisch")}
-         stats <- kennwerte.metrisch(x=dat[,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),])
+         if ( verbose) {cat("Use function 'kennwerte.metrisch'.\n")}
+         stats <- kennwerte.metrisch(x=GADSdat.obj[["dat"]][,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),])
      }
      if (sub.varinfo[,"scale"] == "ordinal") {
          if ( isTRUE(showCallOnly) ) {return("kennwerte.ordinal")}
-         stats <- kennwerte.ordinal(x=dat[,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),])
+         if ( verbose) {cat("Use function 'kennwerte.ordinal'.\n")}
+         stats <- kennwerte.ordinal(x=GADSdat.obj[["dat"]][,sub.varinfo[,"var"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.varinfo[,"var"]),])
      }
   }
 

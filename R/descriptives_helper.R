@@ -275,12 +275,14 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
 ### long format datensatz
   z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE)
 ### nur valide werte
+  cat("Analysis of valid values: ")
   res  <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = FALSE, na.rm=TRUE )
   ret  <- eatRep::report(res)
   retA <- formatC(100*ret[,"est"], format="f", digits=1)                        ### aufbereiten
   names(retA) <- paste(ret[,"parameter"], "valid", sep=".")
 ### alle Werte
   if(any(is.na(z[,"value"]))) {
+      cat("Analysis of total values: ")
       res1 <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE, na.rm=FALSE, forceTable=TRUE )
       ret1 <- eatRep::report(res1)
       weg  <- match(".NA.", ret1[,"parameter"])                                 ### Ergebnisse aufbereiten, in der richtigen Reihenfolge
@@ -293,8 +295,13 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
   bool<- !is.na(datWide[,allNam[["vc"]]])
   N.valid<- length(which(rowSums(bool) == length(allNam[["vc"]])))
   #### Output ####
-
-  ret.var <- c( N.valid=as.character(N.valid) , N.total=as.character(nrow(datWide)) , retA, sysmis.valid = "\\multic{..}", ret1A)
+  
+### felix berechnet absolute Haeufigkeiten bei imputierter Variablen ... finde ich etwas komisch,
+### aber der konsistenz zuliebe passiert es jetzt hier auch
+  absfreqs <- rowMeans(sapply(datWide[,imputedVariableCols], FUN = table, useNA="al"))
+  absf     <- as.character(round( absfreqs, digits = 0))
+  names(absf) <- paste(c(names(absfreqs)[-length(absfreqs)], "sysmis"), "totalabs", sep=".")
+  ret.var <- c( N.valid=as.character(N.valid) , N.total=as.character(nrow(datWide)) , retA, sysmis.valid = "\\multic{--}", ret1A, absf)
   return( ret.var )
 }
 
