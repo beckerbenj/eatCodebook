@@ -87,7 +87,7 @@ varStats <- function(GADSdat.obj, sub.varinfo, verbose, showCallOnly = FALSE) {
              stopifnot(length(which("scale" == sub.varinfo[,"type"])) == 1)
              if ( isTRUE(showCallOnly) ) {return("kennwerte.skala")}
              if ( verbose) {cat("Use function 'kennwerte.skala'.\n")}
-             stats <- kennwerte.skala (dat=GADSdat.obj[["dat"]],scaleCol=sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"var"], variableCols=sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"], missingValues = NULL)
+             stats <- kennwerte.skala (GADSdat.obj=GADSdat.obj,sub.varinfo=sub.varinfo)
          }  else  {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.skala.fake")}
              if ( verbose) {cat("Use function 'kennwerte.skala.fake'.\n")}

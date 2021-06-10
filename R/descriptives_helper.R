@@ -126,7 +126,7 @@ kennwerte.metrisch <- function(x, value_table) {
 
 # how to integrate variable sets (items of scales?)
 ### kennwerte.skala(dat=dat, scaleCol = "DM_erfahrung", c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
-kennwerte.skala <- function(dat,scaleCol, variableCols, missingValues = NULL) {
+kennwerte.skala <- function(GADSdat.obj,sub.varinfo) {
   # erzeugt denselben output wie die originale kennwerte.skala
   # INPUT
   #	dat: Datensatz (data.frame)
@@ -137,18 +137,31 @@ kennwerte.skala <- function(dat,scaleCol, variableCols, missingValues = NULL) {
   #	ret.var: Liste mit zwei Einträgen:
   #			 Erster Listeneintrag ist ein Vektor mit den metrischen Kennwerten der Skala (M, SD, Min, Max, Cronbachs Alpha)
   #			 Zweiter Listeneintrag ist ein data.frame mit den ordinalen Kennwerten der
+scaleCol<- sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"var"]
+variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"]
+
 # erstmal keine checks, die passieren auf hoeherer Ebene
+  dat   <- GADSdat.obj[["dat"]]
   allVar<- list(sc = scaleCol, vc = variableCols)
   allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
-### 1. Itemkennwerte umkodieren, falls noetig
-  # wenn missing values gegeben sind, daten umkodieren!
-  if(!is.null(missingValues)) {
-     for ( j in allNam[["vc"]] ) {
-         if (any(missingValues %in% dat[,j])) {
-             dat[which(dat[,j] %in% missingValues),j] <- NA
-         }
-     }
-  }
+
+# descriptives der einzelitems ... rekursiver Funktionsaufruf ... sub.varinfo kopieren und anpassen
+  svi   <- sub.varinfo
+  svi[,"group"] <- svi[,"var"]
+  items <- cds(GADSdat.obj, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE)
+  desc  <- as.matrix(do.call("cbind", items))
+  desc  <- desc[-grep("multic", desc[,1]),]
+
+# missing values aus GADSdat-objekt auslesen und in den Daten rekodieren, falls es missings gibt
+  for ( i in c(allNam[["vc"]], allNam[["sc"]]) ) {
+      sublab <- GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == i),]
+      if ( "miss" %in% sublab[,"missings"]) {
+           mv <- sublab[which(sublab[,"missings"] == "miss"),"value"]
+           rs <- paste(mv , " = " , "NA",sep="", collapse="; ")
+           dat[,i] <- car::recode(dat[,i], rs)
+      } }
+      
+
 ### 2. Skalenkennwerte (erstes Objekt der zurueckgegebenen Liste)
 ### Rueckgabe sind alles character-Werte mit unterschiedlicher Stellenanzahl, auf die gerundet wird
 ### wenn rundung etwas ganzzahliges ergibt, soll trotzdem 4.0 angezeigt werden statt 4
@@ -162,19 +175,19 @@ kennwerte.skala <- function(dat,scaleCol, variableCols, missingValues = NULL) {
   colnames(ret[[1]]) <- allNam[["sc"]]
   rownames(ret[[1]]) <- c("N.valid", "mean.valid", "sd.valid", "min.valid", "max.valid", "sysmis.totalabs", "alpha")
 ### 3. Itemkennwerte (zweites Objekt der zurueckgegebenen Liste)
-  ret2<- lapply(allNam[["vc"]], FUN = function ( vname ) {
-         data.frame ( v1 = as.character(c(length(na.omit(dat[,vname])), length(dat[,vname]),
-                                 format(round(mean( dat[,vname], na.rm=TRUE),digits = 2), nsmall = 2),
-                                 format(round(sd( dat[,vname], na.rm=TRUE),digits = 2),nsmall = 2),
-                                 format(round(length(which(is.na(dat[,vname]))) / nrow(dat),digits = 1),nsmall = 1),
-                                 length(which(is.na(dat[,vname]))),
-                                 format(round(cor(dat[,c(vname, allNam[["sc"]])], use="pair")[1,2],digits = 2), nsmall = 2))),stringsAsFactors = FALSE)})
-  ret2<- do.call("cbind", ret2)
-  colnames(ret2) <- allNam[["vc"]]
-  rownames(ret2) <- c("N.valid", "N.total", "mean.valid", "sd.valid", "sysmis.total", "sysmis.totalabs", "cor.valid")
-  ret2 <- as.matrix(ret2)                                                       ### urspruengliche Struktur von Felix replizieren
+#  ret2<- lapply(allNam[["vc"]], FUN = function ( vname ) {
+#         data.frame ( v1 = as.character(c(length(na.omit(dat[,vname])), length(dat[,vname]),
+#                                 format(round(mean( dat[,vname], na.rm=TRUE),digits = 2), nsmall = 2),
+#                                 format(round(sd( dat[,vname], na.rm=TRUE),digits = 2),nsmall = 2),
+#                                 format(round(length(which(is.na(dat[,vname]))) / nrow(dat),digits = 1),nsmall = 1),
+#                                 length(which(is.na(dat[,vname]))),
+#                                 format(round(cor(dat[,c(vname, allNam[["sc"]])], use="pair")[1,2],digits = 2), nsmall = 2))),stringsAsFactors = FALSE)})
+#  ret2<- do.call("cbind", ret2)
+#  colnames(ret2) <- allNam[["vc"]]
+#  rownames(ret2) <- c("N.valid", "N.total", "mean.valid", "sd.valid", "sysmis.total", "sysmis.totalabs", "cor.valid")
+#  ret2 <- as.matrix(ret2)                                                       ### urspruengliche Struktur von Felix replizieren
 ### 4. Rueckgabeobjet bauen
-  ret[[2]] <- ret2
+  ret[[2]] <- desc
   return(ret)}
 
 
