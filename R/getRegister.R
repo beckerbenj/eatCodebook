@@ -1,49 +1,40 @@
-get.register <- function(varue.file , sheets , fbshort, varue.info){
-  cat(paste0("ERSTELLE REGISTER.\n"))
-  flush.console()
+createRegister <- function(gadsList, keywordList){
+  #browser()
 
-  # Varue - Register
-  varue.reg <- lapply( sheets , function(d) readWorkbook ( xlsxFile = varue.file , sheet = d, startRow = 1 ) )
-  names(varue.reg) <- fbshort
+  all_reg <- lapply(gadsList , function(gads){
+    # tbd: gadsList can not be used because of scales/imputed variables?
+    single_reg
+  })
 
-  varue.reg <- lapply(fbshort , function(d) varue.register.aufbereiten(varue.reg[[d]] , varue.info[[d]]))
-  names(varue.reg) <- fbshort
-
-  return(varue.reg)
+  stop("Function not written yet.")
+  all_reg
 }
 
-#Register - Reduzierung
-varue.register.aufbereiten <- function(varue.reg , varue.info){
-  varue.reg.aufb <- as.data.frame(varue.reg[ varue.reg$Var.Name %in% varue.info$Var.Name[ varue.info$in.DS.und.SH %in% c("ja", "sh") ] ,  ] , stringsAsFactors=FALSE)
-  names(varue.reg.aufb) <- names(varue.reg)
 
-  if(any(grepl("\\s" , varue.reg.aufb$Var.Name))){
-    cat(paste0("  Die Variable/Variablen ", varue.reg.aufb$Var.Name[grepl("\\s" , varue.reg.aufb$Var.Name)] ," besitzt/besitzen Leerzeichen im Variablennamen. Diese werden entfernt.\n"))
-    flush.console()
-    varue.reg.aufb$Var.Name <- gsub("\\s" , "" , varue.reg.aufb$Var.Name)
-  }
 
-  # keine Schlagwörter
-  if(dim(varue.reg.aufb)[2]==1){
-    cat(paste0("  Es liegen keine Schlagwörter vor. Es wird kein Register erstellt.\n"))
-    flush.console()
-    varue.reg.aufb <- data.frame("Var.Name"=c("") , stringsAsFactors=FALSE)
-  } else if(all(! sapply(names(varue.reg.aufb) , function(d) any(varue.reg.aufb[[d]] %in% "x"), USE.NAMES=FALSE ) ) ) {
-    cat(paste0("  Zu keinem Schlagwort wurden Variablen zugeordnet. Es wird kein Register erstellt.\n"))
-    flush.console()
-    varue.reg.aufb <- data.frame("Var.Name"=c("") , stringsAsFactors=FALSE)
-  } else {
-    #Register - Sortierung der Variablennamen
-    cat(paste0("  Schlagwörter-Variablen-Zuordnung liegt vor.\n"))
-    flush.console()
-    cat(paste0("   Variablen werden nach Gliederung und Reihenfolge aus der Variableninformation sortiert.\n"))
-    flush.console()
-    varue.reg.aufb <- varue.reg.aufb[ order( sapply( varue.reg.aufb$Var.Name, function(d) which( varue.info$Var.Name[ varue.info$Var.Name %in% varue.reg.aufb$Var.Name ] %in% d ) ) ), ]
+getRegister <- function(filePath){
+  #browser()
+  sheet_names <- openxlsx::getSheetNames(filePath)
+  names(sheet_names) <- sheet_names
 
-    cat(paste0("   Sonderzeichen in den Schlagwörtern bearbeiten.\n"))
-    flush.console()
-    names(varue.reg.aufb) <- sonderzeichen.aufbereiten(names(varue.reg.aufb))
+  all_reg <- lapply(sheet_names , function(sheet_name){
+    single_reg <- openxlsx::readWorkbook(xlsxFile = filePath , sheet = sheet_name, startRow = 1)
+    names(single_reg) <- sonderzeichen.aufbereiten(names(single_reg))
 
-  }
-  return(varue.reg.aufb)
+    #varue.reg.aufb <- varue.reg.aufb[ order( sapply( varue.reg.aufb$Var.Name, function(d) which( varue.info$Var.Name[ varue.info$Var.Name %in% varue.reg.aufb$Var.Name ] %in% d ) ) ), ]
+
+    ## checks
+    if(ncol(single_reg) <= 3) stop("Keywords are missing.")
+    if(!any(single_reg[!is.na(single_reg)] == "x")) stop("No keywords assigned.")
+
+    single_reg
+  })
+
+  all_reg
 }
+
+## Remarks/ideas:
+# -----------------------------------
+# fit-checks vs. other variable information in separate function (maybe when it all comes together)
+# sorting automatically during creation by sorting in data set
+

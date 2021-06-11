@@ -2,7 +2,7 @@
 get.varue.info <- function(varue.file , sheets, fbshort , varue.cols=c("Var.Name" , "in.DS.und.SH" , "Layout" , "LabelSH" , "Anmerkung.Var" , "Gliederung" , "Reihenfolge" , "Titel" , "rekodiert","QuelleSH" , "Instruktionen" , "Hintergrundmodell", "HGM.Variable.erstellt.aus", "HGM.Reihenfolge", "intern.extern", "Seitenumbruch.im.Inhaltsverzeichnis" )){
   cat(paste0("Einlesen der Variableninfos.\n"))
   flush.console()
-  varue.info <- lapply( sheets , function(d) readWorkbook ( xlsxFile = varue.file , sheet = d, startRow = 1 ) )
+  varue.info <- lapply( sheets , function(d) openxlsx::readWorkbook ( xlsxFile = varue.file , sheet = d, startRow = 1 ) )
   varue.info <- lapply( 1:length(fbshort) , function(d) varue.info[[d]][, varue.cols] )
   names(varue.info) <- fbshort
 
