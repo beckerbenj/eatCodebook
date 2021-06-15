@@ -24,3 +24,6 @@ library(eatCodebook)
 ## basic example code
 ```
 
+## potential future features
+
+- Missing causes with frequencies for metric variables and scales?
