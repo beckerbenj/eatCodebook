@@ -1,6 +1,4 @@
 ##### REGISTER #####
-cat(paste0(" LADE REGISTER-FUNKTIONEN.\n"))
-flush.console()
 # Funktion zur Aufbereitung der Seitenzahlen im Register
 pages <- function( numbers , fb , varue.reg, double.vars) {
   # INPUT:

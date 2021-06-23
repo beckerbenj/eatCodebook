@@ -5,7 +5,7 @@
 [![R-CMD-check](https://github.com/beckerbenj/eatCodebook/workflows/R-CMD-check/badge.svg)](https://github.com/beckerbenj/eatCodebook/actions)
 <!-- badges: end -->
 
-eatCodebook allows the automatic creation of nicely formatted codebook.
+eatCodebook allows the automatic creation of a nicely formatted codebook via `LaTeX`.
 
 ## Installation
 
@@ -24,3 +24,6 @@ library(eatCodebook)
 ## basic example code
 ```
 
+## potential future features
+
+- Missing causes with frequencies for metric variables and scales?
