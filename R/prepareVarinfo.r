@@ -1,5 +1,8 @@
+### Gruppenzuordnung fuer nicht-imputierte Variablen:
+###     - Name der Skala wird rausgesucht
+###     - alle Variablen, die mit derselben buchstabenkombination beginnen, werden als zugehoerige Items behandelt (= gehoeren zu einer Gruppe)
 ### enriches labels from GADSdat-object with plain information necessary for codebook generation
-prepareVarinfo <- function ( GADSdat.obj, varsToExclude = NULL, impExpr = "IMPUTATION[[:digit:]]{1,2}$", scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp") {
+prepareVarinfo <- function ( GADSdat.obj, varsToExclude = NULL, impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", verbose = TRUE) {
        weg  <- setdiff(varsToExclude,GADSdat.obj[["labels"]][,"varName"])
        if ( length(weg)>0) { message("Following ",length(weg), " variable(s) which should be excluded do exists in GADSdat.obj: '",paste(weg, collapse="', '"), "'.")}
        vari <- GADSdat.obj[["labels"]][!duplicated(GADSdat.obj[["labels"]][,"varName"]),c("varName","varLabel")]
@@ -7,7 +10,7 @@ prepareVarinfo <- function ( GADSdat.obj, varsToExclude = NULL, impExpr = "IMPUT
             vari <- vari[-match(setdiff(varsToExclude, weg), vari[,"varName"]),]
        }
        vari[,"imp"] <- FALSE
-       vari[grep(impExpr, vari[,"varLabel"]),"imp"] <- TRUE
+       for ( i in impExpr) {  vari[grep(i, vari[,"varLabel"]),"imp"] <- TRUE  }
        vari[,"type"] <- "variable"
        vari[grep(scaleExpr, vari[,"varLabel"]),"type"] <- "scale"
        vari <- do.call("rbind", by(data = vari, INDICES = vari[,"varName"], FUN = function ( z ) {
@@ -16,39 +19,39 @@ prepareVarinfo <- function ( GADSdat.obj, varsToExclude = NULL, impExpr = "IMPUT
                     mis    <- GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == z[["varName"]]),]
                     mis    <- mis[which(mis[,"missings"] == "miss"),"value"]
                     nonmis <- sort(setdiff(unique(GADSdat.obj[["dat"]][,z[["varName"]]]), mis))
-                    if ( !all(nonmis == as.integer(nonmis)) ) {
-                         scale <- "numeric"
+                    if ( any(is.na(as.integer(nonmis))) ) {
+                         warning(paste0("Variable '",z[["varName"]],"': Missing values in sorted integer entries found. This should only occur for pseudo-numeric values, i.e. id variables."))
+                         scale <- NA
                     }  else  {
-                         vgl   <- min(nonmis) : max(nonmis)
-                         if ( length(vgl) == length(nonmis) && all(nonmis == (min(nonmis) : max(nonmis)) ) ) {
-                              scale <- "ordinal"
-                         }  else {
-                              scale <- "nominal"
-                         }
+                        if ( !all(nonmis == as.integer(nonmis)) ) {
+                             scale <- "numeric"
+                        }  else  {
+                             vgl   <- min(nonmis) : max(nonmis)
+                             if ( length(vgl) == length(nonmis) && all(nonmis == (min(nonmis) : max(nonmis)) ) ) {
+                                  scale <- "ordinal"
+                             }  else {
+                                  scale <- "nominal"
+                             }
+                        }
                     }
                }
                z[,"scale"] <- scale
                return(z)}))
-       # die group-zuordnung zu vergeben, ist komplizierter
-       # fuer imputierte variablen sollte es gehen,
-       # aber bei skalen, z.B. bei Sswert01a, Sswert01b, Sswert01c, Sswert01d, Sswert01e, Sswert
-       # aus originaler varinfor wirds bloed
-       length(unique(vari[,"varLabel"]))
+    ### Gruppenzuordnung vergeben, das geschieht fuer imputierte und nicht imputierte Variablen separat
+       vari <- do.call("rbind", by(data = vari, INDICES = vari[,"imp"], FUN = function ( v ) {
+               if ( isFALSE(v[1,"imp"]) ) {                                     ### hier begintn die Behandlung fuer nicht-imputierte Variablen
+                    v[,"group"] <- NA                                           ### Gruppenzuhehoerigkeit initialisieren
+                    scales<- v[which(v[,"type"] == "scale"),"varName"]          ### das sind die Namen der Skalen, zu jeder werden jetzt die Items herausgesucht
+                    for ( sc in scales) {
+                          items <- setdiff(v[which(substr(v[,"varName"],1,nchar(sc)) == sc),"varName"], sc)
+                          if ( length(items)==0) {warning(paste0("Cannot found any non-imputed items for scale '",sc,"' (not imputed)."))}
+                          if (verbose) {cat(paste0("Scale '",sc,"' (not imputed): Found following ",length(items)," items: '",paste(items, collapse="', '"),"'.\n"))}
+                          v[eatTools::whereAre(c(items, sc), v[,"varName"], verbose=FALSE),"group"] <- sc
+                    }
+                    v[which(is.na(v[,"group"])),"group"] <- v[which(is.na(v[,"group"])),"varName"]
+               }  else  {
+                    v[,"group"] <- eatTools::halveString(string = v[,"varName"], pattern = varNameSeparatorImp, first = !lastOccurrence)[,1]
+               }
+               return(v)}))
        return(vari)}
-               
 
-#      match("sfb_b", vari[,"varName"])
-
-
-
-#       vars <- setdiff(unique(GADSdat.obj[["labels"]][,"varName"]), varsToExclude)
-
-
-#       View(GADSdat.obj[["labels"]])
-       
-       
-       
-#       test <- c("a", "a imp", "a IMPUTATION2", "ba IMPUTATION12", "qw IMPUTATION123")
-#       grep(impExpr, test)
-
-# ?regexpr
