@@ -14,8 +14,8 @@ getStructure <- function(filePath){
     single_struc <- openxlsx::readWorkbook(xlsxFile = filePath , sheet = sheet_name, startRow = 1)[, 1:2]
 
     names(single_struc) <- sonderzeichen.aufbereiten(names(single_struc))
-    varue.gliederung$Titel <- gsub("[" , "{[" , single_struc$Titel , fixed=TRUE)
-    varue.gliederung$Titel <- gsub("]" , "]}" , single_struc$Titel , fixed=TRUE)
+    single_struc$Titel <- gsub("[" , "{[" , single_struc$Titel , fixed=TRUE)
+    single_struc$Titel <- gsub("]" , "]}" , single_struc$Titel , fixed=TRUE)
 
     ## checks
 
