@@ -12,15 +12,17 @@
 # cds(gd, varinfo)
 
 
-#### Apply Change Meta data
+####
 #############################################################################
 #' Calculate descriptive statistics.
 #'
 #' Calculate descriptive statistics which should be included in the codebook.
 #'
 #'
-#'@param GADSdat.obj Object of class GADSdat, created by import_spss from the eatGADS package, for example
-#'@param varinfo data frame with variable information
+#'@param GADSdat.obj Object of class GADSdat, created by \code{import_spss} from the \code{eatGADS} package, for example
+#'@param varinfo \code{data.frame} with variable information
+#'@param verbose Cat to console?
+#'@param showCallOnly tbd
 #'
 #'@return Returns a list of descriptive statistics.
 #'

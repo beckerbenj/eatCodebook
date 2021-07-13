@@ -2,6 +2,29 @@
 ###     - Name der Skala wird rausgesucht
 ###     - alle Variablen, die mit derselben buchstabenkombination beginnen, werden als zugehoerige Items behandelt (= gehoeren zu einer Gruppe)
 ### enriches labels from GADSdat-object with plain information necessary for codebook generation
+
+####
+#############################################################################
+#' Prepare variable information.
+#'
+#' Create a variable information data.frame.
+#'
+#'
+#'@param GADSdat.obj Object of class GADSdat, created by \code{import_spss} from the \code{eatGADS} package, for example
+#'@param varsToExclude tbd
+#'@param impExpr Cat to console?
+#'@param scaleExpr Cat to console?
+#'@param varNameSeparatorImp tbd
+#'@param lastOccurence tbd
+#'@param groupSuffixImp tbd
+#'@param verbose tbd
+#'
+#'@return Returns a \code{data.frame} with variable information.
+#'
+#'@examples
+#'varInfo <- prepareVarinfo(eatGADS::pisa, impExpr = "Plausible Value")
+#'
+#'@export
 prepareVarinfo <- function ( GADSdat.obj, varsToExclude = NULL, impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", verbose = TRUE) {
        weg  <- setdiff(varsToExclude,GADSdat.obj[["labels"]][,"varName"])
        if ( length(weg)>0) { message("Following ",length(weg), " variable(s) which should be excluded do exists in GADSdat.obj: '",paste(weg, collapse="', '"), "'.")}
