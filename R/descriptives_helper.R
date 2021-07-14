@@ -137,8 +137,8 @@ kennwerte.skala <- function(GADSdat.obj,sub.varinfo) {
   #	ret.var: Liste mit zwei Einträgen:
   #			 Erster Listeneintrag ist ein Vektor mit den metrischen Kennwerten der Skala (M, SD, Min, Max, Cronbachs Alpha)
   #			 Zweiter Listeneintrag ist ein data.frame mit den ordinalen Kennwerten der
-scaleCol<- sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"var"]
-variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"]
+scaleCol<- sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"varName"]
+variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"varName"]
 
 # erstmal keine checks, die passieren auf hoeherer Ebene
   dat   <- GADSdat.obj[["dat"]]
@@ -147,7 +147,7 @@ variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"]
 
 # descriptives der einzelitems ... rekursiver Funktionsaufruf ... sub.varinfo kopieren und anpassen
   svi   <- sub.varinfo
-  svi[,"group"] <- svi[,"var"]
+  svi[,"group"] <- svi[,"varName"]
   items <- cds(GADSdat.obj, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE)
   desc  <- as.matrix(do.call("cbind", items))
   desc  <- desc[-grep("multic", desc[,1]),]
