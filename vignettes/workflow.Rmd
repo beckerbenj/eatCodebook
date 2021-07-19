@@ -46,7 +46,7 @@ showFunctions
 
 # acutally calculate descriptives
 descStatistics <- cds(GADSdat.obj = eatGADS::pisa, varinfo = varinfo_edited, showCallOnly = FALSE)
-descrStatistics[[50]]
+descStatistics[[50]]
 ```
 
 
