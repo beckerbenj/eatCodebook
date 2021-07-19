@@ -69,7 +69,7 @@ varStats <- function(GADSdat.obj, sub.varinfo, verbose, showCallOnly = FALSE) {
        return(NULL)
   }
 ### Ausgabe des Variablennames auf der Konsole
-  if(isFALSE(showCallOnly) && verbose) { cat ( paste0 ( "Compute variable statistics for '",sub.varinfo[1,"group"],"': ")); flush.console()}
+  if(isFALSE(showCallOnly) && verbose) { cat ( paste0 ( "Compute variable statistics for '",sub.varinfo[1,"group"],"': ")); stats::flush.console()}
 
 ### Berechnung der Kennwerte
   if(nrow(sub.varinfo)>1) {
