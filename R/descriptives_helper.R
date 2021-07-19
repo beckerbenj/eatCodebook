@@ -5,13 +5,13 @@
 
 
 kennwerte.kategorial <- function(x, value_table) {
-  missings <- na.omit(value_table[value_table$missings == "miss", "value"])
+  missings <- stats::na.omit(value_table[value_table$missings == "miss", "value"])
   unique_values <- value_table[c(which(is.na(value_table[,"missings"])),which(value_table[,"missings"] == "valid")),"value"]
-  
+
 ### wenn unique_values nicht aus dem labels-objekt ausgelesen werden koennen (etwa weil sie in der SPSS-datei nicht definiert waren)
 ### muessen sie aus den Daten ausgelesen werden
-  uvd  <- sort(setdiff(na.omit(unique(x)), missings))
-  
+  uvd  <- sort(setdiff(stats::na.omit(unique(x)), missings))
+
 ### check, ob es sich um freie antwortfelder handelt
   if( !"numeric" %in% class(x) && length(uvd)>50) {
       warning("Variable '",unique(value_table[,"varName"]), "' has class '",class(x),"' with ",length(uvd)," unique values. '",unique(value_table[,"varName"]), "' seems to stem from an open answer box in the questionnaire. Calculating descriptive statistics seems questionable.")
@@ -82,7 +82,7 @@ kennwerte.kategorial <- function(x, value_table) {
 kennwerte.ordinal <- function(x, value_table) {
   cat_values <- kennwerte.kategorial(x, value_table)
 
-  missings <- na.omit(value_table[value_table[,"missings"] == "miss", "value"])
+  missings <- stats::na.omit(value_table[value_table[,"missings"] == "miss", "value"])
   werte.valid <- x[!x %in% missings  & ! is.na(x)]
 
   #### Berechnung der metrischen Kennwerte ####
@@ -91,7 +91,7 @@ kennwerte.ordinal <- function(x, value_table) {
   names(mean.valid) <- "mean.valid"
 
   # Standardabweichung
-  sd.valid <- formatC(sd(werte.valid), format = "f", digits = 2)
+  sd.valid <- formatC(stats::sd(werte.valid), format = "f", digits = 2)
   names(sd.valid) <- "sd.valid"
 
   c(cat_values["N.valid"], cat_values["N.total"], mean.valid , sd.valid ,
@@ -109,12 +109,12 @@ kennwerte.ordinal.skala <- function(x, value_table) {
 
 
 kennwerte.metrisch <- function(x, value_table) {
-  missings <- na.omit(value_table[value_table$missings == "miss", "value"])
+  missings <- stats::na.omit(value_table[value_table$missings == "miss", "value"])
   werte.valid <- x[!x %in% missings  & ! is.na(x)]
 
   N.valid <- length(werte.valid)
   mean.valid <- formatC(mean(werte.valid), format = "f", digits = 2 )
-  sd.valid <- formatC(sd(werte.valid), format = "f", digits = 2 )
+  sd.valid <- formatC(stats::sd(werte.valid), format = "f", digits = 2 )
   min.valid <- formatC(min(werte.valid), format = "f", digits = 1 )
   max.valid <- formatC(max(werte.valid), format = "f", digits = 1 )
   sysmis.totalabs <- length(which(is.na(x)))
@@ -137,8 +137,8 @@ kennwerte.skala <- function(GADSdat.obj,sub.varinfo) {
   #	ret.var: Liste mit zwei Einträgen:
   #			 Erster Listeneintrag ist ein Vektor mit den metrischen Kennwerten der Skala (M, SD, Min, Max, Cronbachs Alpha)
   #			 Zweiter Listeneintrag ist ein data.frame mit den ordinalen Kennwerten der
-scaleCol<- sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"var"]
-variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"]
+scaleCol<- sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"varName"]
+variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"varName"]
 
 # erstmal keine checks, die passieren auf hoeherer Ebene
   dat   <- GADSdat.obj[["dat"]]
@@ -147,7 +147,7 @@ variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"]
 
 # descriptives der einzelitems ... rekursiver Funktionsaufruf ... sub.varinfo kopieren und anpassen
   svi   <- sub.varinfo
-  svi[,"group"] <- svi[,"var"]
+  svi[,"group"] <- svi[,"varName"]
   items <- cds(GADSdat.obj, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE)
   desc  <- as.matrix(do.call("cbind", items))
   desc  <- desc[-grep("multic", desc[,1]),]
@@ -160,14 +160,14 @@ variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"var"]
            rs <- paste(mv , " = " , "NA",sep="", collapse="; ")
            dat[,i] <- car::recode(dat[,i], rs)
       } }
-      
+
 
 ### 2. Skalenkennwerte (erstes Objekt der zurueckgegebenen Liste)
 ### Rueckgabe sind alles character-Werte mit unterschiedlicher Stellenanzahl, auf die gerundet wird
 ### wenn rundung etwas ganzzahliges ergibt, soll trotzdem 4.0 angezeigt werden statt 4
-  ret <- list(data.frame ( v1 = as.character(c(length(na.omit(dat[,allNam[["sc"]]])),
+  ret <- list(data.frame ( v1 = as.character(c(length(stats::na.omit(dat[,allNam[["sc"]]])),
                                  format(round(mean( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 2), nsmall = 2),
-                                 format(round(sd( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 2),nsmall = 2),
+                                 format(round(stats::sd( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 2),nsmall = 2),
                                  format(round(min( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 1),nsmall = 1),
                                  format(round(max( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 1),nsmall = 1),
                                  length(which(is.na(dat[,allNam[["sc"]]]))),
@@ -213,9 +213,9 @@ kennwerte.skala.fake <- function(dat,variableCols, missingValues = NULL) {
   allValues <- names(eatTools::tableUnlist(dat[,allNam[["vc"]]]))
   ret2<- lapply(allNam[["vc"]], FUN = function ( vname ) {
          tab     <- eatTools::tablePattern(dat[,vname], pattern = allValues)
-         results <- data.frame ( v1 = as.character(c(length(na.omit(dat[,vname])), length(dat[,vname]),
+         results <- data.frame ( v1 = as.character(c(length(stats::na.omit(dat[,vname])), length(dat[,vname]),
                                  format(round(mean( dat[,vname], na.rm=TRUE),digits = 2), nsmall = 2),
-                                 format(round(sd( dat[,vname], na.rm=TRUE),digits = 2),nsmall = 2),
+                                 format(round(stats::sd( dat[,vname], na.rm=TRUE),digits = 2),nsmall = 2),
                                  eatTools::crop(format(round( 100*as.vector(tab/sum(tab)) ,digits = 2),nsmall = 2)),
                                  eatTools::crop(format(round(100*length(which(is.na(dat[,vname]))) / nrow(dat),digits = 2),nsmall = 2)),
                                  as.vector(tab),
@@ -256,7 +256,7 @@ kennwerte.gepoolt.metrisch <- function( datWide, imputedVariableCols) {
 ### Berechnung der gepoolten Kennwerte
   means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  na.rm = TRUE )
   resM  <- eatRep::report(means, exclude = "var")
-  
+
 # Minimum - kleinster Wert aller aufsummierten Imputationswerte einer Person
   min.valid <- formatC ( min( rowSums(datWide[, allNam[["vc"]]] , na.rm = FALSE )/length(allNam[["vc"]]) , na.rm=TRUE), format = "f" , digits = 1 )
 
@@ -308,7 +308,7 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
   bool<- !is.na(datWide[,allNam[["vc"]]])
   N.valid<- length(which(rowSums(bool) == length(allNam[["vc"]])))
   #### Output ####
-  
+
 ### felix berechnet absolute Haeufigkeiten bei imputierter Variablen ... finde ich etwas komisch,
 ### aber der konsistenz zuliebe passiert es jetzt hier auch
   absfreqs <- rowMeans(sapply(datWide[,imputedVariableCols], FUN = table, useNA="al"))

@@ -15,7 +15,7 @@
 #'@param impExpr Cat to console?
 #'@param scaleExpr Cat to console?
 #'@param varNameSeparatorImp tbd
-#'@param lastOccurence tbd
+#'@param lastOccurrence tbd
 #'@param groupSuffixImp tbd
 #'@param verbose tbd
 #'
@@ -72,8 +72,9 @@ prepareVarinfo <- function ( GADSdat.obj, varsToExclude = NULL, impExpr = c("IMP
                           v[eatTools::whereAre(c(items, sc), v[,"varName"], verbose=FALSE),"group"] <- sc
                     }
                     v[which(is.na(v[,"group"])),"group"] <- v[which(is.na(v[,"group"])),"varName"]
-               }  else  {
-                    v[,"group"] <- eatTools::halveString(string = v[,"varName"], pattern = varNameSeparatorImp, first = !lastOccurrence)[,1]
+                    v[,"group"] <- paste(v[,"group"], "notImputed",sep="_")
+               }  else  {                                                       ### hier beginnt die Behandlung fuer imputierte Variablen
+                    v[,"group"] <- paste(eatTools::halveString(string = v[,"varName"], pattern = varNameSeparatorImp, first = !lastOccurrence)[,1], "imputed",sep="_")
                }
                return(v)}))
        return(vari)}

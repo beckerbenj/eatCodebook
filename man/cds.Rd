@@ -7,7 +7,7 @@
 cds(GADSdat.obj, varinfo, verbose = TRUE, showCallOnly = FALSE)
 }
 \arguments{
-\item{GADSdat.obj}{Object of class GADSdat, created by \code{import_spss} from the \code{eatGADS} package, for example}
+\item{GADSdat.obj}{Object of class \code{GADSdat}, created for example by \code{import_spss} from the \code{eatGADS} package.}
 
 \item{varinfo}{\code{data.frame} with variable information}
 
