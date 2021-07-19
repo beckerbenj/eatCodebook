@@ -26,11 +26,11 @@ prepareVarinfo(
 
 \item{varNameSeparatorImp}{tbd}
 
+\item{lastOccurrence}{tbd}
+
 \item{groupSuffixImp}{tbd}
 
 \item{verbose}{tbd}
-
-\item{lastOccurence}{tbd}
 }
 \value{
 Returns a \code{data.frame} with variable information.

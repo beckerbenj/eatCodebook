@@ -15,7 +15,7 @@
 #'@param impExpr Cat to console?
 #'@param scaleExpr Cat to console?
 #'@param varNameSeparatorImp tbd
-#'@param lastOccurence tbd
+#'@param lastOccurrence tbd
 #'@param groupSuffixImp tbd
 #'@param verbose tbd
 #'

@@ -19,7 +19,7 @@
 #' Calculate descriptive statistics which should be included in the codebook.
 #'
 #'
-#'@param GADSdat.obj Object of class GADSdat, created by \code{import_spss} from the \code{eatGADS} package, for example
+#'@param GADSdat.obj Object of class \code{GADSdat}, created for example by \code{import_spss} from the \code{eatGADS} package.
 #'@param varinfo \code{data.frame} with variable information
 #'@param verbose Cat to console?
 #'@param showCallOnly tbd
@@ -37,11 +37,11 @@ cds <- function( GADSdat.obj, varinfo, verbose = TRUE, showCallOnly = FALSE) {
   fehlend <- setdiff (c( "varName",   "group", "type",  "scale", "imp"), colnames(varinfo))
   if ( length(fehlend)>0) { stop("Column(s) '",paste(fehlend, collapse="', '"), "' missed in 'varinfo'.")}
   if(!length(unique(varinfo[,"varName"])) == length(varinfo[,"varName"])) {stop("'varName' column in 'varinfo' must be unique.")}
-  not_allowed1 <- setdiff(na.omit(varinfo[,"type"]), c("variable", "scale", ""))
+  not_allowed1 <- setdiff(stats::na.omit(varinfo[,"type"]), c("variable", "scale", ""))
   if ( length(not_allowed1)>0) { stop("Invalid entries in 'type' column of 'varinfo': '",paste(not_allowed1, collapse="', '"), "'")}
-  not_allowed2 <- setdiff(na.omit(varinfo[,"scale"]), c("nominal", "ordinal", "numeric", "") )
+  not_allowed2 <- setdiff(stats::na.omit(varinfo[,"scale"]), c("nominal", "ordinal", "numeric", "") )
   if ( length(not_allowed2)>0) { stop("Invalid entries in 'scale' column of 'varinfo': '",paste(not_allowed2, collapse="', '"), "'")}
-  not_allowed3 <- setdiff (na.omit(varinfo[,"imp"]), c("FALSE", "TRUE", "") )
+  not_allowed3 <- setdiff (stats::na.omit(varinfo[,"imp"]), c("FALSE", "TRUE", "") )
   if ( length(not_allowed3)>0) { stop("'imp' column in 'varinfo' must only contain 'FALSE' or 'TRUE'")}
 ### welche variablen werden ignoriert?
   vars <- c("type",  "scale", "imp")
