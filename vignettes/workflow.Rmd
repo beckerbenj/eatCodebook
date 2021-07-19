@@ -1,0 +1,59 @@
+---
+title: "General Workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{General Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(eatCodebook)
+```
+
+Create a so called `varinfo` for an `GADSdat` object.
+
+```{r prepareVarinfo}
+varinfo <- prepareVarinfo(GADSdat.obj = eatGADS::pisa)
+```
+
+Modify it (export to excel, re import)
+
+```{r export varinfo, eval=FALSE}
+eatAnalysis::write_xlsx(varinfo, "file_path/varinfo.xlsx")
+varinfo_edited <- readxl::read_excel("file_path/varinfo.xlsx")
+```
+
+```{r edit varinfo, echo=FALSE}
+varinfo_edited <- varinfo
+```
+
+
+Use `varinfo` to calculate descriptive statistics
+
+```{r calculate descr}
+# just show function calls
+showFunctions <- cds(GADSdat.obj = gadsDat, varinfo = varinfo_edited, showCallOnly = TRUE)
+showFunctions <- data.frame(varName = names(showFunctions), functionName = as.vector(showFunctions), stringsAsFactors = FALSE)
+showFunctions
+
+# acutally calculate descriptives
+descStatistics <- cds(GADSdat.obj = eatGADS::pisa, varinfo = varinfo_edited, showCallOnly = FALSE)
+descrStatistics[[50]]
+```
+
+
+Use `varinfo` to create various other input templates
+
+```{r create templates}
+# register
+# structure
+# value info
+```

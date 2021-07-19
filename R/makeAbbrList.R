@@ -1,59 +1,28 @@
-##############################################
-### TEXT-ELEMENTE ###
-##############################################
-
-
-
-makeMetadaten <- function(varue.file , sheet){
-  cat(paste0("Skript für Metadaten erstellen.\n"))
-  flush.console()
-  # Skript für Metadaten
-  # YRNTCSH! - Metadaten in der Varue anpassen
-
-  cat(paste0(" Metadaten einlesen.\n"))
-  flush.console()
-  varue.meta <- readWorkbook (xlsxFile = varue.file , sheet = "Metadaten", startRow = 1 )
-
-  cat(paste0(" Metadaten aufbereiten.\n"))
-  flush.console()
-  for( i in names(varue.meta)){
-    if(is.na(varue.meta[,i])) varue.meta[,i] <- ""
-    if(is.null(varue.meta[,i])) varue.meta[,i] <- ""
-
-    varue.meta[,i] <- sonderzeichen.aufbereiten(varue.meta[,i])
-  }
-  cols <- c("Title" , "Author" , "Keywords" , "Subject")
-  if(any(! cols %in% names(varue.meta))){
-    warning(paste0("Die Spalte/Spalten " , paste0(cols[! cols %in% names(varue.meta)] , collapse=", ") , " ist/sind nicht in der Übersicht der Metadaten und wird/werden auf \"-\" gesetzt.\n"))
-    for(s in cols[! cols %in% names(varue.meta)]){
-      varue.meta[,s] <- "-"
-    }
-  }
-
-  skript <- c( paste0("\\Title{",varue.meta$Title,"}"),
-               paste0("\\Author{",varue.meta$Author,"}"),
-               paste0("\\Keywords{",varue.meta$Keywords,"}"),
-               paste0("\\Subject{",varue.meta$Subject,"}"))
-
-  return(skript)
-}
 
 
 #### ABKÜRZUNGS- UND HINTERGRUNDMODELLTABELLE ####
+
+####
+#############################################################################
+#' Create abbreviation list.
+#'
+#' Create abbreviation lists.
+#'
+#'@param logoFile Path to the graphic file.
+#'@param maintitle Main title of the document.
+#'@param subtitle Sub title of the document.
+#'@param authors Authors of the document.
+#'@param addAuthors Additional contributers to the document.
+#'@param schriftenreihe Schriftenreihe of the document.
+#'@param bibinfo Bibiolografic info of the document.
+#'
+#'@return Returns a latex snippet.
+#'
+#'@examples
+#'tbd
+#'
+#'@export
 makeAbkVerz <- function(varue.file , sheets=c("Akronyme" , "Statistische Formelzeichen") , headings=list("Akronyme"=c( "Abkürzung", "Bedeutung") , "Statistische Formelzeichen"=c( "Symbol", "Bedeutung")) , captions=list("Akronyme"=c( "Abkürzungen") , "Statistische Formelzeichen"=c( "Statistische Formelzeichen"))  , sort.entries=c(TRUE,TRUE)){
-
-  cat(paste0("ERSTELLE ABKÜRZUNGSVERZEICHNIS.\n"))
-  flush.console()
-
-  # Reihenfolge der Headings ist wichtig
-  if(is.null(sheets)){
-    return(null)
-  }
-
-  if(!file.exists(varue.file)){
-    warning(paste0(" Der angebenene Pfad für die Varue (" , varue.file , ") existiert nicht. Es wird NULL zurückgegeben.\n\n"))
-    return(null)
-  }
 
   names(sort.entries) <- sheets
 
