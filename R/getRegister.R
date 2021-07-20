@@ -1,17 +1,18 @@
-createRegister <- function(gadsList, keywordList){
-  #browser()
 
-  all_reg <- lapply(gadsList , function(gads){
-    # tbd: gadsList can not be used because of scales/imputed variables?
-    single_reg
-  })
-
-  stop("Function not written yet.")
-  all_reg
-}
-
-
-
+####
+#############################################################################
+#' Import register excel.
+#'
+#' Import register excel.
+#'
+#'@param filePath Path to excel file.
+#'
+#'@return Register.
+#'
+#'@examples
+#'tbd
+#'
+#'@export
 getRegister <- function(filePath){
   #browser()
   sheet_names <- openxlsx::getSheetNames(filePath)

@@ -1,10 +1,3 @@
-createStructure <- function(namesVec){
-  names(namesVec) <- namesVec
-  all_reg <- lapply(namesVec , function(nam){
-    data.frame(Titel = NA, Ebene = NA)
-  })
-  all_reg
-}
 
 getStructure <- function(filePath){
   sheet_names <- openxlsx::getSheetNames(filePath)

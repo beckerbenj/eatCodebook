@@ -1,6 +1,35 @@
-get.lit.info <- function(varue.file , sheets , lit.cols=c( "Kurzangabe" , "Langangabe" , "in.Literaturverzeichnis" )){
-  varue.lit <- readWorkbook (xlsxFile = varue.file , sheet = sheets, startRow = 1 ) # Nur benötige Spalten; Ab erster Zeile beginnen --> Spalten bekommen richtige Überschrift
-  varue.lit <- varue.lit[, lit.cols]
 
-  return(varue.lit)
+####
+#############################################################################
+#' Create literature template.
+#'
+#' Create literature template.
+#'
+#'
+#'@return Literature template.
+#'
+#'@examples
+#'tbd
+#'
+#'@export
+createLitinfo <- function(){
+  data.frame(Kurzangabe = character(), Langangabe = character(), in_Literaturverzeichnis = character())
+}
+
+####
+#############################################################################
+#' Import register excel.
+#'
+#' Import register excel.
+#'
+#'@param filePath Path to excel file.
+#'
+#'@return Register.
+#'
+#'@examples
+#'tbd
+#'
+#'@export
+getLitinfo <- function(filePath){
+  readWorkbook(xlsxFile = filePath, startRow = 1 )
 }
