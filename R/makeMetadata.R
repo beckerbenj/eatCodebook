@@ -41,7 +41,7 @@ makeMetadata <- function(filePath){
   }
   cols <- c("Title" , "Author" , "Keywords" , "Subject")
   if(any(! cols %in% names(varue.meta))){
-    warning(paste0("Die Spalte/Spalten " , paste0(cols[! cols %in% names(varue.meta)] , collapse=", ") , " ist/sind nicht in der Übersicht der Metadaten und wird/werden auf \"-\" gesetzt.\n"))
+    warning(paste0("Die Spalte/Spalten " , paste0(cols[! cols %in% names(varue.meta)] , collapse=", ") , " ist/sind nicht in der Uebersicht der Metadaten und wird/werden auf \"-\" gesetzt.\n"))
     for(s in cols[! cols %in% names(varue.meta)]){
       varue.meta[,s] <- "-"
     }

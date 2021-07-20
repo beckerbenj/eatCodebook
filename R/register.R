@@ -3,22 +3,22 @@
 pages <- function( numbers , fb , varue.reg, double.vars) {
   # INPUT:
   #	numbers: numerischer Vektor, numerische Position der Variablen im Skalenhandbuch
-  #	fb: Character, Fragebogenküzel aus fbshort
-  #	varue.reg: data.frame, Informationen zum Register: data.frame, Spalten sind Schlagwörter, die im Register aufgelistet sind,
-  #			   Zeilen sind VarNamen. Einträge sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
+  #	fb: Character, Fragebogenkuezel aus fbshort
+  #	varue.reg: data.frame, Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
+  #			   Zeilen sind VarNamen. Eintraege sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
   # OUTPUT:
   #	counter: Character-Vektor mit (unsortierten, aber identifizierbaren) Latex-Befehlen, die
-  #		     für das Register entweder die Seitenzahl setzen oder die Zählervariable manipulieren.
+  #		     fuer das Register entweder die Seitenzahl setzen oder die Zaehlervariable manipulieren.
 
   # ANMERKUNG:
   #	Bei der Funktion pages handelt es sich um eine rekursive Funktion, d.h. innerhalb
   #	der Funktion wird die Funktion erneut aufgerufen bis verschiedene Fallunterscheidugen
   #	duchlaufen wurden.
   #	Der Output wird in der Funktion register.sw aufbereitet und nutzbar gemacht.
-  #	Die Seitenzahlen, die für ein Schlagwort gesetzt werden, werden entweder nacheinander
+  #	Die Seitenzahlen, die fuer ein Schlagwort gesetzt werden, werden entweder nacheinander
   #	aufgelistet oder, falls Variablen aufeinanderfolgen (also numbers eine aufsteigende,
-  #	nicht unterbreochene Folge von Zahlen enthält, bspw. 212,213,214), durch als Intervall
-  #	berichtet. Im letzten Fall wird die höchste und niedrigste Zahl als Grenzen gesetzt.
+  #	nicht unterbreochene Folge von Zahlen enthaelt, bspw. 212,213,214), durch als Intervall
+  #	berichtet. Im letzten Fall wird die hoechste und niedrigste Zahl als Grenzen gesetzt.
 
 
   ##### Vorbereitung ####
@@ -30,7 +30,7 @@ pages <- function( numbers , fb , varue.reg, double.vars) {
   # Fallunterscheidung: Es gibt mehr als eine Zahl und die ersten drei Zahlen sind aufeinanderfolgend
   if ( length( numbers ) > 2 & ( numbers[1] + 1 == numbers[j] ) & ( numbers[1] + 2 == numbers[j+1] ) ) {
 
-    # Identifikation des Eintrags der größten Zahl im Intervall
+    # Identifikation des Eintrags der groessten Zahl im Intervall
     while( numbers[j] + 1 == numbers[j+1] & !is.na(numbers[j+1]) ) j<-j+1
 
     # Identifikation der nachfolgenden Variable
@@ -80,15 +80,15 @@ pages <- function( numbers , fb , varue.reg, double.vars) {
 }
 
 
-# Funktion, um für ein Schlagwort den Registereintrag zu erstellen
+# Funktion, um fuer ein Schlagwort den Registereintrag zu erstellen
 register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars) {
   # INPUT:
   #	schlagwort: Schlagwort, wie es im Register in der Varue vorkommt
-  #	fb.akt: Fragebogen-Kürzel aus fbshort
-  #	varue.reg: Informationen zum Register: data.frame, Spalten sind Schlagwörter, die im Register aufgelistet sind,
-  #			   Zeilen sind VarNamen. Einträge sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
+  #	fb.akt: Fragebogen-Kuerzel aus fbshort
+  #	varue.reg: Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
+  #			   Zeilen sind VarNamen. Eintraege sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
   # OUTPUT:
-  #	skript: Character-Vektor mit Latex-Befehlen, um für ein Schlagwort den Eintrag zu setzen.
+  #	skript: Character-Vektor mit Latex-Befehlen, um fuer ein Schlagwort den Eintrag zu setzen.
 
   # Ausgabe des Schlagwortes- Erleichtert Fehlersuche
   cat ( paste0 ( " Register (", fb.akt , ") - Schlagwort: ",schlagwort ,"\n" ) )
@@ -96,7 +96,7 @@ register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars) {
 
   #### Vorbereitung ####
 
-  # Identifikation der numerischen Postition, die an pages übergeben wird
+  # Identifikation der numerischen Postition, die an pages uebergeben wird
   numbers <- 	which( tolower( varue.reg[ ,schlagwort] ) %in% "x" )
 
   # unsortierte Befehle bestimmen
@@ -121,19 +121,19 @@ register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars) {
   return ( skript )
 }
 
-# Funktion für gesamtes Register eines Instruments
+# Funktion fuer gesamtes Register eines Instruments
 register.ges <- function ( fb.akt , varue.reg ,double.vars) {
   # INPUT:
-  #	fb.akt: Fragebogenkürzel aus fbshort
-  #	varue.reg: Informationen zum Register: data.frame, Spalten sind Schlagwörter, die im Register aufgelistet sind,
-  #			   Zeilen sind VarNamen. Einträge sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
+  #	fb.akt: Fragebogenkuerzel aus fbshort
+  #	varue.reg: Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
+  #			   Zeilen sind VarNamen. Eintraege sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
   # OUTPUT:
   #	skript: Character-Vektor mit Latex-Befehlen, um das gesamte Register zu erstellen
 
 
   #### Vorbereitung ####
 
-  # Identifikation der Schlagwörter - Vektor mit alphabetisch sortierten Schlagwörtern
+  # Identifikation der Schlagwoerter - Vektor mit alphabetisch sortierten Schlagwoertern
   schlagwoerter <- sort( names(varue.reg)[-which(names(varue.reg) %in% "Var.Name")  ] )
 
   # Reduktion der Schlagworte auf diejenigen, unter denen mindestens eine Variable verschlagwortet sind

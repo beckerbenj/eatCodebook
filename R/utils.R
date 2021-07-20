@@ -1,6 +1,6 @@
 
 ### LATEX-FUNKTIONEN
-# Funktion, um Breite von Wörtern in Latex zu erhalten
+# Funktion, um Breite von Woertern in Latex zu erhalten
 
 Latex.length <- function(word , bold , in.cm=FALSE){
   Latex.Letter.Length <- data.frame(
@@ -48,7 +48,7 @@ Latex.length <- function(word , bold , in.cm=FALSE){
   if(bold) lett <- paste0(lett , "_fett")
 
   if(any(!lett %in% Latex.Letter.Length$Letter) ){
-    warning( paste0( "Für folgende Zeichen gibt es keine Längenangaben: ", paste0(unique(lett[!lett %in% Latex.Letter.Length$Letter]), collapse=", ") , ". Die Länge von " , word , " in Latex wird daher unterschätzt.") ,immediate.=TRUE)
+    warning( paste0( "Fuer folgende Zeichen gibt es keine Laengenangaben: ", paste0(unique(lett[!lett %in% Latex.Letter.Length$Letter]), collapse=", ") , ". Die Laenge von " , word , " in Latex wird daher unterschaetzt.") ,immediate.=TRUE)
   }
   lett <- lett[ lett %in% Latex.Letter.Length$Letter ]
 
@@ -61,7 +61,7 @@ Latex.length <- function(word , bold , in.cm=FALSE){
       len <- len/28.45274
     }
     if(bold){
-      return(len*1.1) # Die obigen Angaben passen nicht ganz genau zu den tatsächlichen Wort- und Text-Breiten im finalen Skript. Der Faktor 1.1 kompensiert die Abweichung.
+      return(len*1.1) # Die obigen Angaben passen nicht ganz genau zu den tatsaechlichen Wort- und Text-Breiten im finalen Skript. Der Faktor 1.1 kompensiert die Abweichung.
     } else {
       return(len)
     }
@@ -69,7 +69,7 @@ Latex.length <- function(word , bold , in.cm=FALSE){
 }
 
 
-# Funktion, um Sonderzeichen für Latex-Skript zu bearbeiten
+# Funktion, um Sonderzeichen fuer Latex-Skript zu bearbeiten
 sonderzeichen.aufbereiten <- function(skript, check.tilde=FALSE){
   if(check.tilde){
     sonder <- c("&","%","$","~","#","_")

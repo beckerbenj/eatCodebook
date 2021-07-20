@@ -6,11 +6,12 @@
 #' Create register template based on variable information.
 #'
 #'@param varinfo Object (either list or data.frame) containing variable information.
+#'@param keywordList Character vector of keyword columns to be added.
 #'
 #'@return Register template.
 #'
 #'@examples
-#'tbd
+#'#tbd
 #'
 #'@export
 createRegister <- function(varinfo, keywordList){

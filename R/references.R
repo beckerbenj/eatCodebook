@@ -3,26 +3,26 @@ lit.sort <- function( lit ) {
   # INPUT:
   #	lit: Character-Vektor der Langangaben im Literaturverzeichnisses
   # OUTPUT:
-  #	x: Sortierte Einträge
+  #	x: Sortierte Eintraege
 
 
   # TODO: Gleiche Namen + andere Jahreszahlen mit aufnehmen
 
   #### Sortierung ####
 
-  # Sortierung über Nachnamen, die über Klammern getrennt sind
+  # Sortierung ueber Nachnamen, die ueber Klammern getrennt sind
   x <- gsub( "(^.*\\([[:digit:]]*\\))\\..*" , "\\1" , lit ) # Alles, was nach ein Klammer kommt (exklusiver dieser) entfernen --> Jahreszahlen behalten
   x <- gsub( "et al\\.", "", x) # "et al." entfernen
   x <- gsub( "&", "", x) # alle &-Zeichen entfernen
-  x <- gsub( "\\s\\w\\.-\\w\\." , "" , x ) # Alle Vornamen-Abkürzungen der Form " X.-X." löschen
-  x <- gsub( "\\s\\w\\." , "" , x ) # Alle Vornamen-Abkürzungen der Form " X." löschen
-  x <- gsub( ",\\s*,", ",", x) # Doppelte Kommata löschen
+  x <- gsub( "\\s\\w\\.-\\w\\." , "" , x ) # Alle Vornamen-Abkuerzungen der Form " X.-X." loeschen
+  x <- gsub( "\\s\\w\\." , "" , x ) # Alle Vornamen-Abkuerzungen der Form " X." loeschen
+  x <- gsub( ",\\s*,", ",", x) # Doppelte Kommata loeschen
   x <- gsub( "\\.\\s*$" , "," , x ) # Restliche Punkte zu Kommata
   x <- gsub( "([-[:alpha:][:space:]]*)," , "\\(\\1\\)", x) # Alle durch Kommata getrennte Zeichenfolgen durch Klammern trennen
   x[! grepl("^\\(" , x , fixed=FALSE) ] <- gsub("(^.*)(\\()" , "\\(\\1\\)\\2" , x[!grepl("^\\(" , x , fixed=FALSE)] , ")")
-  x <- gsub( "\\)\\s\\s*\\(", "\\)\\(", x) # Überflüssige Leerzeichen zwischen Klammern löschen
-  x <- gsub( "\\)\\s*" , "\\)" , x) # Überflüssige Leerzeichen am Ende löschen
-  x <- gsub( "(\\()\\s*(\\w+)" , "\\1\\2" , x ) # Leerzeichen am Anfang einer Klammer löschen
+  x <- gsub( "\\)\\s\\s*\\(", "\\)\\(", x) # Ueberfluessige Leerzeichen zwischen Klammern loeschen
+  x <- gsub( "\\)\\s*" , "\\)" , x) # Ueberfluessige Leerzeichen am Ende loeschen
+  x <- gsub( "(\\()\\s*(\\w+)" , "\\1\\2" , x ) # Leerzeichen am Anfang einer Klammer loeschen
 
   x <- lit[ order(x) ]
 
@@ -33,7 +33,7 @@ lit.sort <- function( lit ) {
 # Erstellung des Literaturverzeichnisses
 make.lit <- function(varue.lit){
   # INPUT:
-  #	varue.lit: data.frame, Übersicht aller Literatureinträge in zwei Spalten (Langangabe + TRUE/FALSE-Angabe, ob Eintrag ins Literaturverzeichnis kommt)
+  #	varue.lit: data.frame, Uebersicht aller Literatureintraege in zwei Spalten (Langangabe + TRUE/FALSE-Angabe, ob Eintrag ins Literaturverzeichnis kommt)
   # OUPTUT:
   #	literatur: character-vector, Latex-Skript zur Erstellung des Literaturverzeichnisses
 

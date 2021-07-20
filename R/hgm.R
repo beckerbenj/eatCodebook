@@ -24,7 +24,7 @@ makehintmod <- function(varue.info,fbshort) {
     cat(paste0("Aufbereitung des Hintergrundmodells.\n" ))
     flush.console()
 
-    cat(paste0(" Entfernen aller Einträge, bei denen keine Variablen angegeben ist.\n" ))
+    cat(paste0(" Entfernen aller Eintraege, bei denen keine Variablen angegeben ist.\n" ))
     flush.console()
     hint.info <- hint.info[ ! is.na(hint.info$Var.Name), ]
     hint.info <- hint.info[ ! gsub("\\s" , "" , hint.info$Var.Name) %in% "", ]
@@ -33,7 +33,7 @@ makehintmod <- function(varue.info,fbshort) {
       hint.info$HGM.Variable.erstellt.aus[ is.na(hint.info$HGM.Variable.erstellt.aus) ] <- "-"
     }
 
-    # Sonderzeichen für Latex
+    # Sonderzeichen fuer Latex
     cat(paste0(" Sonderzeichen bearbeiten.\n" ))
     flush.console()
 
@@ -42,7 +42,7 @@ makehintmod <- function(varue.info,fbshort) {
     hint.info$LabelSH <- sonderzeichen.aufbereiten(hint.info$LabelSH)
 
     # Aufbereitung: Wenn Eintrag "-" ist, dann diesen links ausrichten (multil vs multic)
-    # früher: zentrieren (über Latex-Befehl, der in der Praeambel definiert wird
+    # frueher: zentrieren (über Latex-Befehl, der in der Praeambel definiert wird
     hint.info$HGM.Variable.erstellt.aus[ grepl("-",hint.info$HGM.Variable.erstellt.aus) ] <- "\\multil{-}"
 
     # Aufbereitung: Leerzeichen entfernen
@@ -55,13 +55,13 @@ makehintmod <- function(varue.info,fbshort) {
       if(all(!is.na(suppressWarnings(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)]))))){
         hint.info <- rbind(hint.info[grepl( "\\d" , hint.info$HGM.Reihenfolge),][ order(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" ,hint.info$HGM.Reihenfolge)])) ,]  , hint.info[! grepl( "\\d" , gsub(" " , "" , hint.info$HGM.Reihenfolge)),] )
       } else {
-        cat(paste0("  Mindestens ein Eintrag der numerischen Angaben in der Spalte \"HGM Reihenfolge\" wird nicht erkannt. Die entsprechenden Einträge (" , paste0(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)][ is.na(suppressWarnings(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)])))] , collapse="," ) , ") werden bei der Sortierung der Variablen ignoriert.\n"))
+        cat(paste0("  Mindestens ein Eintrag der numerischen Angaben in der Spalte \"HGM Reihenfolge\" wird nicht erkannt. Die entsprechenden Eintraege (" , paste0(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)][ is.na(suppressWarnings(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)])))] , collapse="," ) , ") werden bei der Sortierung der Variablen ignoriert.\n"))
         flush.console()
         hint.info$Reihenfolge[is.na(suppressWarnings(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)])))] <- "-"
         hint.info <- rbind(hint.info[grepl( "\\d" , hint.info$HGM.Reihenfolge),][ order(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" ,hint.info$HGM.Reihenfolge)])) ,]  , hint.info[! grepl( "\\d" , gsub(" " , "" , hint.info$HGM.Reihenfolge)),] )
       }
     } else {
-      cat(paste0("  Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geändert.\n"))
+      cat(paste0("  Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geaendert.\n"))
       flush.console()
     }
 
@@ -73,7 +73,7 @@ makehintmod <- function(varue.info,fbshort) {
                  "\\section*{Hintergrundmodell}\n",
                  "\\addcontentsline{toc}{section}{Hintergrundmodell}",
                  "\\ihead[\\leftmark]{\\leftmark \\newline \\textsc{Hintergrundmodell}}",
-                 "\\begin{longtabu}{llQ} % die ersten beiden Spalten sind so breit wie sie mindestens sein müssen + linksbündig (Spaltentyp l). Die letzte Spalte ist linksbündig+kein Blocksatz + Breite ist gleich dem Rest, der nach Rechts noch frei ist (Spaltentyp Q)",
+                 "\\begin{longtabu}{llQ} % die ersten beiden Spalten sind so breit wie sie mindestens sein müssen + linksbuendig (Spaltentyp l). Die letzte Spalte ist linksbuendig+kein Blocksatz + Breite ist gleich dem Rest, der nach Rechts noch frei ist (Spaltentyp Q)",
                  "\\caption*{\\cellcolor{white} \\textbf{Variablen im Hintergrundmodell}}\\\\",
                  "\\toprule",
                  "\\headrow",

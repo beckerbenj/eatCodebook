@@ -21,7 +21,7 @@ skalen.info.aufbereiten <- function(skalen.info){
     skalen.info$Var.Name <- gsub("\\s" , "" , skalen.info$Var.Name)
   }
 
-  cat(paste0("  Überflüssige Leerzeichen entfernen.\n"))
+  cat(paste0("  Ueberfluessige Leerzeichen entfernen.\n"))
   flush.console()
   skalen.info$Anzahl.valider.Werte <- gsub("\\s" , "" , skalen.info$Anzahl.valider.Werte)
   skalen.info$Items.der.Skala <- gsub("\\s" , "" , skalen.info$Items.der.Skala)

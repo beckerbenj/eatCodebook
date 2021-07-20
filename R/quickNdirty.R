@@ -95,7 +95,7 @@ quickNdirty <- function(ds.files , save.objects=c("skript", "varue.info" , "varu
 
   names(ds.files) <- fbshort
 
-  cat(paste0(" Einlesen der Datensätze.\n"))
+  cat(paste0(" Einlesen der Datensaetze.\n"))
   flush.console()
 
   ds <- lapply( ds.files , ds.einlesen , use.value.labels=TRUE)

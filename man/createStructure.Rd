@@ -7,7 +7,7 @@
 createStructure(varInfo)
 }
 \arguments{
-\item{varinfo}{Object (either list or data.frame) containing variable information.}
+\item{varInfo}{Object (either list or data.frame) containing variable information.}
 }
 \value{
 Structure template.
@@ -16,6 +16,6 @@ Structure template.
 Create structure template based on variable information.
 }
 \examples{
-tbd
+#tbd
 
 }

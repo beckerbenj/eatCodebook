@@ -20,7 +20,7 @@ valid.entry.match <- function(cols , entry){
 }
 
 check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.gliederung,varue.register,varue.lit,ds){
-  cat(paste0("CHECK DER VARIABLENINFO, WERTEINFO, SKALENINFO UND DER LITERATURINFO FÜR " , fbshort , ".\n"))
+  cat(paste0("CHECK DER VARIABLENINFO, WERTEINFO, SKALENINFO UND DER LITERATURINFO FUER " , fbshort , ".\n"))
   flush.console()
   # relevante Spalten der Werteinformation
   miss.cols <- c( "Var.name" , "Wert" , "missing" , "LabelSH", "Zeilenumbruch.vor.Wert")
@@ -28,38 +28,38 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
   varue.cols <- c("Var.Name" , "in.DS.und.SH" , "Layout" , "LabelSH" , "Anmerkung.Var" , "Gliederung" , "Reihenfolge" , "Titel" , "rekodiert","QuelleSH" , "Instruktionen" , "Hintergrundmodell", "HGM.Variable.erstellt.aus", "HGM.Reihenfolge", "intern.extern", "Seitenumbruch.im.Inhaltsverzeichnis" ) # Spalten der Variableninformationen
   # relevante Spalten im Literatur-Reiter
   lit.cols <- c( "Kurzangabe" , "Langangabe" , "in.Literaturverzeichnis" )
-  # relevante Spalten in der Skalenübersicht
+  # relevante Spalten in der Skalenuebersicht
   skalen.cols <- c( "Var.Name", "Quelle" , "Anzahl.valider.Werte" , "Items.der.Skala" )
   # relevante Spalten in Gliederungsreiter
   gliederung.cols <- c("Titel", "Ebene")
 
   bool.rel.cols.info <- all( varue.cols %in% names(varue.info))
   if(!bool.rel.cols.info){
-    cat(paste0(" Die Spaltennamen " , paste0(varue.cols[! varue.cols %in% names(varue.info)], collapse=", ") , " existieren nicht in der Variableninfo. DIESE MÜSSEN EXISTIEREN!\n"))
+    cat(paste0(" Die Spaltennamen " , paste0(varue.cols[! varue.cols %in% names(varue.info)], collapse=", ") , " existieren nicht in der Variableninfo. DIESE MUESSEN EXISTIEREN!\n"))
     flush.console()
   }
 
   bool.rel.cols.miss <- all( miss.cols %in% names(varue.missings))
   if(!bool.rel.cols.miss){
-    cat(paste0(" Die Spaltennamen " , paste0(miss.cols[! miss.cols %in% names(varue.missings)], collapse=", ") , " existieren nicht in der Werteinfo. DIESE MÜSSEN EXISTIEREN!\n"))
+    cat(paste0(" Die Spaltennamen " , paste0(miss.cols[! miss.cols %in% names(varue.missings)], collapse=", ") , " existieren nicht in der Werteinfo. DIESE MUESSEN EXISTIEREN!\n"))
     flush.console()
   }
 
   bool.rel.cols.skalen <- all( skalen.cols %in% names(skalen.info))
   if(!bool.rel.cols.skalen){
-    cat(paste0(" Die Spaltennamen " , paste0(skalen.cols[! skalen.cols %in% names(skalen.info)], collapse=", ") , " existieren nicht in der Skaleninfo. DIESE MÜSSEN EXISTIEREN!\n"))
+    cat(paste0(" Die Spaltennamen " , paste0(skalen.cols[! skalen.cols %in% names(skalen.info)], collapse=", ") , " existieren nicht in der Skaleninfo. DIESE MUESSEN EXISTIEREN!\n"))
     flush.console()
   }
 
   bool.rel.cols.lit <- all( lit.cols %in% names(varue.lit))
   if(!bool.rel.cols.lit){
-    cat(paste0(" Die Spaltennamen " , paste0(lit.cols[! lit.cols %in% names(varue.lit)], collapse=", ") , " existieren nicht in der Literaturinfo. DIESE MÜSSEN EXISTIEREN!\n"))
+    cat(paste0(" Die Spaltennamen " , paste0(lit.cols[! lit.cols %in% names(varue.lit)], collapse=", ") , " existieren nicht in der Literaturinfo. DIESE MUESSEN EXISTIEREN!\n"))
     flush.console()
   }
 
   bool.rel.cols.gliederung <- all( gliederung.cols %in% names(varue.gliederung))
   if(!bool.rel.cols.gliederung){
-    cat(paste0(" Die Spaltennamen " , paste0(gliederung.cols[! gliederung.cols %in% names(varue.gliederung)], collapse=", ") , " existieren nicht im Gliederungsreiter. DIESE MÜSSEN EXISTIEREN!\n"))
+    cat(paste0(" Die Spaltennamen " , paste0(gliederung.cols[! gliederung.cols %in% names(varue.gliederung)], collapse=", ") , " existieren nicht im Gliederungsreiter. DIESE MUESSEN EXISTIEREN!\n"))
     flush.console()
   }
 
@@ -103,7 +103,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
   if("Quelle" %in% names(skalen.info)){
     bool.skala.quelle <- fbshort %in% skalen.info$Quelle
     if(!bool.skala.quelle){
-      cat(paste0(" Es gibt in der Spalte \"Quelle\" in der Skaleninformation keinen Eintrag mit dem Kürzel ", fbshort , ". Für dieses Instrument sind daher keine Skalen definiert.\n"))
+      cat(paste0(" Es gibt in der Spalte \"Quelle\" in der Skaleninformation keinen Eintrag mit dem Kuerzel ", fbshort , ". Fuer dieses Instrument sind daher keine Skalen definiert.\n"))
       flush.console()
     }
   } else {
@@ -140,7 +140,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
     bool.werte.unique <- all(unlist(unname(lapply(varue.missings$Var.name , function(name) {
       kat <- varue.missings$Wert[varue.missings$Var.name %in% name]
       if(length(kat)!=length(unique(kat))){
-        cat(paste0(" Für die Variable ", name , " treten in der Werteinfo Werte mehrfach auf: ", paste0(kat[table(kat)>1] , collapse=", "), "\n"))
+        cat(paste0(" Fuer die Variable ", name , " treten in der Werteinfo Werte mehrfach auf: ", paste0(kat[table(kat)>1] , collapse=", "), "\n"))
         flush.console()
       }
 
@@ -197,7 +197,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
           }
 
           if(any(varue.info$in.DS.und.SH[varue.info$Var.Name %in% items] %in% "ja" )){
-            cat(paste0(" Das Item/Die Items " , paste0(items[varue.info$in.DS.und.SH[varue.info$Var.Name %in% items] %in% "ja"],collapse=", ") , " der Skala " , name , " aus der Skaleninfo besitzen in der Spalten \'in DS und SH\' ein \'ja\'. Diese Items werden daher im Skalenhandbuch doppelt berichtet (einmal innerhalb der Skala, einmal separat). Falls das Item/die Items nur innerhalb der Skala vorkommen soll, dann den Eintrag/die Einträge auf \'ds\' setzen.\n"))
+            cat(paste0(" Das Item/Die Items " , paste0(items[varue.info$in.DS.und.SH[varue.info$Var.Name %in% items] %in% "ja"],collapse=", ") , " der Skala " , name , " aus der Skaleninfo besitzen in der Spalten \'in DS und SH\' ein \'ja\'. Diese Items werden daher im Skalenhandbuch doppelt berichtet (einmal innerhalb der Skala, einmal separat). Falls das Item/die Items nur innerhalb der Skala vorkommen soll, dann den Eintrag/die Eintraege auf \'ds\' setzen.\n"))
             flush.console()
           }
 
@@ -232,7 +232,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
             bool <- FALSE
           }
           if( ! all( table(paste0(items.kat.unique$Wert,"::",items.kat.unique$LabelSH)) %in% length(items)) ){
-            cat(paste0(" Die Items (" , paste0(items , collapse=", "), ") der Skala ", name , " besitzen verschiedene Labels für die Werte. Das Label/Die Labels ", paste0("\'",sub(".*::","",names(table(paste0(items.kat.unique$Wert,"::",items.kat.unique$LabelSH))))[! table(paste0(items.kat.unique$Wert,"::",items.kat.unique$LabelSH)) %in% length(items)] ,"\'", collapse=", ") ," kommt/kommen nicht bei allen Items vor oder gehören zu verschiedenen Werten.\n"))
+            cat(paste0(" Die Items (" , paste0(items , collapse=", "), ") der Skala ", name , " besitzen verschiedene Labels fuer die Werte. Das Label/Die Labels ", paste0("\'",sub(".*::","",names(table(paste0(items.kat.unique$Wert,"::",items.kat.unique$LabelSH))))[! table(paste0(items.kat.unique$Wert,"::",items.kat.unique$LabelSH)) %in% length(items)] ,"\'", collapse=", ") ," kommt/kommen nicht bei allen Items vor oder gehoeren zu verschiedenen Werten.\n"))
             flush.console()
             bool <- FALSE
           }
@@ -248,11 +248,11 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
 
 
 
-  # sind alle relevanten Spalten ausgefüllt?
+  # sind alle relevanten Spalten ausgefuellt?
   if(bool.rel.cols.info){
     bool.rel.cols.info.entry <- unname(sapply( c("Var.Name" , "in.DS.und.SH" , "Layout" , "LabelSH" , "Gliederung" , "Titel"  , "Hintergrundmodell", "intern.extern", "Seitenumbruch.im.Inhaltsverzeichnis" )  , function(d) valid.entry(varue.info[! varue.info$in.DS.und.SH %in% "nein",d])))
     if(! all(bool.rel.cols.info.entry)){
-      cat(paste0(" Die Spalte(n) " , paste0(c("Var.Name" , "in.DS.und.SH" , "Layout" , "LabelSH" , "Gliederung" , "Titel"  , "Hintergrundmodell", "intern.extern", "Seitenumbruch.im.Inhaltsverzeichnis" )[!bool.rel.cols.info.entry] , collapse=", ")," aus der Variableninfo besitzen keine validen Angaben, d.h. die Zellen sind leer, \'NA\' oder enthalten ein Minus (-).\n Hinweis: Es wurden nur diejenigen Variablen überprüft, die in der Spalte \'in DS und SH\' ein \'ja\', \'sh\' oder \'ds\' bekommen haben.\n\n"))
+      cat(paste0(" Die Spalte(n) " , paste0(c("Var.Name" , "in.DS.und.SH" , "Layout" , "LabelSH" , "Gliederung" , "Titel"  , "Hintergrundmodell", "intern.extern", "Seitenumbruch.im.Inhaltsverzeichnis" )[!bool.rel.cols.info.entry] , collapse=", ")," aus der Variableninfo besitzen keine validen Angaben, d.h. die Zellen sind leer, \'NA\' oder enthalten ein Minus (-).\n Hinweis: Es wurden nur diejenigen Variablen ueberprueft, die in der Spalte \'in DS und SH\' ein \'ja\', \'sh\' oder \'ds\' bekommen haben.\n\n"))
       flush.console()
     }
     bool.rel.cols.info.entry <- all(bool.rel.cols.info.entry)
@@ -263,7 +263,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
   if(bool.rel.cols.miss){
     bool.rel.cols.miss.entry <- unname(sapply( c( "Var.name" , "Wert" , "missing" , "Zeilenumbruch.vor.Wert")   , function(d) valid.entry(varue.missings[varue.missings$Var.name %in% varue.info$Var.Name[! varue.info$in.DS.und.SH %in% "nein"],d])))
     if(! all(bool.rel.cols.miss.entry)){
-      cat(paste0(" Die Spalte(n) " , paste0(c( "Var.name" , "Wert" , "missing" , "Zeilenumbruch.vor.Wert")[!bool.rel.cols.miss.entry] , collapse=", ")," aus der Werteinfo besitzen keine validen Angaben, d.h. die Zellen sind leer, \'NA\' oder enthalten ein Minus (-).\n Hinweis: Es wurden nur diejenigen Variablen überprüft, die in der Spalte \'in DS und SH\' ein \'nein\' bekommen haben.\n\n"))
+      cat(paste0(" Die Spalte(n) " , paste0(c( "Var.name" , "Wert" , "missing" , "Zeilenumbruch.vor.Wert")[!bool.rel.cols.miss.entry] , collapse=", ")," aus der Werteinfo besitzen keine validen Angaben, d.h. die Zellen sind leer, \'NA\' oder enthalten ein Minus (-).\n Hinweis: Es wurden nur diejenigen Variablen ueberprueft, die in der Spalte \'in DS und SH\' ein \'nein\' bekommen haben.\n\n"))
       flush.console()
     }
     bool.rel.cols.miss.entry <- all(bool.rel.cols.miss.entry)
@@ -274,7 +274,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
   if(bool.rel.cols.skalen){
     bool.rel.cols.skalen.entry <- unname(sapply( c( "Var.Name", "Items.der.Skala" )    , function(d) valid.entry(skalen.info[ skalen.info$Quelle %in% fbshort & skalen.info$Var.Name %in% varue.info$Var.Name[! varue.info$in.DS.und.SH %in% "nein"],d])))
     if(! all(bool.rel.cols.skalen.entry)){
-      cat(paste0(" Die Spalte(n) " , paste0(c( "Var.Name", "Items.der.Skala" )[!bool.rel.cols.skalen.entry] , collapse=", ")," aus der Skaleninfo besitzen keine validen Angaben, d.h. die Zellen sind leer, \'NA\' oder enthalten ein Minus (-).\n Hinweis: Es wurden nur diejenigen Variablen überprüft, die in der Spalte \'in DS und SH\' ein \'nein\' bekommen haben.\n\n"))
+      cat(paste0(" Die Spalte(n) " , paste0(c( "Var.Name", "Items.der.Skala" )[!bool.rel.cols.skalen.entry] , collapse=", ")," aus der Skaleninfo besitzen keine validen Angaben, d.h. die Zellen sind leer, \'NA\' oder enthalten ein Minus (-).\n Hinweis: Es wurden nur diejenigen Variablen ueberprueft, die in der Spalte \'in DS und SH\' ein \'nein\' bekommen haben.\n\n"))
       flush.console()
     }
     bool.rel.cols.skalen.entry <- all(bool.rel.cols.skalen.entry)
@@ -310,7 +310,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
     }
     bool.rel.cols.gliederung.entry <- all(bool.rel.cols.gliederung.entry)
   } else {
-    cat(" Die Spalten in der Gliederung konnten nicht auf valide Einträge überprüft werden, da nicht alle relevanten Spaltennamen im Gliederungsreiter existieren.\n")
+    cat(" Die Spalten in der Gliederung konnten nicht auf valide Eintraege ueberprueft werden, da nicht alle relevanten Spaltennamen im Gliederungsreiter existieren.\n")
     flush.console()
     bool.rel.cols.gliederung.entry <- FALSE
   }
@@ -367,7 +367,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
           if( all(grepl("^\\d*$" , suff))){
             suff <- as.numeric(suff)
             if( ! all( suff == sort(suff)) ){
-              cat(paste0(" Die Variablen " , paste0(vars , collapse=", "), " besitzen evtl. eine falsche Sortierung: Es wurde geprüft, ob das Muster \'VAR_a\', \'VAR_b\' usw. bzw. \'VAR_1\', \'VAR_2\' usw. eingehalten wurde. Dies ist hier nicht der Fall.\n"))
+              cat(paste0(" Die Variablen " , paste0(vars , collapse=", "), " besitzen evtl. eine falsche Sortierung: Es wurde geprueft, ob das Muster \'VAR_a\', \'VAR_b\' usw. bzw. \'VAR_1\', \'VAR_2\' usw. eingehalten wurde. Dies ist hier nicht der Fall.\n"))
               flush.console()
             }
             return( all( suff == sort(suff)))
@@ -376,7 +376,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
             suff1 <- as.numeric(suff1)
             suff2 <- suff[! grepl("\\d" , suff)]
             if( ! all( suff1 == sort(suff1) & all( suff2 == sort(suff2))) ){
-              cat(paste0(" Die Variablen " , paste0(vars , collapse=", "), " besitzen evtl. eine falsche Sortierung: Es wurde geprüft, ob das Muster \'VAR_a\', \'VAR_b\' usw. bzw. \'VAR_1\', \'VAR_2\' usw. eingehalten wurde. Dies ist hier nicht der Fall.\n"))
+              cat(paste0(" Die Variablen " , paste0(vars , collapse=", "), " besitzen evtl. eine falsche Sortierung: Es wurde geprueft, ob das Muster \'VAR_a\', \'VAR_b\' usw. bzw. \'VAR_1\', \'VAR_2\' usw. eingehalten wurde. Dies ist hier nicht der Fall.\n"))
               flush.console()
             }
             return( all( suff1 == sort(suff1) & all( suff2 == sort(suff2))) )
@@ -384,7 +384,7 @@ check.varue <- function(fbshort,varue.info,varue.missings,skalen.info,varue.glie
             return(TRUE)
           } else {
             if( ! all( suff == sort(suff)) ){
-              cat(paste0(" Die Variablen " , paste0(vars , collapse=", "), " besitzen evtl. eine falsche Sortierung: Es wurde geprüft, ob das Muster \'VAR_a\', \'VAR_b\' usw. bzw. \'VAR_1\', \'VAR_2\' usw. eingehalten wurde. Dies ist hier nicht der Fall.\n"))
+              cat(paste0(" Die Variablen " , paste0(vars , collapse=", "), " besitzen evtl. eine falsche Sortierung: Es wurde geprueft, ob das Muster \'VAR_a\', \'VAR_b\' usw. bzw. \'VAR_1\', \'VAR_2\' usw. eingehalten wurde. Dies ist hier nicht der Fall.\n"))
               flush.console()
             }
             return( all( suff == sort(suff)))
@@ -429,7 +429,7 @@ check.data <- function(varue.info , varue.missings , ds){
   cat(paste0("CHECK DES DATENSATZES.\n"))
   flush.console()
 
-  # zusätzliche Variablen im Datensatz? (check mit Variableninfo)
+  # zusaetzliche Variablen im Datensatz? (check mit Variableninfo)
   bool.ds.var <- names(ds) %in% varue.info$Var.Name[varue.info$in.DS.und.SH %in% c("ja","ds")]
   if(! all(bool.ds.var)){
     cat(paste0(" Die Variablen ",paste0(names(ds)[!bool.ds.var] , collapse=", ")," befinden sich im Datensatz, stehen aber nicht in der Spalte \"in.DS.und.SH\" der Variableninformation auf \"ja\" oder \"ds\".\n"))
@@ -468,7 +468,7 @@ check.data <- function(varue.info , varue.missings , ds){
     if(name %in% names(ds)){
       bool <- unique(ds[!is.na(ds[,name]),name]) %in% varue.missings$Wert[varue.missings$Var.name %in% name]
       if(!all(bool)){
-        cat(paste0(" Für die Variable ",name," liegen nicht im Datensatz Werte vor, die nicht in der Werteinfo definiert sind: ",paste0(unique(ds[,name])[!bool] , collapse=", "),"\n"))
+        cat(paste0(" Fuer die Variable ",name," liegen nicht im Datensatz Werte vor, die nicht in der Werteinfo definiert sind: ",paste0(unique(ds[,name])[!bool] , collapse=", "),"\n"))
         flush.console()
       }
       return(all(bool))
@@ -693,7 +693,7 @@ check.gliederung <- function(varue.info , varue.gliederung){
   # existieren alle Gliederungspunkte aus der Variableninfo auch im Gliederungsreiter?
   bool.info.in.gliederung <- varue.info$Gliederung[varue.info$in.DS.und.SH %in% c("ja","sh")] %in% varue.gliederung$Ebene
   if(any(!bool.info.in.gliederung)){
-    cat(paste0(" Die Gliederungspunkte ", paste0( sort(unique(varue.info$Gliederung[varue.info$in.DS.und.SH %in% c("ja","sh")][! bool.info.in.gliederung])) , collapse=", ") , " treten in der Variableninformation, aber nicht in der Gliederungsübersicht auf.\n\n"))
+    cat(paste0(" Die Gliederungspunkte ", paste0( sort(unique(varue.info$Gliederung[varue.info$in.DS.und.SH %in% c("ja","sh")][! bool.info.in.gliederung])) , collapse=", ") , " treten in der Variableninformation, aber nicht in der Gliederungsuebersicht auf.\n\n"))
     flush.console()
   }
 
@@ -711,11 +711,11 @@ check.gliederung <- function(varue.info , varue.gliederung){
   bool.gliederung.nachgestellt <- lapply(varue.gliederung$Ebene[grepl("^\\d$" , varue.gliederung$Ebene)] , function(e){
     uk <- varue.gliederung$Ebene[ grepl(paste0(e , "\\.\\d*$") , varue.gliederung$Ebene)]
     if(is.null(uk)) {
-      cat(paste0(" Das Kapitel ", e, " besitzt keine (identifizierbaren) Unterkapitel. Falls Unterkapitel vorhanden sein sollen, müssen diese im Gliederungsreiter nach dem Muster \'X.Y\' angegeben werden.\n\n"))
+      cat(paste0(" Das Kapitel ", e, " besitzt keine (identifizierbaren) Unterkapitel. Falls Unterkapitel vorhanden sein sollen, muessen diese im Gliederungsreiter nach dem Muster \'X.Y\' angegeben werden.\n\n"))
       flush.console()
       return(TRUE)
     } else if (length(uk)==0){
-      cat(paste0(" Das Kapitel ", e, " besitzt keine (identifizierbaren) Unterkapitel. Falls Unterkapitel vorhanden sein sollen, müssen diese im Gliederungsreiter nach dem Muster \'X.Y\' angegeben werden.\n\n"))
+      cat(paste0(" Das Kapitel ", e, " besitzt keine (identifizierbaren) Unterkapitel. Falls Unterkapitel vorhanden sein sollen, muessen diese im Gliederungsreiter nach dem Muster \'X.Y\' angegeben werden.\n\n"))
       flush.console()
       return(TRUE)
     } else {
@@ -723,7 +723,7 @@ check.gliederung <- function(varue.info , varue.gliederung){
       if( length(unique(unname(sapply( uk , nchar))))==1){
         return(TRUE)
       } else {
-        cat(paste0(" Die Nummerierung Unterkapitel der Ebene " , e , " im Gliederungsreiter besitzen nicht gleich viele Stellen hinter dem Punkt. Das kann zu einer unerwünschten Sortierung führen. Bei mehr als 10 Unterkapitel sind Angaben der Form \'X.01\', \'X.02\',... ,\'X.10\', ... empfehlenswert. Ohne die vorangestellte Null wird \'X.11\' nach \'X.1\', aber vor \'X.2\' einsortiert.\n\n"))
+        cat(paste0(" Die Nummerierung Unterkapitel der Ebene " , e , " im Gliederungsreiter besitzen nicht gleich viele Stellen hinter dem Punkt. Das kann zu einer unerwuenschten Sortierung fuehren. Bei mehr als 10 Unterkapitel sind Angaben der Form \'X.01\', \'X.02\',... ,\'X.10\', ... empfehlenswert. Ohne die vorangestellte Null wird \'X.11\' nach \'X.1\', aber vor \'X.2\' einsortiert.\n\n"))
         flush.console()
       }
     }

@@ -4,12 +4,12 @@
 #'
 #' Create structure template based on variable information.
 #'
-#'@param varinfo Object (either list or data.frame) containing variable information.
+#'@param varInfo Object (either list or data.frame) containing variable information.
 #'
 #'@return Structure template.
 #'
 #'@examples
-#'tbd
+#'#tbd
 #'
 #'@export
 createStructure <- function(varInfo){

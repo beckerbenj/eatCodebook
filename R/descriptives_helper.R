@@ -134,7 +134,7 @@ kennwerte.skala <- function(GADSdat.obj,sub.varinfo) {
   #	variableCols: Spaltennummern oder Namen der Einzelitems der Skala
   #	missingValues: optional, Vektor aus numerischen Werten, die missings bezeichnen sollen
   # OUTPUT:
-  #	ret.var: Liste mit zwei Einträgen:
+  #	ret.var: Liste mit zwei Eintraegen:
   #			 Erster Listeneintrag ist ein Vektor mit den metrischen Kennwerten der Skala (M, SD, Min, Max, Cronbachs Alpha)
   #			 Zweiter Listeneintrag ist ein data.frame mit den ordinalen Kennwerten der
 scaleCol<- sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"varName"]

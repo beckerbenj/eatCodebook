@@ -9,7 +9,7 @@
 #'@return Literature template.
 #'
 #'@examples
-#'tbd
+#'#tbd
 #'
 #'@export
 createLitinfo <- function(){
@@ -27,7 +27,7 @@ createLitinfo <- function(){
 #'@return Register.
 #'
 #'@examples
-#'tbd
+#'#tbd
 #'
 #'@export
 getLitinfo <- function(filePath){

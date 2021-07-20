@@ -16,6 +16,6 @@ Returns the value information.
 Get information on value level (value labels and missing codes).
 }
 \examples{
-tbd
+#tbd
 
 }

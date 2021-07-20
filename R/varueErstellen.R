@@ -1,10 +1,10 @@
 varue.erstellen <- function(ds , fbshort=NULL, set.gliederung=TRUE , encoding.list=data.frame("input"=c("Ã¼","Ã¶","Ã¤","ÃŸ","Ã„" , "â„¢" , "â€“" , "â€¦" , "â€ž" , "Â¬"),
                                                                                               "output"=c("ü" , "ö", "ä", "ß" , "Ä", "\\textsuperscript{TM}" , "-" , "\\dots" , "``" , ""),
                                                                                               stringsAsFactors=FALSE), return.method="save.only", save.folder=getwd()){
-  cat(paste0("ERSTELLEN DER SHEETS FÜR VOLLSTÄNDIGE VARUE.\n"))
+  cat(paste0("ERSTELLEN DER SHEETS FUER VOLLSTAENDIGE VARUE.\n"))
   flush.console()
 
-  cat(paste0(" SHEETS FÜR VARIABLENINFORMATIONEN.\n"))
+  cat(paste0(" SHEETS FUER VARIABLENINFORMATIONEN.\n"))
   flush.console()
 
   if(is.null(fbshort)){
@@ -39,7 +39,7 @@ varue.erstellen <- function(ds , fbshort=NULL, set.gliederung=TRUE , encoding.li
 
   variableninfo <- lapply( 1:length(ds) , function(d) makeVarue(ds[[d]] , make.gliederung=make.gliederung , encoding.list=encoding.list) )
   names(variableninfo) <- fbshort
-  cat(paste0(" SHEETS FÜR WERTEINFORMATIONEN.\n"))
+  cat(paste0(" SHEETS FUER WERTEINFORMATIONEN.\n"))
   flush.console()
 
   werteinfos <- lapply( 1:length(ds) , function(k) {

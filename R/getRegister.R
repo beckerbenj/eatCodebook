@@ -10,7 +10,7 @@
 #'@return Register.
 #'
 #'@examples
-#'tbd
+#'#tbd
 #'
 #'@export
 getRegister <- function(filePath){

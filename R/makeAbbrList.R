@@ -1,37 +1,31 @@
 
 
-#### ABKÜRZUNGS- UND HINTERGRUNDMODELLTABELLE ####
-
 ####
 #############################################################################
 #' Create abbreviation list.
 #'
 #' Create abbreviation lists.
 #'
-#'@param logoFile Path to the graphic file.
-#'@param maintitle Main title of the document.
-#'@param subtitle Sub title of the document.
-#'@param authors Authors of the document.
-#'@param addAuthors Additional contributers to the document.
-#'@param schriftenreihe Schriftenreihe of the document.
-#'@param bibinfo Bibiolografic info of the document.
+#'@param filePath Path to the file.
+#'@param sheets Main title of the document.
+#'@param headings Sub title of the document.
+#'@param captions Authors of the document.
+#'@param sort.entries Additional contributers to the document.
 #'
 #'@return Returns a latex snippet.
 #'
 #'@examples
-#'tbd
+#'#tbd
 #'
 #'@export
-makeAbkVerz <- function(varue.file , sheets=c("Akronyme" , "Statistische Formelzeichen") , headings=list("Akronyme"=c( "Abkürzung", "Bedeutung") , "Statistische Formelzeichen"=c( "Symbol", "Bedeutung")) , captions=list("Akronyme"=c( "Abkürzungen") , "Statistische Formelzeichen"=c( "Statistische Formelzeichen"))  , sort.entries=c(TRUE,TRUE)){
+makeAbbrList <- function(filePath, sheets=c("Akronyme" , "Statistische Formelzeichen") , headings=list("Akronyme"=c( "Abkürzung", "Bedeutung") , "Statistische Formelzeichen"=c( "Symbol", "Bedeutung")) , captions=list("Akronyme"=c( "Abkürzungen") , "Statistische Formelzeichen"=c( "Statistische Formelzeichen"))  , sort.entries=c(TRUE,TRUE)){
 
   names(sort.entries) <- sheets
 
   alle.infos <- lapply( sheets , function(s) {
-    cat(paste0(" Lese Sheet \"" , s, "\" ein.\n"))
-    flush.console()
     v <- readWorkbook ( xlsxFile = varue.file , sheet = s, startRow = 1 )
     if(any(!names(v) %in% headings[[s]])){
-      warning(paste0(" Die angegebenen Überschriften befinden sich nicht in der ersten Zeile im Reiter ",s,". Die übergebenen Überschriften werden als Spaltennamen der ersten beiden Spalten übernommen.\n\n"))
+      warning(paste0(" Die angegebenen Ueberschriften befinden sich nicht in der ersten Zeile im Reiter ",s,". Die uebergebenen Ueberschriften werden als Spaltennamen der ersten beiden Spalten uebernommen.\n\n"))
       names(v) <- headings[[s]]
     }
     v <- v[ , headings[[s]] ]

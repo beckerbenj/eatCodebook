@@ -8,6 +8,8 @@ createRegister(varinfo, keywordList)
 }
 \arguments{
 \item{varinfo}{Object (either list or data.frame) containing variable information.}
+
+\item{keywordList}{Character vector of keyword columns to be added.}
 }
 \value{
 Register template.
@@ -16,6 +18,6 @@ Register template.
 Create register template based on variable information.
 }
 \examples{
-tbd
+#tbd
 
 }

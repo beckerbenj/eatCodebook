@@ -71,13 +71,13 @@ varue.info.aufbereiten <- function(varue.info , col.sonderzeichen=c("LabelSH" , 
   varue.info$Instruktionen <- gsub("/" , "\\slash " , varue.info$Instruktionen , fixed=TRUE)
 
 
-  # Besondere Zeichen für Latex
+  # Besondere Zeichen fuer Latex
 
   cat(paste0("  Sonderzeichen bearbeiten.\n"))
   flush.console()
   for( s in col.sonderzeichen){
     if(! s %in% names(varue.info)){
-      warning(paste0("\n   Die Spalte " , s , " existiert nicht in der übergebenen Varue. Für diese Spalte wird nichts aufbereitet.\n"))
+      warning(paste0("\n   Die Spalte " , s , " existiert nicht in der uebergebenen Varue. Fuer diese Spalte wird nichts aufbereitet.\n"))
     } else {
       varue.info[,s] <- sonderzeichen.aufbereiten(varue.info[,s])
     }
@@ -115,7 +115,7 @@ varue.info.aufbereiten <- function(varue.info , col.sonderzeichen=c("LabelSH" , 
   }
 
 
-  # Sortieren nach Gliederung -> Die Funktion zur Generierung des Gesamt-Tex-Skripts benötigt einen Vektor mit Variablennamen, die sortiert eingegeben werden.
+  # Sortieren nach Gliederung -> Die Funktion zur Generierung des Gesamt-Tex-Skripts benoetigt einen Vektor mit Variablennamen, die sortiert eingegeben werden.
   varue.info <- varue.info[ order( as.numeric(gd) , as.numeric(re) ), ]
 
   return(varue.info)

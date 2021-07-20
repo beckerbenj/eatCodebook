@@ -1,7 +1,5 @@
 
-#### SKALENHANDBUCH-FUNKTION ####
-
-# Erstellung des Tex-Skripts für das gesamte Skalenhandbuch
+# Erstellung des gesamt-Tex-Skripts
 SHtotal <- function( varue.info ,
                      varue.missings,
                      varue.gliederung,
@@ -22,22 +20,22 @@ SHtotal <- function( varue.info ,
                      lastpage) {
 
   # INPUT:
-  #	varue.info:				Liste mit data.frames der Übersichten der Variableninformationen
-  #	varue.missings:			Liste mit data.frames der Übersichten der Werteinformationen
-  #	varue.gliederung:		Liste mit data.frames der Übersichten der Gliederungsinformationen
-  #	skalen.info:			data.frame, Skaleninformationen über alle Fragebogen
-  #	varue.reg:				Liste mit data.frames der Übersichten der Registerinformationen
-  #	Gesamtdatensatz:		Liste mit data.frames der Datensätze
-  #	Kennwertedatensatz: 	Liste mit data.frames der Kennwertedatensätze
+  #	varue.info:				Liste mit data.frames der Uebersichten der Variableninformationen
+  #	varue.missings:			Liste mit data.frames der Uebersichten der Werteinformationen
+  #	varue.gliederung:		Liste mit data.frames der Uebersichten der Gliederungsinformationen
+  #	skalen.info:			data.frame, Skaleninformationen ueber alle Fragebogen
+  #	varue.reg:				Liste mit data.frames der Uebersichten der Registerinformationen
+  #	Gesamtdatensatz:		Liste mit data.frames der Datensaetze
+  #	Kennwertedatensatz: 	Liste mit data.frames der Kennwertedatensaetze
   #	variablen:				Liste mit character-Vektoren der zu berichtenden Variablen
-  #	fbshort:				Character-Vektor, Fragebogenkürzel
+  #	fbshort:				Character-Vektor, Fragebogenkuerzel
   #	fblong:					Character-Vektor, Namen der Fragebogen, wie sie im Skalenhandbuch ausformuliert genannt werden
-  #	breaks:					Character.Vektor, Zeilen im Latex-Skript, an denen ein neues Kapitel, Abschnitt, o.ä. stattfindet
-  #							und nach denen ein Seitenumbruch im Inhaltsverzeichnis eingefügt werden soll.
-  #							Default ist NULL --> keine Umbrüch werden eingefügt.
+  #	breaks:					Character.Vektor, Zeilen im Latex-Skript, an denen ein neues Kapitel, Abschnitt, o.ae. stattfindet
+  #							und nach denen ein Seitenumbruch im Inhaltsverzeichnis eingefuegt werden soll.
+  #							Default ist NULL --> keine Umbruech werden eingefuegt.
   #	intro:					Character-Vektor, Einleitung
   #	literatur:				Character-Vektor, Literaturverzeichnis
-  #	abkuerzverz:			Character-Vekotr, Tabelle Abkürzungsverzeichnis
+  #	abkuerzverz:			Character-Vekotr, Tabelle Abkuerzungsverzeichnis
   #	hintmod:				Character-Vektor, Tabelle Hintergrundmodell
   #	lastpage:				Character-Vektor, Letzte Seite
 
@@ -46,108 +44,49 @@ SHtotal <- function( varue.info ,
   #	skript: 				Character-vektor, Skript, das das gesamte Latex-Skript zum Skalenhandbuch erzeugt
 
 
-  cat(paste0("ERSTELLE SKRIPT ZUM SKALENHANDBUCH.\n\n"))
-  flush.console()
-
   if(any(is.null(fbshort))){
-    stop("Das übergebene Argument \"fbshort\" besitzt mindestens einmal den Eintrag NULL. Dieses Argument muss ein Character-Vektor mit einzigartigen Einträgen sein, mit dem die übergebenen Objekte (varue.info, Gesamtdatensatz etc.) identifiziert werden können.\n\n")
+    stop()
   }
 
   ### names anpassen (zur Sicherheit) ###
-  if( length(Gesamtdatensatz)>length(fbshort)){
-    stop(" Es gibt mehr Einträge beim Objekt \"Gesamtdatensatz\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else if( length(Gesamtdatensatz)<length(fbshort)){
-    stop(" Es gibt weniger Einträge beim Objekt \"Gesamtdatensatz\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else {
-    if( ! all(names(Gesamtdatensatz) %in% fbshort)){
-      cat(" Die Einträge von \"names(Gesamtdatensatz)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
-      flush.console()
+  if(length(Gesamtdatensatz)!=length(fbshort)) stop()
+  if( ! all(names(Gesamtdatensatz) %in% fbshort)){
       names(Gesamtdatensatz) <- fbshort
-    }
   }
 
-  if( length(varue.info)>length(fbshort)){
-    stop(" Es gibt mehr Einträge beim Objekt \"varue.info\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else if( length(varue.info)<length(fbshort)){
-    stop(" Es gibt weniger Einträge beim Objekt \"varue.info\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else {
-    if( ! all(names(varue.info) %in% fbshort)){
-      cat(" Die Einträge von \"names(varue.info)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
-      flush.console()
+  if( length(varue.info)!=length(fbshort)) stop()
+  if( ! all(names(varue.info) %in% fbshort)){
       names(varue.info) <- fbshort
-    }
   }
 
-  if( length(varue.missings)>length(fbshort)){
-    stop(" Es gibt mehr Einträge beim Objekt \"varue.missings\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else if( length(varue.missings)<length(fbshort)){
-    stop(" Es gibt weniger Einträge beim Objekt \"varue.missings\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else {
-    if( ! all(names(varue.missings) %in% fbshort)){
-      cat(" Die Einträge von \"names(varue.missings)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
-      flush.console()
+  if( length(varue.missings)!=length(fbshort)) stop()
+  if( ! all(names(varue.missings) %in% fbshort)){
       names(varue.missings) <- fbshort
-    }
   }
 
-  if( length(varue.gliederung)>length(fbshort)){
-    stop(" Es gibt mehr Einträge beim Objekt \"varue.gliederung\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else if( length(varue.gliederung)<length(fbshort)){
-    stop(" Es gibt weniger Einträge beim Objekt \"varue.gliederung\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else {
-    if( ! all(names(varue.gliederung) %in% fbshort)){
-      cat(" Die Einträge von \"names(varue.gliederung)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
-      flush.console()
+  if( length(varue.gliederung)!=length(fbshort)) stop()
+  if( ! all(names(varue.gliederung) %in% fbshort)){
       names(varue.gliederung) <- fbshort
-    }
   }
 
-  if( length(varue.reg)>length(fbshort)){
-    stop(" Es gibt mehr Einträge beim Objekt \"varue.reg\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else if( length(varue.reg)<length(fbshort)){
-    stop(" Es gibt weniger Einträge beim Objekt \"varue.reg\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else {
-    if( ! all(names(varue.reg) %in% fbshort)){
-      cat(" Die Einträge von \"names(varue.reg)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
-      flush.console()
+  if( length(varue.reg)!=length(fbshort)) stop()
+  if( ! all(names(varue.reg) %in% fbshort)){
       names(varue.reg) <- fbshort
-    }
   }
 
-  if( length(Kennwertedatensatz)>length(fbshort)){
-    stop(" Es gibt mehr Einträge beim Objekt \"Kennwertedatensatz\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else if( length(Kennwertedatensatz)<length(fbshort)){
-    stop(" Es gibt weniger Einträge beim Objekt \"Kennwertedatensatz\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else {
-    if( ! all(names(Kennwertedatensatz) %in% fbshort)){
-      cat(" Die Einträge von \"names(Kennwertedatensatz)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
-      flush.console()
-      names(Kennwertedatensatz) <- fbshort
-    }
+  if( length(Kennwertedatensatz)!=length(fbshort)) stop()
+  if( ! all(names(Kennwertedatensatz) %in% fbshort)){
+    names(Kennwertedatensatz) <- fbshort
   }
 
-  if( length(variablen)>length(fbshort)){
-    stop(" Es gibt mehr Einträge beim Objekt \"variablen\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else if( length(variablen)<length(fbshort)){
-    stop(" Es gibt weniger Einträge beim Objekt \"variablen\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else {
-    if( ! all(names(variablen) %in% fbshort)){
-      cat(" Die Einträge von \"names(variablen)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
-      flush.console()
+  if( length(variablen)!=length(fbshort)) stop()
+  if( ! all(names(variablen) %in% fbshort)){
       names(variablen) <- fbshort
-    }
   }
 
-  if( length(fblong)>length(fbshort)){
-    stop(" Es gibt mehr Einträge beim Objekt \"fblong\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else if( length(fblong)<length(fbshort)){
-    stop(" Es gibt weniger Einträge beim Objekt \"fblong\" als beim Objekt \"fbshort\". Die Anzahl der Einträge muss übereinstimmen.\n")
-  } else {
-    if( ! all(names(fblong) %in% fbshort)){
-      cat(" Die Einträge von \"names(fblong)\" stimmen nicht mit dem Argument \"fbshort\" überein. Es werden die Angaben von \"fbshort\" übernommen.\n")
-      flush.console()
+  if( length(fblong)!=length(fbshort)) stop()
+  if( ! all(names(fblong) %in% fbshort)){
       names(fblong) <- fbshort
-    }
   }
 
 
@@ -156,7 +95,7 @@ SHtotal <- function( varue.info ,
   double.vars <- unname(unlist(variablen))
   double.vars <- names( table(double.vars)[table(double.vars)>1])
 
-  # TRUE/FALSE pro Instrument, ob Register erstellt werden soll (falls nicht schon übergeben)
+  # TRUE/FALSE pro Instrument, ob Register erstellt werden soll (falls nicht schon uebergeben)
   if(is.null(make.reg)){
     make.reg <- unlist(lapply( fbshort , function(d) {
       bool <- all(sapply( names(varue.reg[[d]]) , function(k) all(is.null(varue.reg[[d]][[k]])) ) )
@@ -222,7 +161,7 @@ SHtotal <- function( varue.info ,
   # Skript der Variablen erstellen
   skript.fb <- lapply( fbshort , function(d) {
     #												lastcountervar <- varue.info[[d]]$Var.Name[ varue.info[[d]]$in.DS.und.SH %in% c("ja","sh") ][length( varue.info[[d]]$Var.Name[varue.info[[d]]$in.DS.und.SH %in% c("ja","sh")] )]
-    cat(toupper(paste0("\n Erstelle Layout-Skripte für: ", d, "\n")))
+    cat(toupper(paste0("\n Erstelle Layout-Skripte fuer: ", d, "\n")))
     flush.console()
     ret. <- c( "\\phantomsection" ,
                paste0("\\chapter{",fblong[d],"}"),
