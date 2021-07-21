@@ -1,9 +1,18 @@
-# Hintergrundmodell
-makehintmod <- function(varue.info,fbshort) {
-
-  cat(paste0("Erstellen des Hintergrundmodells.\n" ))
-  flush.console()
-
+####
+#############################################################################
+#' Create background model information.
+#'
+#' Create background model information.
+#'
+#'@param varInfo Variable information
+#'
+#'@return Returns a latex snippet.
+#'
+#'@examples
+#'#tbd
+#'
+#'@export
+makeBGM <- function(varue.info,fbshort) {
   cols <- c("Var.Name" , "Hintergrundmodell" , "HGM.Variable.erstellt.aus" , "HGM.Reihenfolge", "LabelSH")
   # Hintergrundmodell erstellen
   hint.info <- lapply( fbshort , function(d) {
@@ -34,9 +43,6 @@ makehintmod <- function(varue.info,fbshort) {
     }
 
     # Sonderzeichen fuer Latex
-    cat(paste0(" Sonderzeichen bearbeiten.\n" ))
-    flush.console()
-
     hint.info$Var.Name <- sonderzeichen.aufbereiten(hint.info$Var.Name, TRUE)
     hint.info$HGM.Variable.erstellt.aus <- sonderzeichen.aufbereiten(hint.info$HGM.Variable.erstellt.aus, TRUE)
     hint.info$LabelSH <- sonderzeichen.aufbereiten(hint.info$LabelSH)
@@ -65,8 +71,6 @@ makehintmod <- function(varue.info,fbshort) {
       flush.console()
     }
 
-    cat(paste0(" Erstellen des Skripts.\n" ))
-    flush.console()
     skript <- c( "\\clearpage",
                  "\\phantomsection",
                  "\\label{Tab:hintmod}",
@@ -87,6 +91,6 @@ makehintmod <- function(varue.info,fbshort) {
                  paste0(hint.info$Var.Name, " & ", hint.info$HGM.Variable.erstellt.aus, " & ", hint.info$LabelSH, " \\\\"),
                  "\\bottomrule",
                  "\\end{longtabu}")
-    return(skript)
+    skript
   }
 }

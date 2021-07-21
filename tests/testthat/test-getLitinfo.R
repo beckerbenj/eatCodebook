@@ -1,4 +1,6 @@
+
+
 test_that("create lit info", {
-  out <- createLitinfo()
+  out <- createLitInfo()
   expect_equal(names(out), c("Kurzangabe", "Langangabe", "in_Literaturverzeichnis"))
 })

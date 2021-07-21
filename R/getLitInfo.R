@@ -12,24 +12,24 @@
 #'#tbd
 #'
 #'@export
-createLitinfo <- function(){
+createLitInfo <- function(){
   data.frame(Kurzangabe = character(), Langangabe = character(), in_Literaturverzeichnis = character())
 }
 
 ####
 #############################################################################
-#' Import register excel.
+#' Import literature information.
 #'
-#' Import register excel.
+#' Import literature information.
 #'
 #'@param filePath Path to excel file.
 #'
-#'@return Register.
+#'@return Literature information.
 #'
 #'@examples
 #'#tbd
 #'
 #'@export
-getLitinfo <- function(filePath){
+getLitInfo <- function(filePath){
   readWorkbook(xlsxFile = filePath, startRow = 1 )
 }
