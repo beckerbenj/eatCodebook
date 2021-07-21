@@ -3,7 +3,9 @@ Title: Automatic Codebook Generation
 Version: 0.1.0
 Authors@R: c(
     person("Benjamin", "Becker", email = "b.becker@iqb.hu-berlin.de", role = c("aut", "cre")),
-    person("Sebastian", "Weirich", role = c("aut")))
+    person("Sebastian", "Weirich", role = c("aut")),
+    person("Felix", "Milles", role = c("aut")),
+    person("Johanna", "Busse", role = c("aut")))
 Description: Create automatic codebooks.
 Depends: R (>= 3.5.0)
 Imports: eatTools, eatGADS, eatRep, reshape2, psych, psy, haven, foreign, openxlsx, stats, car

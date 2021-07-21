@@ -6,30 +6,23 @@
 \usage{
 makeAbbrList(
   filePath,
-  sheets = c("Akronyme", "Statistische Formelzeichen"),
-  headings = list(Akronyme = c("Abkürzung", "Bedeutung"), `Statistische Formelzeichen`
-    = c("Symbol", "Bedeutung")),
-  captions = list(Akronyme = c("Abkürzungen"), `Statistische Formelzeichen` =
-    c("Statistische Formelzeichen")),
-  sort.entries = c(TRUE, TRUE)
+  captions = list(Akronyme = "Abkuerzungen", `Statistische Formelzeichen` =
+    "Statistische Formelzeichen"),
+  sort.entries = TRUE
 )
 }
 \arguments{
 \item{filePath}{Path to the file.}
 
-\item{sheets}{Main title of the document.}
-
-\item{headings}{Sub title of the document.}
-
 \item{captions}{Authors of the document.}
 
-\item{sort.entries}{Additional contributers to the document.}
+\item{sort.entries}{Should the abbreviation lists be sorted alphabeticall?.}
 }
 \value{
 Returns a latex snippet.
 }
 \description{
-Create abbreviation lists.
+Create abbreviation lists latex snippet.
 }
 \examples{
 #tbd
