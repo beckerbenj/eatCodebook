@@ -31,5 +31,5 @@ createLitInfo <- function(){
 #'
 #'@export
 getLitInfo <- function(filePath){
-  readWorkbook(xlsxFile = filePath, startRow = 1 )
+  openxlsx::readWorkbook(xlsxFile = filePath, startRow = 1 )
 }

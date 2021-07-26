@@ -2,30 +2,28 @@
 
 # Die Layout-Funktionen unterscheiden sich in zwei Arten: Die erste Art sind layoutspezifische Funktionen.
 # Jede Variable bekommt in der Varue einen Layouttyp, durch den in diesem Skript entschieden wird, welche Layout-Funktion aufgerufen wird (layout.id, layout.kategorial, ...).
-# Innerhalb dieser Layout-Funktionen werden Funktion der zweiten Art aufgerufen (table.descriptive, table.means, ...). Jede dieser Funktion erstellt das Skript für eine Tabelle (Beschreibungstabelle, Häufigkeitstabelle etc.). Das sind layoutübergreifende Funk
-# Diese Aufteilung soll die Bearbeitung der Funktionen vereinfachen: Sollte sich etwas für nur einen Layouttyp verändern, so kann das in den Funktion erster Art vorgenommen werden. Sollte sich etwas an einer Tabellenart ändern, die für alle Layouttypen verwendet wird, so kann das in den Funktionen zweiter Art getan werden.
+# Innerhalb dieser Layout-Funktionen werden Funktion der zweiten Art aufgerufen (table.descriptive, table.means, ...). Jede dieser Funktion erstellt das Skript für eine Tabelle (Beschreibungstabelle, Haeufigkeitstabelle etc.). Das sind layoutuebergreifende Funk
+# Diese Aufteilung soll die Bearbeitung der Funktionen vereinfachen: Sollte sich etwas für nur einen Layouttyp verändern, so kann das in den Funktion erster Art vorgenommen werden. Sollte sich etwas an einer Tabellenart aendern, die für alle Layouttypen verwendet wird, so kann das in den Funktionen zweiter Art getan werden.
 
 
 # Funktionen erster Art: Funktionen pro Layouttyp (Layoutspezifisch)
 # layout.id:				: Skript für Identifikationsvariablen (Tabelle mit Variablenbeschreibung)
 # layout.string				: Skript für String-Variablen (Tabelle mit Variablenbeschreibung)
-# layout.kategorial			: Skript für kategoriale Variablen (Tabelle mit Variablenbeschreibung und Häufigkeitstabelle)
-# layout.ordinal			: Skript für ordinale Variablen (Tabelle mit Variablenbeschreibung, Häufigkeitstabelle und Tabelle mit metrischen Kennwerten)
+# layout.kategorial			: Skript für kategoriale Variablen (Tabelle mit Variablenbeschreibung und Haeufigkeitstabelle)
+# layout.ordinal			: Skript für ordinale Variablen (Tabelle mit Variablenbeschreibung, Haeufigkeitstabelle und Tabelle mit metrischen Kennwerten)
 # layout.metrisch			: Skript für metrische Variablen (Tabelle mit Variablenbeschreibung und Tabelle mit metrischen Kennwerten)
-# layout.skala				: Skript für Skalen (Tabelle mit Variablenbeschreibungen (Skala und Items), Häufigkeitstabelle (Items) und Tabelle mit metrischen Kennwerten (Skala) )
+# layout.skala				: Skript für Skalen (Tabelle mit Variablenbeschreibungen (Skala und Items), Haeufigkeitstabelle (Items) und Tabelle mit metrischen Kennwerten (Skala) )
 # layout.gepoolt.metrisch	: Skript für gepoolte metrische Variablen (Tabelle mit Variablenbeschreibung und Tabelle mit metrischen Kennwerten)
-# layout.gepoolt.kategorial	: Skript für gepoolte kategoriale Variablen (Tabelle mit Variablenbeschreibung und Häufigkeitstabelle)
+# layout.gepoolt.kategorial	: Skript für gepoolte kategoriale Variablen (Tabelle mit Variablenbeschreibung und Haeufigkeitstabelle)
 # layout.numerisch.geleert	: Skript für vom FDZ geleerte numerische Variablen (Tabelle mit Variablenbeschreibung)
 
 # Funktionen zweiter Art: Funktionen pro Tabellentyp (Layoutübergreifend)
 # table.descriptive: Tabelle "Beschreibung der Variable"
 # table.means: Tabelle mit metrischen Kennwerten, auch für die Tabelle "Itemanalyse" von Items in enier Skala
-# table.frequencies: Häufigkeitstabelle für einzelne Variablen
-# table.frequencies.items: Häufigkeitstabelle für Items, die zu einer Skala gehören
+# table.frequencies: Haeufigkeitstabelle für einzelne Variablen
+# table.frequencies.items: Haeufigkeitstabelle für Items, die zu einer Skala gehören
 
 table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ  , skala.items=NULL , Gesamtdatensatz=NULL , werte=NULL, show.kategorien=TRUE, gepoolt=FALSE){
-  cat(paste0("   Skript für Tabelle \'Beschreibung der Variable/Items\'.\n"))
-  flush.console()
   if(length(name)>1){
     varue.info.aktuell <- varue.info[varue.info$Var.Name %in% name[1],]
     varue.missings.aktuell <- varue.missings[varue.missings$Var.name %in% name,]
@@ -183,7 +181,7 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
     } else {
       varue.missings.aktuell$LabelSH[ is.na(varue.missings.aktuell$LabelSH) & varue.missings.aktuell$missing %in% "ja"] <- "(kein Label vergeben)"
       varue.missings.aktuell$LabelSH[ gsub("\\s" , "" , varue.missings.aktuell$LabelSH) %in% "" & varue.missings.aktuell$missing %in% "ja" ] <- "(kein Label vergeben)"
-      # wobei hier zusätzlich Sysmis (falls vorhanden) eingefügt werden und nach der Anzahl der Kategorien (für das Setzen des ";") unterschieden wird
+      # wobei hier zusaetzlich Sysmis (falls vorhanden) eingefügt werden und nach der Anzahl der Kategorien (für das Setzen des ";") unterschieden wird
       if( ! werte[ "sysmis.totalabs" ] %in% "0" & length( which( tolower ( varue.missings.aktuell$missing ) %in% "ja" ) )>0 ) { # Fall: Es gibt Sysmis und mindestens eine sonsitge Missingkategorie
         label.miss <- paste0("~$=$~\\textit{", varue.missings.aktuell$LabelSH[ tolower ( varue.missings.aktuell$missing ) %in% "ja"] , "}; ")
         label.miss <- c( label.miss , "~$=$~\\textit{kein Dateneintrag}" )
@@ -195,11 +193,11 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
       } else if (  werte[ "sysmis.totalabs" ] %in% "0" & length( which( tolower ( varue.missings.aktuell$missing ) %in% "ja" ) )==1 ) { # Fall: Es gibt keine Sysmis und genau eine sonsitge Missingkategorie
         label.miss <- paste0("~$=$~\\textit{", varue.missings.aktuell$LabelSH[ tolower ( varue.missings.aktuell$missing ) %in% "ja"] , "}" )
         label.miss <- cbind( varue.missings.aktuell$Wert[ tolower(varue.missings.aktuell$missing) %in% "ja" ] , label.miss )
-      } else if ( length( varue.missings.aktuell$Wert[ tolower(varue.missings.aktuell$missing) %in% "ja" ] ) == 0 ) { # Fall: Es sind keine Missingkategorie in der Varue definiert --> es wird dann Standardmäßig Sysmis in Beschreibungstabelle aufgeführt.
+      } else if ( length( varue.missings.aktuell$Wert[ tolower(varue.missings.aktuell$missing) %in% "ja" ] ) == 0 ) { # Fall: Es sind keine Missingkategorie in der Varue definiert --> es wird dann Standardmaessig Sysmis in Beschreibungstabelle aufgefuehrt.
 
         label.miss <-  cbind(".","~$=$~\\textit{kein Dateneintrag}")
         #### 29.03. Benjamin: Korrektur der Missinglabel-Anzeige: nur wenn Missings vorkommen!
-        # Achtung: passiert das für anderen Fälle (gibt auch andere Missingkategorien) auch? -> überprüfen!!
+        # Achtung: passiert das für anderen Faelle (gibt auch andere Missingkategorien) auch? -> überprüfen!!
         # ohje, würde das die Latex-Tabelle kaputt machen? Johanna fragen, ob das notwendig ist?
         if(werte["sysmis.totalabs"] == 0) label.miss <- cbind("", "")
       }
@@ -267,12 +265,10 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
 
 
 table.frequencies <- function(name , varue.missings.aktuell , werte){
-  cat(paste0("   Skript für Häufigkeitstabelle.\n"))
-  flush.console()
   # Kennwerte-names: bekommen automatisch den namen der Variable rangepastet, das wird hier korrigiert
   names(werte) <- sub( paste0(name,"\\.(.*)$") , "\\1" , names(werte) )
 
-  # Sysmis als Missing-Kategorie in der varue hinzufügen - wird später wieder gelöscht, falls nicht besetzt
+  # Sysmis als Missing-Kategorie in der varue hinzufügen - wird spaeter wieder gelöscht, falls nicht besetzt
   varue.missings.aktuell <- data.frame( "Var.name"=c( varue.missings.aktuell$Var.name  ,name ) ,
                                         "Wert"= c( varue.missings.aktuell$Wert  , "." ) ,
                                         "LabelSH"=c( varue.missings.aktuell$LabelSH  , "kein Dateneintrag" ),
@@ -308,7 +304,7 @@ table.frequencies <- function(name , varue.missings.aktuell , werte){
   skript <- c("\\begin{tabcoloredlong}",
               paste0( varue.missings.aktuell$Wert , " & " , varue.missings.aktuell$LabelSH , " & " , werte[ paste0( sub("^\\.$","sysmis",varue.missings.aktuell$Wert) , ".valid") ] , " & " , werte[ paste0( sub("^\\.$","sysmis",varue.missings.aktuell$Wert) , ".total") ] , "\\\\", "" ),
               "\\nobreakbottomrule",
-              paste0("\\anmerkungen{4}{Es werden gerundete relative Häufigkeiten in Prozent in Bezug auf die Fallzahl der gültigen Werte ($N_{valid}~=~", werte["N.valid"] ,"$) und in Bezug auf die Fallzahl aller Werte ($N_{total}~=~", werte["N.total"] , "$) berichtet. Dadurch kann die Summe der Prozente minimal von 100 abweichen" , anmerkungtab ,". ",anmerkung.tab.miss, "}"),
+              paste0("\\anmerkungen{4}{Es werden gerundete relative Haeufigkeiten in Prozent in Bezug auf die Fallzahl der gültigen Werte ($N_{valid}~=~", werte["N.valid"] ,"$) und in Bezug auf die Fallzahl aller Werte ($N_{total}~=~", werte["N.total"] , "$) berichtet. Dadurch kann die Summe der Prozente minimal von 100 abweichen" , anmerkungtab ,". ",anmerkung.tab.miss, "}"),
               "\\end{tabcoloredlong}")
 
   return(skript)
@@ -316,8 +312,6 @@ table.frequencies <- function(name , varue.missings.aktuell , werte){
 
 
 table.means <- function(name , werte, setsizefst , cols, anm.tab=NULL , items=FALSE){
-  cat(paste0("   Skript für Tabelle mit metrischen Kennwerten.\n"))
-  flush.console()
   nameSH <- gsub( "_" , "\\_" , name , fixed = TRUE)
   headlines <- cols[1,]
   bool <- sapply( "_" , grepl , x=headlines) | sapply("\\\\" , grepl , x=headlines)
@@ -349,9 +343,6 @@ table.means <- function(name , werte, setsizefst , cols, anm.tab=NULL , items=FA
 }
 
 table.frequencies.items <- function(name , varue.info, varue.missings.item , werte, endung){
-
-  cat(paste0("   Skript für Häufigkeitstabelle der Items.\n"))
-  flush.console()
   nameSH <- gsub( "_" , "\\_" , name , fixed = TRUE)
 
   # Tabellenanmerkung: Wenn gerundete Prozentzahl "0.0" ist, aber absoluter Wert größer 0
@@ -375,12 +366,12 @@ table.frequencies.items <- function(name , varue.info, varue.missings.item , wer
   varue.valid <- varue.valid[order(as.numeric(varue.valid$Wert)) ,]
   varue.missings.item <- rbind(varue.valid , varue.miss)
 
-  # Reduktion der Item-Varue auf zu berichtende Fälle
+  # Reduktion der Item-Varue auf zu berichtende Faelle
   varue.missings.item <- varue.missings.item[ tolower(varue.missings.item$missing) %in% "nein" |
                                                 ! varue.missings.item$Wert %in% varue.missings.item$Wert[ sapply( paste0(varue.missings.item$Wert, ".totalabs") , function(d) all(  werte[[length(werte)]][d, ] %in% "0" ) ) ]	,
   ]
 
-  # Ergänzung der Varue, falls Sysmis berichtet werden
+  # Ergaenzung der Varue, falls Sysmis berichtet werden
   if( ! all( werte[[length(werte)]][ "sysmis.totalabs", ] %in% "0" ) ) {
     varue.missings.item <- data.frame( "Var.name"=c( varue.missings.item$Var.name  ,varue.missings.item$Var.name[1] ) ,
                                        "Wert"= c( varue.missings.item$Wert  , "." ) ,
@@ -417,7 +408,7 @@ table.frequencies.items <- function(name , varue.info, varue.missings.item , wer
   #}
 
 
-  skript <- c(# Häufigkeitstabelle der Items
+  skript <- c(# Haeufigkeitstabelle der Items
     paste0("\\begin{tabcoloreditem}{",column_spec,"}{", length( varue.missings.item$Wert[ varue.missings.item$missing %in% "nein"] ) ,"}{",length( varue.missings.item$Wert[ varue.missings.item$missing %in% "ja"] ) ,"}"),
     paste0("\\rulefiller \\cmidrule[\\lightrulewidth](lr){2-", length( varue.missings.item$Wert[ varue.missings.item$missing %in% "nein"] )+1 ,"} \\cmidrule[\\lightrulewidth](lr){", length( varue.missings.item$Wert[ varue.missings.item$missing %in% "nein"] )+2,"-", length( varue.missings.item$Wert )+1 ,"}"),
     "\\headrow",
@@ -438,12 +429,12 @@ table.frequencies.items <- function(name , varue.info, varue.missings.item , wer
 
 # layout.id:				: Skript für Identifikationsvariablen (Tabelle mit Variablenbeschreibung)
 # layout.string				: Skript für String-Variablen (Tabelle mit Variablenbeschreibung)
-# layout.kategorial			: Skript für kategoriale Variablen (Tabelle mit Variablenbeschreibung und Häufigkeitstabelle)
-# layout.ordinal			: Skript für ordinale Variablen (Tabelle mit Variablenbeschreibung, Häufigkeitstabelle und Tabelle mit metrischen Kennwerten)
+# layout.kategorial			: Skript für kategoriale Variablen (Tabelle mit Variablenbeschreibung und Haeufigkeitstabelle)
+# layout.ordinal			: Skript für ordinale Variablen (Tabelle mit Variablenbeschreibung, Haeufigkeitstabelle und Tabelle mit metrischen Kennwerten)
 # layout.metrisch			: Skript für metrische Variablen (Tabelle mit Variablenbeschreibung und Tabelle mit metrischen Kennwerten)
-# layout.skala				: Skript für Skalen (Tabelle mit Variablenbeschreibungen (Skala und Items), Häufigkeitstabelle (Items) und Tabelle mit metrischen Kennwerten (Skala) )
+# layout.skala				: Skript für Skalen (Tabelle mit Variablenbeschreibungen (Skala und Items), Haeufigkeitstabelle (Items) und Tabelle mit metrischen Kennwerten (Skala) )
 # layout.gepoolt.metrisch	: Skript für gepoolte metrische Variablen (Tabelle mit Variablenbeschreibung und Tabelle mit metrischen Kennwerten)
-# layout.gepoolt.kategorial	: Skript für gepoolte kategoriale Variablen (Tabelle mit Variablenbeschreibung und Häufigkeitstabelle)
+# layout.gepoolt.kategorial	: Skript für gepoolte kategoriale Variablen (Tabelle mit Variablenbeschreibung und Haeufigkeitstabelle)
 # layout.numerisch.geleert	: Skript für vom FDZ geleerte numerische Variablen (Tabelle mit Variablenbeschreibung)
 
 layout.id <- function( name , varue.info) {
@@ -515,12 +506,12 @@ layout.kategorial <- function(name , kennwerte.var = NULL, id.fb, varue.info, va
 
   # OUTPUT:
   #	skript: Character-Vektor mit Skript, die für die Variable den Tabellenblock erstellt
-  #			Hier Beschreibungstabelle und Häufigkeitstabelle
+  #			Hier Beschreibungstabelle und Haeufigkeitstabelle
 
-  # ANMERKUNG: Zur Erstellung der Häufigkeitstabellen sind verschiedene Änderungen an den Kennwerten und der Werteinformationen aus der Varue nötig.
+  # ANMERKUNG: Zur Erstellung der Haeufigkeitstabellen sind verschiedene Aenderungen an den Kennwerten und der Werteinformationen aus der Varue nötig.
   #			 Zuerst wird eine neue Variableninformation erstellt, sofern keine validen Kategorien definiert sind, also nur Missing in der Varue stehen. Valide Werte müssen berichtet werden.
   #			 In der Tabelle sollen alle validen Kategorien aufgelistet werden, aber nur besetzte Missing-Kategorien.
-  #			 Zusätzlich werden Sysmis berichtet, sofern diese besetzt sind.
+  #			 Zusaetzlich werden Sysmis berichtet, sofern diese besetzt sind.
   #			 Außerdem wird eine Tabellenanmerkung eingefügt, sofern Kategorien besetzt sind, aber die gerundete Prozentzahl "0.0" ist.
 
   #### Vorbereitung ####
@@ -599,12 +590,12 @@ layout.ordinal <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue
 
   # OUTPUT:
   #	skript: Character-Vektor mit Skript, die für die Variable den Tabellenblock erstellt
-  #			Hier Beschreibungstabelle, Tabelle mit metrischen Kennwerten und Häufigkeitstabelle
+  #			Hier Beschreibungstabelle, Tabelle mit metrischen Kennwerten und Haeufigkeitstabelle
 
-  # ANMERKUNG: Zur Erstellung der Häufigkeitstabellen sind verschiedene Änderungen an den Kennwerten und der Werteinformationen aus der Varue nötig.
+  # ANMERKUNG: Zur Erstellung der Haeufigkeitstabellen sind verschiedene Aenderungen an den Kennwerten und der Werteinformationen aus der Varue nötig.
   #			 Zuerst wird eine neue Variableninformation erstellt, sofern keine validen Kategorien definiert sind, also nur Missing in der Varue stehen. Valide Werte müssen berichtet werden.
   #			 In der Tabelle sollen alle validen Kategorien aufgelistet werden, aber nur besetzte Missing-Kategorien.
-  #			 Zusätzlich werden Sysmis berichtet, sofern diese besetzt sind.
+  #			 Zusaetzlich werden Sysmis berichtet, sofern diese besetzt sind.
   #			 Außerdem wird eine Tabellenanmerkung eingefügt, sofern Kategorien besetzt sind, aber die gerundete Prozentzahl "0.0" ist.
 
   #### Vorbereitung ####
@@ -721,7 +712,7 @@ layout.skala <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.m
   # OUTPUT:
   #	skript: Character-Vektor mit Skript, die für die Variable den Tabellenblock erstellt
   #			Skala: Beschreibungstabelle und Tabelle mit metrischen Kennwerten
-  #			Items: Beschreibungstabelle, Labeltabelle, Tabelle mit metrischen Kennwerten und Häufigkeitstabelle
+  #			Items: Beschreibungstabelle, Labeltabelle, Tabelle mit metrischen Kennwerten und Haeufigkeitstabelle
 
 
   # YRNTCSH! - Der Funktion "table.frequencies.items" (ganz am Ende) muss die richtige Endung übergeben werden, mit der rekodierte Variablen identifizert werden können. Im LV12 war dies einheitlich ".r", im LV15 "_r". In der genannten Funktion muss dann die Variablenspezifikation 'endung="_r"' durch die neue Endung in der Form'endung="NEUE_ENDUNG"' ersetzt werden.
@@ -823,7 +814,7 @@ layout.skala.fake <- function(name , kennwerte.var = NULL, id.fb, varue.info, va
   # OUTPUT:
   #	skript: Character-Vektor mit Skript, die für die Variable den Tabellenblock erstellt
   #			Skala: Beschreibungstabelle und Tabelle mit metrischen Kennwerten
-  #			Items: Beschreibungstabelle, Labeltabelle, Tabelle mit metrischen Kennwerten und Häufigkeitstabelle
+  #			Items: Beschreibungstabelle, Labeltabelle, Tabelle mit metrischen Kennwerten und Haeufigkeitstabelle
 
 
   # YRNTCSH! - Der Funktion "table.frequencies.items" (ganz am Ende) muss die richtige Endung übergeben werden, mit der rekodierte Variablen identifizert werden können. Im LV12 war dies einheitlich ".r", im LV15 "_r". In der genannten Funktion muss dann die Variablenspezifikation 'endung="_r"' durch die neue Endung in der Form'endung="NEUE_ENDUNG"' ersetzt werden.
@@ -966,7 +957,7 @@ layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, id.fb, varue.
 
   # OUTPUT:
   #	skript: Character-Vektor mit Skript, die für die Variable den Tabellenblock erstellt
-  #			Hier: Beschreibungstabelle, Häufigkeitstabelle mit gepoolten Kennwerten und Zuordnungstabelle (s.o.)
+  #			Hier: Beschreibungstabelle, Haeufigkeitstabelle mit gepoolten Kennwerten und Zuordnungstabelle (s.o.)
 
 
   # Hinweis:	Die Variablen, auf Grundlage derer die Kennwerte gepoolt werden, werden im Skalenhandbuch nicht extra berichtet (wie bei Skalen).
@@ -1013,33 +1004,33 @@ layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, id.fb, varue.
 
 #### ZUSAMMENFÜHRUNG ALLER LAYOUT-FUNKTIONEN ####
 
-# Funktion für Zählervariablen
+# Funktion für Zaehlervariablen
 numtolet <- function( name , fb , double.vars) {
   # INPUT
   #	name: Character. Im Skript ist es immer der Name einer Variable, wie sie in der Varue erscheint
   #	fb: Character, Kürzel für den Fragebogen aus fbshort
   # OUTPUT:
-  #	countername: Name der Zählervariable, die in Latex verwendet wird
+  #	countername: Name der Zaehlervariable, die in Latex verwendet wird
 
   #### Vorbereitung ####
 
-  # YRNTCSH! - Variablen, die namentlich in allen Datensätzen vorkommen, d.h. der Name der Variable ist entscheidend, nicht der Inhalt.
-  #	Variablennamen, der in mind. 2 Datensätzen auftaucht, müssen hier gesondert behandelt werden,
-  #	da sonst mind. 2 Mal die selbe Zählervariable erstellt wird. Die Funktion pastet das Fragebogen-
-  #	Kürzel ans Ende des Names der Zählervariable, um eine eindeutige Zuordnung zu garantieren.
-  #	Der Variablenname selbst wird nicht verändert, nur der Name der Zählervariable in Latex.
+  # YRNTCSH! - Variablen, die namentlich in allen Datensaetzen vorkommen, d.h. der Name der Variable ist entscheidend, nicht der Inhalt.
+  #	Variablennamen, der in mind. 2 Datensaetzen auftaucht, müssen hier gesondert behandelt werden,
+  #	da sonst mind. 2 Mal die selbe Zaehlervariable erstellt wird. Die Funktion pastet das Fragebogen-
+  #	Kürzel ans Ende des Names der Zaehlervariable, um eine eindeutige Zuordnung zu garantieren.
+  #	Der Variablenname selbst wird nicht veraendert, nur der Name der Zaehlervariable in Latex.
   #	Hier muss als "IDSCH_FDZ" durch die entsprechende(n) Variable(n) ersetzt werden.
 
-  # name ändern, falls Variable in mehr als einem Datensatz ist
+  # name aendern, falls Variable in mehr als einem Datensatz ist
   if( tolower( name ) %in% tolower(double.vars) ) {
     name <- paste0(name,tolower(fb))
   }
 
-  # Codierungsvorschrift, um Zahlen und Sonderzeichen in den Variablennamen zu ändern
+  # Codierungsvorschrift, um Zahlen und Sonderzeichen in den Variablennamen zu aendern
   letts	<- c( paste0("NUMBER" , c("ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE" )) , "DASH", "UNDER", "POINT" , "SPACE" , "ss")
   names ( letts ) <- c( 0:9 , "\\" , "_" , ".", " ", "ß")
 
-  #### Erstellung des Namens der Zählervariable
+  #### Erstellung des Namens der Zaehlervariable
   countername <- unlist(strsplit( name , split="") )
   countername[ ! is.na( letts[ countername ] ) ] <- letts[ countername[ ! is.na( letts[ countername ] ) ] ]
   countername <- paste(countername, collapse ="")
@@ -1052,8 +1043,7 @@ numtolet <- function( name , fb , double.vars) {
 # Funktion, um im Inhaltsverzeichnis einen Zeilenumbruch zu setzen
 toc_linebreak <- function( var_title, bold , space_title, do.print=TRUE ){
   if(do.print){
-    cat(paste0("   Check, ob Zeilenumbrüche ins Inhaltsverzeichnis müssen (rekursive Funktion).\n"))
-    flush.console()
+    message("Check, ob Zeilenumbrüche ins Inhaltsverzeichnis muessen (rekursive Funktion).")
   }
   k <- 1
   while(sum(sapply(1:k , function(v) Latex.length( unname(unlist(strsplit(var_title , " ")))[v] , bold=bold , FALSE) +  Latex.length( " " , bold=bold, FALSE)) ) < space_title){
@@ -1081,30 +1071,28 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
   #	varue.gliederung: data.frame, Gliederungsreiter aus der Varue
 
   # OUTPUT:
-  #	skript: Character-Vektor, der für eine Variable alle Informationen ausgibt, die für den Bericht der Variable nötig sind.
+  #	skript: Character-Vektor, der für eine Variable alle Informationen ausgibt, die für den Bericht der Variable noetig sind.
 
   # ANMERKUNG:
   #	Im Skalenhandbuch werden drei Ebene unterschiedene: Kapitel, Abschnitt, Unterabschnitt.
-  #	Jede Variable erhält in der Variableninformation neben dem Label und dem Variablennamen auch einen eigenen Titel,
+  #	Jede Variable erhaelt in der Variableninformation neben dem Label und dem Variablennamen auch einen eigenen Titel,
   #	der im Inhaltsverzeichnis auftauchen soll. Dieser Titel befindet sich auf der dritten Ebene der Gliederung und wird
   #	als Unterabschnitt gesetzt.
   #	Jeder Variable wird eine Gliederungsebene zugeordnet, die das Kapitel (erste Ebene) und den Abschnitt (zweite Ebene)
   #	angibt, unter der die Variable im Skalenhandbuch berichtet wird. Zu einer Gliederungsbene können mehrere Variablen
   #	gehören.
-  #	Falls bei zwei aufeinanderfolgenden Variablen ein neues Kapitel anfängt oder sich der Abschnitt innerhalb des selben
-  #	Kapitels ändert sich, so kann dies eindeutig über die Gliederungsebene festgestellt werden.
+  #	Falls bei zwei aufeinanderfolgenden Variablen ein neues Kapitel anfaengt oder sich der Abschnitt innerhalb des selben
+  #	Kapitels aendert sich, so kann dies eindeutig über die Gliederungsebene festgestellt werden.
 
   #### Vorbereitung ####
 
   # Ausgabe des Variablennames - Erleichtert Fehlersuche
-  cat ( paste0 ( "  Layout der Variable: " , name , "\n" ) )
-  flush.console()
-
+  message(paste0 ( "  Layout der Variable: " , name , "\n" ) )
 
   # Reduzierung der Varue: Nur diejenigen Variablen, die echt berichtet werden (also "ds" raus)
   varue.info.sh <- varue.info[ varue.info$in.DS.und.SH %in% c("ja" , "sh"), ]
 
-  # Zählvariable wird auf Seitenzahl gesetzt
+  # Zaehlvariable wird auf Seitenzahl gesetzt
   if(makeCounter){
     counter <- paste0("\\setcounter{", numtolet(name, fb, double.vars), "}{\\thepage}")
   } else {
@@ -1138,11 +1126,11 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
   if( gsub("\\s","", as.character(varue.info$Reihenfolge[ varue.info$Var.Name %in% name])) == "-") {
     sections.var1 <- varue.info.sh$Titel[ varue.info.sh$Var.Name %in% name ]
     sections.var1 <- lapply(1:1 , function(d){
-      right_margins <- 32.54317 # Länge von  tocrmarg in Latex (zur Verfügung stehender Platz für den rechten Rand im Inhaltsverzeichnis, in pt)
+      right_margins <- 32.54317 # Laenge von  tocrmarg in Latex (zur Verfügung stehender Platz für den rechten Rand im Inhaltsverzeichnis, in pt)
       bold <- d %in% c(1,2)
       left_margins <- Latex.length( all_length[d+1] , bold=bold , FALSE)
       textwidth <- 455.24417 # gesamte Breite für den Text (ca. 16cm) in pt
-      space_title <- floor(textwidth - left_margins - right_margins - all_indents[d])-10 # geschätzter zur Verfügung stehender Platz für Titel im Inhaltsverzeichnis (zur Sicherheit abgerundet)
+      space_title <- floor(textwidth - left_margins - right_margins - all_indents[d])-10 # geschaetzter zur Verfügung stehender Platz für Titel im Inhaltsverzeichnis (zur Sicherheit abgerundet)
       titel.kurz <- NULL
       sections.var1[d] <- gsub("[" , "{["  , sections.var1[d] , fixed=TRUE)
       sections.var1[d] <- gsub("]" , "]}"  , sections.var1[d] , fixed=TRUE)
@@ -1164,11 +1152,11 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
     sections.var1 <- c(varue.gliederung$Titel[varue.gliederung$Ebene %in% ebenen.var1 ] , varue.info.sh$Titel[ varue.info.sh$Var.Name %in% name ] )
     sections.var1 <- lapply(1:length(ebenen.var1) , function(d){
       if(!ebenen.var1[d]==ebenen.var0[d] | length(ebenen.var1)==d ){
-        right_margins <- 32.54317 # Länge von  tocrmarg in Latex (zur Verfügung stehender Platz für den rechten Rand im Inhaltsverzeichnis, in pt)
+        right_margins <- 32.54317 # Laenge von  tocrmarg in Latex (zur Verfuegung stehender Platz für den rechten Rand im Inhaltsverzeichnis, in pt)
         bold <- d %in% c(1,2)
         left_margins <- Latex.length( all_length[d+1] , bold=bold , FALSE)
         textwidth <- 455.24417 # gesamte Breite für den Text (ca. 16cm) in pt
-        space_title <- floor(textwidth - left_margins - right_margins - all_indents[d+1])-10 # geschätzter zur Verfügung stehender Platz für Titel im Inhaltsverzeichnis (zur Sicherheit abgerundet)
+        space_title <- floor(textwidth - left_margins - right_margins - all_indents[d+1])-10 # geschaetzter zur Verfuegung stehender Platz für Titel im Inhaltsverzeichnis (zur Sicherheit abgerundet)
         titel.kurz <- NULL
         sections.var1[d] <- gsub("[" , "{["  , sections.var1[d] , fixed=TRUE)
         sections.var1[d] <- gsub("]" , "]}"  , sections.var1[d] , fixed=TRUE)
@@ -1212,7 +1200,7 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
 
   #### Skript schreiben ####
 
-  # Aufruf der Layout-Funktion abhängig von Layout-typ
+  # Aufruf der Layout-Funktion abhaengig von Layout-typ
   if (i==0) layout.typ.var <- layout.id( name=name , varue.info=varue.info )
   if (i==1) layout.typ.var <- layout.string( name=name , varue.info=varue.info)
   if (i==2) layout.typ.var <- layout.kategorial(name=name , kennwerte.var=kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )

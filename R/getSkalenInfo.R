@@ -13,7 +13,7 @@
 #'
 #'@export
 getScaleInfo <- function(filePath){
-  skalen.info <- readWorkbook(xlsxFile = filePath, startRow = 1 )
+  skalen.info <- openxlsx::readWorkbook(xlsxFile = filePath, startRow = 1 )
   skalen.info$Anzahl.valider.Werte[is.na(skalen.info$Anzahl.valider.Werte) | grepl("\\s","",skalen.info$Anzahl.valider.Werte) %in% "" ] <- "-"
 
   skalen.info <- skalen.info.aufbereiten(skalen.info)

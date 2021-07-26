@@ -1,6 +1,38 @@
 
-# Erstellung des gesamt-Tex-Skripts
-SHtotal <- function( varue.info ,
+####
+#############################################################################
+#' Create codebook script.
+#'
+#' Create the complete codebook latex script.
+#'
+#'@param varue.info Liste mit data.frames der Uebersichten der Variableninformationen
+#'@param varue.missings Liste mit data.frames der Uebersichten der Werteinformationen
+#'@param varue.gliederung Liste mit data.frames der Uebersichten der Gliederungsinformationen
+#'@param skalen.info data.frame, Skaleninformationen ueber alle Fragebogen
+#'@param varue.reg Liste mit data.frames der Uebersichten der Registerinformationen
+#'@param make.reg tbd
+#'@param Gesamtdatensatz Liste mit data.frames der Datensaetze
+#'@param Kennwertedatensatz Liste mit data.frames der Kennwertedatensaetze
+#'@param variablen Liste mit character-Vektoren der zu berichtenden Variablen
+#'@param id tbd
+#'@param fbshort Character-Vektor, Fragebogenkuerzel
+#'@param fblong Character-Vektor, Namen der Fragebogen, wie sie im Skalenhandbuch ausformuliert genannt werden
+#'@param deckblatt tbd
+#'@param intro Character-Vektor, Einleitung
+#'@param literatur Character-Vektor, Literaturverzeichnis
+#'@param abkuerzverz Character-Vekotr, Tabelle Abkuerzungsverzeichnis
+#'@param hintmod Character-Vektor, Tabelle Hintergrundmodell
+#'@param lastpage Character-Vektor, Letzte Seite
+#'
+#'@param varue.info tbd
+#'
+#'@return Codebook latex script.
+#'
+#'@examples
+#'#tbd
+#'
+#'@export
+codebook <- function( varue.info ,
                      varue.missings,
                      varue.gliederung,
                      skalen.info,
@@ -18,31 +50,6 @@ SHtotal <- function( varue.info ,
                      abkuerzverz,
                      hintmod,
                      lastpage) {
-
-  # INPUT:
-  #	varue.info:				Liste mit data.frames der Uebersichten der Variableninformationen
-  #	varue.missings:			Liste mit data.frames der Uebersichten der Werteinformationen
-  #	varue.gliederung:		Liste mit data.frames der Uebersichten der Gliederungsinformationen
-  #	skalen.info:			data.frame, Skaleninformationen ueber alle Fragebogen
-  #	varue.reg:				Liste mit data.frames der Uebersichten der Registerinformationen
-  #	Gesamtdatensatz:		Liste mit data.frames der Datensaetze
-  #	Kennwertedatensatz: 	Liste mit data.frames der Kennwertedatensaetze
-  #	variablen:				Liste mit character-Vektoren der zu berichtenden Variablen
-  #	fbshort:				Character-Vektor, Fragebogenkuerzel
-  #	fblong:					Character-Vektor, Namen der Fragebogen, wie sie im Skalenhandbuch ausformuliert genannt werden
-  #	breaks:					Character.Vektor, Zeilen im Latex-Skript, an denen ein neues Kapitel, Abschnitt, o.ae. stattfindet
-  #							und nach denen ein Seitenumbruch im Inhaltsverzeichnis eingefuegt werden soll.
-  #							Default ist NULL --> keine Umbruech werden eingefuegt.
-  #	intro:					Character-Vektor, Einleitung
-  #	literatur:				Character-Vektor, Literaturverzeichnis
-  #	abkuerzverz:			Character-Vekotr, Tabelle Abkuerzungsverzeichnis
-  #	hintmod:				Character-Vektor, Tabelle Hintergrundmodell
-  #	lastpage:				Character-Vektor, Letzte Seite
-
-
-  # OUTPUT:
-  #	skript: 				Character-vektor, Skript, das das gesamte Latex-Skript zum Skalenhandbuch erzeugt
-
 
   if(any(is.null(fbshort))){
     stop()
@@ -161,8 +168,7 @@ SHtotal <- function( varue.info ,
   # Skript der Variablen erstellen
   skript.fb <- lapply( fbshort , function(d) {
     #												lastcountervar <- varue.info[[d]]$Var.Name[ varue.info[[d]]$in.DS.und.SH %in% c("ja","sh") ][length( varue.info[[d]]$Var.Name[varue.info[[d]]$in.DS.und.SH %in% c("ja","sh")] )]
-    cat(toupper(paste0("\n Erstelle Layout-Skripte fuer: ", d, "\n")))
-    flush.console()
+    message(paste0("\n Erstelle Layout-Skripte fuer: ", d, "\n"))
     ret. <- c( "\\phantomsection" ,
                paste0("\\chapter{",fblong[d],"}"),
                paste0("\\setcounter{sec",toupper(d),"}{\\thepage}"),
@@ -192,8 +198,7 @@ SHtotal <- function( varue.info ,
     if(! make.reg[d]) {
       return(NULL)
     } else {
-      cat(toupper(paste0("\n Erstelle Register: ", d , "\n")))
-      flush.console()
+      # Erstelle Register
       return(register.ges( fb.akt=d , varue.reg=varue.reg[[d]] , double.vars=double.vars) )
     }
   } )
@@ -214,8 +219,6 @@ SHtotal <- function( varue.info ,
 
   # Gesamtes Skript
   skript <- c(layout.prae.ges, intro, skript.fb, anhang, "\\end{document}")
-
-  #### Output ####
-  return(skript)
+  skript
 }
 
