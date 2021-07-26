@@ -31,30 +31,13 @@ preapreVarueInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel
   varue.info$Layout <- as.character(varue.info$Layout)
   varue.info$LabelSH <- as.character(varue.info$LabelSH)
 
-  # Variablentitel bearbeiten
-  varue.info$Titel <- sub( "^\\s*(.*)\\s*$" , "\\1" , varue.info$Titel )
-  varue.info$Titel[which(toupper(varue.info$Titel) %in% "NA")] <- "-"
-  varue.info$Titel[which(toupper(varue.info$Titel) %in% "NULL" )] <- "-"
-  varue.info$Titel[which(varue.info$Titel %in% "")] <- "-"
-  varue.info$Titel[which(is.na(varue.info$Titel))] <- "-"
-  varue.info$Titel[which(is.null(varue.info$Titel))] <- "-"
-
-  # Variablenanmerkungen bearbeiten
-  varue.info$Anmerkung.Var <- sub( "^\\s*(.*)\\s*$" , "\\1" , varue.info$Anmerkung.Var )
-  varue.info$Anmerkung.Var[which(toupper(varue.info$Anmerkung.Var) %in% "NA")] <- "-"
-  varue.info$Anmerkung.Var[which(toupper(varue.info$Anmerkung.Var) %in% "NULL" )] <- "-"
-  varue.info$Anmerkung.Var[which(varue.info$Anmerkung.Var %in% "")] <- "-"
-  varue.info$Anmerkung.Var[which(is.na(varue.info$Anmerkung.Var))] <- "-"
-  varue.info$Anmerkung.Var[which(is.null(varue.info$Anmerkung.Var))] <- "-"
-
-  # Variablentitel bearbeiten
-  varue.info$QuelleSH <- sub( "^\\s*(.*)\\s*$" , "\\1" , varue.info$QuelleSH )
-  varue.info$QuelleSH[which(toupper(varue.info$QuelleSH) %in% "NA")] <- "-"
-  varue.info$QuelleSH[which(toupper(varue.info$QuelleSH) %in% "NULL" )] <- "-"
-  varue.info$QuelleSH[which(varue.info$QuelleSH %in% "")] <- "-"
-  varue.info$QuelleSH[which(is.na(varue.info$QuelleSH))] <- "-"
-  varue.info$QuelleSH[which(is.null(varue.info$QuelleSH))] <- "-"
-
+  # Titel, Anmerkungen, Quellen bearbeiten
+  varue.info$Titel <- replaceNASignes(varue.info$Titel)
+  varue.info$Anmerkung.Var <- replaceNASignes(varue.info$Anmerkung.Var)
+  varue.info$QuelleSH <- replaceNASignes(varue.info$QuelleSH)
+  # Instruktionen aufbereiten
+  varue.info$Instruktionen <- replaceNASignes(varue.info$Instruktionen)
+  varue.info$Instruktionen <- gsub("/" , "\\slash " , varue.info$Instruktionen , fixed=TRUE)
   # Reihenfolge bearbeiten
   varue.info$Reihenfolge <- sub( "^\\s*(.*)\\s*$" , "\\1" , varue.info$Reihenfolge )
   varue.info$Reihenfolge[which(toupper(varue.info$Reihenfolge) %in% "NA")] <- 0
@@ -62,16 +45,6 @@ preapreVarueInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel
   varue.info$Reihenfolge[which(varue.info$Reihenfolge %in% "")] <- 0
   varue.info$Reihenfolge[which(is.na(varue.info$Reihenfolge))] <- 0
   varue.info$Reihenfolge[which(is.null(varue.info$Reihenfolge))] <- 0
-
-  # Instruktionen aufbereiten
-  varue.info$Instruktionen <- sub( "^\\s*(.*)\\s*$" , "\\1" , varue.info$Instruktionen )
-  varue.info$Instruktionen[which(toupper(varue.info$Instruktionen) %in% "NA")] <- "-"
-  varue.info$Instruktionen[which(toupper(varue.info$Instruktionen) %in% "NULL" )] <- "-"
-  varue.info$Instruktionen[which(varue.info$Instruktionen %in% "")] <- "-"
-  varue.info$Instruktionen[which(is.na(varue.info$Instruktionen))] <- "-"
-  varue.info$Instruktionen[which(is.null(varue.info$Instruktionen))] <- "-"
-  varue.info$Instruktionen <- gsub("/" , "\\slash " , varue.info$Instruktionen , fixed=TRUE)
-
 
   # Besondere Zeichen fuer Latex
   for( s in col.sonderzeichen){
@@ -114,11 +87,13 @@ preapreVarueInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel
 
   # Sortieren nach Gliederung -> Die Funktion zur Generierung des Gesamt-Tex-Skripts benoetigt einen Vektor mit Variablennamen, die sortiert eingegeben werden.
   varue.info <- varue.info[ order( as.numeric(gd) , as.numeric(re) ), ]
-
-  return(varue.info)
+  varue.info
 }
 
 
 replaceNASignes <- function(char_vec) {
+  char_vec <- sub( "^\\s*(.*)\\s*$" , "\\1" , char_vec )
+  char_vec[which(toupper(char_vec) %in% c("NA", "NULL", ""))] <- "-"
+  char_vec[which(is.na(char_vec))] <- "-"
   char_vec
 }

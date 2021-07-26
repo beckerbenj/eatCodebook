@@ -2,18 +2,27 @@
 
 # dfSAV <- eatGADS::import_spss("tests/testthat/helper_spss.sav")
 # varueInfo <- createVarueInfo(dfSAV)
-# out$Anmerkung.Var[1] <- "NA"
+# varueInfo$Anmerkung.Var[1] <- "NA"
 # eatAnalysis::write_xlsx(varueInfo, "tests/testthat/helper_varueInfo.xlsx", row.names = FALSE)
 
 
-test_that("multiplication works", {
+test_that("transform char vector", {
+  expect_equal(replaceNASignes(c("1", "a", "b")),
+               c("1", "a", "b"))
+  expect_equal(replaceNASignes(c("1", "", "b", "NA", "-")),
+               c("1", "-", "b", "-", "-"))
+  expect_equal(replaceNASignes(c("1 ", " ", "b", "NA ", "-")),
+               c("1 ", "-", "b", "NA ", "-"))
+})
+
+test_that("get simple varue info", {
   #out <- getVarueInfo("tests/testthat/helper_varueInfo.xlsx")
   out <- getVarueInfo("helper_varueInfo.xlsx")
   expect_equal(names(out[[1]])[1], "Var.Name")
   expect_equal(out[[1]]$LabelSH[1], "Variable 1")
   expect_equal(out[[1]]$Anmerkung.Var[1], "-")
-
 })
+
 
 
 # sheets.varue.info <- c("sfb_tr_ach","lfb","slfb")
