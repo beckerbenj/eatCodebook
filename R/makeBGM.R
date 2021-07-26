@@ -4,7 +4,7 @@
 #'
 #' Create background model information.
 #'
-#'@param varInfo Variable information
+#'@param varueInfo Variable information
 #'
 #'@return Returns a latex snippet.
 #'
@@ -12,29 +12,25 @@
 #'#tbd
 #'
 #'@export
-makeBGM <- function(varue.info,fbshort) {
-  cols <- c("Var.Name" , "Hintergrundmodell" , "HGM.Variable.erstellt.aus" , "HGM.Reihenfolge", "LabelSH")
-  # Hintergrundmodell erstellen
-  hint.info <- lapply( fbshort , function(d) {
-    if(any(! cols %in% names(varue.info[[d]]))){
-      cat(paste0(" In der Variableninformation von " , d , " fehlt/fehlen die Spalten " , paste0(cols[! cols %in% names(varue.info[[d]])] , collapse=", ") ,". Die Variablen aus diesem Instrument erscheinen nicht im Hintergrundmodell.\n" ))
-      flush.console()
-      return(NULL)
-    } else {
-      return(varue.info[[d]][,cols])
-    }
-  })
-  hint.info <- do.call("rbind" , hint.info)
+makeBGM <- function(varueInfo) {
+  UseMethod("makeBGM")
+}
+#'@export
+makeBGM.list <- function(varueInfo) {
+  hint.info <- do.call("rbind" , varueInfo)
+  makeBGM(hint.info)
+}
+#'@export
+makeBGM.data.frame <- function(varueInfo) {
+  hint.info <- varueInfo
 
   if(all(hint.info$Hintergrundmodell %in% c("","nein") | is.na(hint.info$Hintergrundmodell))){
     return(NULL)
   } else {
     hint.info <- hint.info[ hint.info$Hintergrundmodell %in% "ja",]
-    cat(paste0("Aufbereitung des Hintergrundmodells.\n" ))
-    flush.console()
 
-    cat(paste0(" Entfernen aller Eintraege, bei denen keine Variablen angegeben ist.\n" ))
-    flush.console()
+    #### Aufbereitung des Hintergrundmodells
+    # Entfernen aller Eintraege, bei denen keine Variablen angegeben ist
     hint.info <- hint.info[ ! is.na(hint.info$Var.Name), ]
     hint.info <- hint.info[ ! gsub("\\s" , "" , hint.info$Var.Name) %in% "", ]
 
@@ -55,20 +51,16 @@ makeBGM <- function(varue.info,fbshort) {
     hint.info$HGM.Reihenfolge <-  gsub(" " , "" , hint.info$HGM.Reihenfolge)
 
     # Reihenfolge: als erstes diejenigen Variablen, die in Spalte "HGM Reihenfolge" ein, danach die mit "-" in der Reihenfolge, wie sie im SH auftreten
-    cat(paste0(" Variablen sortieren.\n"))
-    flush.console()
     if(any(grepl( "\\d" , hint.info$HGM.Reihenfolge))){
       if(all(!is.na(suppressWarnings(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)]))))){
         hint.info <- rbind(hint.info[grepl( "\\d" , hint.info$HGM.Reihenfolge),][ order(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" ,hint.info$HGM.Reihenfolge)])) ,]  , hint.info[! grepl( "\\d" , gsub(" " , "" , hint.info$HGM.Reihenfolge)),] )
       } else {
-        cat(paste0("  Mindestens ein Eintrag der numerischen Angaben in der Spalte \"HGM Reihenfolge\" wird nicht erkannt. Die entsprechenden Eintraege (" , paste0(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)][ is.na(suppressWarnings(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)])))] , collapse="," ) , ") werden bei der Sortierung der Variablen ignoriert.\n"))
-        flush.console()
+        message(paste0("  Mindestens ein Eintrag der numerischen Angaben in der Spalte \"HGM Reihenfolge\" wird nicht erkannt. Die entsprechenden Eintraege (" , paste0(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)][ is.na(suppressWarnings(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)])))] , collapse="," ) , ") werden bei der Sortierung der Variablen ignoriert.\n"))
         hint.info$Reihenfolge[is.na(suppressWarnings(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" , hint.info$HGM.Reihenfolge)])))] <- "-"
         hint.info <- rbind(hint.info[grepl( "\\d" , hint.info$HGM.Reihenfolge),][ order(as.numeric(hint.info$HGM.Reihenfolge[grepl( "\\d" ,hint.info$HGM.Reihenfolge)])) ,]  , hint.info[! grepl( "\\d" , gsub(" " , "" , hint.info$HGM.Reihenfolge)),] )
       }
     } else {
-      cat(paste0("  Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geaendert.\n"))
-      flush.console()
+      message("Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geaendert.")
     }
 
     skript <- c( "\\clearpage",
@@ -77,7 +69,7 @@ makeBGM <- function(varue.info,fbshort) {
                  "\\section*{Hintergrundmodell}\n",
                  "\\addcontentsline{toc}{section}{Hintergrundmodell}",
                  "\\ihead[\\leftmark]{\\leftmark \\newline \\textsc{Hintergrundmodell}}",
-                 "\\begin{longtabu}{llQ} % die ersten beiden Spalten sind so breit wie sie mindestens sein müssen + linksbuendig (Spaltentyp l). Die letzte Spalte ist linksbuendig+kein Blocksatz + Breite ist gleich dem Rest, der nach Rechts noch frei ist (Spaltentyp Q)",
+                 "\\begin{longtabu}{llQ} % die ersten beiden Spalten sind so breit wie sie mindestens sein muessen + linksbuendig (Spaltentyp l). Die letzte Spalte ist linksbuendig+kein Blocksatz + Breite ist gleich dem Rest, der nach Rechts noch frei ist (Spaltentyp Q)",
                  "\\caption*{\\cellcolor{white} \\textbf{Variablen im Hintergrundmodell}}\\\\",
                  "\\toprule",
                  "\\headrow",

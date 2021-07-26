@@ -4,10 +4,10 @@
 \alias{makeBGM}
 \title{Create background model information.}
 \usage{
-makeBGM(varue.info, fbshort)
+makeBGM(varueInfo)
 }
 \arguments{
-\item{varInfo}{Variable information}
+\item{varueInfo}{Variable information}
 }
 \value{
 Returns a latex snippet.
