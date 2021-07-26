@@ -1,4 +1,17 @@
-
+####
+#############################################################################
+#' Import structure information.
+#'
+#' Import structure information.
+#'
+#'@param filePath Path to excel file.
+#'
+#'@return structure information.
+#'
+#'@examples
+#'#tbd
+#'
+#'@export
 getStructure <- function(filePath){
   sheet_names <- openxlsx::getSheetNames(filePath)
   names(sheet_names) <- sheet_names

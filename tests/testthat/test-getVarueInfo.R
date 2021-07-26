@@ -1,7 +1,18 @@
 
 
+# dfSAV <- eatGADS::import_spss("tests/testthat/helper_spss.sav")
+# varueInfo <- createVarueInfo(dfSAV)
+# out$Anmerkung.Var[1] <- "NA"
+# eatAnalysis::write_xlsx(varueInfo, "tests/testthat/helper_varueInfo.xlsx", row.names = FALSE)
+
+
 test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
+  #out <- getVarueInfo("tests/testthat/helper_varueInfo.xlsx")
+  out <- getVarueInfo("helper_varueInfo.xlsx")
+  expect_equal(names(out[[1]])[1], "Var.Name")
+  expect_equal(out[[1]]$LabelSH[1], "Variable 1")
+  expect_equal(out[[1]]$Anmerkung.Var[1], "-")
+
 })
 
 

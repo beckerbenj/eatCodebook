@@ -1,34 +1,36 @@
 
-get.varue.info <- function(varue.file , sheets, fbshort , varue.cols=c("Var.Name" , "in.DS.und.SH" , "Layout" , "LabelSH" , "Anmerkung.Var" , "Gliederung" , "Reihenfolge" , "Titel" , "rekodiert","QuelleSH" , "Instruktionen" , "Hintergrundmodell", "HGM.Variable.erstellt.aus", "HGM.Reihenfolge", "intern.extern", "Seitenumbruch.im.Inhaltsverzeichnis" )){
-  cat(paste0("Einlesen der Variableninfos.\n"))
-  flush.console()
-  varue.info <- lapply( sheets , function(d) openxlsx::readWorkbook ( xlsxFile = varue.file , sheet = d, startRow = 1 ) )
-  varue.info <- lapply( 1:length(fbshort) , function(d) varue.info[[d]][, varue.cols] )
-  names(varue.info) <- fbshort
+####
+#############################################################################
+#' Import variable information.
+#'
+#' Import variable information.
+#'
+#'@param filePath Path to excel file.
+#'
+#'@return variable information.
+#'
+#'@examples
+#'#tbd
+#'
+#'@export
+getVarueInfo <- function(filePath){
+  sheet_names <- openxlsx::getSheetNames(filePath)
+  names(sheet_names) <- sheet_names
 
-  varue.info <- lapply(varue.info , varue.info.aufbereiten)
-  names(varue.info) <- fbshort
+  all_variable_info <- lapply(sheet_names , function(sheet_name){
+    openxlsx::readWorkbook(xlsxFile = filePath, sheet = sheet_name, startRow = 1)
+  })
 
-  return(varue.info)
+  lapply(all_variable_info, preapreVarueInfo)
 }
 
-varue.info.aufbereiten <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" , "QuelleSH" , "Anmerkung.Var")){
-  cat(paste0(" Aufbereitung der Variableninformationen.\n"))
-  flush.console()
+preapreVarueInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" , "QuelleSH" , "Anmerkung.Var")){
   # Variableninfromationen - zu character-Strings
   varue.info$Var.Name <- as.character(varue.info$Var.Name)
   varue.info$in.DS.und.SH <- as.character(varue.info$in.DS.und.SH)
   varue.info$Layout <- as.character(varue.info$Layout)
   varue.info$LabelSH <- as.character(varue.info$LabelSH)
 
-  if(any(grepl("\\s" , varue.info$Var.Name))){
-    cat(paste0("  Die Variable/Variablen ", varue.info$Var.Name[grepl("\\s" , varue.info$Var.Name)] ," besitzt/besitzen Leerzeichen im Variablennamen. Diese werden entfernt.\n"))
-    flush.console()
-    varue.info$Var.Name <- gsub("\\s" , "" , varue.info$Var.Name)
-  }
-
-  cat(paste0("  Aufbereitung der Titel, Anmerkungen und Quellen.\n"))
-  flush.console()
   # Variablentitel bearbeiten
   varue.info$Titel <- sub( "^\\s*(.*)\\s*$" , "\\1" , varue.info$Titel )
   varue.info$Titel[which(toupper(varue.info$Titel) %in% "NA")] <- "-"
@@ -72,9 +74,6 @@ varue.info.aufbereiten <- function(varue.info , col.sonderzeichen=c("LabelSH" , 
 
 
   # Besondere Zeichen fuer Latex
-
-  cat(paste0("  Sonderzeichen bearbeiten.\n"))
-  flush.console()
   for( s in col.sonderzeichen){
     if(! s %in% names(varue.info)){
       warning(paste0("\n   Die Spalte " , s , " existiert nicht in der uebergebenen Varue. Fuer diese Spalte wird nichts aufbereitet.\n"))
@@ -83,9 +82,7 @@ varue.info.aufbereiten <- function(varue.info , col.sonderzeichen=c("LabelSH" , 
     }
   }
 
-  cat(paste0("  Sortierung der Variablen nach Gliederung und Reihenfolge.\n"))
-  flush.console()
-
+ # Sortierung der Variablen nach Gliederung und Reihenfolge
   gd <- varue.info$Gliederung
   re <- varue.info$Reihenfolge
 
@@ -119,4 +116,9 @@ varue.info.aufbereiten <- function(varue.info , col.sonderzeichen=c("LabelSH" , 
   varue.info <- varue.info[ order( as.numeric(gd) , as.numeric(re) ), ]
 
   return(varue.info)
+}
+
+
+replaceNASignes <- function(char_vec) {
+  char_vec
 }
