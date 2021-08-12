@@ -11,32 +11,49 @@
 #'
 #'
 #'@param GADSdat.obj Object of class GADSdat, created by \code{import_spss} from the \code{eatGADS} package, for example
-#'@param varsToExclude tbd
-#'@param impExpr Cat to console?
-#'@param scaleExpr Cat to console?
-#'@param varNameSeparatorImp tbd
-#'@param lastOccurrence tbd
+#'@param idExpr Regular expression to identify ID variables from variable names (Note: multiple expressions, i.e. character vector of length > 1 mean that at least one expression should match)
+#'@param impExpr Regular expression to identify imputed variables from variable labels in GADSdat object (Note: multiple expressions, i.e. character vector of length > 1 mean that at least one expression should match)
+#'@param scaleExpr Regular expression to identify scale variables from variable labels in GADSdat object (Note: multiple expressions, i.e. character vector of length > 1 mean that at least one expression should match)
+#'@param varNameSeparatorImp character sign to separate the "pooled" suffix from group name in group column
+#'@param lastOccurrence Logical: If varNameSeparatorImp occurrs multiple times within a string, lastOccurrence defines whether the last occurrence should be used for splitting
 #'@param groupSuffixImp tbd
 #'@param verbose tbd
 #'
-#'@return Returns a \code{data.frame} with variable information.
+#'@return Returns a \code{data.frame} with variable information with following columns
+#'\itemize{
+#'  \varName - The name of the varable as it occurs in the data
+#'  \varLabel - The label of the varable as it occurs in the GADSdat label sheet
+#'  \group - If the variable is part of a scale with several items, a common entry in the group column indicates that these variables belong together
+#'  \type - The type of the variable. Two possible entries, 'variable' or 'scale'
+#'  \scale - The scale level of the variable. Possible entries: nominal, ordinal, numeric
+#'  \imp - Logical: Whether or not the variable is imputed
+#'}
 #'
 #'@examples
 #'varInfo <- prepareVarinfo(eatGADS::pisa, impExpr = "Plausible Value")
 #'
 #'@export
-prepareVarinfo <- function ( GADSdat.obj, varsToExclude = NULL, impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", verbose = TRUE) {
-       weg  <- setdiff(varsToExclude,GADSdat.obj[["labels"]][,"varName"])
-       if ( length(weg)>0) { message("Following ",length(weg), " variable(s) which should be excluded do exists in GADSdat.obj: '",paste(weg, collapse="', '"), "'.")}
-       vari <- GADSdat.obj[["labels"]][!duplicated(GADSdat.obj[["labels"]][,"varName"]),c("varName","varLabel")]
-       if ( length( setdiff(varsToExclude, weg))>0) {
-            vari <- vari[-match(setdiff(varsToExclude, weg), vari[,"varName"]),]
-       }
+prepareVarinfo <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", verbose = TRUE) {
+       vari <- GADSdat.obj[["labels"]][!duplicated(GADSdat.obj[["labels"]][,"varName"]),c("varName","varLabel", "format")]
        vari[,"imp"] <- FALSE
+    ### imp-Eintrag vergeben
        for ( i in impExpr) {  vari[grep(i, vari[,"varLabel"]),"imp"] <- TRUE  }
        vari[,"type"] <- "variable"
        vari[grep(scaleExpr, vari[,"varLabel"]),"type"] <- "scale"
-       vari <- do.call("rbind", by(data = vari, INDICES = vari[,"varName"], FUN = function ( z ) {
+    ### scale-Eintrag vergeben
+       vari[,"laufnummer"] <- 1:nrow(vari)                                      ### dieses, damit die Reihenfolge der varinfo so ist wie im labels sheet
+       vari <- do.call("rbind", by(data = vari, INDICES = vari[,"laufnummer"], FUN = function ( z ) {
+    ### wenn Variable als ID variable identifiziert wird, soll scale-Eintrag leer sein
+               if ( length(unlist(lapply(idExpr, FUN = function (ie) {grep(ie, z[["varName"]])})))>0 ) {
+                    message(paste0("Variable '",z[["varName"]],"' matches ID variable definition ('idExpr') and will be handled as ID variable."))
+                    z[,"scale"] <- NA
+                    return(z)
+               }
+    ### wenn Variable im GADSdat-Labelsfile ein "A" in der Format-Spalte hat, bedeutet das "character". Es soll ein leerer Eintrag in der "scale"-Spalte eingetragen werden
+               if(toupper(substr(z[["format"]],1,1)) == "A") {
+                    z[,"scale"] <- NA
+                    return(z)
+               }
                if ( class(GADSdat.obj[["dat"]][,z[["varName"]]]) == "character") {scale <- "nominal"}
                if ( class(GADSdat.obj[["dat"]][,z[["varName"]]]) == "numeric") {
                     mis    <- GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == z[["varName"]]),]
@@ -58,11 +75,21 @@ prepareVarinfo <- function ( GADSdat.obj, varsToExclude = NULL, impExpr = c("IMP
                         }
                     }
                }
+    ### check und ggf. korrektur der 'scale'-Zuweisung
+               if (scale != "numeric") {
+                    digit <- unlist(strsplit(z[["format"]], "\\."))
+                    digit <- suppressWarnings(eatTools::asNumericIfPossible(digit[length(digit)], force.string=FALSE))
+                    krit1 <- is.numeric(digit) && digit>0
+                    if(substr(z[["format"]],1,1) == "F" && isTRUE(krit1)) {
+                        warning(paste0("Variable '",z[["varName"]],"' has identified scale '",scale,"' but is expected to be 'numeric' due to format definition '",z[["format"]],"' in GADSdat labels sheet. Transform '",z[["varName"]],"' to be numeric."))
+                        scale <- "numeric"
+                    }
+               }
                z[,"scale"] <- scale
                return(z)}))
-    ### Gruppenzuordnung vergeben, das geschieht fuer imputierte und nicht imputierte Variablen separat
+    ### group-Eintrag (Gruppenzuordnung) vergeben, das geschieht fuer imputierte und nicht imputierte Variablen separat
        vari <- do.call("rbind", by(data = vari, INDICES = vari[,"imp"], FUN = function ( v ) {
-               if ( isFALSE(v[1,"imp"]) ) {                                     ### hier begintn die Behandlung fuer nicht-imputierte Variablen
+               if ( isFALSE(v[1,"imp"]) ) {                                     ### hier beginnt die Behandlung fuer nicht-imputierte Variablen
                     v[,"group"] <- NA                                           ### Gruppenzuhehoerigkeit initialisieren
                     scales<- v[which(v[,"type"] == "scale"),"varName"]          ### das sind die Namen der Skalen, zu jeder werden jetzt die Items herausgesucht
                     for ( sc in scales) {
@@ -72,10 +99,11 @@ prepareVarinfo <- function ( GADSdat.obj, varsToExclude = NULL, impExpr = c("IMP
                           v[eatTools::whereAre(c(items, sc), v[,"varName"], verbose=FALSE),"group"] <- sc
                     }
                     v[which(is.na(v[,"group"])),"group"] <- v[which(is.na(v[,"group"])),"varName"]
-                    v[,"group"] <- paste(v[,"group"], "notImputed",sep="_")
                }  else  {                                                       ### hier beginnt die Behandlung fuer imputierte Variablen
-                    v[,"group"] <- paste(eatTools::halveString(string = v[,"varName"], pattern = varNameSeparatorImp, first = !lastOccurrence)[,1], "imputed",sep="_")
+                    v[,"group"] <- paste(eatTools::halveString(string = v[,"varName"], pattern = varNameSeparatorImp, first = !lastOccurrence)[,1], "pooled",sep="_")
                }
                return(v)}))
+    ### nach Laufnummer sortieren und dann die Spalte entfernen
+       vari <- data.frame(vari[sort(vari[,"laufnummer"],decreasing=FALSE,index.return=TRUE)$ix,-match("laufnummer", colnames(vari))])
        return(vari)}
 
