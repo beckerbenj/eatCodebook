@@ -6,7 +6,7 @@
 \usage{
 prepareVarinfo(
   GADSdat.obj,
-  varsToExclude = NULL,
+  idExpr = "^ID",
   impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"),
   scaleExpr = "^Skala",
   varNameSeparatorImp = "_",
@@ -18,22 +18,31 @@ prepareVarinfo(
 \arguments{
 \item{GADSdat.obj}{Object of class GADSdat, created by \code{import_spss} from the \code{eatGADS} package, for example}
 
-\item{varsToExclude}{tbd}
+\item{idExpr}{Regular expression to identify ID variables from variable names (Note: for multiple expressions, i.e. if \code{idExpr} is a character vector of length > 1, at least one expression should match to identify the variable as ID variable)}
 
-\item{impExpr}{Cat to console?}
+\item{impExpr}{Regular expression to identify imputed variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1, at least one expression should match to identify the variable as an imputed variable)}
 
-\item{scaleExpr}{Cat to console?}
+\item{scaleExpr}{Regular expression to identify scale variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1, at least one expression should match to identify the variable as a scale variable)}
 
-\item{varNameSeparatorImp}{tbd}
+\item{varNameSeparatorImp}{character sign to separate the "pooled" suffix from group name in group column}
 
-\item{lastOccurrence}{tbd}
+\item{lastOccurrence}{Logical: If varNameSeparatorImp occurrs multiple times within a string, lastOccurrence defines whether the last occurrence should be used for splitting}
 
 \item{groupSuffixImp}{tbd}
 
 \item{verbose}{tbd}
 }
 \value{
-Returns a \code{data.frame} with variable information.
+Returns a \code{data.frame} with variable information with following columns
+\itemize{
+ \item \code{varName} The name of the varable as it occurs in the data
+ \item \code{varLabel} The label of the varable as it occurs in the GADSdat label sheet
+ \item \code{format} The variable format as displayed in the labels sheet of teh GADSdas object
+ \item \code{imp} Logical: Whether or not the variable is imputed
+ \item \code{type} The type of the variable. Two possible entries, 'variable' or 'scale'
+ \item \code{scale} The scale level of the variable. Possible entries: nominal, ordinal, numeric
+ \item \code{group} If the variable is part of a scale with several items, a common entry in the group column indicates that these variables belong together
+}
 }
 \description{
 Create a variable information data.frame.

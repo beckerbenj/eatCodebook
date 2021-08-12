@@ -7,13 +7,13 @@
 #############################################################################
 #' Prepare variable information.
 #'
-#' Create a variable information data.frame.
+#' Create a variable information data.frame from the GADSdat object
 #'
 #'
-#'@param GADSdat.obj Object of class GADSdat, created by \code{import_spss} from the \code{eatGADS} package, for example
-#'@param idExpr Regular expression to identify ID variables from variable names (Note: multiple expressions, i.e. character vector of length > 1 mean that at least one expression should match)
-#'@param impExpr Regular expression to identify imputed variables from variable labels in GADSdat object (Note: multiple expressions, i.e. character vector of length > 1 mean that at least one expression should match)
-#'@param scaleExpr Regular expression to identify scale variables from variable labels in GADSdat object (Note: multiple expressions, i.e. character vector of length > 1 mean that at least one expression should match)
+#'@param GADSdat.obj Object of class \code{GADSdat}, created by \code{import_spss} from the \code{eatGADS} package, for example
+#'@param idExpr Regular expression to identify ID variables from variable names (Note: for multiple expressions, i.e. if \code{idExpr} is a character vector of length > 1, at least one expression should match to identify the variable as ID variable)
+#'@param impExpr Regular expression to identify imputed variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1, at least one expression should match to identify the variable as an imputed variable)
+#'@param scaleExpr Regular expression to identify scale variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1, at least one expression should match to identify the variable as a scale variable)
 #'@param varNameSeparatorImp character sign to separate the "pooled" suffix from group name in group column
 #'@param lastOccurrence Logical: If varNameSeparatorImp occurrs multiple times within a string, lastOccurrence defines whether the last occurrence should be used for splitting
 #'@param groupSuffixImp tbd
@@ -21,12 +21,13 @@
 #'
 #'@return Returns a \code{data.frame} with variable information with following columns
 #'\itemize{
-#'  \varName - The name of the varable as it occurs in the data
-#'  \varLabel - The label of the varable as it occurs in the GADSdat label sheet
-#'  \group - If the variable is part of a scale with several items, a common entry in the group column indicates that these variables belong together
-#'  \type - The type of the variable. Two possible entries, 'variable' or 'scale'
-#'  \scale - The scale level of the variable. Possible entries: nominal, ordinal, numeric
-#'  \imp - Logical: Whether or not the variable is imputed
+#'  \item \code{varName} The name of the variable as it occurs in the data
+#'  \item \code{varLabel} The label of the variable as it occurs in the \code{GADSdat} label sheet
+#'  \item \code{format} The variable format as displayed in the labels sheet of the \code{GADSdat} object
+#'  \item \code{imp} Logical: Whether or not the variable is imputed
+#'  \item \code{type} The type of the variable. Two possible entries, \code{variable} or \code{scale}
+#'  \item \code{scale} The scale level of the variable. Possible entries: \code{nominal}, \code{ordinal}, \code{numeric}. ID variables and character variables have missing entries in this column
+#'  \item \code{group} If the variable is part of a scale with several items, a common entry in the group column indicates that these variables belong together
 #'}
 #'
 #'@examples
