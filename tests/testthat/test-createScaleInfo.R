@@ -3,7 +3,7 @@
 varInfo_pisa <- readRDS("helper_varinfo_pisa.RDS")
 #gads <- readRDS("tests/testthat/helper_scaleDF.RDS")
 gads <- readRDS("helper_scaleDF.RDS")
-varInfo_scale <-  prepareVarinfo(gads, verbose = FALSE)
+varInfo_scale <-  createInputForDescriptives(gads, verbose = FALSE)
 
 
 test_that("single scale", {

@@ -9,7 +9,7 @@
 # check:
 # library(eatGADS); gd <- import_spss("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/inst/extdata/example1.sav")
 # load("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/inst/extdata/example1_varinfo.rda")
-# cds(gd, varinfo)
+# calculateDescriptives(gd, varinfo)
 
 
 ####
@@ -32,7 +32,7 @@
 #'@export
 
 ### showCallOnly: nur zum checken, welche Funktion gecalled wird
-cds <- function( GADSdat.obj, varinfo, verbose = TRUE, showCallOnly = FALSE) {
+calculateDescriptives <- function( GADSdat.obj, varinfo, verbose = TRUE, showCallOnly = FALSE) {
 ### checks, dass varinfo korrekt spezifiziert
   fehlend <- setdiff (c( "varName",   "group", "type",  "scale", "imp"), colnames(varinfo))
   if ( length(fehlend)>0) { stop("Column(s) '",paste(fehlend, collapse="', '"), "' missed in 'varinfo'.")}

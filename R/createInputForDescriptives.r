@@ -17,6 +17,8 @@
 #'@param varNameSeparatorImp character sign to separate the "pooled" suffix from group name in group column
 #'@param lastOccurrence Logical: If varNameSeparatorImp occurrs multiple times within a string, lastOccurrence defines whether the last occurrence should be used for splitting
 #'@param groupSuffixImp tbd
+#'@param nCatsForScaleDefLowerBound Lower bound for scale definition of categorical variables: Variables with this number of categories are defined to be nominal (instead of ordinal)
+#'@param nCatsForScaleDefUpperBound Upper bound for scale definition of categorical variables: Variables with more categories than defined in upper bound are defined to be nominal (instead of ordinal)
 #'@param verbose tbd
 #'
 #'@return Returns a \code{data.frame} with variable information with following columns
@@ -31,16 +33,14 @@
 #'}
 #'
 #'@examples
-#'varInfo <- prepareVarinfo(eatGADS::pisa, impExpr = "Plausible Value")
+#'varInfo <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value")
 #'
 #'@export
-prepareVarinfo <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", verbose = TRUE) {
-    ### Funktion ruft sich rekursiv selber auf, wenn eine Liste von GADSdat-Objekten uebergeben wird
-       if (!"GADSdat" %in% class(dat)) {
-           stopifnot(is.list(dat))
-           varis <- lapply(GADSdat.obj, FUN = prepareVarinfo, idExpr = idExpr, impExpr = impExpr, scaleExpr = scaleExpr, varNameSeparatorImp = varNameSeparatorImp, lastOccurrence =lastOccurrence, groupSuffixImp = groupSuffixImp, verbose = verbose)
-           return(varis)
-       }  else  {
+createInputForDescriptives <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForScaleDefLowerBound = 2, nCatsForScaleDefUpperBound = 5, verbose = TRUE) {
+  UseMethod("createInputForDescriptives")
+}
+#'@export
+createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForScaleDefLowerBound = 2, nCatsForScaleDefUpperBound = 5, verbose = TRUE) {
            vari <- GADSdat.obj[["labels"]][!duplicated(GADSdat.obj[["labels"]][,"varName"]),c("varName","varLabel", "format")]
            vari[,"imp"] <- FALSE
     ### imp-Eintrag vergeben
@@ -92,10 +92,11 @@ prepareVarinfo <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATIO
                             scale <- "numeric"
                         }
                    }
-    ### check No. 2 und KEINE korrektur der 'scale'-Zuweisung
+    ### check No. 2 und ggf. korrektur der 'scale'-Zuweisung
                    if (scale == "ordinal") {
-                        if ( length(unique(nonmis)) == 2 || length(unique(nonmis)) > 5) {
-                            message(paste0("Variable '",z[["varName"]],"' has identified scale '",scale,"' but is expected to be 'nominal' due to ",length(unique(nonmis))," unique non-missing categories PLease check this variable manually."))
+                        if ( length(unique(nonmis)) == nCatsForScaleDefLowerBound || length(unique(nonmis)) > nCatsForScaleDefUpperBound) {
+                            message(paste0("Variable '",z[["varName"]],"' has identified scale '",scale,"' but is expected to be 'nominal' due to ",length(unique(nonmis))," unique non-missing categories. Transform '",z[["varName"]],"' to be nominal."))
+                            scale <- "nominal"
                         }
                    }
                    z[,"scale"] <- scale
@@ -118,5 +119,12 @@ prepareVarinfo <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATIO
                    return(v)}))
     ### nach Laufnummer sortieren und dann die Spalte entfernen
            vari <- data.frame(vari[sort(vari[,"laufnummer"],decreasing=FALSE,index.return=TRUE)$ix,-match("laufnummer", colnames(vari))])
-           return(vari)}}
+           return(vari)}
+           
+#'@export
+createInputForDescriptives.list <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForScaleDefLowerBound = 2, nCatsForScaleDefUpperBound = 5, verbose = TRUE) {
+  lapply(GADSdat.obj, function(x) {
+    createInputForDescriptives(x, idExpr = idExpr, impExpr = impExpr, scaleExpr = scaleExpr, varNameSeparatorImp = varNameSeparatorImp, lastOccurrence =lastOccurrence, groupSuffixImp = groupSuffixImp, nCatsForScaleDefLowerBound = nCatsForScaleDefLowerBound, nCatsForScaleDefUpperBound = nCatsForScaleDefUpperBound, verbose = verbose)
+  })
+}
 

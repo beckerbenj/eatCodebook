@@ -155,8 +155,8 @@ test_that("descriptives metric", {
 #    labs[,"varLabel"] <- c(rep("dummy", times = nrow(labs)-1), "Skala: Erfahrung mit digitalen Medien")
 #    colnames(dat)     <- car::recode(colnames(dat), "'DM_erfahrung'='Semz'")
 #    gd   <- list(dat=dat, labels = labs)
-#    vari <- prepareVarinfo(gd)
-#    res  <- cds(gd, vari)
+#    vari <- createInputForDescriptives(gd)
+#    res  <- calculateDescriptives(gd, vari)
 #
 #
 #    sub.varinfo <- data.frame ( varName = ,

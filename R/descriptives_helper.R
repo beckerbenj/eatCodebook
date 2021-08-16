@@ -148,7 +148,7 @@ variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"varName"]
 # descriptives der einzelitems ... rekursiver Funktionsaufruf ... sub.varinfo kopieren und anpassen
   svi   <- sub.varinfo
   svi[,"group"] <- svi[,"varName"]
-  items <- cds(GADSdat.obj, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE)
+  items <- calculateDescriptives(GADSdat.obj, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE)
   desc  <- as.matrix(do.call("cbind", items))
   desc  <- desc[-grep("multic", desc[,1]),]
 

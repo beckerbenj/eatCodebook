@@ -20,8 +20,8 @@ library(eatCodebook)
 
 Create a so called `varinfo` for an `GADSdat` object.
 
-```{r prepareVarinfo}
-varinfo <- prepareVarinfo(GADSdat.obj = eatGADS::pisa)
+```{r createInputForDescriptives}
+varinfo <- createInputForDescriptives(GADSdat.obj = eatGADS::pisa)
 ```
 
 Modify it (export to excel, re import)
@@ -40,12 +40,12 @@ Use `varinfo` to calculate descriptive statistics
 
 ```{r calculate descr}
 # just show function calls
-showFunctions <- cds(GADSdat.obj = gadsDat, varinfo = varinfo_edited, showCallOnly = TRUE)
+showFunctions <- calculateDescriptives(GADSdat.obj = gadsDat, varinfo = varinfo_edited, showCallOnly = TRUE)
 showFunctions <- data.frame(varName = names(showFunctions), functionName = as.vector(showFunctions), stringsAsFactors = FALSE)
 showFunctions
 
 # acutally calculate descriptives
-descStatistics <- cds(GADSdat.obj = eatGADS::pisa, varinfo = varinfo_edited, showCallOnly = FALSE)
+descStatistics <- calculateDescriptives(GADSdat.obj = eatGADS::pisa, varinfo = varinfo_edited, showCallOnly = FALSE)
 descStatistics[[50]]
 ```
 
