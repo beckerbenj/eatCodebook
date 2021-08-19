@@ -12,8 +12,7 @@ createInputForDescriptives(
   varNameSeparatorImp = "_",
   lastOccurrence = TRUE,
   groupSuffixImp = "imp",
-  nCatsForScaleDefLowerBound = 2,
-  nCatsForScaleDefUpperBound = 5,
+  nCatsForOrdinal = c(2:5),
   verbose = TRUE
 )
 }
@@ -32,9 +31,7 @@ createInputForDescriptives(
 
 \item{groupSuffixImp}{tbd}
 
-\item{nCatsForScaleDefLowerBound}{Lower bound for scale definition of categorical variables: Variables with this number of categories are defined to be nominal (instead of ordinal)}
-
-\item{nCatsForScaleDefUpperBound}{Upper bound for scale definition of categorical variables: Variables with more categories than defined in upper bound are defined to be nominal (instead of ordinal)}
+\item{nCatsForOrdinal}{Numeric vector with number of categories considered for ordinal variables. Variables with number of categories as defined here are considered to be ordinal instead of nominal. If NULL, this rule will be ignored, and nominal/ordinal assignment is done in other ways}
 
 \item{verbose}{tbd}
 }
@@ -46,7 +43,7 @@ Returns a \code{data.frame} with variable information with following columns
  \item \code{format} The variable format as displayed in the labels sheet of the \code{GADSdat} object
  \item \code{imp} Logical: Whether or not the variable is imputed
  \item \code{type} The type of the variable. Two possible entries, \code{variable} or \code{scale}
- \item \code{scale} The scale level of the variable. Possible entries: \code{nominal}, \code{ordinal}, \code{numeric}. ID variables and character variables have missing entries in this column
+ \item \code{scale} The scale level of the variable. Possible entries: \code{nominal}, \code{ordinal}, \code{numeric}. ID variables and character variables have missing entries in this column. Be cautious that 'ordinal' sometimes may be allocated erroneously. The resulting table should be exported to Excel for further checks.
  \item \code{group} If the variable is part of a scale with several items, a common entry in the group column indicates that these variables belong together
 }
 }

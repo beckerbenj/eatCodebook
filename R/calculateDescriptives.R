@@ -20,9 +20,9 @@
 #'
 #'
 #'@param GADSdat.obj Object of class \code{GADSdat}, created for example by \code{import_spss} from the \code{eatGADS} package.
-#'@param varinfo \code{data.frame} with variable information
+#'@param varinfo \code{data.frame} with variable information. This table can be created from GADSdat object, using the \code{createInputForDescriptives} function
 #'@param verbose Cat to console?
-#'@param showCallOnly tbd
+#'@param showCallOnly Logical: only for diagnostics. If TRUE, no calculation is proceed, and only the function which is called for calculation is returned.
 #'
 #'@return Returns a list of descriptive statistics.
 #'
@@ -33,7 +33,11 @@
 
 ### showCallOnly: nur zum checken, welche Funktion gecalled wird
 calculateDescriptives <- function( GADSdat.obj, varinfo, verbose = TRUE, showCallOnly = FALSE) {
-### checks, dass varinfo korrekt spezifiziert
+### checks, dass varinfo korrekt spezifiziert ... es muss u.a. ein data.frame sein
+  if ("tbl" %in% class(varinfo)) {
+       message("'varinfo' has class '",paste(class(varinfo), collapse="', '"), "'. Transform 'varinfo' into 'data.frame'.")
+       varinfo <- as.data.frame(varinfo)
+  }
   fehlend <- setdiff (c( "varName",   "group", "type",  "scale", "imp"), colnames(varinfo))
   if ( length(fehlend)>0) { stop("Column(s) '",paste(fehlend, collapse="', '"), "' missed in 'varinfo'.")}
   if(!length(unique(varinfo[,"varName"])) == length(varinfo[,"varName"])) {stop("'varName' column in 'varinfo' must be unique.")}
