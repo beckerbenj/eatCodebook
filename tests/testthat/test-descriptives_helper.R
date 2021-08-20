@@ -134,26 +134,32 @@ test_that("descriptives dummy", {
   value_table <- data.frame(value = c(1, 2, 3, -98, -99),
                             missings = c("valid", "valid", "valid", "miss", "miss"),
                             stringsAsFactors = FALSE)
-  out <- kennwerte.ordinal.skala(df[,"v1"], value_table)
+  out <- suppressWarnings(kennwerte.ordinal.skala(df[,"v1"], value_table))
 })
 
-# test fuer kennwerte.skala
-# originalobjekte mit felix alter syntax erzeugt und im Paketverzeichnis unter tests/testthat gespeichert
 
-### Wenn es eine Skala mit drei Items gibt, wobei alle Einzelitems die Werte 1, 2, 3, 4 annehmen
-### können, und jetzt aber in einem Item der Wert 2 empirisch nicht vorkommt, werfen die Funktionen
-### falsche Werte aus (wie gesagt, Felix' und unsere).
+### tests fuer die gesamte createInputForDescriptives- und calculateDescriptives-Funktion
 
-#load("out.rda")
-#load("dat.rda")
-#load("results_gepoolt_metrisch.rda")
-#load("kennwerte.skala.fake.rda")
+### Achtung: wenn alle Probleme behoben sind, hier "suppressWarnings" entfernen und die
+### Warnungen explizit abfangen (die soll es ja geben)
+
+load("varinfo_vorlage.rda")
 test_that("descriptives scale", {
   # create GADSdat
     file <- system.file("extdata", "example1.sav", package = "eatCodebook")
-    gd   <- eatGADS::import_spss(file)
-    vari <- createInputForDescriptives(gd)
-    res  <- calculateDescriptives(gd, vari)
+    gd   <- eatGADS::import_spss(file)                                          ### inputliste erzeugen
+    vari <- createInputForDescriptives(gd, varNameSeparatorImp = NULL, impExpr = "plausible value", scaleExpr = "Skalenwert")
+
+### hier gibt es eine wichtige warnmeldung, die beruecksichtigt werden muss,
+### dass das skalenniveau der items, die zu einer skala gehoeren, einheitlich sein muss
+
+    expect_equal(dim(vari), c(22,7))                                            ### data.frame mit 22 Zeilen, 7 Spalten
+    tab  <- table(vari[,"type"])
+    expect_equal(names(tab), c("scale", "variable"))                            ### beide eintraege sollen vorkommen
+    expect_equal(as.vector(tab), c(1,21))                                       ### scale nur einmal, variable 21-mal
+    expect_equal(vari, vari_vorlage)
+    vari[which(vari[,"varName"] == "skalenwert_fake"),"type"] <- "scale"        ### ein eintrag in der varinfo muss jetzt haendisch geaendert werden (das geschieht spaeter fuer das
+    res  <- suppressWarnings(calculateDescriptives(gd, vari))                   ### tatsaechliche Skalenhandbuch bei Bedarf in Excel)
 })
 
 

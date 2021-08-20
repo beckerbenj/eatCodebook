@@ -148,7 +148,15 @@ variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"varName"]
 # descriptives der einzelitems ... rekursiver Funktionsaufruf ... sub.varinfo kopieren und anpassen
   svi   <- sub.varinfo
   svi[,"group"] <- svi[,"varName"]
+  check0<- svi[which(svi[,"type"] == "variable"),"scale"]
+  if ( length(unique(check0)) != 1) {
+       stop("All ",nrow(svi)," items belonging to the same scale '",scaleCol,"' must have equal scale definition.")
+  }
   items <- calculateDescriptives(GADSdat.obj, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE)
+  check1<- table(sapply(items, length))
+  if ( length(check1) != 1) {
+       stop("Vector of descriptives for ",length(items)," items belonging to the same scale '",scaleCol,"' must be of equal length.")
+  }
   desc  <- as.matrix(do.call("cbind", items))
   desc  <- desc[-grep("multic", desc[,1]),]
 

@@ -14,8 +14,9 @@
 #'@param idExpr Regular expression to identify ID variables from variable names (Note: for multiple expressions, i.e. if \code{idExpr} is a character vector of length > 1, at least one expression should match to identify the variable as ID variable)
 #'@param impExpr Regular expression to identify imputed variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1, at least one expression should match to identify the variable as an imputed variable)
 #'@param scaleExpr Regular expression to identify scale variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1, at least one expression should match to identify the variable as a scale variable)
-#'@param varNameSeparatorImp character sign to separate the "pooled" suffix from group name in group column
-#'@param lastOccurrence Logical: If varNameSeparatorImp occurrs multiple times within a string, lastOccurrence defines whether the last occurrence should be used for splitting
+#'@param varNameSeparatorImp character sign to separate the "pooled" suffix from group name in group column. If no such sign exists in the data, i.e. if multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1}, \code{pv.2}, \code{pv.3}, use \code{NA} or \code{NULL} or \code{""}.
+#'@param ncharSeparatorImp Integer: only relevant if no \code{varNameSeparatorImp} exists, i.e. if multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1}, \code{pv.2}, \code{pv.3}. \code{ncharSeparatorImp} than specifies the number of character signs which should be dropped to identify the common variable stem. If \code{varNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if multiple imputations occur as \code{pv_1}, \code{pv_2}, \code{pv_3}, use \code{varNameSeparatorImp = "_"}. If multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, use \code{varNameSeparatorImp = NULL} and \code{ncharSeparatorImp = 1}.
+#'@param lastOccurrence Logical: If varNameSeparatorImp occurrs multiple times within a string, \code{lastOccurrence} defines whether the last occurrence should be used for splitting
 #'@param groupSuffixImp tbd
 #'@param nCatsForOrdinal Numeric vector with number of categories considered for ordinal variables. Variables with number of categories as defined here are considered to be ordinal instead of nominal. If NULL, this rule will be ignored, and nominal/ordinal assignment is done in other ways
 #'@param verbose tbd
@@ -35,17 +36,17 @@
 #'varInfo <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value")
 #'
 #'@export
-createInputForDescriptives <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
+createInputForDescriptives <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
   UseMethod("createInputForDescriptives")
 }
 #'@export
-createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
+createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
            vari <- GADSdat.obj[["labels"]][!duplicated(GADSdat.obj[["labels"]][,"varName"]),c("varName","varLabel", "format")]
            vari[,"imp"] <- FALSE
     ### imp-Eintrag vergeben
            for ( i in impExpr) {  vari[grep(i, vari[,"varLabel"]),"imp"] <- TRUE  }
            vari[,"type"] <- "variable"
-           vari[grep(scaleExpr, vari[,"varLabel"]),"type"] <- "scale"
+           for ( i in scaleExpr) { vari[grep(i, vari[,"varLabel"]),"type"] <- "scale"}
     ### scale-Eintrag vergeben
            vari[,"laufnummer"] <- 1:nrow(vari)                                  ### dieses, damit die Reihenfolge der varinfo so ist wie im labels sheet
            vari <- do.call("rbind", by(data = vari, INDICES = vari[,"laufnummer"], FUN = function ( z ) {
@@ -122,17 +123,29 @@ createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", im
                         }
                         v[which(is.na(v[,"group"])),"group"] <- v[which(is.na(v[,"group"])),"varName"]
                    }  else  {                                                   ### hier beginnt die Behandlung fuer imputierte Variablen
-                        v[,"group"] <- paste(eatTools::halveString(string = v[,"varName"], pattern = varNameSeparatorImp, first = !lastOccurrence)[,1], "pooled",sep="_")
+                        if (is.null(varNameSeparatorImp) || is.na(varNameSeparatorImp) || varNameSeparatorImp == "") {
+                            v[,"group"] <- substr(v[,"varName"], 1, nchar(v[,"varName"])-ncharSeparatorImp)
+                        }  else  {
+                            v[,"group"] <- paste(eatTools::halveString(string = v[,"varName"], pattern = varNameSeparatorImp, first = !lastOccurrence)[,1], "pooled",sep="_")
+                        }
                    }
                    return(v)}))
     ### nach Laufnummer sortieren und dann die Spalte entfernen
            vari <- data.frame(vari[sort(vari[,"laufnummer"],decreasing=FALSE,index.return=TRUE)$ix,-match("laufnummer", colnames(vari))])
+    ### consistency checks
+           variV<- vari[which(vari[,"type"] == "variable"),]
+           chk2 <- by(data = variV, INDICES = variV[,"group"], FUN = function ( x ) {
+                   if ( nrow(x)>1) {
+                        if ( length(unique(x[,"scale"])) > 1) {
+                             warning("Scale level is not unique for items '",paste(x[,"varName"], collapse="', '"), "'. Scale definition seems to be invalid. Please correct by hand.")
+                        }
+                   } })
            return(vari)}
            
 #'@export
-createInputForDescriptives.list <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
+createInputForDescriptives.list <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
   lapply(GADSdat.obj, function(x) {
-    createInputForDescriptives(x, idExpr = idExpr, impExpr = impExpr, scaleExpr = scaleExpr, varNameSeparatorImp = varNameSeparatorImp, lastOccurrence =lastOccurrence, groupSuffixImp = groupSuffixImp, nCatsForOrdinal = nCatsForOrdinal, verbose = verbose)
+    createInputForDescriptives(x, idExpr = idExpr, impExpr = impExpr, scaleExpr = scaleExpr, varNameSeparatorImp = varNameSeparatorImp, ncharSeparatorImp = ncharSeparatorImp, lastOccurrence =lastOccurrence, groupSuffixImp = groupSuffixImp, nCatsForOrdinal = nCatsForOrdinal, verbose = verbose)
   })
 }
 

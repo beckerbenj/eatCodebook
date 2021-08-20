@@ -2,7 +2,7 @@
 % Please edit documentation in R/createInputForDescriptives.r
 \name{createInputForDescriptives}
 \alias{createInputForDescriptives}
-\title{Prepare variable information.}
+\title{Create input data.frame for subsequent calculation of descriptives}
 \usage{
 createInputForDescriptives(
   GADSdat.obj,
@@ -10,6 +10,7 @@ createInputForDescriptives(
   impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"),
   scaleExpr = "^Skala",
   varNameSeparatorImp = "_",
+  ncharSeparatorImp = 1,
   lastOccurrence = TRUE,
   groupSuffixImp = "imp",
   nCatsForOrdinal = c(2:5),
@@ -25,9 +26,11 @@ createInputForDescriptives(
 
 \item{scaleExpr}{Regular expression to identify scale variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1, at least one expression should match to identify the variable as a scale variable)}
 
-\item{varNameSeparatorImp}{character sign to separate the "pooled" suffix from group name in group column}
+\item{varNameSeparatorImp}{character sign to separate the "pooled" suffix from group name in group column. If no such sign exists in the data, i.e. if multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1}, \code{pv.2}, \code{pv.3}, use \code{NA} or \code{NULL} or \code{""}.}
 
-\item{lastOccurrence}{Logical: If varNameSeparatorImp occurrs multiple times within a string, lastOccurrence defines whether the last occurrence should be used for splitting}
+\item{ncharSeparatorImp}{Integer: only relevant if no \code{varNameSeparatorImp} exists, i.e. if multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1}, \code{pv.2}, \code{pv.3}. \code{ncharSeparatorImp} than specifies the number of character signs which should be dropped to identify the common variable stem. If \code{varNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if multiple imputations occur as \code{pv_1}, \code{pv_2}, \code{pv_3}, use \code{varNameSeparatorImp = "_"}. If multiple imputations occur as \code{pv.1}, \code{pv.2}, \code{pv.3}, use \code{varNameSeparatorImp = "\\."}. If multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, use \code{varNameSeparatorImp = NULL} and \code{ncharSeparatorImp = 1}.}
+
+\item{lastOccurrence}{Logical: If varNameSeparatorImp occurrs multiple times within a string, \code{lastOccurrence} defines whether the last occurrence should be used for splitting}
 
 \item{groupSuffixImp}{tbd}
 
@@ -48,7 +51,7 @@ Returns a \code{data.frame} with variable information with following columns
 }
 }
 \description{
-Create a variable information data.frame from the GADSdat object
+Create a variable information data.frame from the GADSdat object. This input can be used to calculate the descriptives of the data via the \code{calculateDescriptives} function
 }
 \examples{
 varInfo <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value")
