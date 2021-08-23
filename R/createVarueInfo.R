@@ -15,11 +15,11 @@
 #'#tbd
 #'
 #'@export
-createVarueInfo <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
-  UseMethod("createVarueInfo")
+createVarInfo <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
+  UseMethod("createVarInfo")
 }
 #'@export
-createVarueInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
+createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
   var_labs <- unique(eatGADS::extractMeta(GADSdat)[, c("varName", "varLabel")])
 
   var_labs2 <- var_labs
@@ -74,9 +74,9 @@ createVarueInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList 
   variableninfo
 }
 #'@export
-createVarueInfo.list <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
+createVarInfo.list <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
   Map(function(single_GADSdat, single_input) {
-    createVarueInfo(single_GADSdat, single_input, encodingList = encodingList, makeStructure = makeStructure)
+    createVarInfo(single_GADSdat, single_input, encodingList = encodingList, makeStructure = makeStructure)
   }, single_GADSdat = GADSdat, single_input = inputForDescriptives)
 }
 

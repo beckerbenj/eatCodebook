@@ -7,7 +7,7 @@ gads <- readRDS("helper_scaleDF.RDS")
 
 test_that("with pisa", {
   suppressMessages(input4descr <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value"))
-  out <- createVarueInfo(eatGADS::pisa, input4descr)
+  out <- createVarInfo(eatGADS::pisa, input4descr)
   expect_true(all(eatGADS::namesGADS(eatGADS::pisa) %in% out$Var.Name))
   expect_true(all(c("ma_pooled", "rea_pooled", "sci_pooled") %in% out$Var.Name))
   expect_equal(out$in.DS.und.SH[1], "ja")
@@ -20,7 +20,7 @@ test_that("with pisa", {
 test_that("with list", {
   l1 <- list(pisa = eatGADS::pisa, other = dfSAV)
   suppressMessages(inputList <- createInputForDescriptives(l1, impExpr = "Plausible Value"))
-  out <- createVarueInfo(l1, inputList)
+  out <- createVarInfo(l1, inputList)
   expect_equal(names(out), c("pisa", "other"))
   expect_true(all(eatGADS::namesGADS(eatGADS::pisa) %in% out[[1]]$Var.Name))
   expect_true(all(c("ma_pooled", "rea_pooled", "sci_pooled") %in% out[[1]]$Var.Name))

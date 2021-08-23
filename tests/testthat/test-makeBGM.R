@@ -4,7 +4,8 @@ dfSAV <- eatGADS::import_spss("helper_spss.sav")
 
 
 test_that("single data.frame", {
-  varueInfo <- createVarueInfo(dfSAV)
+  suppressMessages(input4descr <- createInputForDescriptives(dfSAV))
+  varueInfo <- createVarInfo(dfSAV, input4descr)
   out <- makeBGM(varueInfo)
   expect_equal(out, NULL)
 
@@ -20,7 +21,8 @@ test_that("single data.frame", {
 
 test_that("multiple data.frame", {
   l <- list(dat1 = dfSAV, dat2 = dfSAV)
-  varueInfo_l <- createVarueInfo(l)
+  suppressMessages(input4descr_l <- createInputForDescriptives(l))
+  varueInfo_l <- createVarInfo(l)
   out <- makeBGM(varueInfo_l)
   expect_equal(out, NULL)
 
