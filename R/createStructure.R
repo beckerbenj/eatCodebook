@@ -21,8 +21,8 @@ createStructure.data.frame <- function(inputForDescriptives){
 }
 #'@export
 createStructure.list <- function(inputForDescriptives){
-  all_struc <- lapply(varInfo , function(single_varInfo){
-    createStructure(single_varInfo)
+  all_struc <- lapply(inputForDescriptives, function(single_inputForDescriptives){
+    createStructure(single_inputForDescriptives)
   })
   all_struc
 }

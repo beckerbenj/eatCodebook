@@ -22,7 +22,7 @@ test_that("single data.frame", {
 test_that("multiple data.frame", {
   l <- list(dat1 = dfSAV, dat2 = dfSAV)
   suppressMessages(input4descr_l <- createInputForDescriptives(l))
-  varueInfo_l <- createVarInfo(l)
+  varueInfo_l <- createVarInfo(l, input4descr_l)
   out <- makeBGM(varueInfo_l)
   expect_equal(out, NULL)
 

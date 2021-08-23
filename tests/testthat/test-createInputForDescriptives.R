@@ -2,8 +2,8 @@
 
 
 test_that("with pisa data", {
-  out <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value")
-  expect_equal(names(out), c("varName", "varLabel", "imp", "type", "scale", "group"))
+  messages <- capture_messages(out <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value"))
+  expect_equal(names(out), c("varName", "varLabel", "format", "imp", "type", "scale", "group"))
   expect_equal(unique(out$type), "variable")
 })
 

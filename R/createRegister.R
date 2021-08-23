@@ -21,8 +21,8 @@ createRegister <- function(inputForDescriptives, keywordList){
 createRegister.data.frame <- function(inputForDescriptives, keywordList){
   #browser()
 
-  varinfo[, "Nr"] <- NA
-  register <- unique(varinfo[, c("Nr", "group")])
+  inputForDescriptives[, "Nr"] <- NA
+  register <- unique(inputForDescriptives[, c("Nr", "group")])
   names(register)[2] <- "varName"
   register[, "Nr"] <- seq(nrow(register))
 
@@ -38,8 +38,8 @@ createRegister.data.frame <- function(inputForDescriptives, keywordList){
 createRegister.list <- function(inputForDescriptives, keywordList){
   #browser()
 
-  all_reg <- lapply(varinfo , function(single_varinfo){
-    createRegister(single_varinfo, keywordList)
+  all_reg <- lapply(inputForDescriptives, function(single_inputForDescriptives){
+    createRegister(single_inputForDescriptives, keywordList)
   })
 
   all_reg
