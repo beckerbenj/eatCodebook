@@ -1,8 +1,6 @@
 
-
-
 test_that("with pisa data", {
-  messages <- capture_messages(out <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value"))
+  messages <- capture_messages(out <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value", nCatsForOrdinal = c(2:7)))
   expect_equal(names(out), c("varName", "varLabel", "format", "imp", "type", "scale", "group"))
   expect_equal(unique(out$type), "variable")
 })
@@ -21,7 +19,7 @@ gads <- eatGADS::changeVarLabels(gads, varName = c("constr_1", "constr_2", "cons
 
 test_that("with scale", {
   out <-  createInputForDescriptives(gads, verbose = FALSE)
-  expect_equal(names(out), c("varName", "varLabel", "imp", "type", "scale", "group"))
-  expect_equal(out$type, c("scale", rep("variable", 4)))
+  expect_equal(names(out), c("varName", "varLabel", "format", "imp", "type", "scale", "group"))
+  expect_equal(out$type, c(rep("variable", 4), "scale"))
   expect_equal(unique(out$imp), c(FALSE))
 })

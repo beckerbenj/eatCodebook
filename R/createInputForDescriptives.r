@@ -57,9 +57,13 @@ createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", im
                         return(z)
                    }
     ### wenn Variable im GADSdat-Labelsfile ein "A" in der Format-Spalte hat, bedeutet das "character". Es soll ein leerer Eintrag in der "scale"-Spalte eingetragen werden
-                   if(toupper(substr(z[["format"]],1,1)) == "A") {
-                        z[,"scale"] <- NA
-                        return(z)
+                   if ( is.null( z[["format"]]) || is.na(z[["format"]]) || z[["format"]] == "") {
+                       warning(paste0("Variable '",z[["varName"]],"': 'format' column in the labels sheet of the GADSdat object is empty or NA. Cannot use format information to identify the scale level of the '",z[["varName"]],"' variable."))
+                   }  else  {
+                       if(toupper(substr(z[["format"]],1,1)) == "A") {
+                            z[,"scale"] <- NA
+                            return(z)
+                       }
                    }
                    if ( class(GADSdat.obj[["dat"]][,z[["varName"]]]) == "character") {scale <- "nominal"}
                    if ( class(GADSdat.obj[["dat"]][,z[["varName"]]]) == "numeric") {
@@ -84,17 +88,19 @@ createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", im
                    }
     ### check No. 1 und ggf. korrektur der 'scale'-Zuweisung
                    if (scale != "numeric") {
-                        digit <- unlist(strsplit(z[["format"]], "\\."))
-                        digit <- suppressWarnings(eatTools::asNumericIfPossible(digit[length(digit)], force.string=FALSE))
-                        krit1 <- is.numeric(digit) && digit>0
-                        if(substr(z[["format"]],1,1) == "F" && isTRUE(krit1)) {
-                            message(paste0("Variable '",z[["varName"]],"' has identified scale '",scale,"' but is expected to be 'numeric' due to format definition '",z[["format"]],"' in GADSdat labels sheet. Transform '",z[["varName"]],"' to be numeric."))
-                            scale <- "numeric"
+                        if ( !is.null( z[["format"]]) || is.na(z[["format"]]) || z[["format"]] == "") {
+                              digit <- unlist(strsplit(z[["format"]], "\\."))
+                              digit <- suppressWarnings(eatTools::asNumericIfPossible(digit[length(digit)], force.string=FALSE))
+                              krit1 <- is.numeric(digit) && digit>0
+                              if(substr(z[["format"]],1,1) == "F" && isTRUE(krit1)) {
+                                  message(paste0("Variable '",z[["varName"]],"' has identified scale '",scale,"' but is expected to be 'numeric' due to format definition '",z[["format"]],"' in GADSdat labels sheet. Transform '",z[["varName"]],"' to be numeric."))
+                                  scale <- "numeric"
+                              }
                         }
     ### wenn das erste Kriterium fuer numerisch nicht erfuellt wurde, soll hier das zweite geprueft werden: wenn eine variable nur missings als definierte labels hat, dann soll sie numerisch sein
                         if (scale != "numeric") {
                             if ( all(na.omit(GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == z[["varName"]]),"missings"]) == "miss")) {
-                                 message(paste0("Variable '",z[["varName"]],"' has only missings as defined labels in the labels sheet of the GADSdat object. hence, '",z[["varName"]],"' is expected to be numeric. Change 'scale' value from '",scale,"' to 'numeric'."))
+                                 message(paste0("'",z[["varName"]],"': only missing labels are defined in in the labels sheet of the GADSdat object. Hence, '",z[["varName"]],"' is expected to be numeric. Change 'scale' value from '",scale,"' to 'numeric'."))
                                  scale <- "numeric"
                             }
                         }
