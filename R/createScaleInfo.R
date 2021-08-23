@@ -4,7 +4,8 @@
 #'
 #' Create information on scale aggregation.
 #'
-#'@param varInfo \code{varInfo} object.
+#'@param inputForDescriptives \code{inputForDescriptives} object as created by the \code{createInputForDescriptives} function
+#'@param source character string of length 1: source information of the data, for example \code{"sfb"}, \code{"lfb"}, etc.
 #'
 #'@return Returns the scale information.
 #'
@@ -12,31 +13,35 @@
 #'#tbd
 #'
 #'@export
-createScaleInfo <- function(varInfo){
+createScaleInfo <- function(inputForDescriptives, source){
   UseMethod("createScaleInfo")
 }
 #'@export
-createScaleInfo.data.frame <- function(varInfo){
-  #if(!is.character(source) || length(source) != 1) stop("'source' needs to be a character of length 1.")
+createScaleInfo.data.frame <- function(inputForDescriptives, source){
+  if (!missing(source)) {
+      if(!is.character(source) || length(source) != 1) {stop("'source' needs to be a character of length 1.")}
+  } else {
+      source <- NA
+  }
 
-  scales <- varInfo[varInfo$type == "scale", "group"]
+  scales <- inputForDescriptives[which(inputForDescriptives$type == "scale"), "group"]
 
   scaleInfo <- data.frame(varName = character(),	Quelle = character(),
-                          Anzahl_valider_Werte = character(),	Items_der_Skala = character())
+                          Anzahl_valider_Werte = character(),	Items_der_Skala = character(), stringsAsFactors = FALSE)
 
   for(i in seq_along(scales)) {
-    single_varInfo <- varInfo[varInfo$group == scales[i], ]
-    scaleInfo[i, "varName"] <- single_varInfo[single_varInfo$type == "scale", "varName"]
-    scaleInfo[i, "Items_der_Skala"] <- paste(single_varInfo[single_varInfo$type == "variable", "varName"], collapse = ",")
+    single_inputForDescriptives <- inputForDescriptives[inputForDescriptives$group == scales[i], ]
+    scaleInfo[i, "varName"] <- single_inputForDescriptives[single_inputForDescriptives$type == "scale", "varName"]
+    scaleInfo[i, "Items_der_Skala"] <- paste(single_inputForDescriptives[single_inputForDescriptives$type == "variable", "varName"], collapse = ",")
     scaleInfo[i, "Anzahl_valider_Werte"] <- "-"
-    scaleInfo[i, "Quelle"] <- NA
+    scaleInfo[i, "Quelle"] <- source
   }
   scaleInfo
 }
 #'@export
-createScaleInfo.list <- function(varInfo){
-  scaleInfo_list <- lapply(varInfo, function(x) {
-    createScaleInfo(x)
+createScaleInfo.list <- function(inputForDescriptives, source){
+  scaleInfo_list <- lapply(inputForDescriptives, function(x) {
+    createScaleInfo(x, source=source)
   })
 
   scaleInfo <- eatTools::do_call_rbind_withName(scaleInfo_list, colName = "Quelle2")[, c("varName", "Quelle2", "Anzahl_valider_Werte",

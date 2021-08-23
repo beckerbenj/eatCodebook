@@ -17,7 +17,7 @@ kennwerte.kategorial <- function(x, value_table) {
       warning("Variable '",unique(value_table[,"varName"]), "' has class '",class(x),"' with ",length(uvd)," unique values. '",unique(value_table[,"varName"]), "' seems to stem from an open answer box in the questionnaire. Calculating descriptive statistics seems questionable.")
   }
   if(!identical(unique_values, uvd)) {
-      warning("Variable '",value_table[["varName"]],"': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. \n    'GADSdat' object: '",paste(unique_values, collapse="', '"), "'\n                data: '",paste(uvd,collapse="', '"), "'")
+      warning("Variable '",unique(value_table[["varName"]]),"': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. \n    'GADSdat' object: '",paste(unique_values, collapse="', '"), "'\n                data: '",paste(uvd,collapse="', '"), "'")
       unique_values <- sort(unique(c(uvd, unique_values)))
   }
 
@@ -30,9 +30,11 @@ kennwerte.kategorial <- function(x, value_table) {
 ### Berechnung der Haeufigkeiten
   werte.valid <- x[!x %in% missings  & ! is.na(x)]
   werte.total <- x
-  if(is.numeric(x)) {
-      warning("Original function only allows for non-numeric values.")
-  }
+
+### Warnung ist hier erstmal ausgeschaltet
+#  if(is.numeric(x)) {
+#      warning("Original function only allows for non-numeric values.")
+#  }
 
 #  for(k in unique_values){
 #      if(inherits(try(werte.valid[grepl(paste0("^\\s*",k,"\\s*$") , werte.valid)] <- k ),"try-error"))  {warning("Regular expression failed for category '",k,"' of variable '",unique(value_table[["varName"]]),"'.")}
