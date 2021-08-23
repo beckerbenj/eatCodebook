@@ -2,7 +2,7 @@
 
 ####
 #############################################################################
-#' Create value information.
+#' Create missing value information.
 #'
 #' Create information on value level (value labels and missing codes).
 #'

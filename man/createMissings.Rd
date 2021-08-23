@@ -2,7 +2,7 @@
 % Please edit documentation in R/createMissings.R
 \name{createMissings}
 \alias{createMissings}
-\title{Create value information.}
+\title{Create missing value information.}
 \usage{
 createMissings(GADSdat)
 }

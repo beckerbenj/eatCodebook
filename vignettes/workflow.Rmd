@@ -18,25 +18,26 @@ knitr::opts_chunk$set(
 library(eatCodebook)
 ```
 
-Create a so called `varinfo` for an `GADSdat` object.
+On of the key elements of a codebook are descriptive statistics shortly describing each variable in the data set. What kind of descriptive statistics is reported for each variable depends on the type of the variable. The function `createInputForDescriptives()` creates a template to provide the information that is needed to calculate the descriptive statistics for an `GADSdat` object.
 
 ```{r createInputForDescriptives}
-varinfo <- createInputForDescriptives(GADSdat.obj = eatGADS::pisa)
+inputForDescriptives <- createInputForDescriptives(GADSdat.obj = eatGADS::pisa)
+head(inputForDescriptives)
 ```
 
-Modify it (export to excel, re import)
+The template should be exported to `.xlsx`, modified and reimported to `R`.
 
 ```{r export varinfo, eval=FALSE}
-eatAnalysis::write_xlsx(varinfo, "file_path/varinfo.xlsx")
-varinfo_edited <- readxl::read_excel("file_path/varinfo.xlsx")
+eatAnalysis::write_xlsx(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
+inputForDescriptives_edited <- readxl::read_excel("file_path/inputForDescriptives.xlsx")
 ```
 
 ```{r edit varinfo, echo=FALSE}
-varinfo_edited <- varinfo
+inputForDescriptives_edited <- inputForDescriptives
 ```
 
 
-Use `varinfo` to calculate descriptive statistics
+This input is then used to calculate descriptive statistics via `calculateDescriptives()`.
 
 ```{r calculate descr}
 # just show function calls
@@ -50,7 +51,12 @@ descStatistics[[50]]
 ```
 
 
-Use `varinfo` to create various other input templates
+Additionally, the `inputForDescriptives` object can be used to create the scale information.
+
+```{r create templates}
+scaleInfo <- createScaleInfo(inputForDescriptives_edited)
+head(scaleInfo)
+```
 
 ```{r create templates}
 # register

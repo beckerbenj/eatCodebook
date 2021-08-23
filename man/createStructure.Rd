@@ -4,10 +4,10 @@
 \alias{createStructure}
 \title{Create structure template.}
 \usage{
-createStructure(varInfo)
+createStructure(inputForDescriptives)
 }
 \arguments{
-\item{varInfo}{Object (either list or data.frame) containing variable information.}
+\item{inputForDescriptives}{Object (either list or data.frame) containing variable information.}
 }
 \value{
 Structure template.

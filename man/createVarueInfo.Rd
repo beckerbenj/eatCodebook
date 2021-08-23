@@ -4,10 +4,17 @@
 \alias{createVarueInfo}
 \title{Create variable information template.}
 \usage{
-createVarueInfo(GADSdat, encodingList = NULL, makeStructure = TRUE)
+createVarueInfo(
+  GADSdat,
+  inputForDescriptives,
+  encodingList = NULL,
+  makeStructure = TRUE
+)
 }
 \arguments{
 \item{GADSdat}{\code{GADSdat} object.}
+
+\item{inputForDescriptives}{Input for descriptives calculation.}
 
 \item{encodingList}{tbd.}
 

@@ -4,7 +4,7 @@
 #'
 #' Create structure template based on variable information.
 #'
-#'@param varInfo Object (either list or data.frame) containing variable information.
+#'@param inputForDescriptives Object (either list or data.frame) containing variable information.
 #'
 #'@return Structure template.
 #'
@@ -12,15 +12,15 @@
 #'#tbd
 #'
 #'@export
-createStructure <- function(varInfo){
+createStructure <- function(inputForDescriptives){
   UseMethod("createStructure")
 }
 #'@export
-createStructure.data.frame <- function(varInfo){
+createStructure.data.frame <- function(inputForDescriptives){
   data.frame(Titel = NA, Ebene = NA)
 }
 #'@export
-createStructure.list <- function(varInfo){
+createStructure.list <- function(inputForDescriptives){
   all_struc <- lapply(varInfo , function(single_varInfo){
     createStructure(single_varInfo)
   })

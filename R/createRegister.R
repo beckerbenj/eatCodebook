@@ -5,7 +5,7 @@
 #'
 #' Create register template based on variable information.
 #'
-#'@param varinfo Object (either list or data.frame) containing variable information.
+#'@param inputForDescriptives Object (either list or data.frame) containing variable information.
 #'@param keywordList Character vector of keyword columns to be added.
 #'
 #'@return Register template.
@@ -14,21 +14,11 @@
 #'#tbd
 #'
 #'@export
-createRegister <- function(varinfo, keywordList){
+createRegister <- function(inputForDescriptives, keywordList){
   UseMethod("createRegister")
 }
 #'@export
-createRegister.list <- function(varinfo, keywordList){
-  #browser()
-
-  all_reg <- lapply(varinfo , function(single_varinfo){
-    createRegister(single_varinfo, keywordList)
-  })
-
-  all_reg
-}
-#'@export
-createRegister.data.frame <- function(varinfo, keywordList){
+createRegister.data.frame <- function(inputForDescriptives, keywordList){
   #browser()
 
   varinfo[, "Nr"] <- NA
@@ -42,6 +32,17 @@ createRegister.data.frame <- function(varinfo, keywordList){
 
   rownames(register) <- NULL
   register
+}
+
+#'@export
+createRegister.list <- function(inputForDescriptives, keywordList){
+  #browser()
+
+  all_reg <- lapply(varinfo , function(single_varinfo){
+    createRegister(single_varinfo, keywordList)
+  })
+
+  all_reg
 }
 
 ## WIe Unterkapitel integrieren?
