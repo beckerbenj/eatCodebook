@@ -8,8 +8,8 @@
 #' Create abbreviation lists latex snippet.
 #'
 #'@param filePath Path to the file.
-#'@param captions Authors of the document.
-#'@param sort.entries Should the abbreviation lists be sorted alphabeticall?.
+#'@param captions tbd
+#'@param sort.entries Should the abbreviation lists be sorted alphabetically?
 #'
 #'@return Returns a latex snippet.
 #'
@@ -17,7 +17,8 @@
 #'#tbd
 #'
 #'@export
-makeAbbrList <- function(filePath, captions=list("Akronyme"= "Abkuerzungen", "Statistische Formelzeichen" = "Statistische Formelzeichen"), sort.entries = TRUE){
+makeAbbrList <- function(filePath, captions=list("Akronyme"= "Abkuerzungen", "Statistische Formelzeichen" = "Statistische Formelzeichen"),
+                         sort.entries = TRUE){
 
   sheet_names <- openxlsx::getSheetNames(filePath)
   names(sheet_names) <- sheet_names

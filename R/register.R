@@ -1,4 +1,86 @@
 ##### REGISTER #####
+# Funktion fuer gesamtes Register eines Instruments
+register.ges <- function ( fb.akt , varue.reg ,double.vars) {
+  # INPUT:
+  #	fb.akt: Fragebogenkuerzel aus fbshort
+  #	varue.reg: Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
+  #			   Zeilen sind VarNamen. Eintraege sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
+  # OUTPUT:
+  #	skript: Character-Vektor mit Latex-Befehlen, um das gesamte Register zu erstellen
+
+
+  #### Vorbereitung ####
+
+  # Identifikation der Schlagwoerter - Vektor mit alphabetisch sortierten Schlagwoertern
+  schlagwoerter <- sort( names(varue.reg)[-which(names(varue.reg) %in% "Var.Name")  ] )
+
+  # Reduktion der Schlagworte auf diejenigen, unter denen mindestens eine Variable verschlagwortet sind
+  schlagwoerter <- schlagwoerter[ sapply( schlagwoerter , function(d) any(varue.reg[,d] %in% "x") ) ]
+
+
+  #### Skript schreiben ####
+  skript  <- c(   "\\phantomsection" ,
+                  paste0("\\section*{Register: ",fblong[fb.akt],"}"),
+                  paste0("\\addcontentsline{toc}{section}{Register: ",fblong[fb.akt],"}"),
+                  "%\\clearscrheadings",
+                  "%\\cfoot[\\pagemark]{\\pagemark}",
+                  paste0("\\ihead[\\leftmark]{\\leftmark \\newline \\textsc{Register ",toupper(fb.akt),"}}"),
+                  "\\renewcommand*{\\thefootnote}{\\fnsymbol{footnote}}",
+                  "\\renewcommand*{\\thefootnotemark}{\\fnsymbol{footnote}}",
+                  "\\begin{register}",
+                  unname( unlist( sapply( schlagwoerter , register.sw, fb.akt=fb.akt , varue.reg=varue.reg ,double.vars=double.vars) ) ),
+                  "\\end{register}"
+                  # Hotfix Versuch Benjamin 06.05.19 Formatierung Register
+                  , "\\pagebreak"
+  )
+
+  #### Output ####
+  return ( skript )
+}
+
+
+# Funktion, um fuer ein Schlagwort den Registereintrag zu erstellen
+register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars) {
+  # INPUT:
+  #	schlagwort: Schlagwort, wie es im Register in der Varue vorkommt
+  #	fb.akt: Fragebogen-Kuerzel aus fbshort
+  #	varue.reg: Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
+  #			   Zeilen sind VarNamen. Eintraege sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
+  # OUTPUT:
+  #	skript: Character-Vektor mit Latex-Befehlen, um fuer ein Schlagwort den Eintrag zu setzen.
+
+  # Ausgabe des Schlagwortes- Erleichtert Fehlersuche
+  cat ( paste0 ( " Register (", fb.akt , ") - Schlagwort: ",schlagwort ,"\n" ) )
+  flush.console()
+
+  #### Vorbereitung ####
+
+  # Identifikation der numerischen Postition, die an pages uebergeben wird
+  numbers <- 	which( tolower( varue.reg[ ,schlagwort] ) %in% "x" )
+
+  # unsortierte Befehle bestimmen
+  counter <- pages ( numbers=numbers , fb=fb.akt , varue.reg=varue.reg , double.vars=double.vars)
+
+  # Identifikation der Befehle, die Counter setzen
+  sets <- counter[ sub( "^(\\\\setcounter).*" , "\\1" , counter ) %in% "\\setcounter"  ]
+
+  # Identifikation der Befehle, die Counter vor Eintag setzen
+  sets.before <- 	sets[ ! sub( "^\\\\setcounter\\{.*\\}\\{(\\\\thetemp).*" , "\\1" , sets ) %in% "\\thetemp" ]
+
+  # Identifikation der Befehle, die Counter nach Eintag setzen
+  sets.after <- 	sets[ sub( "^\\\\setcounter\\{.*\\}\\{(\\\\thetemp).*" , "\\1" , sets ) %in% "\\thetemp" ]
+
+  # Eintrag
+  counter <-  paste0( counter[ !sub( "^(\\\\setcounter).*" , "\\1" , counter ) %in% "\\setcounter" ], collapse = ", " )
+
+  #### Skript schreiben ####
+  skript <- c( sets.before, paste0(  "\\regitem{" , gsub( "\\." , " " , schlagwort ) , "}{", counter , "}"  ), sets.after )
+
+  #### Output ####
+  return ( skript )
+}
+
+
 # Funktion zur Aufbereitung der Seitenzahlen im Register
 pages <- function( numbers , fb , varue.reg, double.vars) {
   # INPUT:
@@ -79,83 +161,3 @@ pages <- function( numbers , fb , varue.reg, double.vars) {
   }
 }
 
-
-# Funktion, um fuer ein Schlagwort den Registereintrag zu erstellen
-register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars) {
-  # INPUT:
-  #	schlagwort: Schlagwort, wie es im Register in der Varue vorkommt
-  #	fb.akt: Fragebogen-Kuerzel aus fbshort
-  #	varue.reg: Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
-  #			   Zeilen sind VarNamen. Eintraege sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
-  # OUTPUT:
-  #	skript: Character-Vektor mit Latex-Befehlen, um fuer ein Schlagwort den Eintrag zu setzen.
-
-  # Ausgabe des Schlagwortes- Erleichtert Fehlersuche
-  cat ( paste0 ( " Register (", fb.akt , ") - Schlagwort: ",schlagwort ,"\n" ) )
-  flush.console()
-
-  #### Vorbereitung ####
-
-  # Identifikation der numerischen Postition, die an pages uebergeben wird
-  numbers <- 	which( tolower( varue.reg[ ,schlagwort] ) %in% "x" )
-
-  # unsortierte Befehle bestimmen
-  counter <- pages ( numbers=numbers , fb=fb.akt , varue.reg=varue.reg , double.vars=double.vars)
-
-  # Identifikation der Befehle, die Counter setzen
-  sets <- counter[ sub( "^(\\\\setcounter).*" , "\\1" , counter ) %in% "\\setcounter"  ]
-
-  # Identifikation der Befehle, die Counter vor Eintag setzen
-  sets.before <- 	sets[ ! sub( "^\\\\setcounter\\{.*\\}\\{(\\\\thetemp).*" , "\\1" , sets ) %in% "\\thetemp" ]
-
-  # Identifikation der Befehle, die Counter nach Eintag setzen
-  sets.after <- 	sets[ sub( "^\\\\setcounter\\{.*\\}\\{(\\\\thetemp).*" , "\\1" , sets ) %in% "\\thetemp" ]
-
-  # Eintrag
-  counter <-  paste0( counter[ !sub( "^(\\\\setcounter).*" , "\\1" , counter ) %in% "\\setcounter" ], collapse = ", " )
-
-  #### Skript schreiben ####
-  skript <- c( sets.before, paste0(  "\\regitem{" , gsub( "\\." , " " , schlagwort ) , "}{", counter , "}"  ), sets.after )
-
-  #### Output ####
-  return ( skript )
-}
-
-# Funktion fuer gesamtes Register eines Instruments
-register.ges <- function ( fb.akt , varue.reg ,double.vars) {
-  # INPUT:
-  #	fb.akt: Fragebogenkuerzel aus fbshort
-  #	varue.reg: Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
-  #			   Zeilen sind VarNamen. Eintraege sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
-  # OUTPUT:
-  #	skript: Character-Vektor mit Latex-Befehlen, um das gesamte Register zu erstellen
-
-
-  #### Vorbereitung ####
-
-  # Identifikation der Schlagwoerter - Vektor mit alphabetisch sortierten Schlagwoertern
-  schlagwoerter <- sort( names(varue.reg)[-which(names(varue.reg) %in% "Var.Name")  ] )
-
-  # Reduktion der Schlagworte auf diejenigen, unter denen mindestens eine Variable verschlagwortet sind
-  schlagwoerter <- schlagwoerter[ sapply( schlagwoerter , function(d) any(varue.reg[,d] %in% "x") ) ]
-
-
-  #### Skript schreiben ####
-  skript  <- c(   "\\phantomsection" ,
-                  paste0("\\section*{Register: ",fblong[fb.akt],"}"),
-                  paste0("\\addcontentsline{toc}{section}{Register: ",fblong[fb.akt],"}"),
-                  "%\\clearscrheadings",
-                  "%\\cfoot[\\pagemark]{\\pagemark}",
-                  paste0("\\ihead[\\leftmark]{\\leftmark \\newline \\textsc{Register ",toupper(fb.akt),"}}"),
-                  "\\renewcommand*{\\thefootnote}{\\fnsymbol{footnote}}",
-                  "\\renewcommand*{\\thefootnotemark}{\\fnsymbol{footnote}}",
-                  "\\begin{register}",
-                  unname( unlist( sapply( schlagwoerter , register.sw, fb.akt=fb.akt , varue.reg=varue.reg ,double.vars=double.vars) ) ),
-                  "\\end{register}"
-                  # Hotfix Versuch Benjamin 06.05.19 Formatierung Register
-                  , "\\pagebreak"
-  )
-
-  #### Output ####
-  return ( skript )
-}
