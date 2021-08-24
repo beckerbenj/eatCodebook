@@ -10,7 +10,7 @@
 #' Create a variable information data.frame from the GADSdat object. This input can be used to calculate the descriptives of the data via the \code{calculateDescriptives} function
 #'
 #'
-#'@param GADSdat.obj Object of class \code{GADSdat}, created by \code{import_spss} from the \code{eatGADS} package, for example. Alternatively, a list of objects of class \code{GADSdat}
+#'@param GADSdat Object of class \code{GADSdat}, created by \code{import_spss} from the \code{eatGADS} package, for example. Alternatively, a list of objects of class \code{GADSdat}
 #'@param idExpr Regular expression to identify ID variables from variable names (Note: for multiple expressions, i.e. if \code{idExpr} is a character vector of length > 1, at least one expression should match to identify the variable as ID variable)
 #'@param impExpr Regular expression to identify imputed variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1, at least one expression should match to identify the variable as an imputed variable)
 #'@param scaleExpr Regular expression to identify scale variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1, at least one expression should match to identify the variable as a scale variable)
@@ -36,12 +36,16 @@
 #'varInfo <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value")
 #'
 #'@export
-createInputForDescriptives <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
+createInputForDescriptives <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
   UseMethod("createInputForDescriptives")
 }
 #'@export
-createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
-           vari <- GADSdat.obj[["labels"]][!duplicated(GADSdat.obj[["labels"]][,"varName"]),c("varName","varLabel", "format")]
+createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
+    ### wenn es missings in der Format-Spalte des GADSdat-Labels-Objekt gibt, soll zuvor eatGADS::checkFormat aufgerufen werden
+           if(any(is.na( GADSdat[["labels"]][,"format"]))) {
+              GADSdat <- eatGADS::checkFormat(GADSdat)
+           }
+           vari <- GADSdat[["labels"]][!duplicated(GADSdat[["labels"]][,"varName"]),c("varName","varLabel", "format")]
            vari[,"imp"] <- FALSE
     ### imp-Eintrag vergeben
            for ( i in impExpr) {  vari[grep(i, vari[,"varLabel"]),"imp"] <- TRUE  }
@@ -57,19 +61,19 @@ createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", im
                         return(z)
                    }
     ### wenn Variable im GADSdat-Labelsfile ein "A" in der Format-Spalte hat, bedeutet das "character". Es soll ein leerer Eintrag in der "scale"-Spalte eingetragen werden
-                   if ( is.null( z[["format"]]) || is.na(z[["format"]]) || z[["format"]] == "") {
-                       warning(paste0("Variable '",z[["varName"]],"': 'format' column in the labels sheet of the GADSdat object is empty or NA. Cannot use format information to identify the scale level of the '",z[["varName"]],"' variable."))
-                   }  else  {
-                       if(toupper(substr(z[["format"]],1,1)) == "A") {
-                            z[,"scale"] <- NA
-                            return(z)
-                       }
+#                   if ( is.null( z[["format"]]) || is.na(z[["format"]]) || z[["format"]] == "") {
+#                       warning(paste0("Variable '",z[["varName"]],"': 'format' column in the labels sheet of the GADSdat object is empty or NA. Cannot use format information to identify the scale level of the '",z[["varName"]],"' variable."))
+#                   }  else  {
+                   if(toupper(substr(z[["format"]],1,1)) == "A") {
+                        z[,"scale"] <- NA
+                        return(z)
                    }
-                   if ( class(GADSdat.obj[["dat"]][,z[["varName"]]]) == "character") {scale <- "nominal"}
-                   if ( class(GADSdat.obj[["dat"]][,z[["varName"]]]) == "numeric") {
-                        mis    <- GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == z[["varName"]]),]
+#                   }
+                   if ( class(GADSdat[["dat"]][,z[["varName"]]]) == "character") {scale <- "nominal"}
+                   if ( class(GADSdat[["dat"]][,z[["varName"]]]) == "numeric") {
+                        mis    <- GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == z[["varName"]]),]
                         mis    <- mis[which(mis[,"missings"] == "miss"),"value"]
-                        nonmis <- sort(setdiff(unique(GADSdat.obj[["dat"]][,z[["varName"]]]), mis))
+                        nonmis <- sort(setdiff(unique(GADSdat[["dat"]][,z[["varName"]]]), mis))
                         if ( any(is.na(as.integer(nonmis))) ) {
                              warning(paste0("Variable '",z[["varName"]],"': Missing values in sorted integer entries found. This should only occur for pseudo-numeric values, i.e. id variables."))
                              scale <- NA
@@ -88,18 +92,18 @@ createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", im
                    }
     ### check No. 1 und ggf. korrektur der 'scale'-Zuweisung
                    if (scale != "numeric") {
-                        if ( !is.null( z[["format"]]) || is.na(z[["format"]]) || z[["format"]] == "") {
-                              digit <- unlist(strsplit(z[["format"]], "\\."))
-                              digit <- suppressWarnings(eatTools::asNumericIfPossible(digit[length(digit)], force.string=FALSE))
-                              krit1 <- is.numeric(digit) && digit>0
-                              if(substr(z[["format"]],1,1) == "F" && isTRUE(krit1)) {
-                                  message(paste0("Variable '",z[["varName"]],"' has identified scale '",scale,"' but is expected to be 'numeric' due to format definition '",z[["format"]],"' in GADSdat labels sheet. Transform '",z[["varName"]],"' to be numeric."))
-                                  scale <- "numeric"
-                              }
+#                        if ( !is.null( z[["format"]]) || is.na(z[["format"]]) || z[["format"]] == "") {
+                        digit <- unlist(strsplit(z[["format"]], "\\."))
+                        digit <- suppressWarnings(eatTools::asNumericIfPossible(digit[length(digit)], force.string=FALSE))
+                        krit1 <- is.numeric(digit) && digit>0
+                        if(substr(z[["format"]],1,1) == "F" && isTRUE(krit1)) {
+                            message(paste0("Variable '",z[["varName"]],"' has identified scale '",scale,"' but is expected to be 'numeric' due to format definition '",z[["format"]],"' in GADSdat labels sheet. Transform '",z[["varName"]],"' to be numeric."))
+                            scale <- "numeric"
                         }
+#                        }
     ### wenn das erste Kriterium fuer numerisch nicht erfuellt wurde, soll hier das zweite geprueft werden: wenn eine variable nur missings als definierte labels hat, dann soll sie numerisch sein
                         if (scale != "numeric") {
-                            if ( all(na.omit(GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == z[["varName"]]),"missings"]) == "miss")) {
+                            if ( all(na.omit(GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == z[["varName"]]),"missings"]) == "miss")) {
                                  message(paste0("'",z[["varName"]],"': only missing labels are defined in in the labels sheet of the GADSdat object. Hence, '",z[["varName"]],"' is expected to be numeric. Change 'scale' value from '",scale,"' to 'numeric'."))
                                  scale <- "numeric"
                             }
@@ -149,8 +153,8 @@ createInputForDescriptives.GADSdat <- function ( GADSdat.obj, idExpr = "^ID", im
            return(vari)}
            
 #'@export
-createInputForDescriptives.list <- function ( GADSdat.obj, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
-  lapply(GADSdat.obj, function(x) {
+createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
+  lapply(GADSdat, function(x) {
     createInputForDescriptives(x, idExpr = idExpr, impExpr = impExpr, scaleExpr = scaleExpr, varNameSeparatorImp = varNameSeparatorImp, ncharSeparatorImp = ncharSeparatorImp, lastOccurrence =lastOccurrence, groupSuffixImp = groupSuffixImp, nCatsForOrdinal = nCatsForOrdinal, verbose = verbose)
   })
 }

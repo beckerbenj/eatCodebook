@@ -5,16 +5,16 @@
 \title{Calculate descriptive statistics.}
 \usage{
 calculateDescriptives(
-  GADSdat.obj,
-  varinfo,
+  GADSdat,
+  inputForDescriptives,
   verbose = TRUE,
   showCallOnly = FALSE
 )
 }
 \arguments{
-\item{GADSdat.obj}{Object of class \code{GADSdat}, created for example by \code{import_spss} from the \code{eatGADS} package.}
+\item{GADSdat}{Object of class \code{GADSdat}, created for example by \code{import_spss} from the \code{eatGADS} package.}
 
-\item{varinfo}{\code{data.frame} with variable information. This table can be created from GADSdat object, using the \code{createInputForDescriptives} function}
+\item{inputForDescriptives}{\code{data.frame} with variable information. This table can be created from GADSdat object, using the \code{createInputForDescriptives} function}
 
 \item{verbose}{Cat to console?}
 

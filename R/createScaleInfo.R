@@ -5,7 +5,7 @@
 #' Create information on scale aggregation.
 #'
 #'@param inputForDescriptives \code{inputForDescriptives} object as created by the \code{createInputForDescriptives} function
-#'@param source character string of length 1: source information of the data, for example \code{"sfb"}, \code{"lfb"}, etc.
+#         source character string of length 1: source information of the data, for example \code{"sfb"}, \code{"lfb"}, etc.
 #'
 #'@return Returns the scale information.
 #'
@@ -13,16 +13,16 @@
 #'#tbd
 #'
 #'@export
-createScaleInfo <- function(inputForDescriptives, source){
+createScaleInfo <- function(inputForDescriptives){
   UseMethod("createScaleInfo")
 }
 #'@export
-createScaleInfo.data.frame <- function(inputForDescriptives, source){
-  if (!missing(source)) {
-      if(!is.character(source) || length(source) != 1) {stop("'source' needs to be a character of length 1.")}
-  } else {
-      source <- NA
-  }
+createScaleInfo.data.frame <- function(inputForDescriptives){
+#  if (!missing(source)) {
+#      if(!is.character(source) || length(source) != 1) {stop("'source' needs to be a character of length 1.")}
+#  } else {
+  source <- NA
+#  }
 
   scales <- inputForDescriptives[which(inputForDescriptives$type == "scale"), "group"]
 
@@ -39,9 +39,9 @@ createScaleInfo.data.frame <- function(inputForDescriptives, source){
   scaleInfo
 }
 #'@export
-createScaleInfo.list <- function(inputForDescriptives, source){
+createScaleInfo.list <- function(inputForDescriptives){
   scaleInfo_list <- lapply(inputForDescriptives, function(x) {
-    createScaleInfo(x, source=source)
+    createScaleInfo(x)
   })
 
   scaleInfo <- eatTools::do_call_rbind_withName(scaleInfo_list, colName = "Quelle2")[, c("varName", "Quelle2", "Anzahl_valider_Werte",

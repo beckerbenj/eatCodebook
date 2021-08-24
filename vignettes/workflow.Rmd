@@ -21,7 +21,7 @@ library(eatCodebook)
 On of the key elements of a codebook are descriptive statistics shortly describing each variable in the data set. What kind of descriptive statistics is reported for each variable depends on the type of the variable. The function `createInputForDescriptives()` creates a template to provide the information that is needed to calculate the descriptive statistics for an `GADSdat` object.
 
 ```{r createInputForDescriptives}
-inputForDescriptives <- createInputForDescriptives(GADSdat.obj = eatGADS::pisa)
+inputForDescriptives <- createInputForDescriptives(GADSdat = eatGADS::pisa)
 head(inputForDescriptives)
 ```
 
@@ -41,12 +41,12 @@ This input is then used to calculate descriptive statistics via `calculateDescri
 
 ```{r calculate descr}
 # just show function calls
-showFunctions <- calculateDescriptives(GADSdat.obj = gadsDat, varinfo = varinfo_edited, showCallOnly = TRUE)
+showFunctions <- calculateDescriptives(GADSdat = gadsDat, inputForDescriptives = inputForDescriptives_edited, showCallOnly = TRUE)
 showFunctions <- data.frame(varName = names(showFunctions), functionName = as.vector(showFunctions), stringsAsFactors = FALSE)
 showFunctions
 
 # acutally calculate descriptives
-descStatistics <- calculateDescriptives(GADSdat.obj = eatGADS::pisa, varinfo = varinfo_edited, showCallOnly = FALSE)
+descStatistics <- calculateDescriptives(GADSdat = eatGADS::pisa, inputForDescriptives = inputForDescriptives_edited, showCallOnly = FALSE)
 descStatistics[[50]]
 ```
 
@@ -58,7 +58,7 @@ scaleInfo <- createScaleInfo(inputForDescriptives_edited)
 head(scaleInfo)
 ```
 
-```{r create templates}
+```{r create templates2}
 # register
 # structure
 # value info

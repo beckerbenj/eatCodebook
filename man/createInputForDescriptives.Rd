@@ -5,7 +5,7 @@
 \title{Create input data.frame for subsequent calculation of descriptives}
 \usage{
 createInputForDescriptives(
-  GADSdat.obj,
+  GADSdat,
   idExpr = "^ID",
   impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"),
   scaleExpr = "^Skala",
@@ -18,7 +18,7 @@ createInputForDescriptives(
 )
 }
 \arguments{
-\item{GADSdat.obj}{Object of class \code{GADSdat}, created by \code{import_spss} from the \code{eatGADS} package, for example. Alternatively, a list of objects of class \code{GADSdat}}
+\item{GADSdat}{Object of class \code{GADSdat}, created by \code{import_spss} from the \code{eatGADS} package, for example. Alternatively, a list of objects of class \code{GADSdat}}
 
 \item{idExpr}{Regular expression to identify ID variables from variable names (Note: for multiple expressions, i.e. if \code{idExpr} is a character vector of length > 1, at least one expression should match to identify the variable as ID variable)}
 

@@ -128,7 +128,7 @@ kennwerte.metrisch <- function(x, value_table) {
 
 # how to integrate variable sets (items of scales?)
 ### kennwerte.skala(dat=dat, scaleCol = "DM_erfahrung", c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
-kennwerte.skala <- function(GADSdat.obj,sub.varinfo) {
+kennwerte.skala <- function(GADSdat,sub.inputForDescriptives) {
   # erzeugt denselben output wie die originale kennwerte.skala
   # INPUT
   #	dat: Datensatz (data.frame)
@@ -139,22 +139,22 @@ kennwerte.skala <- function(GADSdat.obj,sub.varinfo) {
   #	ret.var: Liste mit zwei Eintraegen:
   #			 Erster Listeneintrag ist ein Vektor mit den metrischen Kennwerten der Skala (M, SD, Min, Max, Cronbachs Alpha)
   #			 Zweiter Listeneintrag ist ein data.frame mit den ordinalen Kennwerten der
-scaleCol<- sub.varinfo[which(sub.varinfo[,"type"] == "scale"),"varName"]
-variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"varName"]
+scaleCol<- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"] == "scale"),"varName"]
+variableCols <- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"] != "scale"),"varName"]
 
 # erstmal keine checks, die passieren auf hoeherer Ebene
-  dat   <- GADSdat.obj[["dat"]]
+  dat   <- GADSdat[["dat"]]
   allVar<- list(sc = scaleCol, vc = variableCols)
   allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
 
-# descriptives der einzelitems ... rekursiver Funktionsaufruf ... sub.varinfo kopieren und anpassen
-  svi   <- sub.varinfo
+# descriptives der einzelitems ... rekursiver Funktionsaufruf ... sub.inputForDescriptives kopieren und anpassen
+  svi   <- sub.inputForDescriptives
   svi[,"group"] <- svi[,"varName"]
   check0<- svi[which(svi[,"type"] == "variable"),"scale"]
   if ( length(unique(check0)) != 1) {
        stop("All ",nrow(svi)," items belonging to the same scale '",scaleCol,"' must have equal scale definition.")
   }
-  items <- calculateDescriptives(GADSdat.obj, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE)
+  items <- calculateDescriptives(GADSdat, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE)
   check1<- table(sapply(items, length))
   if ( length(check1) != 1) {
        stop("Vector of descriptives for ",length(items)," items belonging to the same scale '",scaleCol,"' must be of equal length.")
@@ -164,7 +164,7 @@ variableCols <- sub.varinfo[which(sub.varinfo[,"type"] != "scale"),"varName"]
 
 # missing values aus GADSdat-objekt auslesen und in den Daten rekodieren, falls es missings gibt
   for ( i in c(allNam[["vc"]], allNam[["sc"]]) ) {
-      sublab <- GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == i),]
+      sublab <- GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == i),]
       if ( "miss" %in% sublab[,"missings"]) {
            mv <- sublab[which(sublab[,"missings"] == "miss"),"value"]
            rs <- paste(mv , " = " , "NA",sep="", collapse="; ")
@@ -321,7 +321,8 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
 
 ### felix berechnet absolute Haeufigkeiten bei imputierter Variablen ... finde ich etwas komisch,
 ### aber der konsistenz zuliebe passiert es jetzt hier auch
-  absfreqs <- rowMeans(sapply(datWide[,imputedVariableCols], FUN = table, useNA="al"))
+  allvals  <- names(eatTools::tableUnlist(datWide[,imputedVariableCols]))
+  absfreqs <- rowMeans(sapply(datWide[,imputedVariableCols], FUN = eatTools::tablePattern, pattern = allvals, useNA="al"))
   absf     <- as.character(round( absfreqs, digits = 0))
   names(absf) <- paste(c(names(absfreqs)[-length(absfreqs)], "sysmis"), "totalabs", sep=".")
   ret.var <- c( N.valid=as.character(N.valid) , N.total=as.character(nrow(datWide)) , retA, sysmis.valid = "\\multic{--}", ret1A, absf)

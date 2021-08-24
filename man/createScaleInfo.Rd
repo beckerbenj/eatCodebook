@@ -4,10 +4,10 @@
 \alias{createScaleInfo}
 \title{Create scale information.}
 \usage{
-createScaleInfo(varInfo)
+createScaleInfo(inputForDescriptives)
 }
 \arguments{
-\item{varInfo}{\code{varInfo} object.}
+\item{inputForDescriptives}{\code{inputForDescriptives} object as created by the \code{createInputForDescriptives} function}
 }
 \value{
 Returns the scale information.

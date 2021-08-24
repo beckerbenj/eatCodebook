@@ -14,9 +14,9 @@ makeAbbrList(
 \arguments{
 \item{filePath}{Path to the file.}
 
-\item{captions}{Authors of the document.}
+\item{captions}{tbd}
 
-\item{sort.entries}{Should the abbreviation lists be sorted alphabeticall?.}
+\item{sort.entries}{Should the abbreviation lists be sorted alphabetically?}
 }
 \value{
 Returns a latex snippet.

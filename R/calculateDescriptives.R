@@ -19,7 +19,7 @@
 #' Calculate descriptive statistics which should be included in the codebook.
 #'
 #'
-#'@param GADSdat.obj Object of class \code{GADSdat}, created for example by \code{import_spss} from the \code{eatGADS} package.
+#'@param GADSdat Object of class \code{GADSdat}, created for example by \code{import_spss} from the \code{eatGADS} package.
 #'@param inputForDescriptives \code{data.frame} with variable information. This table can be created from GADSdat object, using the \code{createInputForDescriptives} function
 #'@param verbose Cat to console?
 #'@param showCallOnly Logical: only for diagnostics. If TRUE, no calculation is proceed, and only the function which is called for calculation is returned.
@@ -32,7 +32,7 @@
 #'@export
 
 ### showCallOnly: nur zum checken, welche Funktion gecalled wird
-calculateDescriptives <- function( GADSdat.obj, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
+calculateDescriptives <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
 ### checks, dass inputForDescriptives korrekt spezifiziert ... es muss u.a. ein data.frame sein
   if ("tbl" %in% class(inputForDescriptives)) {
        message("'inputForDescriptives' has class '",paste(class(inputForDescriptives), collapse="', '"), "'. Transform 'inputForDescriptives' into 'data.frame'.")
@@ -60,16 +60,16 @@ calculateDescriptives <- function( GADSdat.obj, inputForDescriptives, verbose = 
          return(NULL)
       }
   }
-  ret <- by(data = inputForDescriptives, INDICES = inputForDescriptives[,"group"], FUN = function (v) {varStats(GADSdat.obj=GADSdat.obj, sub.inputForDescriptives=v, verbose=verbose, showCallOnly=showCallOnly)})
+  ret <- by(data = inputForDescriptives, INDICES = inputForDescriptives[,"group"], FUN = function (v) {varStats(GADSdat=GADSdat, sub.inputForDescriptives=v, verbose=verbose, showCallOnly=showCallOnly)})
   return(ret)
 }
 
 
 ### showCallOnly: nur zum checken, welche Funktion gecalled wird
-varStats <- function(GADSdat.obj, sub.inputForDescriptives, verbose, showCallOnly = FALSE) {
+varStats <- function(GADSdat, sub.inputForDescriptives, verbose, showCallOnly = FALSE) {
 ### checks
-  if ( isFALSE(showCallOnly) && !all(sub.inputForDescriptives[,"varName"] %in% colnames(GADSdat.obj[["dat"]])) ) {
-       message("Following variables from the 'inputForDescriptives' missed in GADSdat.obj: '",paste(setdiff(sub.inputForDescriptives[,"varName"],colnames(GADSdat.obj[["dat"]])), collapse="', '"), "'.\nSkip collecting variable statistics for '",sub.inputForDescriptives[1,"group"],"'.")
+  if ( isFALSE(showCallOnly) && !all(sub.inputForDescriptives[,"varName"] %in% colnames(GADSdat[["dat"]])) ) {
+       message("Following variables from the 'inputForDescriptives' missed in GADSdat: '",paste(setdiff(sub.inputForDescriptives[,"varName"],colnames(GADSdat[["dat"]])), collapse="', '"), "'.\nSkip collecting variable statistics for '",sub.inputForDescriptives[1,"group"],"'.")
        return(NULL)
   }
 ### Ausgabe des Variablennames auf der Konsole
@@ -81,11 +81,11 @@ varStats <- function(GADSdat.obj, sub.inputForDescriptives, verbose, showCallOnl
          if ( sub.inputForDescriptives[1,"scale"] == "numeric") {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.metrisch")}
              if ( verbose) {cat("Use function 'kennwerte.gepoolt.metrisch'.\n")}
-             stats <- kennwerte.gepoolt.metrisch(datWide=GADSdat.obj[["dat"]], imputedVariableCols = sub.inputForDescriptives[,"varName"])
+             stats <- kennwerte.gepoolt.metrisch(datWide=GADSdat[["dat"]], imputedVariableCols = sub.inputForDescriptives[,"varName"])
          }  else  {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.kategorial")}
              if ( verbose) {cat("Use function 'kennwerte.gepoolt.kategorial'.\n")}
-             stats <- kennwerte.gepoolt.kategorial(datWide=GADSdat.obj[["dat"]], imputedVariableCols = sub.inputForDescriptives[,"varName"])
+             stats <- kennwerte.gepoolt.kategorial(datWide=GADSdat[["dat"]], imputedVariableCols = sub.inputForDescriptives[,"varName"])
          }
      }  else  {
 ### differenzieren, ob es skala (es gibt eine separate skalenvariale) oder fake.skala (es gibt keine separate skalenvariale) ist
@@ -93,28 +93,28 @@ varStats <- function(GADSdat.obj, sub.inputForDescriptives, verbose, showCallOnl
              if(length(which("scale" == sub.inputForDescriptives[,"type"])) != 1) {cat("Error: Activate browser.\n"); browser()}
              if ( isTRUE(showCallOnly) ) {return("kennwerte.skala")}
              if ( verbose) {cat("Use function 'kennwerte.skala'.\n")}
-             stats <- kennwerte.skala (GADSdat.obj=GADSdat.obj,sub.inputForDescriptives=sub.inputForDescriptives)
+             stats <- kennwerte.skala (GADSdat=GADSdat,sub.inputForDescriptives=sub.inputForDescriptives)
          }  else  {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.skala.fake")}
              if ( verbose) {cat("Use function 'kennwerte.skala.fake'.\n")}
-             stats <- kennwerte.skala.fake (dat=GADSdat.obj[["dat"]],variableCols=sub.inputForDescriptives[,"varName"], missingValues = NULL)
+             stats <- kennwerte.skala.fake (dat=GADSdat[["dat"]],variableCols=sub.inputForDescriptives[,"varName"], missingValues = NULL)
          }
      }
   }  else  {
      if (sub.inputForDescriptives[,"scale"] == "nominal") {
          if ( isTRUE(showCallOnly) ) {return("kennwerte.kategorial")}
          if ( verbose) {cat("Use function 'kennwerte.kategorial'.\n")}
-         stats <- kennwerte.kategorial(x=GADSdat.obj[["dat"]][,sub.inputForDescriptives[,"varName"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.inputForDescriptives[,"varName"]),])
+         stats <- kennwerte.kategorial(x=GADSdat[["dat"]][,sub.inputForDescriptives[,"varName"]], value_table = GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == sub.inputForDescriptives[,"varName"]),])
      }
      if (sub.inputForDescriptives[,"scale"] == "numeric") {
          if ( isTRUE(showCallOnly) ) {return("kennwerte.metrisch")}
          if ( verbose) {cat("Use function 'kennwerte.metrisch'.\n")}
-         stats <- kennwerte.metrisch(x=GADSdat.obj[["dat"]][,sub.inputForDescriptives[,"varName"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.inputForDescriptives[,"varName"]),])
+         stats <- kennwerte.metrisch(x=GADSdat[["dat"]][,sub.inputForDescriptives[,"varName"]], value_table = GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == sub.inputForDescriptives[,"varName"]),])
      }
      if (sub.inputForDescriptives[,"scale"] == "ordinal") {
          if ( isTRUE(showCallOnly) ) {return("kennwerte.ordinal")}
          if ( verbose) {cat("Use function 'kennwerte.ordinal'.\n")}
-         stats <- kennwerte.ordinal(x=GADSdat.obj[["dat"]][,sub.inputForDescriptives[,"varName"]], value_table = GADSdat.obj[["labels"]][which(GADSdat.obj[["labels"]][,"varName"] == sub.inputForDescriptives[,"varName"]),])
+         stats <- kennwerte.ordinal(x=GADSdat[["dat"]][,sub.inputForDescriptives[,"varName"]], value_table = GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == sub.inputForDescriptives[,"varName"]),])
      }
   }
 
