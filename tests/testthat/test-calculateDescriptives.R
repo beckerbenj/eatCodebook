@@ -19,5 +19,5 @@ test_that("descriptives scale", {
   expect_equal(names(tab), c("scale", "variable"))                            ### beide eintraege sollen vorkommen
   expect_equal(as.vector(tab), c(1,21))                                       ### scale nur einmal, variable 21-mal
   vari[which(vari[,"varName"] == "skalenwert_fake"),"type"] <- "scale"        ### ein eintrag in der varinfo muss jetzt haendisch geaendert werden (das geschieht spaeter fuer das
-  res  <- suppressMessages(calculateDescriptives(gd, vari))                   ### tatsaechliche Skalenhandbuch bei Bedarf in Excel)
+  warns <- capture_warnings(res  <- suppressMessages(calculateDescriptives(gd, vari)))### tatsaechliche Skalenhandbuch bei Bedarf in Excel)
 })
