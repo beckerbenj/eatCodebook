@@ -1,4 +1,7 @@
 
+#input <- readRDS("tests/testthat/helper_inputForDescriptives_clean.RDS")
+input <- readRDS("helper_inputForDescriptives_clean.RDS")
+
 test_that("with pisa data", {
   messages <- capture_messages(out <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value", nCatsForOrdinal = c(2:7)))
   expect_equal(names(out), c("varName", "varLabel", "format", "imp", "type", "scale", "group"))
@@ -22,4 +25,21 @@ test_that("with scale", {
   expect_equal(names(out), c("varName", "varLabel", "format", "imp", "type", "scale", "group"))
   expect_equal(out$type, c(rep("variable", 4), "scale"))
   expect_equal(unique(out$imp), c(FALSE))
+})
+
+test_that("check inputForDescriptives", {
+  input5 <- input4 <- input3 <- input2 <- input1 <- input
+  expect_silent(check_inputForDescriptives(input))
+  input2 <- input2[, -2]
+  expect_error(check_inputForDescriptives(input2),
+               "The column names of 'inputForDescriptives' need to be: 'varName', 'varLabel', 'format', 'imp', 'type', 'scale', 'group'.")
+  input3[2, "imp"] <- "a"
+  expect_error(check_inputForDescriptives(input3),
+               "The column 'imp' in 'inputForDescriptives' must be logical.")
+  input4[2, "type"] <- "a"
+  expect_error(check_inputForDescriptives(input4),
+               "The column 'type' in 'inputForDescriptives' can only contain the entries 'variable' and 'scale'.")
+  input5[2, "scale"] <- "a"
+  expect_error(check_inputForDescriptives(input5),
+               "The column 'scale' in 'inputForDescriptives' can only contain the entries 'numeric', 'ordinal', 'nominal'.")
 })

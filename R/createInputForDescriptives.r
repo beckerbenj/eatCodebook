@@ -151,7 +151,7 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
                         }
                    } })
            return(vari)}
-           
+
 #'@export
 createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", varNameSeparatorImp = "_", ncharSeparatorImp = 1, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), verbose = TRUE) {
   lapply(GADSdat, function(x) {
@@ -159,3 +159,12 @@ createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr =
   })
 }
 
+
+check_inputForDescriptives <- function(inputForDescriptives){
+  if(!is.data.frame(inputForDescriptives)) stop("'inputForDescriptives' needs to be a data.frame.")
+  if(!identical(names(inputForDescriptives), c('varName', 'varLabel', 'format', 'imp', 'type', 'scale', 'group'))) stop("The column names of 'inputForDescriptives' need to be: 'varName', 'varLabel', 'format', 'imp', 'type', 'scale', 'group'.")
+  if(!is.logical(inputForDescriptives$imp)) stop("The column 'imp' in 'inputForDescriptives' must be logical.")
+  if(any(!inputForDescriptives$type %in% c("variable", "scale"))) stop("The column 'type' in 'inputForDescriptives' can only contain the entries 'variable' and 'scale'.")
+  if(any(!inputForDescriptives$scale %in% c("numeric", "ordinal", "nominal", NA))) stop("The column 'scale' in 'inputForDescriptives' can only contain the entries 'numeric', 'ordinal', 'nominal'.")
+  return()
+}
