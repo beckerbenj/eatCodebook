@@ -1,9 +1,9 @@
 
-pisa_input <- createInputForDescriptives(eatGADS::pisa)
+pisa_input <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value")
 saveRDS(pisa_input, "tests/testthat/helper_inputForDescriptives_pisa.RDS")
 
 clean <- eatGADS::import_spss("tests/testthat/helper_clean.sav")
-clean_input <- createInputForDescriptives(clean)
+clean_input <- createInputForDescriptives(clean, scaleExpr = "Skalenwert")
 saveRDS(clean_input, "tests/testthat/helper_inputForDescriptives_clean.RDS")
 
 

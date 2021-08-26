@@ -8,7 +8,7 @@ test_that("single scale", {
   out <- createScaleInfo(input_clean)
   expect_equal(nrow(out), 1)
   expect_equal(out$varName, "skala1")
-  expect_equal(out$Items_der_Skala, "constr_1,constr_2,constr_3")
+  expect_equal(out$Items_der_Skala, "skala1_item1,skala1_item2,skala1_item3")
 })
 
 test_that("no scales", {
@@ -22,7 +22,7 @@ test_that("with input as list", {
   expect_equal(nrow(out), 1)
   expect_equal(out$Quelle, "other")
 
-  l2 <- list(other1 = input_pisa, other2 = input_clean)
+  l2 <- list(other1 = input_clean, other2 = input_clean)
   out2 <- createScaleInfo(l2)
   expect_equal(nrow(out2), 2)
   expect_equal(out2$Quelle, c("other1", "other2"))
