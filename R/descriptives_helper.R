@@ -264,7 +264,8 @@ kennwerte.gepoolt.metrisch <- function( datWide, imputedVariableCols) {
   z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=TRUE)
 
 ### Berechnung der gepoolten Kennwerte
-  means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  na.rm = TRUE )
+  means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",
+                            na.rm = TRUE, verbose = FALSE, progress = FALSE )
   resM  <- eatRep::report(means, exclude = "var")
 
 # Minimum - kleinster Wert aller aufsummierten Imputationswerte einer Person
@@ -299,14 +300,16 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
   z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE)
 ### nur valide werte
   cat("Analysis of valid values: ")
-  res  <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = FALSE, na.rm=TRUE )
+  res  <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = FALSE,
+                            na.rm=TRUE, verbose = FALSE, progress = FALSE )
   ret  <- eatRep::report(res)
   retA <- formatC(100*ret[,"est"], format="f", digits=1)                        ### aufbereiten
   names(retA) <- paste(ret[,"parameter"], "valid", sep=".")
 ### alle Werte
   if(any(is.na(z[,"value"]))) {
       cat("Analysis of total values: ")
-      res1 <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE, na.rm=FALSE, forceTable=TRUE )
+      res1 <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE,
+                                na.rm=FALSE, forceTable=TRUE, verbose = FALSE, progress = FALSE )
       ret1 <- eatRep::report(res1)
       weg  <- match(".NA.", ret1[,"parameter"])                                 ### Ergebnisse aufbereiten, in der richtigen Reihenfolge
       ret1A<- formatC(100* c(ret1[-weg,"est"],ret1[weg,"est"]), format="f", digits=1)
