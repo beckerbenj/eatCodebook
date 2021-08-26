@@ -128,7 +128,7 @@ kennwerte.metrisch <- function(x, value_table) {
 
 # how to integrate variable sets (items of scales?)
 ### kennwerte.skala(dat=dat, scaleCol = "DM_erfahrung", c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
-kennwerte.skala <- function(GADSdat,sub.inputForDescriptives) {
+kennwerte.skala <- function(GADSdat,sub.inputForDescriptives, verbose) {
   # erzeugt denselben output wie die originale kennwerte.skala
   # INPUT
   #	dat: Datensatz (data.frame)
@@ -154,7 +154,7 @@ variableCols <- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"]
   if ( length(unique(check0)) != 1) {
        stop("All ",nrow(svi)," items belonging to the same scale '",scaleCol,"' must have equal scale definition.")
   }
-  items <- calculateDescriptives(GADSdat, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE)
+  items <- calculateDescriptives(GADSdat, svi[which(svi[,"type"] != "scale"),], showCallOnly = FALSE, verbose=verbose)
   check1<- table(sapply(items, length))
   if ( length(check1) != 1) {
        stop("Vector of descriptives for ",length(items)," items belonging to the same scale '",scaleCol,"' must be of equal length.")
@@ -285,7 +285,7 @@ kennwerte.gepoolt.metrisch <- function( datWide, imputedVariableCols) {
 
 ## load("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/tests/testthat/dat.rda")
 ## kennwerte.gepoolt.kategorial ( datWide=dat, imputedVariableCols=3:6 )
-kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
+kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose ) {
 ### wie mit benjamin besprochen: Funktion erlaubt nur NAs als missings, keine -98 etc.
   # INPUT
   # datWide: Datensatz im Wideformat (!!)
@@ -299,7 +299,7 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
 ### long format datensatz
   z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE)
 ### nur valide werte
-  cat("Analysis of valid values: ")
+  if(verbose){cat("Analysis of valid values: ")}
   res  <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = FALSE,
                             na.rm=TRUE, verbose = FALSE, progress = FALSE )
   ret  <- eatRep::report(res)
@@ -307,7 +307,7 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols ) {
   names(retA) <- paste(ret[,"parameter"], "valid", sep=".")
 ### alle Werte
   if(any(is.na(z[,"value"]))) {
-      cat("Analysis of total values: ")
+      if(verbose){cat("Analysis of total values: ")}
       res1 <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE,
                                 na.rm=FALSE, forceTable=TRUE, verbose = FALSE, progress = FALSE )
       ret1 <- eatRep::report(res1)
