@@ -35,28 +35,20 @@
 calculateDescriptives <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
 ### checks, dass inputForDescriptives korrekt spezifiziert ... es muss u.a. ein data.frame sein
   if ("tbl" %in% class(inputForDescriptives)) {
-       message("'inputForDescriptives' has class '",paste(class(inputForDescriptives), collapse="', '"), "'. Transform 'inputForDescriptives' into 'data.frame'.")
+       if(verbose){message("'inputForDescriptives' has class '",paste(class(inputForDescriptives), collapse="', '"), "'. Transform 'inputForDescriptives' into 'data.frame'.")}
        inputForDescriptives <- as.data.frame(inputForDescriptives)
   }
-  fehlend <- setdiff (c( "varName",   "group", "type",  "scale", "imp"), colnames(inputForDescriptives))
-  if ( length(fehlend)>0) { stop("Column(s) '",paste(fehlend, collapse="', '"), "' missed in 'inputForDescriptives'.")}
-  if(!length(unique(inputForDescriptives[,"varName"])) == length(inputForDescriptives[,"varName"])) {stop("'varName' column in 'inputForDescriptives' must be unique.")}
-  not_allowed1 <- setdiff(stats::na.omit(inputForDescriptives[,"type"]), c("variable", "scale", ""))
-  if ( length(not_allowed1)>0) { stop("Invalid entries in 'type' column of 'inputForDescriptives': '",paste(not_allowed1, collapse="', '"), "'")}
-  not_allowed2 <- setdiff(stats::na.omit(inputForDescriptives[,"scale"]), c("nominal", "ordinal", "numeric", "") )
-  if ( length(not_allowed2)>0) { stop("Invalid entries in 'scale' column of 'inputForDescriptives': '",paste(not_allowed2, collapse="', '"), "'")}
-  not_allowed3 <- setdiff (stats::na.omit(inputForDescriptives[,"imp"]), c("FALSE", "TRUE", "") )
-  if ( length(not_allowed3)>0) { stop("'imp' column in 'inputForDescriptives' must only contain 'FALSE' or 'TRUE'")}
+  check_inputForDescriptives(inputForDescriptives)
 ### welche variablen werden ignoriert?
   vars <- c("type",  "scale", "imp")
   mis  <- lapply(vars, FUN = function ( v ) { c(which(is.na(inputForDescriptives[,v])), which(inputForDescriptives[,v] == "")) })
   anz  <- unlist(lapply(mis, length))
   mis  <- unique(unlist(mis))
   if ( any(anz>0) ) {
-      message("Following variables will be ignored due to missing entries in 'type', 'scale' or 'imp' column of 'inputForDescriptives': '",paste(inputForDescriptives[mis,"varName"], collapse="', '"), "'")
+      if(verbose){message("Following variables will be ignored due to missing entries in 'type', 'scale' or 'imp' column of 'inputForDescriptives': '",paste(inputForDescriptives[mis,"varName"], collapse="', '"), "'")}
       inputForDescriptives <- inputForDescriptives[-mis,]
       if(nrow(inputForDescriptives)==0) {
-         message("No valid entries in 'inputForDescriptives'.")
+         if(verbose){message("No valid entries in 'inputForDescriptives'.")}
          return(NULL)
       }
   }
@@ -69,7 +61,7 @@ calculateDescriptives <- function( GADSdat, inputForDescriptives, verbose = TRUE
 varStats <- function(GADSdat, sub.inputForDescriptives, verbose, showCallOnly = FALSE) {
 ### checks
   if ( isFALSE(showCallOnly) && !all(sub.inputForDescriptives[,"varName"] %in% colnames(GADSdat[["dat"]])) ) {
-       message("Following variables from the 'inputForDescriptives' missed in GADSdat: '",paste(setdiff(sub.inputForDescriptives[,"varName"],colnames(GADSdat[["dat"]])), collapse="', '"), "'.\nSkip collecting variable statistics for '",sub.inputForDescriptives[1,"group"],"'.")
+       if(verbose){message("Following variables from the 'inputForDescriptives' missed in GADSdat: '",paste(setdiff(sub.inputForDescriptives[,"varName"],colnames(GADSdat[["dat"]])), collapse="', '"), "'.\nSkip collecting variable statistics for '",sub.inputForDescriptives[1,"group"],"'.")}
        return(NULL)
   }
 ### Ausgabe des Variablennames auf der Konsole
@@ -85,7 +77,7 @@ varStats <- function(GADSdat, sub.inputForDescriptives, verbose, showCallOnly = 
          }  else  {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.kategorial")}
              if ( verbose) {cat("Use function 'kennwerte.gepoolt.kategorial'.\n")}
-             stats <- kennwerte.gepoolt.kategorial(datWide=GADSdat[["dat"]], imputedVariableCols = sub.inputForDescriptives[,"varName"])
+             stats <- kennwerte.gepoolt.kategorial(datWide=GADSdat[["dat"]], imputedVariableCols = sub.inputForDescriptives[,"varName"], verbose=verbose)
          }
      }  else  {
 ### differenzieren, ob es skala (es gibt eine separate skalenvariale) oder fake.skala (es gibt keine separate skalenvariale) ist
@@ -93,7 +85,7 @@ varStats <- function(GADSdat, sub.inputForDescriptives, verbose, showCallOnly = 
              if(length(which("scale" == sub.inputForDescriptives[,"type"])) != 1) {cat("Error: Activate browser.\n"); browser()}
              if ( isTRUE(showCallOnly) ) {return("kennwerte.skala")}
              if ( verbose) {cat("Use function 'kennwerte.skala'.\n")}
-             stats <- kennwerte.skala (GADSdat=GADSdat,sub.inputForDescriptives=sub.inputForDescriptives)
+             stats <- kennwerte.skala (GADSdat=GADSdat,sub.inputForDescriptives=sub.inputForDescriptives, verbose=verbose)
          }  else  {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.skala.fake")}
              if ( verbose) {cat("Use function 'kennwerte.skala.fake'.\n")}
