@@ -171,6 +171,16 @@ variableCols <- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"]
            dat[,i] <- car::recode(dat[,i], rs)
       } }
 
+# check, dass der mittelwert der skalenvariable gleich dem gepoolten MW der Skalenitems ist
+m1 <- mean( dat[,allNam[["sc"]]], na.rm=TRUE)
+d2 <- dat
+d2[,"id"] <- paste0("P", 1:nrow(dat))
+d3 <- reshape2::melt(d2, id.vars = "id", measure.vars = allNam[["vc"]], na.rm = TRUE)
+m2 <- eatRep::repMean(datL = d3, ID="id", imp = "variable", dependent = "value")
+m2r<- eatRep::report(m2)
+if ( abs(m1 - m2r[which(m2r[,"parameter"] == "mean"), "est"]) > 0.02) {
+     warning("Scale '",scaleCol,"': Mean of scale variable ",round(m1, digits = 3), " does not equal the pooled mean of the items '",paste(variableCols, collapse="', '"),"' (",round(m2r[which(m2r[,"parameter"] == "mean"), "est"], digits = 3),").")
+}
 
 ### 2. Skalenkennwerte (erstes Objekt der zurueckgegebenen Liste)
 ### Rueckgabe sind alles character-Werte mit unterschiedlicher Stellenanzahl, auf die gerundet wird
