@@ -13,7 +13,7 @@
 #'#tbd
 #'
 #'@export
-getVarueInfo <- function(filePath){
+getVarInfo <- function(filePath){
   sheet_names <- openxlsx::getSheetNames(filePath)
   names(sheet_names) <- sheet_names
 

@@ -36,7 +36,7 @@ createInputForDescriptives(
 
 \item{ncharSeparatorImp}{Integer: only relevant if no \code{varNameSeparatorImp} exists, i.e. if multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1}, \code{pv.2}, \code{pv.3}. \code{ncharSeparatorImp} than specifies the number of character signs which should be trimmed to identify the common variable stem. If \code{varNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if multiple imputations occur as \code{pv_1}, \code{pv_2}, \code{pv_3}, use \code{varNameSeparatorImp = "_"}. If multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, use \code{varNameSeparatorImp = NULL} and \code{ncharSeparatorImp = 2}. The first 2 signs of variables names (i.e., \code{"pv"}) will be used to identify the imputed variables which belong to a common stem.}
 
-\item{lastOccurrence}{Logical: If varNameSeparatorImp occurrs multiple times within a string, \code{lastOccurrence} defines whether the last occurrence should be used for splitting}
+\item{lastOccurrence}{Logical: If \code{varNameSeparatorImp} occurrs multiple times within a string, \code{lastOccurrence} defines whether the last occurrence should be used for splitting}
 
 \item{groupSuffixImp}{tbd}
 
@@ -46,7 +46,7 @@ createInputForDescriptives(
 
 \item{nwNcharSeparatorImp}{Integer: only relevant if no \code{nwVarNameSeparatorImp} exists, i.e. if network variables occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, instead of \code{friend_1}, \code{friend_2}, ..., \code{friend_12}. \code{nwVcharSeparatorImp} than specifies the number of character signs which should be trimmed to identify the common variable stem. If \code{nwVarNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if network variables occur as \code{friend_1}, \code{friend_2}, ..., \code{friend_12}, use \code{nwVarNameSeparatorImp = "_"}. If network variables occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, use \code{nwVarNameSeparatorImp = NULL} and \code{nwNcharSeparatorImp = 6}. The first 6 signs of variables names (i.e., \code{"friend"}) will be used to identify the group.}
 
-\item{nwLastOccurrence}{Logical: If nwVarNameSeparatorImp occurrs multiple times within a string, \code{nwLastOccurrence} defines whether the last occurrence should be used for splitting}
+\item{nwLastOccurrence}{Logical: If \code{nwVarNameSeparatorImp} occurrs multiple times within a string, \code{nwLastOccurrence} defines whether the last occurrence should be used for splitting}
 
 \item{verbose}{tbd}
 }

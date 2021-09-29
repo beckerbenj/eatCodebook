@@ -4,7 +4,7 @@
 \alias{createLitInfo}
 \title{Create literature template.}
 \usage{
-createLitInfo()
+createLitInfo(varInfo = NULL)
 }
 \value{
 Literature template.
