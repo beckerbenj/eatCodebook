@@ -24,6 +24,7 @@ createScaleInfo.data.frame <- function(inputForDescriptives){
   source <- NA
 #  }
 
+  check_inputForDescriptives(inputForDescriptives)
   scales <- inputForDescriptives[which(inputForDescriptives$type == "scale"), "group"]
 
   scaleInfo <- data.frame(varName = character(),	Quelle = character(),
