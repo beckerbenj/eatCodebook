@@ -19,10 +19,19 @@ getMissings <- function(filePath){
 
   varue.missings <- lapply(sheet_names, function(sheet_name) {
     x <- openxlsx::readWorkbook(filePath, sheet = sheet_name, startRow = 1)
+    check_missings(x)
     prepareMissings(x)
   })
 
   varue.missings
+}
+
+check_missings <- function(missings) {
+  if(!is.data.frame(missings)) stop("'missings' must be a data.frame.")
+  if(!identical(names(missings), c("Var.name", "Wert", "missing", "LabelSH", "Zeilenumbruch_vor_Wert"))) {
+    stop("Column names for 'missings' must be: Var.name, Wert, missing, LabelSH, Zeilenumbruch_vor_Wert'")
+  }
+  return()
 }
 
 prepareMissings <- function(varue.missings){

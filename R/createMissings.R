@@ -25,7 +25,7 @@ createMissings.GADSdat <- function(GADSdat){
 
   if(any(is.na(missings$missings))) stop("Missings in column 'missings'.")
   missings$missings <- ifelse(missings$missings == "miss", yes = "ja", no = "nein")
-  names(missings) <- c("varName", "Wert", "missing", "Label")
+  names(missings) <- c("Var.name", "Wert", "missing", "LabelSH")
   missings[, "Zeilenumbruch_vor_Wert"] <- "nein"
 
   missings

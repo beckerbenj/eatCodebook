@@ -1,12 +1,11 @@
 
 
-test_that("multiplication works", {
+test_that("list format", {
+  # out <- getMissings("tests/testthat/helper_missings.xlsx")
   out <- getMissings("helper_missings.xlsx")
   expect_equal(length(out), 2)
   expect_equal(names(out), c("dat1", "dat2"))
 })
-
-
 
 # varue.file <- "other_code/Varue.xlsx"
 # fbshort <- c("sfb" ,"lfb" ,"slfb" )

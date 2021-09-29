@@ -8,3 +8,12 @@ saveRDS(clean_input, "tests/testthat/helper_inputForDescriptives_clean.RDS")
 
 
 # usethis::use_data(DATASET, overwrite = TRUE)
+
+# Excel helper
+# -----------------------------------------------------------------------------------
+missings <- data.frame(Var.name = c("v1", "v2"),
+                       Wert = c(-99, 1),
+                       missing = c("ja", "nein"),
+                       LabelSH = c("Auslassen einer Frage", "eins"),
+                       Zeilenumbruch_vor_Wert = c("nein", "nein"))
+eatAnalysis::write_xlsx(list(dat1 = missings, dat2 = missings), filePath = "tests/testthat/helper_missings.xlsx", row.names = FALSE)
