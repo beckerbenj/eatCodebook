@@ -6,6 +6,9 @@
 \usage{
 createLitInfo(varInfo = NULL)
 }
+\arguments{
+\item{varInfo}{A \code{varInfo} object as imported by \code{getVarInfo}.}
+}
 \value{
 Literature template.
 }

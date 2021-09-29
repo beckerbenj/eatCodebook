@@ -5,6 +5,7 @@
 #'
 #' Create literature template.
 #'
+#'@param varInfo A \code{varInfo} object as imported by \code{getVarInfo}.
 #'
 #'@return Literature template.
 #'
