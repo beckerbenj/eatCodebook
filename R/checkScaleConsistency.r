@@ -13,6 +13,10 @@
 #'
 #'@export
 checkScaleConsistency <- function ( GADSdat, inputForDescriptives, id, verbose = TRUE) {
+  UseMethod("checkScaleConsistency")
+}
+#'@export
+checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, verbose = TRUE) {
            allNam<- lapply(list(id=id), FUN=function(ii) {eatTools::existsBackgroundVariables(dat = GADSdat[["dat"]], variable=ii)})
            inpSel<- inputForDescriptives[which(inputForDescriptives[,"imp"] == FALSE),]
            groups<- unique(inpSel[which(inpSel[,"type"] == "scale"),"group"])   ### nur fuer nicht-imputierte variablen
@@ -30,6 +34,36 @@ checkScaleConsistency <- function ( GADSdat, inputForDescriptives, id, verbose =
                               message("Scale '",vars[["scale"]],"': Mean of scale variable ",round(m1, digits = 3), " does not equal the pooled mean of the items '",paste(vars[["variable"]], collapse="', '"),"' (",round(m2r[which(m2r[,"parameter"] == "mean"), "est"], digits = 3),").")
                          }
                     }}) }
+                    
+#'@export
+checkScaleConsistency.list <- function ( GADSdat, inputForDescriptives, id, verbose = TRUE) {
+    ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
+    ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
+           funCall <- as.list(sys.call())
+    ### Argumentnamen rekonstruieren, falls sie nicht explizit vom user angegeben wurden
+           empty   <- which(names(funCall)[-1] == "")
+           if ( length(empty)>0) {
+                names(funCall)[empty+1] <- names(as.list(args(checkScaleConsistency)))[empty]
+           }
+           isList  <- unlist(lapply(2:length(funCall), FUN = function (i) {class(eval(funCall[[i]])) == "list"}))
+           if ( length(which(isList == FALSE))>0) {
+                nams <- names(funCall)[which(isList == FALSE)+1]
+                for ( i in 1:length(nams)) {
+                      arg <- eval(parse(text=nams[i]))
+                      assign(nams[i], list())
+                      for (j in 1:length(GADSdat)) {
+                           eval(parse(text=paste0(nams[i],"[[",j,"]] <- arg")))
+                      }
+                }
+           }
+    ### function call erstellen
+           ret <- list()
+           lapply(1:length(GADSdat), FUN = function (i) {
+                  txt <- paste0("ret[[",i,"]] <- checkScaleConsistency(", paste(names(funCall)[-1], paste0(names(funCall)[-1],"[[",i,"]]"), collapse = ", ", sep = " = "), ")")
+                  eval(parse(text=txt))
+           })
+           return(ret)}
+
 
 
 

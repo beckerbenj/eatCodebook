@@ -205,10 +205,32 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
 
 #'@export
 createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = TRUE) {
-  lapply(GADSdat, function(x) {
-    createInputForDescriptives(x, idExpr = idExpr, impExpr = impExpr, scaleExpr = scaleExpr, nwExpr = nwExpr, varNameSeparatorImp = varNameSeparatorImp, ncharSeparatorImp = ncharSeparatorImp, lastOccurrence =lastOccurrence, groupSuffixImp = groupSuffixImp, nCatsForOrdinal = nCatsForOrdinal, nwVarNameSeparatorImp = nwVarNameSeparatorImp, nwNcharSeparatorImp = nwNcharSeparatorImp, nwLastOccurrence = nwLastOccurrence, verbose = verbose)
-  })
-}
+    ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
+    ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
+           funCall <- as.list(sys.call())
+    ### Argumentnamen rekonstruieren, falls sie nicht explizit vom user angegeben wurden
+           empty   <- which(names(funCall)[-1] == "")
+           if ( length(empty)>0) {
+                names(funCall)[empty+1] <- names(as.list(args(checkScaleConsistency)))[empty]
+           }
+           isList  <- unlist(lapply(2:length(funCall), FUN = function (i) {class(eval(funCall[[i]])) == "list"}))
+           if ( length(which(isList == FALSE))>0) {
+                nams <- names(funCall)[which(isList == FALSE)+1]
+                for ( i in 1:length(nams)) {
+                      arg <- eval(parse(text=nams[i]))
+                      assign(nams[i], list())
+                      for (j in 1:length(GADSdat)) {
+                           eval(parse(text=paste0(nams[i],"[[",j,"]] <- arg")))
+                      }
+                }
+           }
+    ### function call erstellen
+           ret <- list()
+           lapply(1:length(GADSdat), FUN = function (i) {
+                  txt <- paste0("ret[[",i,"]] <- createInputForDescriptives(", paste(names(funCall)[-1], paste0(names(funCall)[-1],"[[",i,"]]"), collapse = ", ", sep = " = "), ")")
+                  eval(parse(text=txt))
+           })
+           return(ret)}
 
 
 check_inputForDescriptives <- function(inputForDescriptives){
@@ -220,3 +242,6 @@ check_inputForDescriptives <- function(inputForDescriptives){
   if(!length(unique(inputForDescriptives[,"varName"])) == length(inputForDescriptives[,"varName"])) {stop("'varName' column in 'inputForDescriptives' must be unique.")}
   return()
 }
+
+
+
