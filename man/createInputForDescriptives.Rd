@@ -22,31 +22,66 @@ createInputForDescriptives(
 )
 }
 \arguments{
-\item{GADSdat}{Object of class \code{GADSdat}, created by \code{import_spss} from the \code{eatGADS} package, for example. Alternatively, a list of objects of class \code{GADSdat}}
+\item{GADSdat}{Object of class \code{GADSdat}, created by \code{import_spss} from the \code{eatGADS}
+package, for example. Alternatively, a list of objects of class \code{GADSdat}}
 
-\item{idExpr}{Regular expression to identify ID variables from variable names (Note: for multiple expressions, i.e. if \code{idExpr} is a character vector of length > 1, at least one expression should match to identify the variable as ID variable)}
+\item{idExpr}{Regular expression to identify ID variables from variable names (Note: for multiple
+expressions, i.e. if \code{idExpr} is a character vector of length > 1, at least one expression
+should match to identify the variable as ID variable)}
 
-\item{impExpr}{Regular expression to identify imputed variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1, at least one expression should match to identify the variable as an imputed variable)}
+\item{impExpr}{Regular expression to identify imputed variables from variable labels in GADSdat
+object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1,
+at least one expression should match to identify the variable as an imputed variable)}
 
-\item{scaleExpr}{Regular expression to identify scale variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1, at least one expression should match to identify the variable as a scale variable)}
+\item{scaleExpr}{Regular expression to identify scale variables from variable labels in GADSdat
+object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1,
+at least one expression should match to identify the variable as a scale variable)}
 
-\item{nwExpr}{Regular expression to identify network variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{nwExpr} is a character vector of length > 1, at least one expression should match to identify the variable as a network variable)}
+\item{nwExpr}{Regular expression to identify network variables from variable labels in GADSdat object
+(Note: for multiple expressions, i.e. if \code{nwExpr} is a character vector of length > 1, at least
+one expression should match to identify the variable as a network variable)}
 
-\item{varNameSeparatorImp}{character sign to separate the "pooled" suffix from group name in group column. For example, if multiple imputed variables occur in the wide-format data.frame as \code{pv_1}, \code{pv_2}, \code{pv_3}, use \code{"_"}. If no such sign exists in the data, i.e. if multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1}, \code{pv.2}, \code{pv.3}, use \code{NA} or \code{NULL} or \code{""}.}
+\item{varNameSeparatorImp}{character sign to separate the "pooled" suffix from group name in group
+column. For example, if multiple imputed variables occur in the wide-format data.frame as \code{pv_1},
+\code{pv_2}, \code{pv_3}, use \code{"_"}. If no such sign exists in the data, i.e. if multiple imputations
+occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1},
+\code{pv.2}, \code{pv.3}, use \code{NA} or \code{NULL} or \code{""}.}
 
-\item{ncharSeparatorImp}{Integer: only relevant if no \code{varNameSeparatorImp} exists, i.e. if multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1}, \code{pv.2}, \code{pv.3}. \code{ncharSeparatorImp} than specifies the number of character signs which should be trimmed to identify the common variable stem. If \code{varNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if multiple imputations occur as \code{pv_1}, \code{pv_2}, \code{pv_3}, use \code{varNameSeparatorImp = "_"}. If multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, use \code{varNameSeparatorImp = NULL} and \code{ncharSeparatorImp = 2}. The first 2 signs of variables names (i.e., \code{"pv"}) will be used to identify the imputed variables which belong to a common stem.}
+\item{ncharSeparatorImp}{Integer: only relevant if no \code{varNameSeparatorImp} exists, i.e. if multiple
+imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3},
+or \code{pv.1}, \code{pv.2}, \code{pv.3}. \code{ncharSeparatorImp} than specifies the number of character
+signs which should be trimmed to identify the common variable stem. If \code{varNameSeparatorImp} is not
+\code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if multiple
+imputations occur as \code{pv_1}, \code{pv_2}, \code{pv_3}, use \code{varNameSeparatorImp = "_"}. If multiple
+imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, use \code{varNameSeparatorImp = NULL} and
+\code{ncharSeparatorImp = 2}. The first 2 signs of variables names (i.e., \code{"pv"}) will be used to
+identify the imputed variables which belong to a common stem.}
 
-\item{lastOccurrence}{Logical: If \code{varNameSeparatorImp} occurrs multiple times within a string, \code{lastOccurrence} defines whether the last occurrence should be used for splitting}
+\item{lastOccurrence}{Logical: If \code{varNameSeparatorImp} occurrs multiple times within a string,
+\code{lastOccurrence} defines whether the last occurrence should be used for splitting}
 
 \item{groupSuffixImp}{tbd}
 
-\item{nCatsForOrdinal}{Numeric vector with number of categories considered for ordinal variables. Variables with number of categories as defined here are considered to be ordinal instead of nominal. If NULL, this rule will be ignored, and nominal/ordinal assignment is done in other ways}
+\item{nCatsForOrdinal}{Numeric vector with number of categories considered for ordinal variables. Variables
+with number of categories as defined here are considered to be ordinal instead of nominal. If NULL, this rule
+will be ignored, and nominal/ordinal assignment is done in other ways}
 
-\item{nwVarNameSeparatorImp}{character sign to separate network variable names from network variable groups. For example, if network variables occur as \code{friend_1}, \code{friend_2}, ..., \code{friend_12}, use \code{"_"}. If no such sign exists in the data, i.e. if network variable names occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, use \code{NA} or \code{NULL} or \code{""}.}
+\item{nwVarNameSeparatorImp}{character sign to separate network variable names from network variable groups.
+For example, if network variables occur as \code{friend_1}, \code{friend_2}, ..., \code{friend_12}, use \code{"_"}.
+If no such sign exists in the data, i.e. if network variable names occur as \code{friend1}, \code{friend2}, ...,
+\code{friend12}, use \code{NA} or \code{NULL} or \code{""}.}
 
-\item{nwNcharSeparatorImp}{Integer: only relevant if no \code{nwVarNameSeparatorImp} exists, i.e. if network variables occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, instead of \code{friend_1}, \code{friend_2}, ..., \code{friend_12}. \code{nwVcharSeparatorImp} than specifies the number of character signs which should be trimmed to identify the common variable stem. If \code{nwVarNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if network variables occur as \code{friend_1}, \code{friend_2}, ..., \code{friend_12}, use \code{nwVarNameSeparatorImp = "_"}. If network variables occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, use \code{nwVarNameSeparatorImp = NULL} and \code{nwNcharSeparatorImp = 6}. The first 6 signs of variables names (i.e., \code{"friend"}) will be used to identify the group.}
+\item{nwNcharSeparatorImp}{Integer: only relevant if no \code{nwVarNameSeparatorImp} exists, i.e. if network variables
+occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, instead of \code{friend_1}, \code{friend_2}, ...,
+\code{friend_12}. \code{nwVcharSeparatorImp} than specifies the number of character signs which should be trimmed to
+identify the common variable stem. If \code{nwVarNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""},
+\code{ncharSeparatorImp} will be ignored. For example, if network variables occur as \code{friend_1}, \code{friend_2},
+..., \code{friend_12}, use \code{nwVarNameSeparatorImp = "_"}. If network variables occur as \code{friend1}, \code{friend2},
+..., \code{friend12}, use \code{nwVarNameSeparatorImp = NULL} and \code{nwNcharSeparatorImp = 6}. The first 6 signs of
+variables names (i.e., \code{"friend"}) will be used to identify the group.}
 
-\item{nwLastOccurrence}{Logical: If \code{nwVarNameSeparatorImp} occurrs multiple times within a string, \code{nwLastOccurrence} defines whether the last occurrence should be used for splitting}
+\item{nwLastOccurrence}{Logical: If \code{nwVarNameSeparatorImp} occurrs multiple times within a string, \code{nwLastOccurrence}
+defines whether the last occurrence should be used for splitting}
 
 \item{verbose}{tbd}
 }
@@ -63,7 +98,8 @@ Returns a \code{data.frame} with variable information with following columns
 }
 }
 \description{
-Create a variable information data.frame from the GADSdat object. This input can be used to calculate the descriptives of the data via the \code{calculateDescriptives} function.
+Create a variable information data.frame from the GADSdat object. This input can be used
+to calculate the descriptives of the data via the \code{calculateDescriptives} function.
 }
 \examples{
 varInfo <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value")

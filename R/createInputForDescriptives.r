@@ -7,22 +7,58 @@
 #############################################################################
 #' Create input data.frame for subsequent calculation of descriptives
 #'
-#' Create a variable information data.frame from the GADSdat object. This input can be used to calculate the descriptives of the data via the \code{calculateDescriptives} function.
+#' Create a variable information data.frame from the GADSdat object. This input can be used
+#'to calculate the descriptives of the data via the \code{calculateDescriptives} function.
 #'
 #'
-#'@param GADSdat Object of class \code{GADSdat}, created by \code{import_spss} from the \code{eatGADS} package, for example. Alternatively, a list of objects of class \code{GADSdat}
-#'@param idExpr Regular expression to identify ID variables from variable names (Note: for multiple expressions, i.e. if \code{idExpr} is a character vector of length > 1, at least one expression should match to identify the variable as ID variable)
-#'@param impExpr Regular expression to identify imputed variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1, at least one expression should match to identify the variable as an imputed variable)
-#'@param scaleExpr Regular expression to identify scale variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1, at least one expression should match to identify the variable as a scale variable)
-#'@param nwExpr Regular expression to identify network variables from variable labels in GADSdat object (Note: for multiple expressions, i.e. if \code{nwExpr} is a character vector of length > 1, at least one expression should match to identify the variable as a network variable)
-#'@param varNameSeparatorImp character sign to separate the "pooled" suffix from group name in group column. For example, if multiple imputed variables occur in the wide-format data.frame as \code{pv_1}, \code{pv_2}, \code{pv_3}, use \code{"_"}. If no such sign exists in the data, i.e. if multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1}, \code{pv.2}, \code{pv.3}, use \code{NA} or \code{NULL} or \code{""}.
-#'@param ncharSeparatorImp Integer: only relevant if no \code{varNameSeparatorImp} exists, i.e. if multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1}, \code{pv.2}, \code{pv.3}. \code{ncharSeparatorImp} than specifies the number of character signs which should be trimmed to identify the common variable stem. If \code{varNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if multiple imputations occur as \code{pv_1}, \code{pv_2}, \code{pv_3}, use \code{varNameSeparatorImp = "_"}. If multiple imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, use \code{varNameSeparatorImp = NULL} and \code{ncharSeparatorImp = 2}. The first 2 signs of variables names (i.e., \code{"pv"}) will be used to identify the imputed variables which belong to a common stem.
-#'@param lastOccurrence Logical: If \code{varNameSeparatorImp} occurrs multiple times within a string, \code{lastOccurrence} defines whether the last occurrence should be used for splitting
+#'@param GADSdat Object of class \code{GADSdat}, created by \code{import_spss} from the \code{eatGADS}
+#'package, for example. Alternatively, a list of objects of class \code{GADSdat}
+#'@param idExpr Regular expression to identify ID variables from variable names (Note: for multiple
+#'expressions, i.e. if \code{idExpr} is a character vector of length > 1, at least one expression
+#'should match to identify the variable as ID variable)
+#'@param impExpr Regular expression to identify imputed variables from variable labels in GADSdat
+#'object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1,
+#'at least one expression should match to identify the variable as an imputed variable)
+#'@param scaleExpr Regular expression to identify scale variables from variable labels in GADSdat
+#'object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1,
+#'at least one expression should match to identify the variable as a scale variable)
+#'@param nwExpr Regular expression to identify network variables from variable labels in GADSdat object
+#'(Note: for multiple expressions, i.e. if \code{nwExpr} is a character vector of length > 1, at least
+#'one expression should match to identify the variable as a network variable)
+#'@param varNameSeparatorImp character sign to separate the "pooled" suffix from group name in group
+#'column. For example, if multiple imputed variables occur in the wide-format data.frame as \code{pv_1},
+#'\code{pv_2}, \code{pv_3}, use \code{"_"}. If no such sign exists in the data, i.e. if multiple imputations
+#'occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3}, or \code{pv.1},
+#'\code{pv.2}, \code{pv.3}, use \code{NA} or \code{NULL} or \code{""}.
+#'@param ncharSeparatorImp Integer: only relevant if no \code{varNameSeparatorImp} exists, i.e. if multiple
+#'imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, instead of \code{pv_1}, \code{pv_2}, \code{pv_3},
+#'or \code{pv.1}, \code{pv.2}, \code{pv.3}. \code{ncharSeparatorImp} than specifies the number of character
+#'signs which should be trimmed to identify the common variable stem. If \code{varNameSeparatorImp} is not
+#'\code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if multiple
+#'imputations occur as \code{pv_1}, \code{pv_2}, \code{pv_3}, use \code{varNameSeparatorImp = "_"}. If multiple
+#'imputations occur as \code{pv1}, \code{pv2}, \code{pv3}, use \code{varNameSeparatorImp = NULL} and
+#'\code{ncharSeparatorImp = 2}. The first 2 signs of variables names (i.e., \code{"pv"}) will be used to
+#'identify the imputed variables which belong to a common stem.
+#'@param lastOccurrence Logical: If \code{varNameSeparatorImp} occurrs multiple times within a string,
+#'\code{lastOccurrence} defines whether the last occurrence should be used for splitting
 #'@param groupSuffixImp tbd
-#'@param nCatsForOrdinal Numeric vector with number of categories considered for ordinal variables. Variables with number of categories as defined here are considered to be ordinal instead of nominal. If NULL, this rule will be ignored, and nominal/ordinal assignment is done in other ways
-#'@param nwVarNameSeparatorImp character sign to separate network variable names from network variable groups. For example, if network variables occur as \code{friend_1}, \code{friend_2}, ..., \code{friend_12}, use \code{"_"}. If no such sign exists in the data, i.e. if network variable names occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, use \code{NA} or \code{NULL} or \code{""}.
-#'@param nwNcharSeparatorImp Integer: only relevant if no \code{nwVarNameSeparatorImp} exists, i.e. if network variables occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, instead of \code{friend_1}, \code{friend_2}, ..., \code{friend_12}. \code{nwVcharSeparatorImp} than specifies the number of character signs which should be trimmed to identify the common variable stem. If \code{nwVarNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""}, \code{ncharSeparatorImp} will be ignored. For example, if network variables occur as \code{friend_1}, \code{friend_2}, ..., \code{friend_12}, use \code{nwVarNameSeparatorImp = "_"}. If network variables occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, use \code{nwVarNameSeparatorImp = NULL} and \code{nwNcharSeparatorImp = 6}. The first 6 signs of variables names (i.e., \code{"friend"}) will be used to identify the group.
-#'@param nwLastOccurrence Logical: If \code{nwVarNameSeparatorImp} occurrs multiple times within a string, \code{nwLastOccurrence} defines whether the last occurrence should be used for splitting
+#'@param nCatsForOrdinal Numeric vector with number of categories considered for ordinal variables. Variables
+#'with number of categories as defined here are considered to be ordinal instead of nominal. If NULL, this rule
+#'will be ignored, and nominal/ordinal assignment is done in other ways
+#'@param nwVarNameSeparatorImp character sign to separate network variable names from network variable groups.
+#'For example, if network variables occur as \code{friend_1}, \code{friend_2}, ..., \code{friend_12}, use \code{"_"}.
+#'If no such sign exists in the data, i.e. if network variable names occur as \code{friend1}, \code{friend2}, ...,
+#'\code{friend12}, use \code{NA} or \code{NULL} or \code{""}.
+#'@param nwNcharSeparatorImp Integer: only relevant if no \code{nwVarNameSeparatorImp} exists, i.e. if network variables
+#'occur as \code{friend1}, \code{friend2}, ..., \code{friend12}, instead of \code{friend_1}, \code{friend_2}, ...,
+#'\code{friend_12}. \code{nwVcharSeparatorImp} than specifies the number of character signs which should be trimmed to
+#'identify the common variable stem. If \code{nwVarNameSeparatorImp} is not \code{NA} or \code{NULL} or \code{""},
+#'\code{ncharSeparatorImp} will be ignored. For example, if network variables occur as \code{friend_1}, \code{friend_2},
+#'..., \code{friend_12}, use \code{nwVarNameSeparatorImp = "_"}. If network variables occur as \code{friend1}, \code{friend2},
+#'..., \code{friend12}, use \code{nwVarNameSeparatorImp = NULL} and \code{nwNcharSeparatorImp = 6}. The first 6 signs of
+#'variables names (i.e., \code{"friend"}) will be used to identify the group.
+#'@param nwLastOccurrence Logical: If \code{nwVarNameSeparatorImp} occurrs multiple times within a string, \code{nwLastOccurrence}
+#'defines whether the last occurrence should be used for splitting
 #'@param verbose tbd
 #'
 #'@return Returns a \code{data.frame} with variable information with following columns
@@ -63,12 +99,12 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
            vari <- do.call("rbind", by(data = vari, INDICES = vari[,"laufnummer"], FUN = function ( z ) {
     ### wenn Variable als ID variable oder Netzwerk-Variable identifiziert wird, soll scale-Eintrag leer sein
                    if ( length(unlist(lapply(idExpr, FUN = function (ie) {grep(ie, z[["varName"]])})))>0 ) {
-                        message(paste0("Variable '",z[["varName"]],"' matches ID variable definition (as defined in 'idExpr') and will be handled as ID variable (set 'scale' entry to NA)."))
+                        # message(paste0("Variable '",z[["varName"]],"' matches ID variable definition (as defined in 'idExpr') and will be handled as ID variable (set 'scale' entry to NA)."))
                         z[,"scale"] <- NA
                         return(z)
                    }
                    if ( length(unlist(lapply(nwExpr, FUN = function (ie) {grep(ie, z[["varLabel"]])})))>0 ) {
-                        message(paste0("Variable '",z[["varName"]],"' matches network variable definition (as defined in 'nwExpr') and will be handled like ID variables (set 'scale' and 'type' entries to NA)."))
+                        # message(paste0("Variable '",z[["varName"]],"' matches network variable definition (as defined in 'nwExpr') and will be handled like ID variables (set 'scale' and 'type' entries to NA)."))
                         z[,"scale"] <- z[,"type"] <- NA
                         z[,"nw"]    <- TRUE
                         return(z)
@@ -105,13 +141,13 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
                         digit <- suppressWarnings(eatTools::asNumericIfPossible(digit[length(digit)], force.string=FALSE))
                         krit1 <- is.numeric(digit) && digit>0
                         if(substr(z[["format"]],1,1) == "F" && isTRUE(krit1)) {
-                            message(paste0("Variable '",z[["varName"]],"' has identified scale '",scale,"' but is expected to be 'numeric' due to format definition '",z[["format"]],"' in GADSdat labels sheet. Transform '",z[["varName"]],"' to be numeric."))
+                            # message(paste0("Variable '",z[["varName"]],"' has identified scale '",scale,"' but is expected to be 'numeric' due to format definition '",z[["format"]],"' in GADSdat labels sheet. Transform '",z[["varName"]],"' to be numeric."))
                             scale <- "numeric"
                         }
     ### wenn das erste Kriterium fuer numerisch nicht erfuellt wurde, soll hier das zweite geprueft werden: wenn eine variable nur missings als definierte labels hat, dann soll sie numerisch sein
                         if (scale != "numeric") {
                             if ( all(na.omit(GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == z[["varName"]]),"missings"]) == "miss")) {
-                                 message(paste0("'",z[["varName"]],"': only missing labels are defined in in the labels sheet of the GADSdat object. Hence, '",z[["varName"]],"' is expected to be numeric. Change 'scale' value from '",scale,"' to 'numeric'."))
+                                 # message(paste0("'",z[["varName"]],"': only missing labels are defined in in the labels sheet of the GADSdat object. Hence, '",z[["varName"]],"' is expected to be numeric. Change 'scale' value from '",scale,"' to 'numeric'."))
                                  scale <- "numeric"
                             }
                         }
@@ -120,7 +156,7 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
                    if (scale == "ordinal") {
                         if(!is.null(nCatsForOrdinal)) {
                              if ( !length(unique(nonmis)) %in% nCatsForOrdinal) {
-                                 message(paste0("Variable '",z[["varName"]],"' has ",length(unique(nonmis))," non-missing categories. This is outside of the range defined in the 'nCatsForOrdinal' argument. Hence, '",z[["varName"]],"' will be transformed from '",scale,"' to 'nominal'."))
+                                 # message(paste0("Variable '",z[["varName"]],"' has ",length(unique(nonmis))," non-missing categories. This is outside of the range defined in the 'nCatsForOrdinal' argument. Hence, '",z[["varName"]],"' will be transformed from '",scale,"' to 'nominal'."))
                                  scale <- "nominal"
                              }
                         }
