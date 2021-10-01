@@ -58,10 +58,10 @@ checkScaleConsistency.list <- function ( GADSdat, inputForDescriptives, id, verb
            }
     ### function call erstellen
            ret <- list()
-           lapply(1:length(GADSdat), FUN = function (i) {
+           for (i in 1:length(GADSdat)) {
                   txt <- paste0("ret[[",i,"]] <- checkScaleConsistency(", paste(names(funCall)[-1], paste0(names(funCall)[-1],"[[",i,"]]"), collapse = ", ", sep = " = "), ")")
                   eval(parse(text=txt))
-           })
+           }
            return(ret)}
 
 
