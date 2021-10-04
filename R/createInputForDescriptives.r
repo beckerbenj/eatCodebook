@@ -83,7 +83,7 @@ createInputForDescriptives <- function ( GADSdat, idExpr = "^ID", impExpr = c("I
 createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = TRUE) {
     ### wenn es missings in der Format-Spalte des GADSdat-Labels-Objekt gibt, soll zuvor eatGADS::checkFormat aufgerufen werden
            if(any(is.na( GADSdat[["labels"]][,"format"]))) {
-              cat("Call 'checkFormat()' from the 'eatGADS' package.\n"); flush.console()
+              message("Call 'checkFormat()' from the 'eatGADS' package.")
               GADSdat <- eatGADS::checkFormat(GADSdat)
            }
            vari <- GADSdat[["labels"]][!duplicated(GADSdat[["labels"]][,"varName"]),c("varName","varLabel", "format")]
