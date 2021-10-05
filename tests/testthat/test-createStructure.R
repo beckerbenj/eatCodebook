@@ -7,8 +7,8 @@ test_that("no input", {
   expect_equal(out[1, 2], NA)
 })
 
-#varInfo <- getVarInfo("tests/testthat/helper_varueInfo.xlsx")
-varInfo <- getVarInfo("helper_varueInfo.xlsx")
+#varInfo <- getVarInfo("tests/testthat/helper_varInfo.xlsx")
+varInfo <- getVarInfo("helper_varInfo.xlsx")
 varInfo[[1]]$Gliederung <- c("1.01", "1.03", "1.02")
 
 test_that("for data.frame", {

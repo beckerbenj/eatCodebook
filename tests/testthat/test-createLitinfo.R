@@ -5,8 +5,8 @@ test_that("create lit info", {
   expect_equal(names(out), c("Kurzangabe", "Langangabe", "in_Literaturverzeichnis"))
 })
 
-#varInfo <- getVarInfo("tests/testthat/helper_varueInfo.xlsx")
-varInfo <- getVarInfo("helper_varueInfo.xlsx")
+#varInfo <- getVarInfo("tests/testthat/helper_varInfo.xlsx")
+varInfo <- getVarInfo("helper_varInfo.xlsx")
 varInfo[[1]]$QuelleSH <- c("Author1", "Author3", "Author2")
 
 test_that("create lit info with single input", {
