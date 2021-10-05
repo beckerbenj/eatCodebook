@@ -240,7 +240,9 @@ check_inputForDescriptives <- function(inputForDescriptives){
   if(any(!inputForDescriptives$type %in% c("variable", "scale","", NA))) stop("The column 'type' in 'inputForDescriptives' can only contain the entries 'variable' and 'scale'.")
   if(any(!inputForDescriptives$scale %in% c("numeric", "ordinal", "nominal", NA))) stop("The column 'scale' in 'inputForDescriptives' can only contain the entries 'numeric', 'ordinal', 'nominal'.")
   if(!length(unique(inputForDescriptives[,"varName"])) == length(inputForDescriptives[,"varName"])) {stop("'varName' column in 'inputForDescriptives' must be unique.")}
-  return()
+
+  if(tibble::is_tibble(inputForDescriptives)) inputForDescriptives <- as.data.frame(inputForDescriptives)
+  inputForDescriptives
 }
 
 

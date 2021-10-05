@@ -17,3 +17,8 @@ missings <- data.frame(Var.name = c("v1", "v2"),
                        LabelSH = c("Auslassen einer Frage", "eins"),
                        Zeilenumbruch_vor_Wert = c("nein", "nein"))
 eatAnalysis::write_xlsx(list(dat1 = missings, dat2 = missings), filePath = "tests/testthat/helper_missings.xlsx", row.names = FALSE)
+
+
+#
+imputed_scale <- input_descriptives$sus[input_descriptives$sus$group == "Sinmo_pooled", ]
+saveRDS(imputed_scale, "tests/testthat/helper_inputedForDescriptives_imputedScale.RDS")

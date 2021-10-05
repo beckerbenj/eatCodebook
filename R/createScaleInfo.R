@@ -24,14 +24,23 @@ createScaleInfo.data.frame <- function(inputForDescriptives){
   source <- NA
 #  }
 
-  check_inputForDescriptives(inputForDescriptives)
-  scales <- inputForDescriptives[which(inputForDescriptives$type == "scale"), "group"]
+  inputForDescriptives <- check_inputForDescriptives(inputForDescriptives)
+  scales_inputForDescriptives <- inputForDescriptives[which(inputForDescriptives$type == "scale"), ]
+  scales <- scales_inputForDescriptives[!duplicated(scales_inputForDescriptives$group), "group"]
 
   scaleInfo <- data.frame(varName = character(),	Quelle = character(),
                           Anzahl_valider_Werte = character(),	Items_der_Skala = character(), stringsAsFactors = FALSE)
 
   for(i in seq_along(scales)) {
     single_inputForDescriptives <- inputForDescriptives[inputForDescriptives$group == scales[i], ]
+    # special treatment for imputed scales (all of these are marked as scales!)
+    if(all(single_inputForDescriptives$imp)) {
+      scaleInfo[i, "varName"] <- unique(single_inputForDescriptives$group)
+      scaleInfo[i, "Items_der_Skala"] <- paste(single_inputForDescriptives$varName, collapse = ",")
+      scaleInfo[i, "Anzahl_valider_Werte"] <- "-"
+      scaleInfo[i, "Quelle"] <- source
+      next
+    }
     scaleInfo[i, "varName"] <- single_inputForDescriptives[single_inputForDescriptives$type == "scale", "varName"]
     scaleInfo[i, "Items_der_Skala"] <- paste(single_inputForDescriptives[single_inputForDescriptives$type == "variable", "varName"], collapse = ",")
     scaleInfo[i, "Anzahl_valider_Werte"] <- "-"
