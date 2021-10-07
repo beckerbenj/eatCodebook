@@ -16,7 +16,7 @@ calculateDescriptives(
 
 \item{inputForDescriptives}{\code{data.frame} with variable information. This table can be created from GADSdat object, using the \code{createInputForDescriptives} function}
 
-\item{verbose}{Cat to console?}
+\item{verbose}{Print variable and function information to console?}
 
 \item{showCallOnly}{Logical: only for diagnostics. If TRUE, no calculation is proceed, and only the function which is called for calculation is returned.}
 }

@@ -21,7 +21,7 @@
 #'
 #'@param GADSdat Object of class \code{GADSdat}, created for example by \code{import_spss} from the \code{eatGADS} package.
 #'@param inputForDescriptives \code{data.frame} with variable information. This table can be created from GADSdat object, using the \code{createInputForDescriptives} function
-#'@param verbose Cat to console?
+#'@param verbose Print variable and function information to console?
 #'@param showCallOnly Logical: only for diagnostics. If TRUE, no calculation is proceed, and only the function which is called for calculation is returned.
 #'
 #'@return Returns a list of descriptive statistics.
@@ -30,9 +30,42 @@
 #'# tbd
 #'
 #'@export
-
-### showCallOnly: nur zum checken, welche Funktion gecalled wird
 calculateDescriptives <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
+  UseMethod("calculateDescriptives")
+}
+
+#'@export
+calculateDescriptives.list <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
+    ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
+    ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
+           funCall <- as.list(sys.call())
+    ### Argumentnamen rekonstruieren, falls sie nicht explizit vom user angegeben wurden
+           empty   <- which(names(funCall)[-1] == "")
+           if ( length(empty)>0) {
+                names(funCall)[empty+1] <- names(as.list(args(calculateDescriptives)))[empty]
+           }
+           isList  <- unlist(lapply(2:length(funCall), FUN = function (i) {class(eval(funCall[[i]])) == "list"}))
+           if ( length(which(isList == FALSE))>0) {
+                nams <- names(funCall)[which(isList == FALSE)+1]
+                for ( i in 1:length(nams)) {
+                      arg <- eval(parse(text=nams[i]))
+                      assign(nams[i], list())
+                      for (j in 1:length(GADSdat)) {
+                           eval(parse(text=paste0(nams[i],"[[",j,"]] <- arg")))
+                      }
+                }
+           }
+    ### function call erstellen
+           ret <- list()
+           for ( i in 1:length(GADSdat)) {
+                  txt <- paste0("ret[[",i,"]] <- calculateDescriptives(", paste(names(funCall)[-1], paste0(names(funCall)[-1],"[[",i,"]]"), collapse = ", ", sep = " = "), ")")
+                  eval(parse(text=txt))
+           }
+           return(ret)}
+
+#'@export
+calculateDescriptives.GADSdat <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
+### showCallOnly: nur zum checken, welche Funktion gecalled wird
 ### checks, dass inputForDescriptives korrekt spezifiziert ... es muss u.a. ein data.frame sein
   if ("tbl" %in% class(inputForDescriptives)) {
        if(verbose){message("'inputForDescriptives' has class '",paste(class(inputForDescriptives), collapse="', '"), "'. Transform 'inputForDescriptives' into 'data.frame'.")}
