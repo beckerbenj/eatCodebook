@@ -17,21 +17,28 @@ checkScaleConsistency <- function ( GADSdat, inputForDescriptives, id, verbose =
 }
 #'@export
 checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, verbose = TRUE) {
+           if ("tbl" %in% class(inputForDescriptives)) {
+               if(verbose){message("'inputForDescriptives' has class '",paste(class(inputForDescriptives), collapse="', '"), "'. Transform 'inputForDescriptives' into 'data.frame'.")}
+               inputForDescriptives <- as.data.frame(inputForDescriptives)
+           }
            allNam<- lapply(list(id=id), FUN=function(ii) {eatTools::existsBackgroundVariables(dat = GADSdat[["dat"]], variable=ii)})
            inpSel<- inputForDescriptives[which(inputForDescriptives[,"imp"] == FALSE),]
            groups<- unique(inpSel[which(inpSel[,"type"] == "scale"),"group"])   ### nur fuer nicht-imputierte variablen
            scales<- lapply(groups, FUN = function ( v ) {
-                    inpV <- inpSel[grep(v, inpSel[,"group"]),]
+                    inpV <- inpSel[which(inpSel[,"group"] == v),]
                     vars <- by(data = inpV, INDICES = inpV[,"type"], FUN = function ( x ) { x[,"varName"]})
                     if ( length(vars) != 2 || min(sapply(vars, length)) != 1) {
                          if (verbose) { message(paste0("Scale '",vars[["scale"]],"' without items."))}
                     }  else  {
                          m1 <- mean( GADSdat[["dat"]][,vars[["scale"]]], na.rm=TRUE)
                          dL <- reshape2::melt(GADSdat[["dat"]], id.vars = allNam[["id"]], measure.vars = vars[["variable"]], na.rm = TRUE)
-                         m2 <- eatRep::repMean(datL = dL, ID=allNam[["id"]], imp = "variable", dependent = "value", verbose=FALSE)
+                         if(inherits(try(m2 <- eatRep::repMean(datL = dL, ID=allNam[["id"]], imp = "variable", dependent = "value", verbose=FALSE, progress = FALSE) ),"try-error"))  {
+                             if(verbose) {message("Skip scale '",inpV[which(inpV[,"type"] == "scale"), "group"],"' with items '",paste(unique(inpV[which(inpV[,"type"] == "variable"),"varName"]), collapse = "', '"),"'.")}
+                         }  else  {
                          m2r<- eatRep::report(m2)
-                         if ( abs(m1 - m2r[which(m2r[,"parameter"] == "mean"), "est"]) > 0.02) {
-                              message("Scale '",vars[["scale"]],"': Mean of scale variable ",round(m1, digits = 3), " does not equal the pooled mean of the items '",paste(vars[["variable"]], collapse="', '"),"' (",round(m2r[which(m2r[,"parameter"] == "mean"), "est"], digits = 3),").")
+                             if ( abs(m1 - m2r[which(m2r[,"parameter"] == "mean"), "est"]) > 0.02) {
+                                  message("Scale '",vars[["scale"]],"': Mean of scale variable ",round(m1, digits = 3), " does not equal the pooled mean of the items '",paste(vars[["variable"]], collapse="', '"),"' (",round(m2r[which(m2r[,"parameter"] == "mean"), "est"], digits = 3),").")
+                             }
                          }
                     }}) }
                     
