@@ -4,12 +4,13 @@
 \alias{createRegister}
 \title{Create register template.}
 \usage{
-createRegister(inputForDescriptives, keywordList)
+createRegister(inputForDescriptives, keywordList = NULL)
 }
 \arguments{
-\item{inputForDescriptives}{Object (either list or data.frame) containing variable information.}
+\item{inputForDescriptives}{Object (either \code{list} or \code{data.frame}) containing variable information.}
 
-\item{keywordList}{Character vector of keyword columns to be added.}
+\item{keywordList}{Character vector of keyword columns to be added. If \code{NULL}, no additional columns are added.
+If \code{inputForDescriptives} is a \code{list}, \code{keywordList} must also be a \code{list} (of character vectors).}
 }
 \value{
 Register template.
