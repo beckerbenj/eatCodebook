@@ -26,9 +26,16 @@ getRegister <- function(filePath){
 
     ## checks
     if(ncol(single_reg) <= 3) stop("Keywords are missing.")
-    if(!any(single_reg[!is.na(single_reg)] == "x")) stop("No keywords assigned.")
 
-    single_reg
+    for(keyword in names(single_reg)[4:ncol(single_reg)]){
+      single_col <- single_reg[!is.na(single_reg[, keyword]), keyword]
+      if(any(single_col != "x")) stop("Other entry than 'x' or NA in column '", keyword, "' in sheet '", sheet_name, "'.")
+      if(!any(single_col == "x")) stop("Keyword '", keyword, "' is not assigned in sheet '", sheet_name, "'.")
+    }
+    #if(!any(single_reg[!is.na(single_reg)] == "x")) stop("No keywords assigned.")
+
+    sorted_keywords <- sort(names(single_reg)[-(1:3)])
+    single_reg[, c(names(single_reg)[1:3], sorted_keywords)]
   })
 
   all_reg
