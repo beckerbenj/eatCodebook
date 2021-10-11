@@ -2,6 +2,9 @@
 #input <- readRDS("tests/testthat/helper_inputForDescriptives_clean.RDS")
 input <- readRDS("helper_inputForDescriptives_clean.RDS")
 
+#dfSAV <- eatGADS::import_spss("tests/testthat/helper_spss.sav")
+dfSAV <- eatGADS::import_spss("helper_spss.sav")
+
 test_that("with pisa data", {
   messages <- capture_messages(out <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value", nCatsForOrdinal = c(2:7)))
   expect_equal(names(out), c("varName", "varLabel", "format", "imp", "type", "scale", "group"))
@@ -42,4 +45,10 @@ test_that("check inputForDescriptives", {
   input5[2, "scale"] <- "a"
   expect_error(check_inputForDescriptives(input5),
                "The column 'scale' in 'inputForDescriptives' can only contain the entries 'numeric', 'ordinal', 'nominal'.")
+})
+
+test_that("list input and default options", {
+  l <- list(dat1 = dfSAV, dat2 = dfSAV)
+  out <- createInputForDescriptives(l)
+  expect_equal(names(out), c("dat1", "dat2"))
 })

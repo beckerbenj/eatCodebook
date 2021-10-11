@@ -205,15 +205,19 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
 
 #'@export
 createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = TRUE) {
-    ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
+  #browser()
+  ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
     ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
-           funCall <- as.list(sys.call())
+  names_ori <- names(GADSdat)
+  funCall <- as.list(sys.call())
     ### Argumentnamen rekonstruieren, falls sie nicht explizit vom user angegeben wurden
+           #empty   <- which(names(funCall)[-1] == "")
+           if(is.null(names(funCall))) names(funCall) <- rep("", length(funCall))
            empty   <- which(names(funCall)[-1] == "")
-           if ( length(empty)>0) {
+           if (length(empty)>0) {
                 names(funCall)[empty+1] <- names(as.list(args(checkScaleConsistency)))[empty]
            }
-           isList  <- unlist(lapply(2:length(funCall), FUN = function (i) {class(eval(funCall[[i]])) == "list"}))
+           isList <- unlist(lapply(2:length(funCall), FUN = function (i) {is.list(eval(parse(text = names(funCall)[i])))})) # Sebastian bitte hier nochmal checken
            if ( length(which(isList == FALSE))>0) {
                 nams <- names(funCall)[which(isList == FALSE)+1]
                 for ( i in 1:length(nams)) {
@@ -230,6 +234,7 @@ createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr =
                   txt <- paste0("ret[[",i,"]] <- createInputForDescriptives(", paste(names(funCall)[-1], paste0(names(funCall)[-1],"[[",i,"]]"), collapse = ", ", sep = " = "), ")")
                   eval(parse(text=txt))
            }
+           names(ret) <- names_ori
            return(ret)}
 
 

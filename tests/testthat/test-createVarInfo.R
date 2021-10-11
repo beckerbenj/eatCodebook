@@ -29,9 +29,9 @@ test_that("with list", {
 })
 
 test_that("input validation with list", {
-  #l1 <- list(pisa = eatGADS::pisa, other = dfSAV)
-  #suppressMessages(inputList <- createInputForDescriptives(l1, impExpr = "Plausible Value"))
-  #expect_error(createVarInfo(l1, inputList[1]),
-  #             "lala")
+  l1 <- list(pisa = eatGADS::pisa, other = dfSAV)
+  suppressMessages(inputList <- createInputForDescriptives(l1, impExpr = "Plausible Value"))
+  expect_error(createVarInfo(l1, inputList[1]),
+              "'GADSdat' and 'inputForDescriptives' lists have different lengths.")
 
 })
