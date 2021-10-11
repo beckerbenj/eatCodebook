@@ -41,7 +41,7 @@ This input is then used to calculate descriptive statistics via `calculateDescri
 
 ```{r calculate descr}
 # just show function calls
-showFunctions <- calculateDescriptives(GADSdat = gadsDat, inputForDescriptives = inputForDescriptives_edited, showCallOnly = TRUE)
+showFunctions <- calculateDescriptives(GADSdat = eatGADS::pisa, inputForDescriptives = inputForDescriptives_edited, showCallOnly = TRUE)
 showFunctions <- data.frame(varName = names(showFunctions), functionName = as.vector(showFunctions), stringsAsFactors = FALSE)
 showFunctions
 
