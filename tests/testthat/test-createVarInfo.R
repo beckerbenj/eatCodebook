@@ -27,3 +27,11 @@ test_that("with list", {
   expect_equal(out[[1]]$LabelSH, out[[1]]$Titel)
   expect_equal(out[[2]]$Var.Name, eatGADS::namesGADS(dfSAV))
 })
+
+test_that("input validation with list", {
+  #l1 <- list(pisa = eatGADS::pisa, other = dfSAV)
+  #suppressMessages(inputList <- createInputForDescriptives(l1, impExpr = "Plausible Value"))
+  #expect_error(createVarInfo(l1, inputList[1]),
+  #             "lala")
+
+})

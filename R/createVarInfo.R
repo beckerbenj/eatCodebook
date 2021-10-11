@@ -20,11 +20,13 @@ createVarInfo <- function(GADSdat, inputForDescriptives, encodingList = NULL, ma
 }
 #'@export
 createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
+  inputForDescriptives <- check_inputForDescriptives(inputForDescriptives)
+
   var_labs <- unique(eatGADS::extractMeta(GADSdat)[, c("varName", "varLabel")])
 
   var_labs2 <- var_labs
   inputed_info <- inputForDescriptives[inputForDescriptives$imp == TRUE, ]
-  pooled_variables <- unique(inputed_info[, "group"])
+  pooled_variables <- unique(inputed_info[["group"]])
   for(i in pooled_variables) {
     #browser()
     single_inputed_info <- inputed_info[inputed_info$group == i, ]
@@ -75,6 +77,8 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
 }
 #'@export
 createVarInfo.list <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
+  if(length(GADSdat) != length(inputForDescriptives)) stop("'GADSdat' and 'inputForDescriptives' lists have different lengths.")
+
   Map(function(single_GADSdat, single_input) {
     createVarInfo(single_GADSdat, single_input, encodingList = encodingList, makeStructure = makeStructure)
   }, single_GADSdat = GADSdat, single_input = inputForDescriptives)
