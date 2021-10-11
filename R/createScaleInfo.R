@@ -59,3 +59,4 @@ createScaleInfo.list <- function(inputForDescriptives){
   names(scaleInfo)[2] <- "Quelle"
   scaleInfo
 }
+
