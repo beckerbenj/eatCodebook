@@ -205,38 +205,18 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
 
 #'@export
 createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = TRUE) {
-  #browser()
-  ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
+    ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
     ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
-  names_ori <- names(GADSdat)
-  funCall <- as.list(sys.call())
-    ### Argumentnamen rekonstruieren, falls sie nicht explizit vom user angegeben wurden
-           #empty   <- which(names(funCall)[-1] == "")
-           if(is.null(names(funCall))) names(funCall) <- rep("", length(funCall))
-           empty   <- which(names(funCall)[-1] == "")
-           if (length(empty)>0) {
-                names(funCall)[empty+1] <- names(as.list(args(checkScaleConsistency)))[empty]
+           fwa    <- createFunNameWithArgs(funName = "createInputForDescriptives")# 'fwa' = function with arguments
+           argList<- list()                                                     ### list with arguments
+           for ( i in names(fwa)[-1] ) {eval(parse(text = paste0("argList[[i]] <- ",i)))}
+           loop   <- createFunctionCalls(funName = "createInputForDescriptives", argList = argList)
+           length(loop)
+           ret    <- list()
+           for ( i in 1:length(loop)) {
+                ret[[i]] <- eval(parse(text = loop[i]))
            }
-           isList <- unlist(lapply(2:length(funCall), FUN = function (i) {is.list(eval(parse(text = names(funCall)[i])))})) # Sebastian bitte hier nochmal checken
-           if ( length(which(isList == FALSE))>0) {
-                nams <- names(funCall)[which(isList == FALSE)+1]
-                for ( i in 1:length(nams)) {
-                      arg <- eval(parse(text=nams[i]))
-                      assign(nams[i], list())
-                      for (j in 1:length(GADSdat)) {
-                           eval(parse(text=paste0(nams[i],"[[",j,"]] <- arg")))
-                      }
-                }
-           }
-    ### function call erstellen
-           ret <- list()
-           for ( i in 1:length(GADSdat)) {
-                  txt <- paste0("ret[[",i,"]] <- createInputForDescriptives(", paste(names(funCall)[-1], paste0(names(funCall)[-1],"[[",i,"]]"), collapse = ", ", sep = " = "), ")")
-                  eval(parse(text=txt))
-           }
-           names(ret) <- names_ori
-           return(ret)}
-
+           return(ret) }
 
 check_inputForDescriptives <- function(inputForDescriptives){
   if(!is.data.frame(inputForDescriptives)) stop("'inputForDescriptives' needs to be a data.frame.")
@@ -245,10 +225,45 @@ check_inputForDescriptives <- function(inputForDescriptives){
   if(any(!inputForDescriptives$type %in% c("variable", "scale","", NA))) stop("The column 'type' in 'inputForDescriptives' can only contain the entries 'variable' and 'scale'.")
   if(any(!inputForDescriptives$scale %in% c("numeric", "ordinal", "nominal", NA))) stop("The column 'scale' in 'inputForDescriptives' can only contain the entries 'numeric', 'ordinal', 'nominal'.")
   if(!length(unique(inputForDescriptives[,"varName"])) == length(inputForDescriptives[,"varName"])) {stop("'varName' column in 'inputForDescriptives' must be unique.")}
-
   if(tibble::is_tibble(inputForDescriptives)) inputForDescriptives <- as.data.frame(inputForDescriptives)
   inputForDescriptives
 }
 
+# teste:
+# test <- function ( x=1, y = 12) { print(as.list(match.call(definition = test))) }
+# test <- function ( x=1, y = 12) { print(as.list(sys.call())) }
+# test2 <- function ( xx = 100, yy = 200) {a <- 1000; test(x=99, y = 999)}
+# test(x=12, y=19)
+# test(12, 19)
+# test(12)
+# test()
+createFunctionCalls <- function(funName, argList){
+           isList<- lapply(argList, is.list)
+           stopifnot(isList[[1]])
+           noList<- which(isList == FALSE)
+           if ( length(noList)>0) {
+                for ( i in noList) {
+                     iEntry <- list()
+                     for ( j in 1:length(argList[[1]])) {
+                         iEntry[[j]] <- argList[[i]]
+                     }
+                     argList[[i]] <- iEntry
+                }
+           }
+    ### function call erstellen
+           txt <- NULL
+           for ( i in 1:length(argList[[1]])) {
+                  txt <- c(txt, paste0(funName,"(", paste(names(argList), paste0("argList[[\"",names(argList),"\"]][[",i,"]]"), sep="=", collapse=", "), ")"))
+           }
+           return(txt)}
 
 
+createFunNameWithArgs <- function ( funName) {
+          i     <- 0
+          while ( eatTools::crop(unlist(strsplit(deparse(sys.call(i))[1], split = "\\("))[1]) != funName) {i <- i-1}
+          fc    <- as.list(sys.call(i))
+          missed<- setdiff(which(names(fc) == ""), 1)                           ### fuer welche Argumente hat der user keine namen angegeben?
+          if ( length(missed)>0) {
+               names(fc)[missed] <- names(formals(funName))[missed-1]
+          }
+          return(fc)}

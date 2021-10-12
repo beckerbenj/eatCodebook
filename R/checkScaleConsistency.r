@@ -46,31 +46,13 @@ checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, v
 checkScaleConsistency.list <- function ( GADSdat, inputForDescriptives, id, verbose = TRUE) {
     ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
     ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
-           funCall <- as.list(sys.call())
-    ### Argumentnamen rekonstruieren, falls sie nicht explizit vom user angegeben wurden
-           empty   <- which(names(funCall)[-1] == "")
-           if ( length(empty)>0) {
-                names(funCall)[empty+1] <- names(as.list(args(checkScaleConsistency)))[empty]
+           fwa    <- createFunNameWithArgs(funName = "checkScaleConsistency")   ### 'fwa' = function with arguments
+           argList<- list()                                                     ### list with arguments
+           for ( i in names(fwa)[-1] ) {eval(parse(text = paste0("argList[[i]] <- ",i)))}
+           loop   <- createFunctionCalls(funName = "checkScaleConsistency", argList = argList)
+           length(loop)
+           ret    <- list()
+           for ( i in 1:length(loop)) {
+                ret[[i]] <- eval(parse(text = loop[i]))
            }
-           isList  <- unlist(lapply(2:length(funCall), FUN = function (i) {class(eval(funCall[[i]])) == "list"}))
-           if ( length(which(isList == FALSE))>0) {
-                nams <- names(funCall)[which(isList == FALSE)+1]
-                for ( i in 1:length(nams)) {
-                      arg <- eval(parse(text=nams[i]))
-                      assign(nams[i], list())
-                      for (j in 1:length(GADSdat)) {
-                           eval(parse(text=paste0(nams[i],"[[",j,"]] <- arg")))
-                      }
-                }
-           }
-    ### function call erstellen
-           ret <- list()
-           for (i in 1:length(GADSdat)) {
-                  txt <- paste0("ret[[",i,"]] <- checkScaleConsistency(", paste(names(funCall)[-1], paste0(names(funCall)[-1],"[[",i,"]]"), collapse = ", ", sep = " = "), ")")
-                  eval(parse(text=txt))
-           }
-           return(ret)}
-
-
-
-
+           return(ret) }
