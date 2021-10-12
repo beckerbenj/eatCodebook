@@ -41,13 +41,8 @@ calculateDescriptives.list <- function( GADSdat, inputForDescriptives, verbose =
            fwa    <- createFunNameWithArgs(funName = "calculateDescriptives")   ### 'fwa' = function with arguments
            argList<- list()                                                     ### list with arguments
            for ( i in names(fwa)[-1] ) {eval(parse(text = paste0("argList[[i]] <- ",i)))}
-           loop   <- createFunctionCalls(funName = "calculateDescriptives", argList = argList)
-           length(loop)
-           ret    <- list()
-           for ( i in 1:length(loop)) {
-                ret[[i]] <- eval(parse(text = loop[i]))
-           }
-           return(ret) }
+           loop   <- createAndExecuteFunctionCalls(funName = "calculateDescriptives", argList = argList)
+           return(loop)}
 
 #'@export
 calculateDescriptives.GADSdat <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {

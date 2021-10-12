@@ -210,13 +210,8 @@ createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr =
            fwa    <- createFunNameWithArgs(funName = "createInputForDescriptives")# 'fwa' = function with arguments
            argList<- list()                                                     ### list with arguments
            for ( i in names(fwa)[-1] ) {eval(parse(text = paste0("argList[[i]] <- ",i)))}
-           loop   <- createFunctionCalls(funName = "createInputForDescriptives", argList = argList)
-           length(loop)
-           ret    <- list()
-           for ( i in 1:length(loop)) {
-                ret[[i]] <- eval(parse(text = loop[i]))
-           }
-           return(ret) }
+           loop   <- createAndExecuteFunctionCalls(funName = "createInputForDescriptives", argList = argList)
+           return(loop)}
 
 check_inputForDescriptives <- function(inputForDescriptives){
   if(!is.data.frame(inputForDescriptives)) stop("'inputForDescriptives' needs to be a data.frame.")
@@ -237,7 +232,7 @@ check_inputForDescriptives <- function(inputForDescriptives){
 # test(12, 19)
 # test(12)
 # test()
-createFunctionCalls <- function(funName, argList){
+createAndExecuteFunctionCalls <- function(funName, argList){
            isList<- lapply(argList, is.list)
            stopifnot(isList[[1]])
            noList<- which(isList == FALSE)
@@ -250,12 +245,12 @@ createFunctionCalls <- function(funName, argList){
                      argList[[i]] <- iEntry
                 }
            }
-    ### function call erstellen
-           txt <- NULL
+    ### function call
+           ret <- list()
            for ( i in 1:length(argList[[1]])) {
-                  txt <- c(txt, paste0(funName,"(", paste(names(argList), paste0("argList[[\"",names(argList),"\"]][[",i,"]]"), sep="=", collapse=", "), ")"))
+                  ret[[i]] <- eval(parse(text=paste0(funName,"(", paste(names(argList), paste0("argList[[\"",names(argList),"\"]][[",i,"]]"), sep="=", collapse=", "), ")")))
            }
-           return(txt)}
+           return(ret)}
 
 
 createFunNameWithArgs <- function ( funName) {
