@@ -28,7 +28,7 @@ checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, v
            gdSel <- GADSdat                                                     ### GADSdat-selektiert
            gdSel[["dat"]]    <- gdSel[["dat"]][,which(colnames(gdSel[["dat"]]) %in% c(allNam[["id"]], vars))]
            gdSel[["labels"]] <- gdSel[["labels"]][which(gdSel[["labels"]][,"varName"] %in% c(allNam[["id"]], vars)),]
-           dat   <- extractData ( gdSel , convertLabels = "numeric")
+           dat   <- eatGADS::extractData ( gdSel , convertLabels = "numeric")
            scales<- do.call(plyr::rbind.fill, lapply(groups, FUN = function ( v ) {
                     inpV <- inpSel[which(inpSel[,"group"] == v),]
                     vars <- by(data = inpV, INDICES = inpV[,"type"], FUN = function ( x ) { x[,"varName"]})
@@ -38,21 +38,21 @@ checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, v
                          return(ret)
                     }  else  {
                          m1 <- mean( dat[,vars[["scale"]]], na.rm=TRUE)
-                         dL <- reshape2::melt(dat, id.vars = allNam[["id"]], measure.vars = vars[["variable"]], na.rm = TRUE)
-                         if(inherits(try(m2 <- eatRep::repMean(datL = dL, ID=allNam[["id"]], imp = "variable", dependent = "value", verbose=FALSE, progress = FALSE) ),"try-error"))  {
-                             if(verbose) {message("Skip scale '",inpV[which(inpV[,"type"] == "scale"), "group"],"' with items '",paste(unique(inpV[which(inpV[,"type"] == "variable"),"varName"]), collapse = "', '"),"'.")}
-                             ret <- data.frame ( scale = inpV[which(inpV[,"type"] == "scale"), "group"], nItems = length(unique(inpV[which(inpV[,"type"] == "variable"),"varName"])), items = paste0("'", paste(unique(inpV[which(inpV[,"type"] == "variable"),"varName"]), collapse = "', '"),"'"),  checkOK = FALSE, reason = "computation of pooled mean failed", stringsAsFactors = FALSE)
-                             return(ret)
-                         }  else  {
-                         m2r<- eatRep::report(m2)
-                             if ( abs(m1 - m2r[which(m2r[,"parameter"] == "mean"), "est"]) > 0.02) {
-                                  message("Scale '",vars[["scale"]],"': Mean of scale variable ",round(m1, digits = 3), " does not equal the pooled mean of the items '",paste(vars[["variable"]], collapse="', '"),"' (",round(m2r[which(m2r[,"parameter"] == "mean"), "est"], digits = 3),").")
-                                  ret <- data.frame ( scale = vars[["scale"]], nItems = length(vars[["variable"]]), items = paste0("'", paste(vars[["variable"]], collapse = "', '"),"'"),  checkOK = FALSE, scaleMean = m1, pooledMean = m2r[which(m2r[,"parameter"] == "mean"), "est"], reason = "scale mean and pooled mean differ", stringsAsFactors = FALSE)
-                                  return(ret)
-                             }
-                         ret <- data.frame ( scale = vars[["scale"]], nItems = length(vars[["variable"]]), items = paste0("'", paste(vars[["variable"]], collapse = "', '"),"'"),  checkOK = TRUE, scaleMean = m1, pooledMean = m2r[which(m2r[,"parameter"] == "mean"), "est"], stringsAsFactors = FALSE)
+#                         dL <- reshape2::melt(dat, id.vars = allNam[["id"]], measure.vars = vars[["variable"]], na.rm = TRUE)
+#                         if(inherits(try(m2 <- eatRep::repMean(datL = dL, ID=allNam[["id"]], imp = "variable", dependent = "value", verbose=FALSE, progress = FALSE) ),"try-error"))  {
+#                             if(verbose) {message("Skip scale '",inpV[which(inpV[,"type"] == "scale"), "group"],"' with items '",paste(unique(inpV[which(inpV[,"type"] == "variable"),"varName"]), collapse = "', '"),"'.")}
+#                             ret <- data.frame ( scale = inpV[which(inpV[,"type"] == "scale"), "group"], nItems = length(unique(inpV[which(inpV[,"type"] == "variable"),"varName"])), items = paste0("'", paste(unique(inpV[which(inpV[,"type"] == "variable"),"varName"]), collapse = "', '"),"'"),  checkOK = FALSE, reason = "computation of pooled mean failed", stringsAsFactors = FALSE)
+#                             return(ret)
+#                         }  else  {
+#                         m2r<- eatRep::report(m2)
+                         m3r<- mean(rowMeans(dat[,vars[["variable"]]], na.rm=TRUE), na.rm=TRUE)
+                         if ( abs(m1 - m3r) > 0.02) {
+                               message("Scale '",vars[["scale"]],"': Mean of scale variable ",round(m1, digits = 3), " does not equal the pooled mean of the items '",paste(vars[["variable"]], collapse="', '"),"' (",round(m3r, digits = 3),").")
+                               ret <- data.frame ( scale = vars[["scale"]], nItems = length(vars[["variable"]]), items = paste0("'", paste(vars[["variable"]], collapse = "', '"),"'"),  checkOK = FALSE, scaleMean = m1, pooledMean = m3r, reason = "scale mean and pooled mean differ", stringsAsFactors = FALSE)
+                               return(ret)
                          }
-                    }}))
+                         ret <- data.frame ( scale = vars[["scale"]], nItems = length(vars[["variable"]]), items = paste0("'", paste(vars[["variable"]], collapse = "', '"),"'"),  checkOK = TRUE, scaleMean = m1, pooledMean = m3r, stringsAsFactors = FALSE)
+                    } }))
            return(scales)}
 
 #'@export
