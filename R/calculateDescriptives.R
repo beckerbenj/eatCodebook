@@ -38,7 +38,8 @@ calculateDescriptives <- function( GADSdat, inputForDescriptives, verbose = TRUE
 calculateDescriptives.list <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
     ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
     ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
-           fwa    <- createFunNameWithArgs(funName = "calculateDescriptives")   ### 'fwa' = function with arguments
+           #fwa    <- createFunNameWithArgs(funName = "calculateDescriptives")   ### 'fwa' = function with arguments
+           fwa    <- as.list(match.call())
            argList<- list()                                                     ### list with arguments
            for ( i in names(fwa)[-1] ) {eval(parse(text = paste0("argList[[i]] <- ",i)))}
            loop   <- createAndExecuteFunctionCalls(funName = "calculateDescriptives", argList = argList)
