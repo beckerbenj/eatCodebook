@@ -7,6 +7,7 @@
 #'@param GADSdat Object of class\code{GADSdat}
 #'@param inputForDescriptives The output of the function \code{createInputForDescriptives()}
 #'@param id Name or column number of the ID variable. Argument can be numeric or character
+#'@param tolerance A positive numeric value, indicating the maximum allowed discrepancy between the mean of a scale variable and the pooled mean of single items
 #'@param verbose Logical: Print informations on console?
 #'
 #'@return Function does not return output but provide messages.
@@ -16,7 +17,7 @@ checkScaleConsistency <- function ( GADSdat, inputForDescriptives, id, verbose =
   UseMethod("checkScaleConsistency")
 }
 #'@export
-checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, verbose = TRUE) {
+checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, tolerance = 0.02, verbose = TRUE) {
            if ("tbl" %in% class(inputForDescriptives)) {
                if(verbose){message("'inputForDescriptives' has class '",paste(class(inputForDescriptives), collapse="', '"), "'. Transform 'inputForDescriptives' into 'data.frame'.")}
                inputForDescriptives <- as.data.frame(inputForDescriptives)
@@ -46,7 +47,7 @@ checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, v
 #                         }  else  {
 #                         m2r<- eatRep::report(m2)
                          m3r<- mean(rowMeans(dat[,vars[["variable"]]], na.rm=TRUE), na.rm=TRUE)
-                         if ( abs(m1 - m3r) > 0.02) {
+                         if ( abs(m1 - m3r) > abs(tolerance)) {
                                message("Scale '",vars[["scale"]],"': Mean of scale variable ",round(m1, digits = 3), " does not equal the pooled mean of the items '",paste(vars[["variable"]], collapse="', '"),"' (",round(m3r, digits = 3),").")
                                ret <- data.frame ( scale = vars[["scale"]], nItems = length(vars[["variable"]]), items = paste0("'", paste(vars[["variable"]], collapse = "', '"),"'"),  checkOK = FALSE, scaleMean = m1, pooledMean = m3r, reason = "scale mean and pooled mean differ", stringsAsFactors = FALSE)
                                return(ret)

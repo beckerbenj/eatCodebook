@@ -14,6 +14,8 @@ checkScaleConsistency(GADSdat, inputForDescriptives, id, verbose = TRUE)
 \item{id}{Name or column number of the ID variable. Argument can be numeric or character}
 
 \item{verbose}{Logical: Print informations on console?}
+
+\item{tolerance}{A positive numeric value, indicating the maximum allowed discrepancy between the mean of a scale variable and the pooled mean of single items}
 }
 \value{
 Function does not return output but provide messages.
