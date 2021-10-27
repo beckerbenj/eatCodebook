@@ -207,7 +207,8 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
 createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = TRUE) {
     ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
     ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
-           fwa    <- createFunNameWithArgs(funName = "createInputForDescriptives")# 'fwa' = function with arguments
+           #fwa    <- createFunNameWithArgs(funName = "createInputForDescriptives")# 'fwa' = function with arguments
+           fwa    <- as.list(match.call())
            argList<- list()                                                     ### list with arguments
            for ( i in names(fwa)[-1] ) {eval(parse(text = paste0("argList[[i]] <- ",i)))}
            loop   <- createAndExecuteFunctionCalls(funName = "createInputForDescriptives", argList = argList)
@@ -253,12 +254,12 @@ createAndExecuteFunctionCalls <- function(funName, argList){
            return(ret)}
 
 
-createFunNameWithArgs <- function ( funName) {
-          i     <- 0
-          while ( eatTools::crop(unlist(strsplit(deparse(sys.call(i))[1], split = "\\("))[1]) != funName) {i <- i-1}
-          fc    <- as.list(sys.call(i))
-          missed<- setdiff(which(names(fc) == ""), 1)                           ### fuer welche Argumente hat der user keine namen angegeben?
-          if ( length(missed)>0) {
-               names(fc)[missed] <- names(formals(funName))[missed-1]
-          }
-          return(fc)}
+#createFunNameWithArgs <- function ( funName) {
+#          i     <- 0
+#          while ( eatTools::crop(unlist(strsplit(deparse(sys.call(i))[1], split = "\\("))[1]) != funName) {i <- i-1}
+#          fc    <- as.list(sys.call(i))
+#          missed<- setdiff(which(names(fc) == ""), 1)                           ### fuer welche Argumente hat der user keine namen angegeben?
+#          if ( length(missed)>0) {
+#               names(fc)[missed] <- names(formals(funName))[missed-1]
+#          }
+#          return(fc)}
