@@ -7,5 +7,5 @@ test_that("with defaults", {
   out <- getAbbrList("helper_abbrList.xlsx")
   expect_equal(length(out), 2)
   expect_equal(names(out), c("Statistische Formelzeichen", "Akronyme"))
-  expect_equal(dim(out[[2]]), c(2, 2))
+  expect_equal(dim(out[[2]]), c(1, 2))
 })
