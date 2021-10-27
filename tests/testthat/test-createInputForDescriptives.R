@@ -50,5 +50,5 @@ test_that("check inputForDescriptives", {
 test_that("list input and default options", {
   l <- list(dat1 = dfSAV, dat2 = dfSAV)
   out <- createInputForDescriptives(l)
- # expect_equal(names(out), c("dat1", "dat2"))
+  expect_equal(names(out), c("dat1", "dat2"))
 })
