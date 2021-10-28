@@ -9,7 +9,7 @@ eatCodebook allows the automatic creation of a nicely formatted codebook via `La
 
 ## Installation
 
-You can install the developemnt version of eatCodebook from Github with
+You can install the development version of eatCodebook from Github with
 
 ``` r
 remotes::install_github("beckerbenj/eatCodebook")

@@ -14,16 +14,7 @@
 #'
 #'@export
 getMissings <- function(filePath){
-  sheet_names <- openxlsx::getSheetNames(filePath)
-  names(sheet_names) <- sheet_names
-
-  varue.missings <- lapply(sheet_names, function(sheet_name) {
-    x <- openxlsx::readWorkbook(filePath, sheet = sheet_name, startRow = 1)
-    check_missings(x)
-    prepareMissings(x)
-  })
-
-  varue.missings
+  getExcel(filePath, funList = list(check_missings, prepareMissings))
 }
 
 check_missings <- function(missings) {
