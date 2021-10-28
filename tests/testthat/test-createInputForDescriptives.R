@@ -1,8 +1,10 @@
 
 #input <- readRDS("tests/testthat/helper_inputForDescriptives_clean.RDS")
+#input <- readRDS("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/tests/testthat/helper_inputForDescriptives_clean.RDS")
 input <- readRDS("helper_inputForDescriptives_clean.RDS")
 
 #dfSAV <- eatGADS::import_spss("tests/testthat/helper_spss.sav")
+#dfSAV <- eatGADS::import_spss("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/tests/testthat/helper_spss.sav")
 dfSAV <- eatGADS::import_spss("helper_spss.sav")
 
 test_that("with pisa data", {

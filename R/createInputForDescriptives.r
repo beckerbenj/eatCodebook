@@ -212,6 +212,7 @@ createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr =
            argList<- list()                                                     ### list with arguments
            for ( i in names(fwa)[-1] ) {eval(parse(text = paste0("argList[[i]] <- ",i)))}
            loop   <- createAndExecuteFunctionCalls(funName = "createInputForDescriptives", argList = argList)
+           names(loop) <- names(GADSdat)
            return(loop)}
 
 check_inputForDescriptives <- function(inputForDescriptives){
