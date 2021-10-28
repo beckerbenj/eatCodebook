@@ -14,5 +14,5 @@
 #'
 #'@export
 getLitInfo <- function(filePath){
-  openxlsx::readWorkbook(xlsxFile = filePath, startRow = 1 )
+  getExcel(filePath)
 }
