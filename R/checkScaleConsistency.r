@@ -65,5 +65,4 @@ checkScaleConsistency.list <- function ( GADSdat, inputForDescriptives, id, verb
            argList<- list()                                                     ### list with arguments
            for ( i in names(fwa)[-1] ) {eval(parse(text = paste0("argList[[i]] <- ",i)))}
            loop   <- createAndExecuteFunctionCalls(funName = "checkScaleConsistency", argList = argList)
-           names(loop) <- names(GADSdat)
            return(loop)}
