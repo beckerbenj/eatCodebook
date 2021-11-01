@@ -22,3 +22,14 @@ eatAnalysis::write_xlsx(list(dat1 = missings, dat2 = missings), filePath = "test
 #
 imputed_scale <- input_descriptives$sus[input_descriptives$sus$group == "Sinmo_pooled", ]
 saveRDS(imputed_scale, "tests/testthat/helper_inputedForDescriptives_imputedScale.RDS")
+
+
+
+# Minimal full example
+# -----------------------------------------------------------------------------------
+file <- system.file("extdata", "example1.sav", package = "eatCodebook")
+gd   <- eatGADS::import_spss(file)                                          ### inputliste erzeugen
+
+str(gd)
+
+## alles basteln, vlt. Vignette?
