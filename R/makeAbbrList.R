@@ -36,7 +36,7 @@ makeAbbrList <- function(filePath, captions=list("Akronyme"= "Abkuerzungen", "St
     v <- alle.infos[[i]]
     v.code <- NULL
 
-    if(nrow(v) > 1){
+    if(nrow(v) >= 1){
       v.code <- c(paste0("\\begin{longtabu}{l",rep("Q",dim(v)[2]-1),"}"),
                   paste0("\\caption*{\\cellcolor{white} \\textbf{",captions[i],"}}\\\\"),
                   "\\toprule",
