@@ -4,7 +4,13 @@
 \alias{checkScaleConsistency}
 \title{Check whether the mean of a scale variable equals the pooled mean of single items}
 \usage{
-checkScaleConsistency(GADSdat, inputForDescriptives, id, verbose = TRUE)
+checkScaleConsistency(
+  GADSdat,
+  inputForDescriptives,
+  id,
+  tolerance = 0.02,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{GADSdat}{Object of class\code{GADSdat}}
@@ -13,9 +19,9 @@ checkScaleConsistency(GADSdat, inputForDescriptives, id, verbose = TRUE)
 
 \item{id}{Name or column number of the ID variable. Argument can be numeric or character}
 
-\item{verbose}{Logical: Print informations on console?}
-
 \item{tolerance}{A positive numeric value, indicating the maximum allowed discrepancy between the mean of a scale variable and the pooled mean of single items}
+
+\item{verbose}{Logical: Print informations on console?}
 }
 \value{
 Function does not return output but provide messages.
