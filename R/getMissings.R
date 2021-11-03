@@ -22,7 +22,7 @@ check_missings <- function(missings) {
   if(!identical(names(missings), c("Var.name", "Wert", "missing", "LabelSH", "Zeilenumbruch_vor_Wert"))) {
     stop("Column names for 'missings' must be: Var.name, Wert, missing, LabelSH, Zeilenumbruch_vor_Wert'")
   }
-  return()
+  invisible(missings)
 }
 
 prepareMissings <- function(varue.missings){

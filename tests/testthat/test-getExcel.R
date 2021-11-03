@@ -13,7 +13,6 @@ test_that("list format", {
   expect_equal(names(out), c("dat1", "dat2"))
 })
 
-
 test_that("list with funList", {
   # out <- getExcel("tests/testthat/helper_getExcel.xlsx", funList = funList)
   funList <- list(fun1 = function(x) {

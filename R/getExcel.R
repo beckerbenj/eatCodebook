@@ -20,11 +20,11 @@ getExcel <- function(filePath, funList = NULL){
   sheet_names <- openxlsx::getSheetNames(filePath)
   names(sheet_names) <- sheet_names
 
-  all_dfs <- lapply(sheet_names , function(sheet_name){
+  all_dfs <- lapply(sheet_names, function(sheet_name){
     out <- openxlsx::readWorkbook(xlsxFile = filePath, sheet = sheet_name, startRow = 1)
     if(!is.null(funList)) {
       for(single_fun in funList) {
-       # browser()
+        #browser()
         out <- single_fun(out)
       }
     }
