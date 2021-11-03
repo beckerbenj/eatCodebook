@@ -4,7 +4,7 @@
 \alias{getExcel}
 \title{Import data from Excel.}
 \usage{
-getExcel(filePath)
+getExcel(filePath, funList = NULL)
 }
 \arguments{
 \item{filePath}{Path to excel file.}
@@ -17,6 +17,7 @@ or a named \code{list} (if the Excel file has multiple sheets).
 Import all sheets from an Excel file.
 }
 \examples{
-#tbd
+filePath <- system.file("extdata", "example_abbrList.xlsx", package = "eatCodebook")
+excel_list   <- getExcel(filePath)
 
 }

@@ -11,7 +11,8 @@
 #' or a named \code{list} (if the Excel file has multiple sheets).
 #'
 #'@examples
-#'#tbd
+#'filePath <- system.file("extdata", "example_abbrList.xlsx", package = "eatCodebook")
+#'excel_list   <- getExcel(filePath)
 #'
 #'@export
 getExcel <- function(filePath, funList = NULL){
