@@ -1,14 +1,14 @@
 
 # Minimal full example
 # -----------------------------------------------------------------------------------
-file <- system.file("extdata", "example1.sav", package = "eatCodebook")
+file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
 gd   <- eatGADS::import_spss(file)                                          ### inputliste erzeugen
 
 str(gd)
 
 ## Descriptives
-inputForDescr <- createInputForDescriptives(gd, varNameSeparatorImp = NULL, impExpr = "plausible value", scaleExpr = "Skalenwert")
-inputForDescr[grep("skala1item", inputForDescr[,"varName"]),"scale"] <- "ordinal"
+inputForDescr <- createInputForDescriptives(gd)
+
 inputForDescr[which(inputForDescr[,"varName"] == "skalenwert_fake"),"type"] <- "scale"        ### ein eintrag in der varinfo muss jetzt haendisch geaendert werden (das geschieht spaeter fuer das
 descr  <- calculateDescriptives(gd, inputForDescr)
 
@@ -19,6 +19,8 @@ miss_final <- getMissings("inst/extdata/example_miss.xlsx")
 
 ## Varinfo
 varInfo <- createVarInfo(gd, inputForDescriptives = inputForDescr)
+# Gliederung
+# Instruktion und Quellen (Beispiele rein)
 varInfo[3, "QuelleSH"] <- "Mueller (2019)"
 varInfo[c(2, 3, 8), "Hintergrundmodell"] <- "ja"
 eatAnalysis::write_xlsx(varInfo, "inst/extdata/example_varInfo.xlsx", row.names = FALSE)
@@ -26,6 +28,7 @@ varInfo_final <- getVarInfo("inst/extdata/example_varInfo.xlsx")
 
 ## Structure
 struc <- createStructure(varInfo_final)
+# Hier Oberkapitel einfuegen
 eatAnalysis::write_xlsx(struc, "inst/extdata/example_struc.xlsx", row.names = FALSE)
 struc_final <- getStructure("inst/extdata/example_struc.xlsx")
 
@@ -36,8 +39,9 @@ scaleInfo_final <- getScaleInfo("inst/extdata/example_scaleInfo.xlsx")
 
 ## Register
 register <- createRegister(inputForDescr, keywordList = c("kw1", "kw2"))
-eatAnalysis::write_xlsx(scaleInfo, "inst/extdata/example_scaleInfo.xlsx", row.names = FALSE)
-scaleInfo_final <- getScaleInfo("inst/extdata/example_scaleInfo.xlsx")
+# Beispiel-Keyowrds vergeben
+eatAnalysis::write_xlsx(register, "inst/extdata/example_register.xlsx", row.names = FALSE)
+register_final <- getRegister("inst/extdata/example_register.xlsx")
 
 ## Abbrevtiation list
 abbrList <- createAbbrList()
@@ -51,6 +55,7 @@ litInfo[, 3] <- "ja"
 litInfo[, 2] <- "Mueller, M. (2020). Titel."
 eatAnalysis::write_xlsx(litInfo, "inst/extdata/example_litInfo.xlsx", row.names = FALSE)
 litInfo_final <- getLitInfo("inst/extdata/example_litInfo.xlsx")
+# vlt. getLitInfo ueberarbeiten, sodass in_Litverzeichnis obsolet wird (also doppelte Langangabe rausnehmen)
 
 # meta data
 meta <- createMetadata()
@@ -75,6 +80,8 @@ hint <- makeBGM(varInfo_final)
 
 meta_final <- makeMetadata("inst/extdata/example_meta.xlsx")
 
+# Inkonsistenzen in make vs get ueberarbeiten
+
 ## Sonstiges Zeug von Felix
 # --------------------------------------------------
 # SH-Variablen
@@ -86,7 +93,8 @@ id <- c("id")
 
 ## Ueberlegungen
 # --------------------------------------------------
-# getExcel umschreiben, sodass im Zweifelsfall doch immer eine Liste (bei Input df -> Laenge 1 rauskommst?)
+# getExcel umschreiben, sodass im Zweifelsfall doch immer eine Liste (bei Input df -> Laenge 1 rauskommt?)
+# mit Sebastian klaeren
 
 
 
