@@ -13,7 +13,7 @@
 #'@return Function does not return output but provide messages.
 #'
 #'@export
-checkScaleConsistency <- function ( GADSdat, inputForDescriptives, id, verbose = TRUE) {
+checkScaleConsistency <- function ( GADSdat, inputForDescriptives, id, tolerance = 0.02, verbose = TRUE) {
   UseMethod("checkScaleConsistency")
 }
 #'@export
@@ -57,7 +57,7 @@ checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, t
            return(scales)}
 
 #'@export
-checkScaleConsistency.list <- function ( GADSdat, inputForDescriptives, id, verbose = TRUE) {
+checkScaleConsistency.list <- function ( GADSdat, inputForDescriptives, id, tolerance = 0.02, verbose = TRUE) {
     ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
     ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
            #fwa    <- createFunNameWithArgs(funName = "checkScaleConsistency")   ### 'fwa' = function with arguments
