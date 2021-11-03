@@ -52,6 +52,14 @@ litInfo[, 2] <- "Mueller, M. (2020). Titel."
 eatAnalysis::write_xlsx(litInfo, "inst/extdata/example_litInfo.xlsx", row.names = FALSE)
 litInfo_final <- getLitInfo("inst/extdata/example_litInfo.xlsx")
 
+# meta data
+meta <- createMetadata()
+meta[1, "Title"] <- "Codebook Test"
+meta[1, "Author"] <- "Anna Muster"
+meta[1, "Keywords"] <- "lsa, education"
+meta[1, "Subject"] <- "test"
+eatAnalysis::write_xlsx(meta, "inst/extdata/example_meta.xlsx", row.names = FALSE)
+
 
 ## Make-steps
 # --------------------------------------------------
@@ -65,6 +73,7 @@ lit <- makeLit(litInfo_final)
 
 hint <- makeBGM(varInfo_final)
 
+meta_final <- makeMetadata("inst/extdata/example_meta.xlsx")
 
 ## Sonstiges Zeug von Felix
 # --------------------------------------------------

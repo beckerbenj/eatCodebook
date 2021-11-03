@@ -1,20 +1,3 @@
-####
-#############################################################################
-#' Create meta data template.
-#'
-#' Create meta data template.
-#'
-#'
-#'@return Returns a meta data template.
-#'
-#'@examples
-#'#tbd
-#'
-#'@export
-createMetadata <- function(){
-  data.frame(Title = character(), Author = character(), Keywords = character(), Subject = character())
-
-}
 
 ####
 #############################################################################
@@ -31,7 +14,7 @@ createMetadata <- function(){
 #'
 #'@export
 makeMetadata <- function(filePath){
-  varue.meta <- readWorkbook(xlsxFile = filePath, startRow = 1 )
+  varue.meta <- getExcel(filePath)
 
   for( i in names(varue.meta)){
     if(is.na(varue.meta[,i])) varue.meta[,i] <- ""
