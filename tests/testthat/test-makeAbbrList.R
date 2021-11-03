@@ -4,11 +4,12 @@
 test_that("multiplication works", {
   #out <- makeAbbrList("tests/testthat/helper_abbrList.xlsx")
   out <- makeAbbrList("helper_abbrList.xlsx")
-  expect_equal(length(out), 22)
+  expect_equal(length(out), 36)
   expect_equal(out[1], "\\clearpage")
-  expect_equal(out[22], "\\end{longtabu}\n")
-  expect_equal(out[20], "Min. & Minimum\\\\")
-  expect_equal(out[12], "\\textbf{Symbol} & \\textbf{Bedeutung}\\\\")
+  expect_equal(out[36], "\\end{longtabu}\n")
+  expect_equal(out[19], "Int. & International\\\\")
+  expect_equal(out[34], "Min. & Minimum\\\\")
+  expect_equal(out[26], "\\textbf{Symbol} & \\textbf{Bedeutung}\\\\")
 })
 
 
