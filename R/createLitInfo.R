@@ -31,5 +31,6 @@ createLitInfo.list <- function(varInfo){
   litInfo_list <- lapply(varInfo, createLitInfo)
   litInfo <- do.call(rbind, litInfo_list)
   litInfo_lean <- litInfo[!duplicated(litInfo$Kurzangabe), ]
-  litInfo_final <- litInfo[order(litInfo_lean$Kurzangabe), ]
+  litInfo_final <- litInfo_lean[order(litInfo_lean$Kurzangabe), ]
+  litInfo_final
 }

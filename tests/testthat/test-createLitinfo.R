@@ -30,3 +30,10 @@ test_that("create lit info with list input", {
   out <- createLitInfo(varInfo_list)
   expect_equal(out$Kurzangabe, c("Author1", "Author2", "Author3"))
 })
+
+test_that("create lit info with list input remove duplicates", {
+  varInfo3[[1]]$QuelleSH[1] <- "-"
+  varInfo_list <- list(dat1 = varInfo[[1]], dat2 = varInfo3[[1]])
+  out <- createLitInfo(varInfo_list)
+  expect_equal(out$Kurzangabe, c("Author1", "Author2", "Author3"))
+})
