@@ -32,5 +32,7 @@ createLitInfo.list <- function(varInfo){
   litInfo <- do.call(rbind, litInfo_list)
   litInfo_lean <- litInfo[!duplicated(litInfo$Kurzangabe), ]
   litInfo_final <- litInfo_lean[order(litInfo_lean$Kurzangabe), ]
+
+  if(nrow(litInfo_final) > 1) litInfo_final <- litInfo_final[litInfo_final$Kurzangabe != "-", ]
   litInfo_final
 }
