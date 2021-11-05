@@ -11,6 +11,8 @@ saveRDS(clean_input, "tests/testthat/helper_inputForDescriptives_clean.RDS")
 
 # Excel helper
 # -----------------------------------------------------------------------------------
+
+## missings
 missings <- data.frame(Var.name = c("v1", "v2"),
                        Wert = c(-99, 1),
                        missing = c("ja", "nein"),
@@ -18,8 +20,19 @@ missings <- data.frame(Var.name = c("v1", "v2"),
                        Zeilenumbruch_vor_Wert = c("nein", "nein"))
 eatAnalysis::write_xlsx(list(dat1 = missings, dat2 = missings), filePath = "tests/testthat/helper_missings.xlsx", row.names = FALSE)
 
+## varInfo
+dfSAV <- eatGADS::import_spss("tests/testthat/helper_spss.sav")
+dfSAV_input <- createInputForDescriptives(dfSAV)
+varInfo <- createVarInfo(dfSAV, dfSAV_input)
+varInfo$Unterteilung.im.Skalenhandbuch <- c("Teil 1a", "Teil 1b", "Teil 2")
+varInfo$Gliederung <- c("1.01", "1.02", "2.01")
+#varInfo$Anmerkung.Var[1] <- "NA"
+eatAnalysis::write_xlsx(varInfo, "tests/testthat/helper_varInfo.xlsx", row.names = FALSE)
 
-#
+
+
+
+# inputfordescr
 imputed_scale <- input_descriptives$sus[input_descriptives$sus$group == "Sinmo_pooled", ]
 saveRDS(imputed_scale, "tests/testthat/helper_inputedForDescriptives_imputedScale.RDS")
 

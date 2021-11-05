@@ -1,11 +1,5 @@
 
 
-# dfSAV <- eatGADS::import_spss("tests/testthat/helper_spss.sav")
-# varueInfo <- createVarueInfo(dfSAV)
-# varueInfo$Anmerkung.Var[1] <- "NA"
-# eatAnalysis::write_xlsx(varueInfo, "tests/testthat/helper_varueInfo.xlsx", row.names = FALSE)
-
-
 test_that("transform char vector", {
   expect_equal(replaceNASignes(c("1", "a", "b")),
                c("1", "a", "b"))

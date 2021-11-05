@@ -7,7 +7,7 @@
 #'@param GADSdat \code{GADSdat} object.
 #'@param inputForDescriptives Input for descriptives calculation.
 #'@param encodingList tbd.
-#'@param makeStructure Should an automatic structuring of variables be created_
+#'@param makeStructure Should an automatic structuring of variables be created
 #'
 #'@return Returns the variable information template.
 #'
@@ -15,11 +15,11 @@
 #'#tbd
 #'
 #'@export
-createVarInfo <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
+createVarInfo <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = FALSE){
   UseMethod("createVarInfo")
 }
 #'@export
-createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
+createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = FALSE){
   inputForDescriptives <- check_inputForDescriptives(inputForDescriptives)
 
   var_labs <- unique(eatGADS::extractMeta(GADSdat)[, c("varName", "varLabel")])
@@ -47,6 +47,7 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
   variableninfo <- data.frame(
     "Var.Name" = var_labs2$varName,
     "in.DS.und.SH" = rep("ja" , n),
+    "Unterteilung.im.Skalenhandbuch" = rep(NA , n),
     "Layout" = rep("-" , n),
     "LabelSH" = var_labs2$varLabel,
     "Anmerkung.Var" = rep("-" , n),

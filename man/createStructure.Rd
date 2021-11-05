@@ -15,6 +15,9 @@ Structure template.
 \description{
 Create structure template based on variable information.
 }
+\details{
+To create the structure template, information from the columns \code{'Unterteilung.im.Skalenhandbuch'} and \code{'Gliederung'} are used.
+}
 \examples{
 #tbd
 

@@ -8,7 +8,7 @@ createVarInfo(
   GADSdat,
   inputForDescriptives,
   encodingList = NULL,
-  makeStructure = TRUE
+  makeStructure = FALSE
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ createVarInfo(
 
 \item{encodingList}{tbd.}
 
-\item{makeStructure}{Should an automatic structuring of variables be created_}
+\item{makeStructure}{Should an automatic structuring of variables be created}
 }
 \value{
 Returns the variable information template.
