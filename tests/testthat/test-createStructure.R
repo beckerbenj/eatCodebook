@@ -10,9 +10,9 @@ test_that("no input", {
 #varInfo <- getVarInfo("tests/testthat/helper_varInfo.xlsx")
 #varInfo <- getVarInfo("helper_varInfo.xlsx")
 #varInfo[[1]]$Gliederung <- c("1.01", "1.03", "1.02")
+varInfo <- getVarInfo("helper_varInfo.xlsx")
 
 test_that("for data.frame", {
-  varInfo <- getVarInfo("helper_varInfo.xlsx")
   out <- createStructure(varInfo)
   expect_equal(out[[1]]$Ebene, c("1", "1.01", "1.02", "2", "2.01"))
   expect_equal(out[[1]]$Titel, c(NA, "Teil 1a", "Teil 1b", NA, "Teil 2"))

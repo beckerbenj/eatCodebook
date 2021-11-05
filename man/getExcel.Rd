@@ -8,6 +8,8 @@ getExcel(filePath, funList = NULL)
 }
 \arguments{
 \item{filePath}{Path to excel file.}
+
+\item{funList}{tbd.}
 }
 \value{
 Either a \code{data.frame} (if the Excel file has a single sheet)

@@ -14,11 +14,11 @@ createVarInfo(
 \arguments{
 \item{GADSdat}{\code{GADSdat} object.}
 
-\item{inputForDescriptives}{Input for descriptives calculation.}
+\item{inputForDescriptives}{Input for descriptive statistics calculation.}
 
 \item{encodingList}{tbd.}
 
-\item{makeStructure}{Should an automatic structuring of variables be created}
+\item{makeStructure}{Should an automatic structuring of variables be created?}
 }
 \value{
 Returns the variable information template.

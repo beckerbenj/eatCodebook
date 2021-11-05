@@ -6,6 +6,7 @@
 #' Import all sheets from an Excel file.
 #'
 #'@param filePath Path to excel file.
+#'@param funList tbd.
 #'
 #'@return Either a \code{data.frame} (if the Excel file has a single sheet)
 #' or a named \code{list} (if the Excel file has multiple sheets).

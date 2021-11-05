@@ -175,7 +175,7 @@ codebook <- function( varue.info ,
                unlist( sapply( variablen[[d]], function(v)
                  layout.var( name=v,
                              fb=tolower(d),
-                             id=id[d],
+                             id.fb=id[d],
                              kennwerte.var = unlist(Kennwertedatensatz[[d]][ names(Kennwertedatensatz[[d]]) %in% v] , recursive=FALSE),
                              varue.info=varue.info[[d]],
                              varue.missings=varue.missings[[d]],
