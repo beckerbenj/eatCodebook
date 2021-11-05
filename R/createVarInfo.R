@@ -5,9 +5,9 @@
 #' Create variable information (background model, which variables in the data set, ...) template.
 #'
 #'@param GADSdat \code{GADSdat} object.
-#'@param inputForDescriptives Input for descriptives calculation.
+#'@param inputForDescriptives Input for descriptive statistics calculation.
 #'@param encodingList tbd.
-#'@param makeStructure Should an automatic structuring of variables be created
+#'@param makeStructure Should an automatic structuring of variables be created?
 #'
 #'@return Returns the variable information template.
 #'
@@ -25,8 +25,11 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
   var_labs <- unique(eatGADS::extractMeta(GADSdat)[, c("varName", "varLabel")])
 
   var_labs2 <- var_labs
+
+  ## inputed variables
   inputed_info <- inputForDescriptives[inputForDescriptives$imp == TRUE, ]
   pooled_variables <- unique(inputed_info[["group"]])
+  #browser()
   for(i in pooled_variables) {
     #browser()
     single_inputed_info <- inputed_info[inputed_info$group == i, ]
@@ -37,8 +40,19 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
     var_labs2 <- insertRow(var_labs2, newRow = newRow, index = which(var_labs2$varName == first_entry))
   }
 
-  # insert pooled variables here? with modified variable label
-  # defaults in.DS.und.SH (ja/sh/ds)
+  ## network variables
+  netw_info <- inputForDescriptives[inputForDescriptives$imp == FALSE & !inputForDescriptives$group %in% inputForDescriptives$varName, ]
+  netw_abstracts <- unique(netw_info[["group"]])
+  netw_variables <- unique(netw_info[["varName"]])
+  for(i in netw_abstracts) {
+    single_netw_info <- netw_info[netw_info$group == i, ]
+    first_entry <- single_netw_info[1, "varName"]
+    newRow <- var_labs2[var_labs2$varName == first_entry, ]
+    newRow[, "varName"] <- i
+
+    var_labs2 <- insertRow(var_labs2, newRow = newRow, index = which(var_labs2$varName == first_entry))
+  }
+
 
   n <- nrow(var_labs2)
   g <- rep("-" , n)
@@ -66,6 +80,9 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
 
   variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% pooled_variables, yes = "sh", no = variableninfo[, "in.DS.und.SH"])
   variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% inputed_info$varName, yes = "ds", no = variableninfo[, "in.DS.und.SH"])
+
+  variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% netw_abstracts, yes = "sh", no = variableninfo[, "in.DS.und.SH"])
+  variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% netw_variables, yes = "ds", no = variableninfo[, "in.DS.und.SH"])
 
   if(!is.null(encodingList)) {
     for( i in 1:length(encodingList$input)){

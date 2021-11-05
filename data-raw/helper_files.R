@@ -11,7 +11,6 @@ saveRDS(clean_input, "tests/testthat/helper_inputForDescriptives_clean.RDS")
 
 # Excel helper
 # -----------------------------------------------------------------------------------
-
 ## missings
 missings <- data.frame(Var.name = c("v1", "v2"),
                        Wert = c(-99, 1),
@@ -30,10 +29,21 @@ varInfo$Gliederung <- c("1.01", "1.02", "2.01")
 eatAnalysis::write_xlsx(varInfo, "tests/testthat/helper_varInfo.xlsx", row.names = FALSE)
 
 
-
-
 # inputfordescr
 imputed_scale <- input_descriptives$sus[input_descriptives$sus$group == "Sinmo_pooled", ]
 saveRDS(imputed_scale, "tests/testthat/helper_inputedForDescriptives_imputedScale.RDS")
 
 
+# data sets
+# -----------------------------------------------------------------------------------
+netw <- data.frame(id = 1:2,
+                    friend_1 = c(0, 1),
+                    friend_2 = c(0, 0))
+netw_g <- eatGADS::import_DF(netzw)
+input_netw <- createInputForDescriptives(netzw_g)
+input_netw[2:3, "group"] <- "friend"
+input_netw[2:3, "scale"] <- NA
+descr_netw <- calculateDescriptives(netw_g, input_netw)
+
+saveRDS(netw_g, "tests/testthat/helper_data_netw.RDS")
+saveRDS(input_netw, "tests/testthat/helper_inputForDescriptives_netw.RDS")

@@ -1,9 +1,13 @@
 
 #dfSAV <- eatGADS::import_spss("tests/testthat/helper_spss.sav")
 dfSAV <- eatGADS::import_spss("helper_spss.sav")
-
 #gads <- readRDS("tests/testthat/helper_scaleDF.RDS")
 gads <- readRDS("helper_scaleDF.RDS")
+#netw_g <- readRDS("tests/testthat/helper_data_netw.RDS")
+netw_g <- readRDS("helper_data_netw.RDS")
+#netw_input <- readRDS("tests/testthat/helper_inputForDescriptives_netw.RDS")
+netw_input <- readRDS("helper_inputForDescriptives_netw.RDS")
+
 
 test_that("with pisa", {
   suppressMessages(input4descr <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value"))
@@ -17,6 +21,12 @@ test_that("with pisa", {
   expect_equal(out$LabelSH[1], "Student-ID")
   expect_equal(out$LabelSH, out$Titel)
   expect_equal(unique(out$Gliederung), "-")
+})
+
+test_that("with network data", {
+  out <- createVarInfo(netw_g, netw_input)
+  expect_equal(out$Var.Name, c("id", "friend", "friend_1", "friend_2"))
+  expect_equal(out$in.DS.und.SH, c("ja", "sh", "ds", "ds"))
 })
 
 test_that("with list", {
