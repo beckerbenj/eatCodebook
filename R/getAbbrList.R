@@ -14,5 +14,6 @@
 #'
 #'@export
 getAbbrList <- function(filePath){
+  stop("'getAbbrList' is deprecated, use 'makeAbbrList' instead.")
   getExcel(filePath)
 }
