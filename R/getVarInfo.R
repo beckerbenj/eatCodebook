@@ -93,5 +93,13 @@ replaceNASignes <- function(char_vec) {
 
 # tbd: check structure, check that Titel column does not contain any missings (!)
 check_varInfo <- function(varInfo) {
+  if(!identical(names(varInfo), c("Var.Name", "in.DS.und.SH", "Unterteilung.im.Skalenhandbuch", "Layout", "LabelSH",
+                                  "Anmerkung.Var", "Gliederung", "Reihenfolge", "Titel", "rekodiert", "QuelleSH",
+                                  "Instruktionen", "Hintergrundmodell", "HGM.Reihenfolge", "HGM.Variable.erstellt.aus",
+                                  "intern.extern","Seitenumbruch.im.Inhaltsverzeichnis"))) stop("Malformed column names in 'varInfo'.")
+  if(any(is.na(varInfo$Var.Name))) stop("Missing values in 'Var.Name' column in 'varInfo'.")
+  if(any(is.na(varInfo$Titel))) stop("Missing values in 'Titel' column in 'varInfo'.")
+  if(any(is.na(varInfo$in.DS.und.SH))) stop("Missing values in 'in.DS.und.SH' column in 'varInfo'.")
+  if(any(!varInfo$in.DS.und.SH %in% c("sh", "ds", "ja"))) stop("Invalid values in 'in.DS.und.SH' column in 'varInfo'.")
   invisible(varInfo)
 }

@@ -17,6 +17,18 @@ test_that("get simple varue info", {
   expect_equal(out$Anmerkung.Var[1], "-")
 })
 
+test_that("check_varInfo", {
+  #varInfo <- getVarInfo("tests/testthat/helper_varInfo.xlsx")
+  varInfo1 <- varInfo2 <- varInfo3 <- varInfo4 <- varInfo5 <- varInfo6 <- getVarInfo("helper_varInfo.xlsx")
+
+  names(varInfo1)[1] <- "varName"
+  expect_error(check_varInfo(varInfo1), "Malformed column names in 'varInfo'.")
+  varInfo2[1, "in.DS.und.SH"] <- "-"
+  expect_error(check_varInfo(varInfo2), "Invalid values in 'in.DS.und.SH' column in 'varInfo'.")
+  varInfo3[2, "Titel"] <- NA
+  expect_error(check_varInfo(varInfo3), "Missing values in 'Titel' column in 'varInfo'.")
+})
+
 
 
 # sheets.varue.info <- c("sfb_tr_ach","lfb","slfb")

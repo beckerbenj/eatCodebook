@@ -23,7 +23,8 @@ createStructure.NULL <- function(varInfo){
 }
 #'@export
 createStructure.data.frame <- function(varInfo){
-  #browser()
+  check_varInfo(varInfo)
+
   struc <- unique(varInfo[, c("Unterteilung.im.Skalenhandbuch", "Gliederung")])
   if(nrow(struc) > length(unique(struc$Unterteilung.im.Skalenhandbuch))) stop("'Unterteilung.im.Skalenhandbuch' and 'Gliederung' must be structured identically.")
   gliederung_splitted <- eatTools::halveString(struc$Gliederung, "\\.")
