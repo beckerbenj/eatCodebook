@@ -14,12 +14,12 @@ varInfo <- getVarInfo("helper_varInfo.xlsx")
 
 test_that("for data.frame", {
   out <- createStructure(varInfo)
-  expect_equal(out[[1]]$Ebene, c("1", "1.01", "1.02", "2", "2.01"))
-  expect_equal(out[[1]]$Titel, c(NA, "Teil 1a", "Teil 1b", NA, "Teil 2"))
+  expect_equal(out$Ebene, c("1", "1.01", "1.02", "2", "2.01"))
+  expect_equal(out$Titel, c(NA, "Teil 1a", "Teil 1b", NA, "Teil 2"))
 })
 
 test_that("for list", {
-  l <- list(dat1 = varInfo[[1]], dat2 = varInfo[[1]])
+  l <- list(dat1 = varInfo, dat2 = varInfo)
   out <- createStructure(l)
   expect_equal(out[[1]]$Ebene, c("1", "1.01", "1.02", "2", "2.01"))
   expect_equal(out[[1]]$Titel, c(NA, "Teil 1a", "Teil 1b", NA, "Teil 2"))

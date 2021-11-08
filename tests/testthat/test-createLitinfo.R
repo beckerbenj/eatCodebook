@@ -7,8 +7,8 @@ test_that("create lit info", {
 
 #varInfo3 <- varInfo2 <- varInfo <- getVarInfo("tests/testthat/helper_varInfo.xlsx")
 varInfo3 <- varInfo2 <- varInfo <- getVarInfo("helper_varInfo.xlsx")
-varInfo[[1]]$QuelleSH <- c("Author1", "Author3", "Author2")
-varInfo3[[1]]$QuelleSH <- c("Author1", "-", "Author2")
+varInfo$QuelleSH <- c("Author1", "Author3", "Author2")
+varInfo3$QuelleSH <- c("Author1", "-", "Author2")
 
 test_that("create lit info with simple input", {
   out <- createLitInfo(varInfo)
@@ -26,14 +26,14 @@ test_that("create lit info with mixed input", {
 })
 
 test_that("create lit info with list input", {
-  varInfo_list <- list(dat1 = varInfo[[1]], dat2 = varInfo[[1]])
+  varInfo_list <- list(dat1 = varInfo, dat2 = varInfo)
   out <- createLitInfo(varInfo_list)
   expect_equal(out$Kurzangabe, c("Author1", "Author2", "Author3"))
 })
 
 test_that("create lit info with list input remove duplicates", {
-  varInfo3[[1]]$QuelleSH[1] <- "-"
-  varInfo_list <- list(dat1 = varInfo[[1]], dat2 = varInfo3[[1]], dat3 = varInfo2)
+  varInfo3$QuelleSH[1] <- "-"
+  varInfo_list <- list(dat1 = varInfo, dat2 = varInfo3, dat3 = varInfo2)
   out <- createLitInfo(varInfo_list)
   expect_equal(out$Kurzangabe, c("Author1", "Author2", "Author3"))
 })

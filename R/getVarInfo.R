@@ -14,17 +14,10 @@
 #'
 #'@export
 getVarInfo <- function(filePath){
-  sheet_names <- openxlsx::getSheetNames(filePath)
-  names(sheet_names) <- sheet_names
-
-  all_variable_info <- lapply(sheet_names , function(sheet_name){
-    openxlsx::readWorkbook(xlsxFile = filePath, sheet = sheet_name, startRow = 1)
-  })
-
-  lapply(all_variable_info, preapreVarueInfo)
+  getExcel(filePath, funList = list(check_varInfo, prepareVarInfo))
 }
 
-preapreVarueInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" , "QuelleSH" , "Anmerkung.Var")){
+prepareVarInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" , "QuelleSH" , "Anmerkung.Var")){
   # Variableninfromationen - zu character-Strings
   varue.info$Var.Name <- as.character(varue.info$Var.Name)
   varue.info$in.DS.und.SH <- as.character(varue.info$in.DS.und.SH)
@@ -96,4 +89,9 @@ replaceNASignes <- function(char_vec) {
   char_vec[which(toupper(char_vec) %in% c("NA", "NULL", ""))] <- "-"
   char_vec[which(is.na(char_vec))] <- "-"
   char_vec
+}
+
+# tbd: check structure, check that Titel column does not contain any missings (!)
+check_varInfo <- function(varInfo) {
+  invisible(varInfo)
 }

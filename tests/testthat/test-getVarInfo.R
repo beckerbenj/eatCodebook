@@ -12,9 +12,9 @@ test_that("transform char vector", {
 test_that("get simple varue info", {
   #out <- getVarInfo("tests/testthat/helper_varInfo.xlsx")
   out <- getVarInfo("helper_varInfo.xlsx")
-  expect_equal(names(out[[1]])[1], "Var.Name")
-  expect_equal(out[[1]]$LabelSH[1], "Variable 1")
-  expect_equal(out[[1]]$Anmerkung.Var[1], "-")
+  expect_equal(names(out)[1], "Var.Name")
+  expect_equal(out$LabelSH[1], "Variable 1")
+  expect_equal(out$Anmerkung.Var[1], "-")
 })
 
 

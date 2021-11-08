@@ -24,7 +24,8 @@ createLitInfo.NULL <- function(varInfo){
 createLitInfo.data.frame <- function(varInfo){
   all_short_sources <- unique(varInfo$QuelleSH)
   if(length(all_short_sources) > 1) all_short_sources <- all_short_sources[all_short_sources != "-"]
-  data.frame(Kurzangabe = all_short_sources, Langangabe = NA, in_Literaturverzeichnis = NA)
+  litInfo <- data.frame(Kurzangabe = all_short_sources, Langangabe = NA, in_Literaturverzeichnis = NA)
+  litInfo[order(litInfo$Kurzangabe), ]
 }
 #'@export
 createLitInfo.list <- function(varInfo){
