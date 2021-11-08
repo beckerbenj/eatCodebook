@@ -1,18 +1,28 @@
-##### REGISTER #####
-# Funktion fuer gesamtes Register eines Instruments
-register.ges <- function ( fb.akt , varue.reg ,double.vars) {
-  # INPUT:
-  #	fb.akt: Fragebogenkuerzel aus fbshort
-  #	varue.reg: Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
-  #			   Zeilen sind VarNamen. Eintraege sind "x" oder "", ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
-  # OUTPUT:
-  #	skript: Character-Vektor mit Latex-Befehlen, um das gesamte Register zu erstellen
-
+####
+#############################################################################
+#' Create register.
+#'
+#' Create register latex snippet.
+#'
+#'@param fblong Full name of data set
+#'@param fb.akt Fragebogenkuerzel aus fbshort
+#'@param varue.reg Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
+#'		   Zeilen sind VarNamen. Eintraege sind \code{"x"} oder \code{""}, ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
+#'@param double.vars tbd
+#'
+#'@return Returns a (character vector) latex snippet.
+#'
+#'@examples
+#'#tbd
+#'
+#'@export
+makeRegister <- function(fblong, fb.akt, varue.reg, double.vars) {
+  # Funktion fuer gesamtes Register eines Instruments
 
   #### Vorbereitung ####
 
   # Identifikation der Schlagwoerter - Vektor mit alphabetisch sortierten Schlagwoertern
-  schlagwoerter <- sort( names(varue.reg)[-which(names(varue.reg) %in% "Var.Name")  ] )
+  schlagwoerter <- sort( names(varue.reg)[-which(names(varue.reg) %in% c("varName", "Nr.", "varLabel"))  ] )
 
   # Reduktion der Schlagworte auf diejenigen, unter denen mindestens eine Variable verschlagwortet sind
   schlagwoerter <- schlagwoerter[ sapply( schlagwoerter , function(d) any(varue.reg[,d] %in% "x") ) ]
@@ -20,8 +30,8 @@ register.ges <- function ( fb.akt , varue.reg ,double.vars) {
 
   #### Skript schreiben ####
   skript  <- c(   "\\phantomsection" ,
-                  paste0("\\section*{Register: ",fblong[fb.akt],"}"),
-                  paste0("\\addcontentsline{toc}{section}{Register: ",fblong[fb.akt],"}"),
+                  paste0("\\section*{Register: ",fblong,"}"),
+                  paste0("\\addcontentsline{toc}{section}{Register: ",fblong,"}"),
                   "%\\clearscrheadings",
                   "%\\cfoot[\\pagemark]{\\pagemark}",
                   paste0("\\ihead[\\leftmark]{\\leftmark \\newline \\textsc{Register ",toupper(fb.akt),"}}"),
@@ -50,8 +60,7 @@ register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars) {
   #	skript: Character-Vektor mit Latex-Befehlen, um fuer ein Schlagwort den Eintrag zu setzen.
 
   # Ausgabe des Schlagwortes- Erleichtert Fehlersuche
-  cat ( paste0 ( " Register (", fb.akt , ") - Schlagwort: ",schlagwort ,"\n" ) )
-  flush.console()
+  message("Register (", fb.akt , ") - Schlagwort: ", schlagwort)
 
   #### Vorbereitung ####
 
@@ -117,8 +126,8 @@ pages <- function( numbers , fb , varue.reg, double.vars) {
 
     # Identifikation der nachfolgenden Variable
     # Deren Seite minus 1 ergibt letzte Zahl im Intervall
-    if( length( varue.reg$Var.Name ) > numbers[j] ) { # Falls nachfolgende Variable Teil des FB ist
-      refpage <- paste0( numtolet( name=varue.reg$Var.Name[ numbers[j] +1 ], fb=fb ,double.vars=double.vars) )
+    if( length( varue.reg$varName ) > numbers[j] ) { # Falls nachfolgende Variable Teil des FB ist
+      refpage <- paste0( numtolet( name=varue.reg$varName[ numbers[j] +1 ], fb=fb ,double.vars=double.vars) )
     } else { # falls nachfolgende Variable im neuen Teil ist
       if(fb==fbshort[length(fbshort)]){
         refpage <- paste0("lit")
@@ -128,10 +137,10 @@ pages <- function( numbers , fb , varue.reg, double.vars) {
     }
 
     # Schreiben des Counters
-    counter <- c( paste0("\\setcounter{temp", numtolet( name=varue.reg$Var.Name[ numbers[j] ] , fb=fb ,double.vars=double.vars),"}{", "\\the", numtolet( name=varue.reg$Var.Name[ numbers[j] ] , fb=fb ,double.vars=double.vars) ,"}" ),
-                  paste0("\\setcounter{", numtolet( name=varue.reg$Var.Name[ numbers[j] ] , fb=fb ,double.vars=double.vars) , "}{\\the\\numexpr\\value{", refpage, "}-1\\relax}" ),
-                  paste0("\\the", sapply( varue.reg$Var.Name[ numbers[c(1,j) ] ] , numtolet , fb=fb ,double.vars=double.vars ) , collapse = "--"),
-                  paste0("\\setcounter{", numtolet( name=varue.reg$Var.Name[ numbers[j] ] , fb=fb,double.vars=double.vars ) , "}{\\thetemp", numtolet( name=varue.reg$Var.Name[ numbers[j] ] , fb=fb ,double.vars=double.vars ),"}" )
+    counter <- c( paste0("\\setcounter{temp", numtolet( name=varue.reg$varName[ numbers[j] ] , fb=fb ,double.vars=double.vars),"}{", "\\the", numtolet( name=varue.reg$varName[ numbers[j] ] , fb=fb ,double.vars=double.vars) ,"}" ),
+                  paste0("\\setcounter{", numtolet( name=varue.reg$varName[ numbers[j] ] , fb=fb ,double.vars=double.vars) , "}{\\the\\numexpr\\value{", refpage, "}-1\\relax}" ),
+                  paste0("\\the", sapply( varue.reg$varName[ numbers[c(1,j) ] ] , numtolet , fb=fb ,double.vars=double.vars ) , collapse = "--"),
+                  paste0("\\setcounter{", numtolet( name=varue.reg$varName[ numbers[j] ] , fb=fb,double.vars=double.vars ) , "}{\\thetemp", numtolet( name=varue.reg$varName[ numbers[j] ] , fb=fb ,double.vars=double.vars ),"}" )
     )
 
     #### Output und rekursiver Zugriff ####
@@ -145,7 +154,7 @@ pages <- function( numbers , fb , varue.reg, double.vars) {
   } else if ( length( numbers ) > 2 ) {
 
     # Schreiben des Counters
-    counter <- paste0("\\the", numtolet( name=varue.reg$Var.Name[ numbers[ 1 ] ] , fb=fb ,double.vars=double.vars ) )
+    counter <- paste0("\\the", numtolet( name=varue.reg$varName[ numbers[ 1 ] ] , fb=fb ,double.vars=double.vars ) )
 
     #### Output und rekursiver Zugriff ####
     return ( c( counter , pages( numbers[ -c(1) ] , fb=fb , varue.reg=varue.reg , double.vars=double.vars) ) )
@@ -154,7 +163,7 @@ pages <- function( numbers , fb , varue.reg, double.vars) {
   } else if ( length( numbers ) %in% c(1,2) ) {
 
     # Schreiben des Counters
-    counter <- paste( sapply( numbers , function(n)  paste0("\\the", numtolet( name=varue.reg$Var.Name[ n ] , fb=fb ,double.vars=double.vars ) ) ) , sep=",")
+    counter <- paste( sapply( numbers , function(n)  paste0("\\the", numtolet( name=varue.reg$varName[ n ] , fb=fb ,double.vars=double.vars ) ) ) , sep=",")
 
     #### Output ####
     return ( counter )

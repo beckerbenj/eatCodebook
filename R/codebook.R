@@ -199,7 +199,7 @@ codebook <- function( varue.info ,
       return(NULL)
     } else {
       # Erstelle Register
-      return(register.ges( fb.akt=d , varue.reg=varue.reg[[d]] , double.vars=double.vars) )
+      return(makeRegister( fb.akt=d , varue.reg=varue.reg[[d]] , double.vars=double.vars) )
     }
   } )
 

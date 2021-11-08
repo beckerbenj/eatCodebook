@@ -161,58 +161,6 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
 }
 
 
-# Funktion für Zaehlervariablen
-numtolet <- function( name , fb , double.vars) {
-  # INPUT
-  #	name: Character. Im Skript ist es immer der Name einer Variable, wie sie in der Varue erscheint
-  #	fb: Character, Kürzel für den Fragebogen aus fbshort
-  # OUTPUT:
-  #	countername: Name der Zaehlervariable, die in Latex verwendet wird
 
-  #### Vorbereitung ####
-
-  # YRNTCSH! - Variablen, die namentlich in allen Datensaetzen vorkommen, d.h. der Name der Variable ist entscheidend, nicht der Inhalt.
-  #	Variablennamen, der in mind. 2 Datensaetzen auftaucht, müssen hier gesondert behandelt werden,
-  #	da sonst mind. 2 Mal die selbe Zaehlervariable erstellt wird. Die Funktion pastet das Fragebogen-
-  #	Kürzel ans Ende des Names der Zaehlervariable, um eine eindeutige Zuordnung zu garantieren.
-  #	Der Variablenname selbst wird nicht veraendert, nur der Name der Zaehlervariable in Latex.
-  #	Hier muss als "IDSCH_FDZ" durch die entsprechende(n) Variable(n) ersetzt werden.
-
-  # name aendern, falls Variable in mehr als einem Datensatz ist
-  if( tolower( name ) %in% tolower(double.vars) ) {
-    name <- paste0(name,tolower(fb))
-  }
-
-  # Codierungsvorschrift, um Zahlen und Sonderzeichen in den Variablennamen zu aendern
-  letts	<- c( paste0("NUMBER" , c("ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE" )) , "DASH", "UNDER", "POINT" , "SPACE" , "ss")
-  names ( letts ) <- c( 0:9 , "\\" , "_" , ".", " ", "ß")
-
-  #### Erstellung des Namens der Zaehlervariable
-  countername <- unlist(strsplit( name , split="") )
-  countername[ ! is.na( letts[ countername ] ) ] <- letts[ countername[ ! is.na( letts[ countername ] ) ] ]
-  countername <- paste(countername, collapse ="")
-
-
-  ### Output ####
-  return ( countername )
-}
-
-# Funktion, um im Inhaltsverzeichnis einen Zeilenumbruch zu setzen
-toc_linebreak <- function( var_title, bold , space_title, do.print=TRUE ){
-  if(do.print){
-    message("Check, ob Zeilenumbrüche ins Inhaltsverzeichnis muessen (rekursive Funktion).")
-  }
-  k <- 1
-  while(sum(sapply(1:k , function(v) Latex.length( unname(unlist(strsplit(var_title , " ")))[v] , bold=bold , FALSE) +  Latex.length( " " , bold=bold, FALSE)) ) < space_title){
-    k <- k+1
-  }
-  l <- nchar(paste0(unname(unlist(strsplit(var_title , " ")))[1:(k-1)] , collapse=" "))
-  left_title <- paste0(unname(unlist(strsplit(var_title , " ")))[k:length(unname(unlist(strsplit(var_title , " "))))] , collapse=" ")
-  if( Latex.length(left_title, bold=bold, FALSE) > space_title ){
-    return( paste0(paste0(unname(unlist(strsplit(var_title , " ")))[1:(k-1)] , collapse=" ") , "\\texorpdfstring{\\newline}{}" , toc_linebreak( left_title , bold , space_title , do.print=FALSE) ) )
-  } else {
-    return(paste0(paste0(unname(unlist(strsplit(var_title , " ")))[1:(k-1)] , collapse=" ") , "\\texorpdfstring{\\newline}{}" , left_title ) )
-  }
-}
 
 
