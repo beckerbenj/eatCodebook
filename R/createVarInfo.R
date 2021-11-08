@@ -53,6 +53,10 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
     var_labs2 <- insertRow(var_labs2, newRow = newRow, index = which(var_labs2$varName == first_entry))
   }
 
+  ## scales
+  scale_variables <- inputForDescriptives[which(inputForDescriptives$type == "scale"), "varName"]
+  item_variables <- inputForDescriptives[which(inputForDescriptives$group %in% scale_variables & !inputForDescriptives$varName %in% scale_variables),
+                                         "varName"]
 
   n <- nrow(var_labs2)
   g <- rep("-" , n)
@@ -78,11 +82,21 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
     "Seitenumbruch.im.Inhaltsverzeichnis" = rep("nein" , n) ,
     stringsAsFactors=FALSE)
 
+  ## Defaults in.DS.und.SH
   variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% pooled_variables, yes = "sh", no = variableninfo[, "in.DS.und.SH"])
   variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% inputed_info$varName, yes = "ds", no = variableninfo[, "in.DS.und.SH"])
 
   variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% netw_abstracts, yes = "sh", no = variableninfo[, "in.DS.und.SH"])
   variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% netw_variables, yes = "ds", no = variableninfo[, "in.DS.und.SH"])
+
+  variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% item_variables, yes = "ds", no = variableninfo[, "in.DS.und.SH"])
+
+  ## Defaults Titel
+  variableninfo[, "Titel"] <- ifelse(variableninfo[, "in.DS.und.SH"] == "ds", yes = "-", no = variableninfo[, "Titel"])
+  # pooled variables: has to be inserted by hand
+  variableninfo[, "Titel"] <- ifelse(variableninfo[, "in.DS.und.SH"] == "sh", yes = NA, no = variableninfo[, "Titel"])
+  # scales
+  variableninfo[, "Titel"] <- ifelse(variableninfo[, "Var.Name"] %in% item_variables, yes = "-", no = variableninfo[, "Titel"])
 
   if(!is.null(encodingList)) {
     for( i in 1:length(encodingList$input)){

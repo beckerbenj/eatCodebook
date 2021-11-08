@@ -19,14 +19,25 @@ test_that("with pisa", {
   expect_equal(sum(out$in.DS.und.SH == "sh"), 3)
   expect_equal(sum(out$in.DS.und.SH == "ds"), 3 * 5)
   expect_equal(out$LabelSH[1], "Student-ID")
-  expect_equal(out$LabelSH, out$Titel)
   expect_equal(unique(out$Gliederung), "-")
+
+  expect_equal(out[119:124, ]$in.DS.und.SH, c("sh", rep("ds", 5)))
+  expect_equal(out[119:124, ]$Titel, c(NA, rep("-", 5)))
 })
 
 test_that("with network data", {
   out <- createVarInfo(netw_g, netw_input)
   expect_equal(out$Var.Name, c("id", "friend", "friend_1", "friend_2"))
   expect_equal(out$in.DS.und.SH, c("ja", "sh", "ds", "ds"))
+})
+
+test_that("with scale data", {
+  outpu <- capture_output(suppressMessages(input <- createInputForDescriptives(gads)))
+  out <- createVarInfo(gads, input)
+  expect_equal(out$Var.Name, c("id", "constr_1", "constr_2", "constr_3", "constr"))
+  expect_equal(out$in.DS.und.SH, c("ja", "ds", "ds", "ds", "ja"))
+  expect_equal(out$Titel, c(NA, "-", "-", "-", "Skala Construct"))
+  expect_equal(out$Gliederung, rep("-", 5))
 })
 
 test_that("with list", {
@@ -36,7 +47,6 @@ test_that("with list", {
   expect_equal(names(out), c("pisa", "other"))
   expect_true(all(eatGADS::namesGADS(eatGADS::pisa) %in% out[[1]]$Var.Name))
   expect_true(all(c("ma_pooled", "rea_pooled", "sci_pooled") %in% out[[1]]$Var.Name))
-  expect_equal(out[[1]]$LabelSH, out[[1]]$Titel)
   expect_equal(out[[2]]$Var.Name, eatGADS::namesGADS(dfSAV))
 })
 
