@@ -91,12 +91,13 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
 
   variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% item_variables, yes = "ds", no = variableninfo[, "in.DS.und.SH"])
 
-  ## Defaults Titel
+  ## Defaults Titel & LabelSH
   variableninfo[, "Titel"] <- ifelse(variableninfo[, "in.DS.und.SH"] == "ds", yes = "-", no = variableninfo[, "Titel"])
   # pooled variables: has to be inserted by hand
   variableninfo[, "Titel"] <- ifelse(variableninfo[, "in.DS.und.SH"] == "sh", yes = NA, no = variableninfo[, "Titel"])
   # scales
   variableninfo[, "Titel"] <- ifelse(variableninfo[, "Var.Name"] %in% item_variables, yes = "-", no = variableninfo[, "Titel"])
+  variableninfo[, "LabelSH"] <- variableninfo[, "Titel"]
 
   if(!is.null(encodingList)) {
     for( i in 1:length(encodingList$input)){

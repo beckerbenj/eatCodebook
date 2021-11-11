@@ -23,6 +23,7 @@ test_that("with pisa", {
 
   expect_equal(out[119:124, ]$in.DS.und.SH, c("sh", rep("ds", 5)))
   expect_equal(out[119:124, ]$Titel, c(NA, rep("-", 5)))
+  expect_equal(out$Titel, out$LabelSH)
 })
 
 test_that("with network data", {
