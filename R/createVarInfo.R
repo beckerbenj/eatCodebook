@@ -22,11 +22,11 @@ createVarInfo <- function(GADSdat, inputForDescriptives, encodingList = NULL, ma
 createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = FALSE){
   inputForDescriptives <- check_inputForDescriptives(inputForDescriptives)
 
-  var_labs <- unique(eatGADS::extractMeta(GADSdat)[, c("varName", "varLabel")])
+  var_labs <- unique(eatGADS::extractMeta(GADSdat)[, c("varName", "varLabel", "format")])
 
   var_labs2 <- var_labs
 
-  ## inputed variables
+  ## imputed variables
   inputed_info <- inputForDescriptives[inputForDescriptives$imp == TRUE, ]
   pooled_variables <- unique(inputed_info[["group"]])
   #browser()
@@ -62,7 +62,7 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
   g <- rep("-" , n)
   if(makeStructure) g <- 1:n
 
-  variableninfo <- data.frame(
+  varInfo <- data.frame(
     "Var.Name" = var_labs2$varName,
     "in.DS.und.SH" = rep("ja" , n),
     "Unterteilung.im.Skalenhandbuch" = rep(NA , n),
@@ -83,30 +83,30 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
     stringsAsFactors=FALSE)
 
   ## Defaults in.DS.und.SH
-  variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% pooled_variables, yes = "sh", no = variableninfo[, "in.DS.und.SH"])
-  variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% inputed_info$varName, yes = "ds", no = variableninfo[, "in.DS.und.SH"])
+  varInfo[, "in.DS.und.SH"] <- ifelse(varInfo[, "Var.Name"] %in% pooled_variables, yes = "sh", no = varInfo[, "in.DS.und.SH"])
+  varInfo[, "in.DS.und.SH"] <- ifelse(varInfo[, "Var.Name"] %in% inputed_info$varName, yes = "ds", no = varInfo[, "in.DS.und.SH"])
 
-  variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% netw_abstracts, yes = "sh", no = variableninfo[, "in.DS.und.SH"])
-  variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% netw_variables, yes = "ds", no = variableninfo[, "in.DS.und.SH"])
+  varInfo[, "in.DS.und.SH"] <- ifelse(varInfo[, "Var.Name"] %in% netw_abstracts, yes = "sh", no = varInfo[, "in.DS.und.SH"])
+  varInfo[, "in.DS.und.SH"] <- ifelse(varInfo[, "Var.Name"] %in% netw_variables, yes = "ds", no = varInfo[, "in.DS.und.SH"])
 
-  variableninfo[, "in.DS.und.SH"] <- ifelse(variableninfo[, "Var.Name"] %in% item_variables, yes = "ds", no = variableninfo[, "in.DS.und.SH"])
+  varInfo[, "in.DS.und.SH"] <- ifelse(varInfo[, "Var.Name"] %in% item_variables, yes = "ds", no = varInfo[, "in.DS.und.SH"])
 
   ## Defaults Titel & LabelSH
-  variableninfo[, "Titel"] <- ifelse(variableninfo[, "in.DS.und.SH"] == "ds", yes = "-", no = variableninfo[, "Titel"])
+  varInfo[, "Titel"] <- ifelse(varInfo[, "in.DS.und.SH"] == "ds", yes = "-", no = varInfo[, "Titel"])
   # pooled variables: has to be inserted by hand
-  variableninfo[, "Titel"] <- ifelse(variableninfo[, "in.DS.und.SH"] == "sh", yes = NA, no = variableninfo[, "Titel"])
+  varInfo[, "Titel"] <- ifelse(varInfo[, "in.DS.und.SH"] == "sh", yes = NA, no = varInfo[, "Titel"])
   # scales
-  variableninfo[, "Titel"] <- ifelse(variableninfo[, "Var.Name"] %in% item_variables, yes = "-", no = variableninfo[, "Titel"])
-  variableninfo[, "LabelSH"] <- variableninfo[, "Titel"]
+  varInfo[, "Titel"] <- ifelse(varInfo[, "Var.Name"] %in% item_variables, yes = "-", no = varInfo[, "Titel"])
+  varInfo[, "LabelSH"] <- varInfo[, "Titel"]
 
   if(!is.null(encodingList)) {
     for( i in 1:length(encodingList$input)){
-      variableninfo$LabelSH <- gsub(encodingList$input[i] , encodingList$output[i] , variableninfo$LabelSH , fixed=TRUE)
-      variableninfo$Titel <- gsub(encodingList$input[i] , encodingList$output[i] , variableninfo$Titel , fixed=TRUE)
-      variableninfo$Var.Name <- gsub(encodingList$input[i] , encodingList$output[i] , variableninfo$Var.Name , fixed=TRUE)
+      varInfo$LabelSH <- gsub(encodingList$input[i] , encodingList$output[i] , varInfo$LabelSH , fixed=TRUE)
+      varInfo$Titel <- gsub(encodingList$input[i] , encodingList$output[i] , varInfo$Titel , fixed=TRUE)
+      varInfo$Var.Name <- gsub(encodingList$input[i] , encodingList$output[i] , varInfo$Var.Name , fixed=TRUE)
     }
   }
-  variableninfo
+  varInfo
 }
 #'@export
 createVarInfo.list <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = FALSE){
@@ -123,4 +123,6 @@ insertRow <- function(df, newRow, index) {
   newDF <- newDF[order(c(1:(nrow(newDF) - 1), index - 0.5)), ]
   newDF
 }
+
+
 
