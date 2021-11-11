@@ -109,7 +109,7 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
   variableninfo
 }
 #'@export
-createVarInfo.list <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = TRUE){
+createVarInfo.list <- function(GADSdat, inputForDescriptives, encodingList = NULL, makeStructure = FALSE){
   if(length(GADSdat) != length(inputForDescriptives)) stop("'GADSdat' and 'inputForDescriptives' lists have different lengths.")
 
   Map(function(single_GADSdat, single_input) {
