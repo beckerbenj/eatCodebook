@@ -27,6 +27,7 @@ varInfo[, "Unterteilung.im.Skalenhandbuch"] <- c(rep("BG", 4), rep("Scale", 4), 
 varInfo[, "Gliederung"] <- c(rep("1.1", 4), rep("1.2", 4), rep("2.1", 10))
 eatAnalysis::write_xlsx(varInfo, "inst/extdata/example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("inst/extdata/example_varInfo.xlsx")
+varInfo_final2 <- inferLayout(varInfo_final, GADSdat = gd, inputForDescriptives = inputForDescr)
 
 ## Structure
 struc <- createStructure(varInfo_final)
