@@ -100,6 +100,6 @@ check_varInfo <- function(varInfo) {
   if(any(is.na(varInfo$Var.Name))) stop("Missing values in 'Var.Name' column in 'varInfo'.")
   if(any(is.na(varInfo$Titel))) stop("Missing values in 'Titel' column in 'varInfo'.")
   if(any(is.na(varInfo$in.DS.und.SH))) stop("Missing values in 'in.DS.und.SH' column in 'varInfo'.")
-  if(any(!varInfo$in.DS.und.SH %in% c("sh", "ds", "ja"))) stop("Invalid values in 'in.DS.und.SH' column in 'varInfo'.")
+  if(any(!varInfo$in.DS.und.SH %in% c("sh", "ds", "ja", "nein"))) stop("Invalid values in 'in.DS.und.SH' column in 'varInfo'.")
   invisible(varInfo)
 }
