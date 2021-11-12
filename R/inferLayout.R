@@ -15,7 +15,12 @@
 #'#tbd
 #'
 #'@export
-inferLayout <- function(varInfo, GADSdat, inputForDescriptives) {
+inferLayout <- function(varInfo, GADSdat, inputForDescriptives){
+  UseMethod("inferLayout")
+}
+
+#'@export
+inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
   all_names <- varInfo$Var.Name
   ds_names <- eatGADS::namesGADS(GADSdat)
   only_sh_names <- setdiff(all_names, ds_names)
@@ -66,4 +71,16 @@ inferLayout <- function(varInfo, GADSdat, inputForDescriptives) {
 
   varInfo$Layout <- eatTools::asNumericIfPossible(varInfo$Layout)
   varInfo
+}
+
+#'@export
+inferLayout.list <- function(varInfo, GADSdat, inputForDescriptives) {
+  if(!is.list(GADSdat)) stop("'GADSdat' is not a list but 'varInfo' is.")
+  if(!is.list(inputForDescriptives)) stop("'inputForDescriptives' is not a list but 'varInfo' is.")
+  if(length(varInfo) != length(GADSdat)) stop("'GADSdat' and 'inputForDescriptives' lists have different lengths.")
+  if(length(varInfo) != length(inputForDescriptives)) stop("'GADSdat' and 'inputForDescriptives' lists have different lengths.")
+
+  Map(function(single_varInfo, single_GADSdat, single_input) {
+    inferLayout(single_varInfo, GADSdat = single_GADSdat, inputForDescriptives = single_input)
+  }, single_varInfo = varInfo, single_GADSdat = GADSdat, single_input = inputForDescriptives)
 }

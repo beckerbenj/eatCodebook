@@ -29,3 +29,16 @@ test_that("infer layout pisa", {
   out <- inferLayout(varInfo, GADSdat = eatGADS::pisa, inputForDescriptives = input)
   expect_equal(out$Layout[119:124], c(6, NA, NA, NA, NA, NA))
 })
+
+
+test_that("infer layout list", {
+  suppressMessages(gads2 <- eatGADS::checkFormat(gads))
+  gadsList <- list(pisa = eatGADS::pisa, gads = gads2)
+  outpu <- capture_output(suppressMessages(input <- createInputForDescriptives(gadsList, impExpr = "Plausible Value")))
+  input$gads$scale[1] <- NA
+  varInfo <- createVarInfo(gadsList, input)
+  out <- inferLayout(varInfo, GADSdat = gadsList, inputForDescriptives = input)
+  expect_equal(length(out), 2)
+  expect_equal(out$pisa$Layout[119:124], c(6, NA, NA, NA, NA, NA))
+  expect_equal(out$gads$Layout, c(0, NA, NA, NA, 5))
+})
