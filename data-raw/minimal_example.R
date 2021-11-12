@@ -1,15 +1,14 @@
 
 # Minimal full example
 # -----------------------------------------------------------------------------------
-file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
+#file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
+file <- "inst/extdata/example1_clean.sav"
 gd   <- eatGADS::import_spss(file)                                          ### inputliste erzeugen
 
 str(gd)
 
 ## Descriptives
 inputForDescr <- createInputForDescriptives(gd)
-
-inputForDescr[which(inputForDescr[,"varName"] == "skalenwert_fake"),"type"] <- "scale"        ### ein eintrag in der varinfo muss jetzt haendisch geaendert werden (das geschieht spaeter fuer das
 descr  <- calculateDescriptives(gd, inputForDescr)
 
 ## Missings/Line Breaks
@@ -23,11 +22,15 @@ varInfo <- createVarInfo(gd, inputForDescriptives = inputForDescr)
 # Instruktion und Quellen (Beispiele rein)
 varInfo[3, "QuelleSH"] <- "Mueller (2019)"
 varInfo[c(2, 3, 8), "Hintergrundmodell"] <- "ja"
+varInfo[c(1), "Titel"] <- "Schueler-ID"
+varInfo[, "Unterteilung.im.Skalenhandbuch"] <- c(rep("BG", 4), rep("Scale", 4), rep("PVs", 10))
+varInfo[, "Gliederung"] <- c(rep("1.1", 4), rep("1.2", 4), rep("2.1", 10))
 eatAnalysis::write_xlsx(varInfo, "inst/extdata/example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("inst/extdata/example_varInfo.xlsx")
 
 ## Structure
 struc <- createStructure(varInfo_final)
+struc[c(1, 4), "Titel"] <- c("Background", "Competences")
 # Hier Oberkapitel einfuegen
 eatAnalysis::write_xlsx(struc, "inst/extdata/example_struc.xlsx", row.names = FALSE)
 struc_final <- getStructure("inst/extdata/example_struc.xlsx")
@@ -39,7 +42,8 @@ scaleInfo_final <- getScaleInfo("inst/extdata/example_scaleInfo.xlsx")
 
 ## Register
 register <- createRegister(inputForDescr, keywordList = c("kw1", "kw2"))
-# Beispiel-Keyowrds vergeben
+register[c(1, 3, 4), "kw1"] <- "x"
+register[c(11:15), "kw2"] <- "x"
 eatAnalysis::write_xlsx(register, "inst/extdata/example_register.xlsx", row.names = FALSE)
 register_final <- getRegister("inst/extdata/example_register.xlsx")
 
@@ -85,10 +89,18 @@ meta_final <- makeMetadata("inst/extdata/example_meta.xlsx")
 ## Sonstiges Zeug von Felix
 # --------------------------------------------------
 # SH-Variablen
-variablen.all <- varInfo_final[varInfo_final %in% c("ja", "sh"), "Var.Name"]
+variablen.all <- varInfo_final[varInfo_final$in.DS.und.SH %in% c("ja", "sh"), "Var.Name"]
 
 # ID-Variablen
 id <- c("id")
+
+
+## Codebook (tbd)
+# --------------------------------------------------
+codebook(varue.info = varInfo_final, varue.missings = miss_final, varue.gliederung = struc_final, skalen.info = scaleInfo_final,
+         varue.reg = register_final, make.reg = NULL, Gesamtdatensatz = gd, Kennwertedatensatz = descr, variablen = variablen.all,
+         id = id, fbshort = "", fblong = "", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
+         lastpage = "")
 
 
 ## Ueberlegungen
