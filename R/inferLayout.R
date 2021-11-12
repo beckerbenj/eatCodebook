@@ -42,6 +42,10 @@ inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
       input_scale <- unique(inputForDescriptives[inputForDescriptives$group == nam, "scale"])
       stopifnot(length(input_scale) == 1)
 
+      if(is.na(input_scale)) {
+        varInfo[i, "Layout"] <- 10 ## network 'pooled' variable (new)
+        next
+      }
       if(input_scale == "numeric") varInfo[i, "Layout"] <- 6 ## pooled metric
       if(input_scale == "nominal") varInfo[i, "Layout"] <- 7 ## pooled categorical
       next
