@@ -37,6 +37,7 @@ inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
 
     #browser()
 
+    #if(nam == "constr_1") browser()
     # pooled variables early and separately
     if(nam %in% only_sh_names) {
       input_scale <- unique(inputForDescriptives[inputForDescriptives$group == nam, "scale"])
@@ -70,6 +71,8 @@ inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
     if(!input_imp && input_type == "variable" && input_scale == "numeric") varInfo[i, "Layout"] <- 4 ## metric
     if(!input_imp && input_type == "scale" && input_scale == "numeric") varInfo[i, "Layout"] <- 5 ## scale
 
+    # this is slightly experimental, but in theory this should work (this variables do not appear in the codebook)
+    # prior layout-column was also used for scale items (and maybe imputed variables?)
     if(varInfo[i, "in.DS.und.SH"] == "ds") varInfo[i, "Layout"] <- NA
   }
 
