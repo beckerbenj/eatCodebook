@@ -103,6 +103,18 @@ codebook(varue.info = varInfo_final, varue.missings = miss_final, varue.gliederu
          id = id, fbshort = "", fblong = "", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
          lastpage = "")
 
+####################
+struc_final2 <- struc_final
+names(struc_final2) <- "dat"
+
+codebook(varue.info = list(dat = varInfo_final), varue.missings = list(dat = miss_final), varue.gliederung = struc_final2,
+         skalen.info = list(dat = scaleInfo_final),
+         varue.reg = list(dat = register_final), make.reg = NULL, Gesamtdatensatz = list(dat = gd),
+         Kennwertedatensatz = list(dat = descr),
+         variablen = list(dat = variablen.all),
+         id = id, fbshort = "dat", fblong = "dat", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
+         lastpage = "")
+
 
 ## Ueberlegungen
 # --------------------------------------------------
