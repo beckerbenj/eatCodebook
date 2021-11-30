@@ -7,7 +7,7 @@
 createInputForDescriptives(
   GADSdat,
   idExpr = "^ID",
-  impExpr = c("IMPUTATION[[:digit:]]{1,2}$", "PV[[:digit:]]{1,2}"),
+  impExpr = c("IMPUTATION\\\\s+[[:digit:]]{1,2}", "PV\\\\s+[[:digit:]]{1,2}"),
   scaleExpr = "^Skala",
   nwExpr = "IDinClass",
   varNameSeparatorImp = "_",
