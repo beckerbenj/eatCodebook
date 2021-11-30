@@ -23,8 +23,9 @@ varInfo <- createVarInfo(gd, inputForDescriptives = inputForDescr)
 varInfo[3, "QuelleSH"] <- "Mueller (2019)"
 varInfo[c(2, 3, 8), "Hintergrundmodell"] <- "ja"
 varInfo[c(1), "Titel"] <- "Schueler-ID"
-varInfo[, "Unterteilung.im.Skalenhandbuch"] <- c(rep("BG", 4), rep("Scale", 4), rep("PVs", 10))
-varInfo[, "Gliederung"] <- c(rep("1.1", 4), rep("1.2", 4), rep("2.1", 10))
+varInfo[, "Unterteilung.im.Skalenhandbuch"] <- c(rep("BG", 4), rep("Scale", 4), rep("PVs", 12))
+varInfo[, "Gliederung"] <- c(rep("1.1", 4), rep("1.2", 4), rep("2.1", 12))
+varInfo[c(9, 15), "Titel"] <- c("Plausible Value", "categorical plausible value")
 eatAnalysis::write_xlsx(varInfo, "inst/extdata/example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("inst/extdata/example_varInfo.xlsx")
 varInfo_final2 <- inferLayout(varInfo_final, GADSdat = gd, inputForDescriptives = inputForDescr)
@@ -44,7 +45,7 @@ scaleInfo_final <- getScaleInfo("inst/extdata/example_scaleInfo.xlsx")
 ## Register
 register <- createRegister(inputForDescr, keywordList = c("kw1", "kw2"))
 register[c(1, 3, 4), "kw1"] <- "x"
-register[c(11:15), "kw2"] <- "x"
+register[c(7), "kw2"] <- "x"
 eatAnalysis::write_xlsx(register, "inst/extdata/example_register.xlsx", row.names = FALSE)
 register_final <- getRegister("inst/extdata/example_register.xlsx")
 
