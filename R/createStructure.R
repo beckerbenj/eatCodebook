@@ -26,7 +26,20 @@ createStructure.data.frame <- function(varInfo){
   check_varInfo(varInfo)
 
   struc <- unique(varInfo[, c("Unterteilung.im.Skalenhandbuch", "Gliederung")])
-  if(nrow(struc) > length(unique(struc$Unterteilung.im.Skalenhandbuch))) stop("'Unterteilung.im.Skalenhandbuch' and 'Gliederung' must be structured identically.")
+
+  #if(length(unique(struc$Unterteilung.im.Skalenhandbuch)) != length(unique(struc$Gliederung))) browser()
+
+  by(struc, struc$Unterteilung.im.Skalenhandbuch, function(sub_struc) {
+    sub_gliederung <- unique(sub_struc$Gliederung)
+    sub_unterteilung <- unique(sub_struc$Unterteilung.im.Skalenhandbuch)
+    if(length(sub_gliederung) != 1) stop("For 'Unterteilung.im.Skalenhandbuch' ", sub_unterteilung, " there are different entries in 'Gliederung': ", paste(sub_gliederung, collapse = ", "))
+  })
+  by(struc, struc$Gliederung, function(sub_struc) {
+    sub_gliederung <- unique(sub_struc$Gliederung)
+    sub_unterteilung <- unique(sub_struc$Unterteilung.im.Skalenhandbuch)
+    if(length(sub_unterteilung) != 1) stop("For 'Gliederung' ", sub_gliederung, " there are different entries in 'Unterteilung.im.Skalenhandbuch': ", paste(sub_unterteilung, collapse = ", "))
+  })
+
   gliederung_splitted <- eatTools::halveString(struc$Gliederung, "\\.")
   ho_chapter <- as.numeric(gliederung_splitted[, 1])
   struc2 <- cbind(struc, chapter = ho_chapter)

@@ -26,3 +26,15 @@ test_that("for list", {
   expect_equal(out[[2]]$Ebene, c("1", "1.01", "1.02", "2", "2.01"))
   expect_equal(out[[2]]$Titel, c(NA, "Teil 1a", "Teil 1b", NA, "Teil 2"))
 })
+
+
+test_that("informative error", {
+  varInfo2 <- varInfo3 <- varInfo
+  varInfo2[2, "Gliederung"] <- "1.01"
+  expect_error(createStructure(varInfo2),
+               "For 'Gliederung' 1.01 there are different entries in 'Unterteilung.im.Skalenhandbuch': Teil 1a, Teil 1b")
+  varInfo3[2, "Unterteilung.im.Skalenhandbuch"] <- "Teil 1a"
+  expect_error(createStructure(varInfo3),
+               "For 'Unterteilung.im.Skalenhandbuch' Teil 1a there are different entries in 'Gliederung': 1.01, 1.02")
+
+})
