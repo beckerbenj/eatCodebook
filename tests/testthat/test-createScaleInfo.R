@@ -9,26 +9,28 @@ input_imputedScale <- readRDS("helper_inputedForDescriptives_imputedScale.RDS")
 
 test_that("single scale", {
   out <- createScaleInfo(input_clean)
-  expect_equal(nrow(out), 2)
-  expect_equal(out$varName, c("skala1", "skalenwert_fake"))
-  expect_equal(out$Items_der_Skala, c("skala1_item1,skala1_item2,skala1_item3", ""))
+  expect_equal(nrow(out), 4)
+  expect_equal(out$varName, c("skala1", "skalenwert_fake", "pv_pooled", "pv_kat_pooled"))
+  expect_equal(out$Items_der_Skala[1], c("skala1_item1,skala1_item2,skala1_item3"))
+  expect_equal(out$Items_der_Skala[2], c(""))
+  expect_equal(out$Items_der_Skala[3], paste(paste0("pv_", 1:5), collapse = ","))
 })
 
-test_that("no scales", {
+test_that("no scales, only imputed", {
   out <- createScaleInfo(input_pisa)
-  expect_equal(nrow(out), 0)
+  expect_equal(nrow(out), 3)
 })
 
 test_that("with input as list", {
   l1 <- list(pisa = input_pisa, other = input_clean)
   out <- createScaleInfo(l1)
-  expect_equal(nrow(out), 2)
-  expect_equal(out$Quelle, rep("other",2))
+  expect_equal(nrow(out), 7)
+  expect_equal(out$Quelle, c(rep("pisa",3), rep("other",4)))
 
   l2 <- list(other1 = input_clean, other2 = input_clean)
   out2 <- createScaleInfo(l2)
-  expect_equal(nrow(out2), 4)
-  expect_equal(out2$Quelle, rep(c("other1", "other2"), each=2))
+  expect_equal(nrow(out2), 8)
+  expect_equal(out2$Quelle, rep(c("other1", "other2"), each=4))
 })
 
 test_that("imputed scale", {
