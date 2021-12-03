@@ -1,6 +1,13 @@
 
 #gads <- readRDS("tests/testthat/helper_scaleDF.RDS")
 gads <- readRDS("helper_scaleDF.RDS")
+#gads_catPV <- eatGADS::import_spss("tests/testthat/helper_clean.sav")
+gads_catPV <- eatGADS::import_spss("helper_clean.sav")
+#input_catPV <- readRDS("tests/testthat/helper_inputForDescriptives_clean.RDS")
+input_catPV <- readRDS("helper_inputForDescriptives_clean.RDS")
+#varInfo_catPV <- readRDS("tests/testthat/helper_varInfo_clean.RDS")
+varInfo_catPV <- readRDS("helper_varInfo_clean.RDS")
+
 
 test_that("infer layout errors", {
   outpu <- capture_output(suppressMessages(input <- createInputForDescriptives(gads)))
@@ -30,6 +37,10 @@ test_that("infer layout pisa", {
   expect_equal(out$Layout[119:124], c(6, NA, NA, NA, NA, NA))
 })
 
+test_that("infer layout imputed categorical var", {
+  out <- inferLayout(varInfo_catPV, GADSdat = gads_catPV, inputForDescriptives = input_catPV)
+  expect_equal(out$Layout[15], c(7))
+})
 
 test_that("infer layout list", {
   suppressMessages(gads2 <- eatGADS::checkFormat(gads))

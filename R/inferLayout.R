@@ -27,6 +27,7 @@ inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
 
   for(i in seq_along(all_names)) {
     nam <- all_names[i]
+    #if(nam == "pv_kat_pooled") browser()
     spss_format <- NULL
     if(nam %in% ds_names) spss_format <- unique(eatGADS::extractMeta(GADSdat, nam)$format)
 
@@ -48,7 +49,7 @@ inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
         next
       }
       if(input_scale == "numeric") varInfo[i, "Layout"] <- 6 ## pooled metric
-      if(input_scale == "nominal") varInfo[i, "Layout"] <- 7 ## pooled categorical
+      if(input_scale %in% c("nominal", "ordinal")) varInfo[i, "Layout"] <- 7 ## pooled categorical
       next
     }
     if(nam %in% only_sh_names && input_imp && input_scale == "nominal") {

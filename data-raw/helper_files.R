@@ -4,7 +4,9 @@ saveRDS(pisa_input, "tests/testthat/helper_inputForDescriptives_pisa.RDS")
 
 clean <- eatGADS::import_spss("tests/testthat/helper_clean.sav")
 clean_input <- createInputForDescriptives(clean)
+clean_varinfo <- createVarInfo(clean, inputForDescriptives = clean_input)
 saveRDS(clean_input, "tests/testthat/helper_inputForDescriptives_clean.RDS")
+saveRDS(clean_varinfo, "tests/testthat/helper_varInfo_clean.RDS")
 
 
 # usethis::use_data(DATASET, overwrite = TRUE)
