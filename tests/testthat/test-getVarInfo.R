@@ -27,6 +27,9 @@ test_that("check_varInfo", {
   expect_error(check_varInfo(varInfo2), "Invalid values in 'in.DS.und.SH' column in 'varInfo'.")
   varInfo3[2, "Titel"] <- NA
   expect_error(check_varInfo(varInfo3), "Missing values in 'Titel' column in 'varInfo'.")
+  varInfo4[2, "Titel"] <- NA
+  varInfo4[2, "in.DS.und.SH"] <- "nein"
+  expect_silent(check_varInfo(varInfo4))
 })
 
 

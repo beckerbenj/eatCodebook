@@ -42,7 +42,7 @@ prepareVarInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" 
   # Besondere Zeichen fuer Latex
   for( s in col.sonderzeichen){
     if(! s %in% names(varue.info)){
-      warning(paste0("\n   Die Spalte " , s , " existiert nicht in der uebergebenen Varue. Fuer diese Spalte wird nichts aufbereitet.\n"))
+      warning(paste0("Die Spalte " , s , " existiert nicht in der uebergebenen Varue. Fuer diese Spalte wird nichts aufbereitet."))
     } else {
       varue.info[,s] <- sonderzeichen.aufbereiten(varue.info[,s])
     }
@@ -98,7 +98,7 @@ check_varInfo <- function(varInfo) {
                                   "Instruktionen", "Hintergrundmodell", "HGM.Reihenfolge", "HGM.Variable.erstellt.aus",
                                   "intern.extern","Seitenumbruch.im.Inhaltsverzeichnis"))) stop("Malformed column names in 'varInfo'.")
   if(any(is.na(varInfo$Var.Name))) stop("Missing values in 'Var.Name' column in 'varInfo'.")
-  if(any(is.na(varInfo$Titel))) stop("Missing values in 'Titel' column in 'varInfo'.")
+  if(any(is.na(varInfo$Titel) & varInfo$in.DS.und.SH != "nein")) stop("Missing values in 'Titel' column in 'varInfo'.")
   if(any(is.na(varInfo$in.DS.und.SH))) stop("Missing values in 'in.DS.und.SH' column in 'varInfo'.")
   if(any(!varInfo$in.DS.und.SH %in% c("sh", "ds", "ja", "nein"))) stop("Invalid values in 'in.DS.und.SH' column in 'varInfo'.")
   invisible(varInfo)
