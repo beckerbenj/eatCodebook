@@ -41,6 +41,8 @@ struc_final <- getStructure("inst/extdata/example_struc.xlsx")
 scaleInfo <- createScaleInfo(inputForDescr)
 eatAnalysis::write_xlsx(scaleInfo, "inst/extdata/example_scaleInfo.xlsx", row.names = FALSE)
 scaleInfo_final <- getScaleInfo("inst/extdata/example_scaleInfo.xlsx")
+# workaround, should be done automatically, but currently problem with non list inputs for createScaleInfo
+scaleInfo_final$Quelle <- "dat"
 
 ## Register
 register <- createRegister(inputForDescr, keywordList = c("kw1", "kw2"))
@@ -91,15 +93,15 @@ meta_final <- makeMetadata("inst/extdata/example_meta.xlsx")
 ## Sonstiges Zeug von Felix
 # --------------------------------------------------
 # SH-Variablen
-variablen.all <- varInfo_final[varInfo_final$in.DS.und.SH %in% c("ja", "sh"), "Var.Name"]
+variablen.all <- varInfo_final2[varInfo_final2$in.DS.und.SH %in% c("ja", "sh"), "Var.Name"]
 
 # ID-Variablen
-id <- c("id")
+id <- c(dat = "id")
 
 
 ## Codebook (tbd)
 # --------------------------------------------------
-codebook(varue.info = varInfo_final, varue.missings = miss_final, varue.gliederung = struc_final, skalen.info = scaleInfo_final,
+codebook(varue.info = varInfo_final2, varue.missings = miss_final, varue.gliederung = struc_final, skalen.info = scaleInfo_final,
          varue.reg = register_final, make.reg = NULL, Gesamtdatensatz = gd, Kennwertedatensatz = descr, variablen = variablen.all,
          id = id, fbshort = "", fblong = "", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
          lastpage = "")
@@ -108,13 +110,18 @@ codebook(varue.info = varInfo_final, varue.missings = miss_final, varue.gliederu
 struc_final2 <- struc_final
 names(struc_final2) <- "dat"
 
-codebook(varue.info = list(dat = varInfo_final), varue.missings = list(dat = miss_final), varue.gliederung = struc_final2,
-         skalen.info = list(dat = scaleInfo_final),
-         varue.reg = list(dat = register_final), make.reg = NULL, Gesamtdatensatz = list(dat = gd),
+# try to hotfix (maybe kennwerte needs a data.frame sometimes?)
+#str(descr$skala1[[2]])
+descr$skala1[[2]] <- as.data.frame(descr$skala1[[2]])
+
+codebook(varue.info = list(dat = varInfo_final2), varue.missings = list(dat = miss_final), varue.gliederung = struc_final2,
+         skalen.info = scaleInfo_final,
+         varue.reg = list(dat = register_final), make.reg = NULL, Gesamtdatensatz = list(dat = extractData(gd)),
          Kennwertedatensatz = list(dat = descr),
          variablen = list(dat = variablen.all),
          id = id, fbshort = "dat", fblong = "dat", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
          lastpage = "")
+
 
 
 ## Ueberlegungen

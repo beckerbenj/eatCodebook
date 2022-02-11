@@ -172,7 +172,8 @@ codebook <- function( varue.info ,
     ret. <- c( "\\phantomsection" ,
                paste0("\\chapter{",fblong[d],"}"),
                paste0("\\setcounter{sec",toupper(d),"}{\\thepage}"),
-               unlist( sapply( variablen[[d]], function(v)
+               unlist( sapply( variablen[[d]], function(v) {
+                 #browser()
                  layout.var( name=v,
                              fb=tolower(d),
                              id.fb=id[d],
@@ -184,8 +185,8 @@ codebook <- function( varue.info ,
                              varue.gliederung=varue.gliederung[[d]],
                              double.vars=double.vars,
                              makeCounter=make.reg[d],
-                             all_length=all_length))
-               )
+                             all_length=all_length)
+               }))
                #,paste0( "\\setcounter{", numtolet( lastcountervar , fb=tolower(d) ,double.vars=double.vars ) ,"}{\\thepage }" )
     )
 

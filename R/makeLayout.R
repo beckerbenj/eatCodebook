@@ -140,6 +140,7 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
 
   #### Skript schreiben ####
 
+  if(!i %in% 0:9) stop("Invalid value of 'i'.")
   # Aufruf der Layout-Funktion abhaengig von Layout-typ
   if (i==0) layout.typ.var <- layout.id( name=name , varue.info=varue.info )
   if (i==1) layout.typ.var <- layout.string( name=name , varue.info=varue.info)

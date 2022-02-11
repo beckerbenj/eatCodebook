@@ -139,7 +139,7 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
           label.nonmiss[1:(length(label.nonmiss)-1)] <- paste0( label.nonmiss[1:(length(label.nonmiss)-1)] , "; " )
           # Aufbereitung der Werte --> Wenn Zeilenumbruch vor Wert, dann "\\\\ \n & " vor den Wert
           kat_werte <- varue.missings.aktuell$Wert
-          kat_werte[varue.missings.aktuell$missing=="nein" & varue.missings.aktuell$Zeilenumbruch.vor.Wert=="ja"] <- paste0("\\\\ \n & ",kat_werte[varue.missings.aktuell$missing=="nein" & varue.missings.aktuell$Zeilenumbruch.vor.Wert=="ja"])
+          kat_werte[varue.missings.aktuell$missing=="nein" & varue.missings.aktuell$Zeilenumbruch_vor_Wert=="ja"] <- paste0("\\\\ \n & ",kat_werte[varue.missings.aktuell$missing=="nein" & varue.missings.aktuell$Zeilenumbruch_vor_Wert=="ja"])
           kat_werte <- kat_werte[varue.missings.aktuell$missing=="nein"]
           # Zusammenfügen von Werten und Labels
           label.nonmiss <- paste0( kat_werte , label.nonmiss )
@@ -724,7 +724,7 @@ layout.skala <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.m
   varue.missings.aktuell <- varue.missings[varue.missings$Var.name %in% name,]
 
   # Identifikation der zur Skala zugehörigen Items
-  skala.items <- gsub( "\\s", "", unlist( strsplit( skalen.info[ tolower( skalen.info$Var.Name ) %in% tolower( name ), "Items.der.Skala" ], ",", fixed = TRUE ) ) )
+  skala.items <- gsub( "\\s", "", unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), "Items_der_Skala" ], ",", fixed = TRUE ) ) )
 
   # Reduktion der Items, falls diese in der Varue auf "nein" gesetzt sind
   skala.items <- skala.items[skala.items %in% varue.info$Var.Name[varue.info$in.DS.und.SH %in% c("ja" , "sh", "ds")]]
@@ -741,11 +741,11 @@ layout.skala <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.m
 
   varue.missings.item <- varue.missings[ varue.missings$Var.name %in% skala.items , ]
   varue.missings.item <- varue.missings.item[ ! duplicated(varue.missings.item$Wert) , ]
-  varue.missings.item <- lapply(skala.items , function(d) data.frame("Var.name"=rep(d , length(varue.missings.item$Wert)) , "Wert"=varue.missings.item$Wert , "missing"=varue.missings.item$missing , "LabelSH" = varue.missings.item$LabelSH , "Zeilenumbruch.vor.Wert"=varue.missings.item$Zeilenumbruch.vor.Wert , stringsAsFactors=FALSE) )
+  varue.missings.item <- lapply(skala.items , function(d) data.frame("Var.name"=rep(d , length(varue.missings.item$Wert)) , "Wert"=varue.missings.item$Wert , "missing"=varue.missings.item$missing , "LabelSH" = varue.missings.item$LabelSH , "Zeilenumbruch_vor_Wert"=varue.missings.item$Zeilenumbruch_vor_Wert , stringsAsFactors=FALSE) )
   varue.missings.item <- do.call("rbind" , varue.missings.item)
 
   # Reduzierte Item-Varue der Variableninformationen
-  varue.info.item <- varue.info[varue.info$Var.Name %in% skala.items[1],]
+  varue.info.item <- varue.info[varue.info$varName %in% skala.items[1],]
 
   # Kennwerte berechnen bzw. nutzen
   if( is.null(kennwerte.var) ){
@@ -759,14 +759,14 @@ layout.skala <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.m
   skala.items.name <- gsub( "_" , "\\_" , skala.items , fixed = TRUE)
 
   # Anzahl gültiger Werte zur Berechnung der Skala
-  if( skalen.info$Anzahl.valider.Werte[ tolower(skalen.info$Var.Name) %in% tolower(name) ] %in% c("einem","ein","eins") ) {
-    anmerkung.anzahl.valider.werte <- " Für die Berechnung der Skalenkennwerte wurden alle Teilnehmenden einbezogen, die auf mindestens einem Item einen gültigen Wert aufweisen ($N_{valid}$)."
-  } else if( skalen.info$Anzahl.valider.Werte[ tolower(skalen.info$Var.Name) %in% tolower(name) ] %in% c("alle","allen","all") ) {
-    anmerkung.anzahl.valider.werte <- " Für die Berechnung der Skalenkennwerte wurden alle Teilnehmenden einbezogen, die auf allen Items einen gültigen Wert aufweisen ($N_{valid}$)."
-  } else if( skalen.info$Anzahl.valider.Werte[ tolower(skalen.info$Var.Name) %in% tolower(name) ] %in% "-" ) {
-    anmerkung.anzahl.valider.werte <- NULL
+  if( skalen.info$Anzahl_valider_Werte[ tolower(skalen.info$varName) %in% tolower(name) ] %in% c("einem","ein","eins") ) {
+    anmerkung.anzahl_valider_werte <- " Für die Berechnung der Skalenkennwerte wurden alle Teilnehmenden einbezogen, die auf mindestens einem Item einen gültigen Wert aufweisen ($N_{valid}$)."
+  } else if( skalen.info$Anzahl_valider_Werte[ tolower(skalen.info$varName) %in% tolower(name) ] %in% c("alle","allen","all") ) {
+    anmerkung.anzahl_valider_werte <- " Für die Berechnung der Skalenkennwerte wurden alle Teilnehmenden einbezogen, die auf allen Items einen gültigen Wert aufweisen ($N_{valid}$)."
+  } else if( skalen.info$Anzahl_valider_Werte[ tolower(skalen.info$varName) %in% tolower(name) ] %in% "-" ) {
+    anmerkung.anzahl_valider_werte <- NULL
   } else {
-    anmerkung.anzahl.valider.werte <- paste0(" Für die Berechnung der Skalenkennwerte wurden alle Teilnehmenden einbezogen, die auf mindestens ", skalen.info$Anzahl.valider.Werte[ tolower(skalen.info$Var.Name) %in% tolower(name) ]," Items einen gültigen Wert aufweisen ($N_{valid}$).")
+    anmerkung.anzahl_valider_werte <- paste0(" Für die Berechnung der Skalenkennwerte wurden alle Teilnehmenden einbezogen, die auf mindestens ", skalen.info$Anzahl_valider_Werte[ tolower(skalen.info$varName) %in% tolower(name) ]," Items einen gültigen Wert aufweisen ($N_{valid}$).")
   }
 
   if( Latex.length( nameSH , FALSE) > Latex.length("Variablenname" , TRUE) ){
@@ -784,7 +784,7 @@ layout.skala <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.m
   ### reinbrowsen um Bug in Lfk zu finden (bis hier hin ok!) -> Problem bei skript.frequencies.items!!
 
   #### Skript schreiben ####
-  anm.tab.skala <- paste0("\\anmerkungen{7}{$N =$ Fallzahl; $Min. =$ Minimum; $Max. =$ Maximum; $\\alpha =$~Cronbachs Alpha (Cronbach, 1951).", anmerkung.anzahl.valider.werte," Für die Reliabilitätsanalyse wurden nur Teilnehmende einbezogen, die auf allen Items gültige Werte besitzen.}")
+  anm.tab.skala <- paste0("\\anmerkungen{7}{$N =$ Fallzahl; $Min. =$ Minimum; $Max. =$ Maximum; $\\alpha =$~Cronbachs Alpha (Cronbach, 1951).", anmerkung.anzahl_valider_werte," Für die Reliabilitätsanalyse wurden nur Teilnehmende einbezogen, die auf allen Items gültige Werte besitzen.}")
   anm.tab.item.means <- "\\anmerkungen{5}{$N_{valid}$ gibt pro Item die Anzahl aller Fälle mit gültigen Werten an. Bei der Trennschärfe~$r_{pw}$ handelt es sich um die part-whole-korrigierte Korrelation des jeweiligen Items mit der Skala.}"
 
   skript.descriptive.skala <- table.descriptive(name=name, varue.info=varue.info , varue.missings=varue.missings , var.typ="Numerisch" , werte=werte , Gesamtdatensatz=Gesamtdatensatz , skala.items=skala.items, show.kategorien=FALSE)
@@ -822,7 +822,7 @@ layout.skala.fake <- function(name , kennwerte.var = NULL, id.fb, varue.info, va
   #### Vorbereitung ####
 
   # Identifikation der zur Skala zugehörigen Items
-  skala.items <- gsub( "\\s", "", unlist( strsplit( skalen.info[ tolower( skalen.info$Var.Name ) %in% tolower( name ), "Items.der.Skala" ], ",", fixed = TRUE ) ) )
+  skala.items <- gsub( "\\s", "", unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), "Items_der_Skala" ], ",", fixed = TRUE ) ) )
 
   # Reduktion der Items, falls diese in der Varue ein "nein" haben
   skala.items <- skala.items[skala.items %in% varue.info$Var.Name[varue.info$in.DS.und.SH %in% c("ja" , "sh", "ds")]]
@@ -834,7 +834,7 @@ layout.skala.fake <- function(name , kennwerte.var = NULL, id.fb, varue.info, va
   # Reduzierte Item-Varue der Werteinformation (über ein nicht-rekodierten Items) - um richtige Ordnung der Werte zu bekommen
   varue.missings.item <- varue.missings[ varue.missings$Var.name %in% skala.items , ]
   varue.missings.item <- varue.missings.item[ ! duplicated(varue.missings.item$Wert) , ]
-  varue.missings.item <- lapply(skala.items , function(d) data.frame("Var.name"=rep(d , length(varue.missings.item$Wert)) , "Wert"=varue.missings.item$Wert , "missing"=varue.missings.item$missing , "LabelSH" = varue.missings.item$LabelSH , "Zeilenumbruch.vor.Wert"=varue.missings.item$Zeilenumbruch.vor.Wert , stringsAsFactors=FALSE) )
+  varue.missings.item <- lapply(skala.items , function(d) data.frame("Var.name"=rep(d , length(varue.missings.item$Wert)) , "Wert"=varue.missings.item$Wert , "missing"=varue.missings.item$missing , "LabelSH" = varue.missings.item$LabelSH , "Zeilenumbruch_vor_Wert"=varue.missings.item$Zeilenumbruch_vor_Wert , stringsAsFactors=FALSE) )
   varue.missings.item <- do.call("rbind" , varue.missings.item)
 
 
@@ -905,7 +905,7 @@ layout.gepoolt.metrisch <- function(name , kennwerte.var = NULL, id.fb, varue.in
   }
 
   # Items der gepoolten Variable
-  skala.items <- gsub( "\\s", "", unlist( strsplit( skalen.info[ tolower( skalen.info$Var.Name ) %in% tolower( name ), "Items.der.Skala" ], ",", fixed = TRUE ) ) )
+  skala.items <- gsub( "\\s", "", unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), "Items_der_Skala" ], ",", fixed = TRUE ) ) )
 
   # Reduktion der Items, falls diese in der Varue ein "nein" haben
   skala.items <- skala.items[skala.items %in% varue.info$Var.Name[varue.info$in.DS.und.SH %in% c("ja" , "sh", "ds")]]
@@ -978,7 +978,7 @@ layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, id.fb, varue.
   }
 
   # Items der gepoolten Variable
-  skala.items <- gsub( "\\s", "", unlist( strsplit( skalen.info[ tolower( skalen.info$Var.Name ) %in% tolower( name ), "Items.der.Skala" ], ",", fixed = TRUE ) ) )
+  skala.items <- gsub( "\\s", "", unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), "Items_der_Skala" ], ",", fixed = TRUE ) ) )
 
   # Reduktion der Items, falls diese in der Varue ein "nein" haben
   skala.items <- skala.items[skala.items %in% varue.info$Var.Name[varue.info$in.DS.und.SH %in% c("ja" , "sh", "ds")]]
