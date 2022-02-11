@@ -8,6 +8,11 @@ netw_g <- readRDS("helper_data_netw.RDS")
 #netw_input <- readRDS("tests/testthat/helper_inputForDescriptives_netw.RDS")
 netw_input <- readRDS("helper_inputForDescriptives_netw.RDS")
 
+test_that("insertRow", {
+# tbd
+
+})
+
 
 test_that("with pisa", {
   suppressMessages(input4descr <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value"))
