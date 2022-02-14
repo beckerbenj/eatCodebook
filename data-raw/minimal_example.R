@@ -12,7 +12,7 @@ inputForDescr <- createInputForDescriptives(gd)
 descr  <- calculateDescriptives(gd, inputForDescr)
 
 ## Missings/Line Breaks
-miss <- createMissings(gd)
+miss <- createMissings(gd, inputForDescriptives = inputForDescr)
 eatAnalysis::write_xlsx(miss, "inst/extdata/example_miss.xlsx", row.names = FALSE)
 miss_final <- getMissings("inst/extdata/example_miss.xlsx")
 
@@ -116,7 +116,7 @@ descr$skala1[[2]] <- as.data.frame(descr$skala1[[2]])
 
 codebook(varue.info = list(dat = varInfo_final2), varue.missings = list(dat = miss_final), varue.gliederung = struc_final2,
          skalen.info = scaleInfo_final,
-         varue.reg = list(dat = register_final), make.reg = NULL, Gesamtdatensatz = list(dat = extractData(gd)),
+         varue.reg = list(dat = register_final), make.reg = NULL, Gesamtdatensatz = list(dat = eatGADS::extractData(gd)),
          Kennwertedatensatz = list(dat = descr),
          variablen = list(dat = variablen.all),
          id = id, fbshort = "dat", fblong = "dat", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,

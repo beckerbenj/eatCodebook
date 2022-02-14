@@ -22,13 +22,22 @@ test_that("normal", {
 test_that("with pooled variables", {
   reading_vars <- paste0("rea_pv", 1:5)
   suppressMessages(small_pisa <- eatGADS::extractVars(eatGADS::pisa, c("idstud", reading_vars)))
-  for(i in reading_vars) {
-    small_pisa <- eatGADS::changeValLabels(small_pisa, varName = i, value = 10, valLabel = "some label")
-  }
-  input4descr <- createInputForDescriptives(small_pisa, impExpr = "Plausible Value")
-  varInfo <- createVarInfo(small_pisa, input4descr)
+  small_pisa_withMeta <- small_pisa_noMeta <- small_pisa
 
-  out <- createMissings(small_pisa, input4descr)
+  input4descr1 <- createInputForDescriptives(small_pisa_noMeta, impExpr = "Plausible Value")
+  varInfo1 <- createVarInfo(small_pisa_withMeta, input4descr1)
+
+  out <- createMissings(small_pisa_noMeta, input4descr1)
+  expect_equal(names(out), c("Var.name", "Wert", "missing", "LabelSH", "Zeilenumbruch_vor_Wert"))
+  expect_equal(nrow(out), 0)
+
+  for(i in reading_vars) {
+    small_pisa_withMeta <- eatGADS::changeValLabels(small_pisa_withMeta, varName = i, value = 10, valLabel = "some label")
+  }
+  input4descr2 <- createInputForDescriptives(small_pisa_withMeta, impExpr = "Plausible Value")
+  varInfo <- createVarInfo(small_pisa_withMeta, input4descr2)
+
+  out <- createMissings(small_pisa_withMeta, input4descr2)
   expect_equal(names(out), c("Var.name", "Wert", "missing", "LabelSH", "Zeilenumbruch_vor_Wert"))
   expect_equal(out$Zeilenumbruch_vor_Wert, rep("nein", 6))
   expect_equal(out$missing, rep("nein", 6))

@@ -29,6 +29,8 @@ createMissings.GADSdat <- function(GADSdat, inputForDescriptives){
   if(any(is.na(missings$missings))) stop("Missings in column 'missings'.")
   missings$missings <- ifelse(missings$missings == "miss", yes = "ja", no = "nein")
   names(missings) <- c("Var.name", "Wert", "missing", "LabelSH")
+  if(nrow(missings) == 0) {missings[, "Zeilenumbruch_vor_Wert"] <- character(); return(missings)}
+
   missings[, "Zeilenumbruch_vor_Wert"] <- "nein"
 
   ## imputed variables
@@ -40,10 +42,12 @@ createMissings.GADSdat <- function(GADSdat, inputForDescriptives){
     first_entry <- single_inputed_info[1, "varName"]
 
     newRows <- missings[missings$Var.name == first_entry, ]
-    newRows[, "Var.name"] <- i
 
-    #browser()
-    missings <- insertRows(missings, newRows = newRows, index = max(which(missings$Var.name == first_entry)))
+    if(nrow(newRows) > 0) {
+      newRows[, "Var.name"] <- i
+      missings <- insertRows(missings, newRows = newRows,
+                                                 index = max(which(missings$Var.name == first_entry)))
+    }
   }
 
   missings
