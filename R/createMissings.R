@@ -35,15 +35,15 @@ createMissings.GADSdat <- function(GADSdat, inputForDescriptives){
   inputed_info <- inputForDescriptives[inputForDescriptives$imp == TRUE, ]
   pooled_variables <- unique(inputed_info[["group"]])
   for(i in pooled_variables) {
-    browser()
+    #browser()
     single_inputed_info <- inputed_info[inputed_info$group == i, ]
     first_entry <- single_inputed_info[1, "varName"]
 
     newRows <- missings[missings$Var.name == first_entry, ]
-    newRows[, "varName"] <- i
+    newRows[, "Var.name"] <- i
 
-    stop("insertRows function has to be developed.")
-    missings <- insertRows(missings, newRow = newRows, index = max(which(missings$Var.name == first_entry)))
+    #browser()
+    missings <- insertRows(missings, newRows = newRows, index = max(which(missings$Var.name == first_entry)))
   }
 
   missings
