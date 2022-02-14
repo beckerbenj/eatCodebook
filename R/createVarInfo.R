@@ -37,7 +37,7 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
     newRow <- var_labs2[var_labs2$varName == first_entry, ]
     newRow[, "varName"] <- i
 
-    var_labs2 <- insertRow(var_labs2, newRow = newRow, index = which(var_labs2$varName == first_entry))
+    var_labs2 <- insertRows(var_labs2, newRow = newRow, index = which(var_labs2$varName == first_entry))
   }
 
   ## network variables
@@ -50,7 +50,7 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
     newRow <- var_labs2[var_labs2$varName == first_entry, ]
     newRow[, "varName"] <- i
 
-    var_labs2 <- insertRow(var_labs2, newRow = newRow, index = which(var_labs2$varName == first_entry))
+    var_labs2 <- insertRows(var_labs2, newRow = newRow, index = which(var_labs2$varName == first_entry))
   }
 
   ## scales
@@ -119,11 +119,21 @@ createVarInfo.list <- function(GADSdat, inputForDescriptives, encodingList = NUL
 }
 
 
-insertRow <- function(df, newRow, index) {
-  newDF <- rbind(df, newRow)
-  newDF <- newDF[order(c(1:(nrow(newDF) - 1), index - 0.5)), ]
+# insertRow <- function(df, newRow, index) {
+#   newDF <- rbind(df, newRow)
+#   newDF <- newDF[order(c(1:(nrow(newDF) - 1), index - 0.5)), ]
+#   newDF
+# }
+
+# insert rows before index
+insertRows <- function(df, newRows, index) {
+  newDF <- rbind(df, newRows)
+  #browser()
+  indeces <- rep(index, nrow(newRows))
+  diff_for_ordering <- seq(from = 0.9, to = 0.1, length.out = length(indeces))
+  indeces <- indeces - diff_for_ordering
+  newDF <- newDF[order(c(1:nrow(df), indeces)), ]
   newDF
 }
-
 
 

@@ -10,7 +10,15 @@ netw_input <- readRDS("helper_inputForDescriptives_netw.RDS")
 
 test_that("insertRow", {
 # tbd
+  comp1 <- rbind(mtcars[1:3, ], mtcars[1:3, ], mtcars[4:nrow(mtcars), ])
+  out1 <- insertRows(mtcars, mtcars[1:3, ], 4)
+  rownames(comp1) <- rownames(out1) <- NULL
+  expect_equal(out1, comp1)
 
+  comp2 <- rbind(mtcars[1:7, ], mtcars[5, ], mtcars[8:nrow(mtcars), ])
+  out2 <- insertRows(mtcars, mtcars[5, ], 8)
+  rownames(comp2) <- rownames(out2) <- NULL
+  expect_equal(out2, comp2)
 })
 
 
