@@ -305,6 +305,8 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
   retA <- formatC(100*ret[,"est"], format="f", digits=1)                        ### aufbereiten
   names(retA) <- paste(ret[,"parameter"], "valid", sep=".")
 ### alle Werte
+
+  ## muss man hier was aendern? mit SW besprechen!
   if(any(is.na(z[,"value"]))) {
       if(verbose){cat("Analysis of total values: ")}
       res1 <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE,

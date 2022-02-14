@@ -126,6 +126,25 @@ test_that("descriptives metric", {
   expect_equal(names(out), c("N.valid", "mean.valid", "sd.valid", "min.valid", "max.valid", "sysmis.totalabs"))
 })
 
+test_that("descriptives pooled categorical", {
+  imputed_cols <- data.frame(imp1 = c(1, 2, 1, 2), imp2 = c(2, 2, 1, 1))
+  out <- kennwerte.gepoolt.kategorial(imputed_cols, imputedVariableCols = c("imp1", "imp2"), verbose = FALSE)
+  expect_equal(out[["N.valid"]], "4")
+  expect_equal(out[["1.valid"]], "50.0")
+  expect_equal(out[["2.valid"]], "50.0")
+  expect_equal(out[["1.totalabs"]], "2")
+    expect_equal(out[["sysmis.totalabs"]], "0")
+  expect_equal(names(out), c("N.valid", "N.total", "1.valid", "2.valid", "sysmis.valid", "1.total", "2.total", "sysmis.total", "1.totalabs", "2.totalabs", "sysmis.totalabs"))
+
+  imputed_cols <- data.frame(imp1 = c(1, 2, 1, NA), imp2 = c(2, 2, 1, NA))
+  suppressWarnings(out2 <- kennwerte.gepoolt.kategorial(imputed_cols, imputedVariableCols = c("imp1", "imp2"), verbose = FALSE))
+  expect_equal(out2[["N.valid"]], "3")
+  expect_equal(out2[["1.valid"]], "50.0")
+  expect_equal(out2[["2.valid"]], "50.0")
+  expect_equal(out2[["1.totalabs"]], "2")
+  expect_equal(out2[["sysmis.totalabs"]], "1")
+  expect_equal(names(out2), c("N.valid", "N.total", "1.valid", "2.valid", "sysmis.valid", "1.total", "2.total", "sysmis.total", "1.totalabs", "2.totalabs", "sysmis.totalabs"))
+})
 
 
 

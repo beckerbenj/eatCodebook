@@ -130,5 +130,5 @@ codebook(varue.info = list(dat = varInfo_final2), varue.missings = list(dat = mi
 # mit Sebastian klaeren
 
 
-
+#load("q:/BT2016/BT/02_Organisation/81_StuMi_Arbeitsordner/Skalenhandbuch/03_Kennwerte/Kennwerte_sfb.rdata")
 

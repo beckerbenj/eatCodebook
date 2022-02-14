@@ -288,6 +288,7 @@ table.frequencies <- function(name , varue.missings.aktuell , werte){
   ## versuchter Bugfix Benjamin 02.04.2019: nur valide Werte prüfen (aber falscher Ansatz)
   # valid_werte <- varue.missings.aktuell[varue.missings.aktuell$missing == "nein", "Wert"]
   # if( any( ( werte[ paste0(sub("^\\.$","sysmis", valid_werte), ".valid") ] == "0.0" |
+  #browser()
   if( any( ( werte[ paste0(sub("^\\.$","sysmis",varue.missings.aktuell$Wert), ".valid") ] == "0.0" |  ### alte Syntax von Felix
              werte[ paste0(sub("^\\.$","sysmis",varue.missings.aktuell$Wert), ".total") ] == "0.0" ) &
            ! werte[ paste0(sub("^\\.$","sysmis",varue.missings.aktuell$Wert), ".totalabs") ] == "0" ) ) {
