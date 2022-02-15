@@ -306,7 +306,7 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
   names(retA) <- paste(ret[,"parameter"], "valid", sep=".")
 ### alle Werte
 
-  ## muss man hier was aendern? mit SW besprechen!
+  ## berechnung relative haeufigkeiten mit Missings drin
   if(any(is.na(z[,"value"]))) {
       if(verbose){cat("Analysis of total values: ")}
       res1 <- eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE,
@@ -316,8 +316,10 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
       ret1A<- formatC(100* c(ret1[-weg,"est"],ret1[weg,"est"]), format="f", digits=1)
       names(ret1A) <- c(paste(ret1[-weg,"parameter"], "total", sep="."),"sysmis.total")
   }  else  {
-      ret1A <- NULL
+      ret1A <- c(retA, sysmis.total = "0.0")
+      names(ret1A) <- gsub("valid", "total", names(ret1A))
   }
+
 ### Fallzahlen (etwas effizienter)
   bool<- !is.na(datWide[,allNam[["vc"]]])
   N.valid<- length(which(rowSums(bool) == length(allNam[["vc"]])))
