@@ -200,7 +200,7 @@ codebook <- function( varue.info ,
       return(NULL)
     } else {
       # Erstelle Register
-      return(makeRegister( fb.akt=d , varue.reg=varue.reg[[d]] , double.vars=double.vars) )
+      return(makeRegister(fblong = fblong, fb.akt=d , varue.reg=varue.reg[[d]] , double.vars=double.vars) )
     }
   } )
 
