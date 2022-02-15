@@ -119,7 +119,7 @@ latex_skript <- codebook(varue.info = list(dat = varInfo_final2), varue.missings
          varue.reg = register_final, make.reg = NULL, Gesamtdatensatz = list(dat = eatGADS::extractData(gd)),
          Kennwertedatensatz = list(dat = descr),
          variablen = list(dat = variablen.all),
-         id = id, fbshort = "dat", fblong = "dat", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
+         id = id, fbshort = "dat", fblong = c(dat = "dat"), deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
          lastpage = "")
 
 #### SKRIPTE SCHREIBEN ####

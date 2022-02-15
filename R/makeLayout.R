@@ -29,6 +29,7 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
   # Ausgabe des Variablennames - Erleichtert Fehlersuche
   message(paste0 ( "  Layout der Variable: " , name , "\n" ) )
 
+
   # Reduzierung der Varue: Nur diejenigen Variablen, die echt berichtet werden (also "ds" raus)
   varue.info.sh <- varue.info[ varue.info$in.DS.und.SH %in% c("ja" , "sh"), ]
 
@@ -64,6 +65,7 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
 
 
   if( gsub("\\s","", as.character(varue.info$Reihenfolge[ varue.info$Var.Name %in% name])) == "-") {
+    #browser() ## to do: wieso section bei Felix und uns so unterschiedlich? -> vergleichen!
     sections.var1 <- varue.info.sh$Titel[ varue.info.sh$Var.Name %in% name ]
     sections.var1 <- lapply(1:1 , function(d){
       right_margins <- 32.54317 # Laenge von  tocrmarg in Latex (zur Verfügung stehender Platz für den rechten Rand im Inhaltsverzeichnis, in pt)
