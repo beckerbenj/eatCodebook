@@ -118,8 +118,6 @@ names(struc_final2) <- "dat"
 #str(descr$skala1[[2]])
 descr$skala1[[2]] <- as.data.frame(descr$skala1[[2]])
 
-# Hotfix, otherwise Section etc. different
-varInfo_final2$Reihenfolge <- 0
 
 latex_skript <- codebook(varue.info = list(dat = varInfo_final2), varue.missings = list(dat = miss_final), varue.gliederung = struc_final2,
          skalen.info = scaleInfo_final,

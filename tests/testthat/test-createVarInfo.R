@@ -28,6 +28,7 @@ test_that("with pisa", {
   expect_true(all(eatGADS::namesGADS(eatGADS::pisa) %in% out$Var.Name))
   expect_true(all(c("ma_pooled", "rea_pooled", "sci_pooled") %in% out$Var.Name))
   expect_equal(out$in.DS.und.SH[1], "ja")
+  expect_equal(out$Reihenfolge, rep(NA, nrow(out)))
   expect_equal(out$Unterteilung.im.Skalenhandbuch, rep(NA, nrow(out)))
   expect_equal(sum(out$in.DS.und.SH == "sh"), 3)
   expect_equal(sum(out$in.DS.und.SH == "ds"), 3 * 5)
