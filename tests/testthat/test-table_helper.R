@@ -37,6 +37,8 @@ test_that("description for ordinal variable with source", {
 test_that("simple description for metric variable with missings", {
   out <- table.descriptive(name = "varMetrisch", varue.info = varInfo, varue.missings = varMiss, var.typ="Numerisch", Gesamtdatensatz = gd,
                            werte = descr$varMetrisch , skala.items=NULL, show.kategorien=FALSE)
+
+  ## wie funktioniert das mit Missings??
   expect_equal(out[1], "\\begin{tabnormallong}{Beschreibung der Variable}")
   expect_equal(out[2], "Variablenname:&varMetrisch\\\\")
   expect_equal(out[3], "Label:&metrische Beispielvariable, Kompetenzwert\\\\")
