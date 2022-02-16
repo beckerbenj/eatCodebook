@@ -60,7 +60,8 @@ calculateDescriptives.GADSdat <- function( GADSdat, inputForDescriptives, verbos
   anz  <- unlist(lapply(mis, length))
   mis  <- unique(unlist(mis))
   if ( any(anz>0) ) {
-      if(verbose){message("Following variables will be ignored due to missing entries in 'type', 'scale' or 'imp' column of 'inputForDescriptives': '",paste(inputForDescriptives[mis,"varName"], collapse="', '"), "'")}
+      if(verbose){message("Following variables will be ignored due to missing entries in 'type', 'scale' or 'imp' column of 'inputForDescriptives': '",
+                          paste(inputForDescriptives[mis,"varName"], collapse="', '"), "'")}
       inputForDescriptives <- inputForDescriptives[-mis,]
       if(nrow(inputForDescriptives)==0) {
          if(verbose){message("No valid entries in 'inputForDescriptives'.")}
@@ -125,27 +126,7 @@ varStats <- function(GADSdat, sub.inputForDescriptives, verbose, showCallOnly = 
      }
   }
 
-#  if( all( varue.missings[varue.missings$Var.name %in% name, "missing" ] %in% "ja" ) & i==2 ) {
-#    kennwerte.var <- kennwerte.kategorial.variation(name=name, varue.missings=varue.missings , Gesamtdatensatz=Gesamtdatensatz)
-#  } else if (i %in% c(0,1,8)) {
-#    kennwerte.var <- NULL
-#  } else if (i==2) {
-#    kennwerte.var <-  kennwerte.kategorial(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz)
-#  } else if (i==3) {
-#    kennwerte.var <-  kennwerte.ordinal(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz)
-#  } else if (i==4) {
-#    kennwerte.var <- kennwerte.metrisch(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz)
-#  } else if (i==5) {
-#    kennwerte.var <- kennwerte.skala(name=name,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
-#  } else if (i==6) {
-#    kennwerte.var <- kennwerte.gepoolt.metrisch(name=name,id.fb=id.fb,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
-#  } else if (i==7) {
-#    kennwerte.var <- kennwerte.gepoolt.kategorial(name=name,id.fb=id.fb,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
-#  } else if (i==9) {
-#    kennwerte.var <- kennwerte.skala.fake(name=name,varue.info=varue.info,varue.missings=varue.missings,Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
-#  }
-
-  #### Output ####
+#### Output ####
 #  kennwerte.var
 return(stats)}
 
