@@ -249,7 +249,8 @@ createAndExecuteFunctionCalls <- function(funName, argList){
     ### function call
            ret <- list()
            for ( i in 1:length(argList[[1]])) {
-                  ret[[i]] <- eval(parse(text=paste0(funName,"(", paste(names(argList), paste0("argList[[\"",names(argList),"\"]][[",i,"]]"), sep="=", collapse=", "), ")")))
+                  ret[[i]] <- eval(parse(text=paste0(funName,"(",
+                                                     paste(names(argList), paste0("argList[[\"",names(argList),"\"]][[",i,"]]"), sep="=", collapse=", "), ")")))
            }
            names(ret) <- names(argList[[1]])
            return(ret)}

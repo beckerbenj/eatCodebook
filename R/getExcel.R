@@ -33,7 +33,7 @@ getExcel <- function(filePath, funList = NULL){
     out
   })
 
-  if(length(all_dfs) == 1) all_dfs <- all_dfs[[1]]
+  #if(length(all_dfs) == 1) all_dfs <- all_dfs[[1]]
   all_dfs
 }
 
