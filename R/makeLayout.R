@@ -63,9 +63,8 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
 
   all_indents <- c(0 , 0 , 30 , 70) # Einzug für Chapter, Section, Subsection und Subsubsection in Latex (in pt)
 
-
+  #browser() ## to do: wieso section bei Felix und uns so unterschiedlich? -> vergleichen!
   if( gsub("\\s","", as.character(varue.info$Reihenfolge[ varue.info$Var.Name %in% name])) == "-") {
-    #browser() ## to do: wieso section bei Felix und uns so unterschiedlich? -> vergleichen!
     sections.var1 <- varue.info.sh$Titel[ varue.info.sh$Var.Name %in% name ]
     sections.var1 <- lapply(1:1 , function(d){
       right_margins <- 32.54317 # Laenge von  tocrmarg in Latex (zur Verfügung stehender Platz für den rechten Rand im Inhaltsverzeichnis, in pt)

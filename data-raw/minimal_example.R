@@ -65,6 +65,15 @@ litInfo[, 2] <- "Mueller, M. (2020). Titel."
 litInfo_final <- getLitInfo("inst/extdata/example_litInfo.xlsx")
 # vlt. getLitInfo ueberarbeiten, sodass in_Litverzeichnis obsolet wird (also doppelte Langangabe rausnehmen)
 
+# cover page
+cover <- makeCover(logoFile = "q:/BT2016/BT/02_Organisation/81_StuMi_Arbeitsordner/Skalenhandbuch/Vorlagen/Grafiken/iqb-logo.jpg",
+                   maintitle = "Study of Achievement",
+                   subtitle = "Codebook of Study of Achievement",
+                   authors = "Some Person",
+                   addAuthors = "With the help of some other persons",
+                   schriftenreihe = "Book 9 of Studies of Achievement",
+                   bibinfo = "test")
+
 # meta data
 meta <- createMetadata()
 meta[1, "Title"] <- "Codebook Test"
@@ -76,9 +85,10 @@ meta[1, "Subject"] <- "test"
 
 ## Make-steps
 # --------------------------------------------------
-cover <- makeCover(maintitle = "Study of Achievement", subtitle = "Codebook of Study of Achievement",
+cover <- makeCover(logoFile = "q:/BT2016/BT/02_Organisation/81_StuMi_Arbeitsordner/Skalenhandbuch/Vorlagen/Grafiken/iqb-logo.jpg",
+                   maintitle = "Study of Achievement", subtitle = "Codebook of Study of Achievement",
                    authors = "Some Person", addAuthors = "With the help of some other persons",
-                   schriftenreihe = "Book 9 of Studies of Achievement")
+                   schriftenreihe = "Book 9 of Studies of Achievement", bibinfo = "test")
 
 abbr <- makeAbbrList("inst/extdata/example_abbrList.xlsx")
 
@@ -101,12 +111,6 @@ id <- c(dat = "id")
 
 ## Codebook (tbd)
 # --------------------------------------------------
-codebook(varue.info = varInfo_final2, varue.missings = miss_final, varue.gliederung = struc_final, skalen.info = scaleInfo_final,
-         varue.reg = register_final, make.reg = NULL, Gesamtdatensatz = gd, Kennwertedatensatz = descr, variablen = variablen.all,
-         id = id, fbshort = "", fblong = "", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
-         lastpage = "")
-
-####################
 struc_final2 <- struc_final
 names(struc_final2) <- "dat"
 
@@ -114,12 +118,15 @@ names(struc_final2) <- "dat"
 #str(descr$skala1[[2]])
 descr$skala1[[2]] <- as.data.frame(descr$skala1[[2]])
 
+# Hotfix, otherwise Section etc. different
+varInfo_final2$Reihenfolge <- 0
+
 latex_skript <- codebook(varue.info = list(dat = varInfo_final2), varue.missings = list(dat = miss_final), varue.gliederung = struc_final2,
          skalen.info = scaleInfo_final,
          varue.reg = register_final, make.reg = NULL, Gesamtdatensatz = list(dat = eatGADS::extractData(gd)),
          Kennwertedatensatz = list(dat = descr),
          variablen = list(dat = variablen.all),
-         id = id, fbshort = "dat", fblong = c(dat = "dat"), deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
+         id = id, fbshort = "dat", fblong = c(dat = "dat"), deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
          lastpage = "")
 
 #### SKRIPTE SCHREIBEN ####
@@ -130,18 +137,23 @@ write.table(meta_final , file = "other_code/minimal_example/minimal_example_meta
 
 
 
-
 ## Ueberlegungen
 # --------------------------------------------------
 # getExcel umschreiben, sodass im Zweifelsfall doch immer eine Liste (bei Input df -> Laenge 1 rauskommt?)
 # mit Sebastian klaeren
 
 
-#load("q:/BT2016/BT/02_Organisation/81_StuMi_Arbeitsordner/Skalenhandbuch/03_Kennwerte/Kennwerte_sfb.rdata")
-Kennwertedatensatz$stufe_deu_hoeren_gepoolt
-Kennwertedatensatz$stufe_deu_hoeren_gepoolt
-
-# mit JB sprechen, ohjeohje!
+# mit JB sprechen
 load("q:/BT2018/BT/90_Skalenhandbuch/07_SH_Erstellung/Minimalbeispiel/Erstellung_alte_syntax/03_Kennwerte/Kennwerte_minimal.rdata")
 Kennwertedatensatz$pvkat_1
 #Kennwertedatensatz$
+
+
+## Codebook (tbd)
+# --------------------------------------------------
+# eigentlich sollte es mit diesem Call laufen?
+codebook(varue.info = varInfo_final2, varue.missings = miss_final, varue.gliederung = struc_final, skalen.info = scaleInfo_final,
+         varue.reg = register_final, make.reg = NULL, Gesamtdatensatz = gd, Kennwertedatensatz = descr, variablen = variablen.all,
+         id = id, fbshort = "", fblong = "", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
+         lastpage = "")
+
