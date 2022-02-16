@@ -114,15 +114,16 @@ id <- c(dat = "id")
 struc_final2 <- struc_final
 names(struc_final2) <- "dat"
 
-# try to hotfix (maybe kennwerte needs a data.frame sometimes?)
+# try to hotfix (maybe kennwerte needs a data.frame sometimes?) -> fix this after JB has fixed the example with Felix's syntax
 #str(descr$skala1[[2]])
-descr$skala1[[2]] <- as.data.frame(descr$skala1[[2]])
+descr2 <- descr
+descr2$skala1[[2]] <- as.data.frame(descr2$skala1[[2]])
 
 
 latex_skript <- codebook(varue.info = list(dat = varInfo_final2), varue.missings = list(dat = miss_final), varue.gliederung = struc_final2,
          skalen.info = scaleInfo_final,
          varue.reg = register_final, make.reg = NULL, Gesamtdatensatz = list(dat = eatGADS::extractData(gd)),
-         Kennwertedatensatz = list(dat = descr),
+         Kennwertedatensatz = list(dat = descr2),
          variablen = list(dat = variablen.all),
          id = id, fbshort = "dat", fblong = c(dat = "dat"), deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
          lastpage = "")
@@ -145,6 +146,12 @@ write.table(meta_final , file = "other_code/minimal_example/minimal_example_meta
 load("q:/BT2018/BT/90_Skalenhandbuch/07_SH_Erstellung/Minimalbeispiel/Erstellung_alte_syntax/03_Kennwerte/Kennwerte_minimal.rdata")
 Kennwertedatensatz$pvkat_1
 #Kennwertedatensatz$
+
+#load("q:/BT2016/BT/02_Organisation/81_StuMi_Arbeitsordner/Skalenhandbuch/03_Kennwerte/Kennwerte_sfb.rdata")
+str(descr$skala1)
+str(Kennwertedatensatz$Salgsf)
+#Kennwertedatensatz$Salgsf
+Kennwertedatensatz$stufe_deu_hoeren_gepoolt
 
 
 ## Codebook (tbd)
