@@ -74,15 +74,9 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
   }
 
   # Bericht der Kategorien
-  if(is.null(varue.missings.aktuell)){
-    # falls keine Kategoien/Missings vorhanden
-    kategorien <- NULL
-    missings <- NULL
-  } else if( length(varue.missings.aktuell[,1])==0) {
-    # falls keine Kategoien/Missings vorhanden
-    kategorien <- NULL
-    missings <- NULL
-  } else {
+  kategorien <- NULL
+  missings <- NULL
+  if(!is.null(varue.missings.aktuell) && nrow(varue.missings.aktuell) > 0){
     # Fallunterscheidung: Falls Variable als kategoriale definiert wurde, aber außer Missings keine Kategorien definiert hat
     if( all( varue.missings.aktuell$missing %in% "ja" ) ) {
       # Missingkategorien
@@ -98,10 +92,9 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
       }
 
       # Bericht der validen Kategorien im Skript
+      kategorien <- NULL
       if(show.kategorien){
         kategorien <- paste0("Kategorien:& " , min.val , "--" ,  max.val  , "\\\\")
-      } else {
-        kategorien <- NULL
       }
     } else {
       bool.kat <- is.na(varue.missings.aktuell$LabelSH[ tolower ( varue.missings.aktuell$missing ) %in% "nein"]) |  gsub("\\s" , "" , varue.missings.aktuell$LabelSH[ tolower ( varue.missings.aktuell$missing ) %in% "nein"]) %in% "" |  grepl("kein label vergeben", tolower(varue.missings.aktuell$LabelSH[ tolower ( varue.missings.aktuell$missing ) %in% "nein"]), fixed=TRUE)
