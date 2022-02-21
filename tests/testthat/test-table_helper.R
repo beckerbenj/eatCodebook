@@ -4,7 +4,7 @@ gd_path <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
 gd   <- eatGADS::import_spss(gd_path)
 
 inputForDescr <- createInputForDescriptives(gd, verbose = FALSE)
-descr  <- calculateDescriptives(gd, inputForDescr, verbose = FALSE)
+suppressWarnings(descr  <- calculateDescriptives(gd, inputForDescr, verbose = FALSE))
 
 varInfo_path <- system.file("extdata", "example_varInfo.xlsx", package = "eatCodebook")
 varInfo <- getVarInfo(varInfo_path)
