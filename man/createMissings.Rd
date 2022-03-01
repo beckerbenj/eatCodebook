@@ -4,10 +4,12 @@
 \alias{createMissings}
 \title{Create missing value information.}
 \usage{
-createMissings(GADSdat)
+createMissings(GADSdat, inputForDescriptives)
 }
 \arguments{
 \item{GADSdat}{A \code{GADSdat} object.}
+
+\item{inputForDescriptives}{Input for descriptive statistics calculation.}
 }
 \value{
 Returns the value information.
