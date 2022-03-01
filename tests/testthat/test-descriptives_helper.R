@@ -4,6 +4,9 @@
 #Kennwertedatensatz$TR_SEX
 #kennwerte.kategorial(ds$sfb$TR_SEX, c(-94,-99))
 
+file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
+gd   <- eatGADS::import_spss(file)
+
 test_that("descriptives categorical", {
   df <- data.frame(id = 1:5, v1 = c(1, 3, -99, -98, NA))
   value_table <- data.frame(value = c(1, 2, 3, -98, -99),
@@ -146,6 +149,21 @@ test_that("descriptives pooled categorical", {
   expect_equal(names(out2), c("N.valid", "N.total", "1.valid", "2.valid", "sysmis.valid", "1.total", "2.total", "sysmis.total", "1.totalabs", "2.totalabs", "sysmis.totalabs"))
 })
 
+test_that("descriptives metric scale", {
+  inputForDescr <- createInputForDescriptives(gd)
+  sub_inputForDescr <- inputForDescr[inputForDescr$group == "skala1", ]
+  out <- kennwerte.skala(gd, sub.inputForDescriptives = sub_inputForDescr, verbose = FALSE)
+  expect_equal(out[[1]][["N.valid"]], "9")
+  expect_equal(out[[1]][["mean.valid"]], "2.52")
+  expect_equal(out[[1]][["sd.valid"]], "0.53")
+  expect_equal(out[[1]][["min.valid"]], "1.7")
+  expect_equal(out[[1]][["max.valid"]], "3.3")
+  expect_equal(out[[1]][["sysmis.totalabs"]], "0")
+  expect_equal(out[[1]][["alpha"]], "-.68")
 
+  expect_equal(as.character(out[[2]][1, ]), rep("9", 3))
+  expect_equal(as.character(out[[2]]["mean.valid", ]), c("2.78", "2.11", "2.89"))
+  expect_equal(as.character(out[[2]]["cor.valid", ]), c(".00", ".61", ".09"))
+})
 
 
