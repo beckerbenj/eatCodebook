@@ -174,13 +174,17 @@ variableCols <- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"]
 ### 2. Skalenkennwerte (erstes Objekt der zurueckgegebenen Liste)
 ### Rueckgabe sind alles character-Werte mit unterschiedlicher Stellenanzahl, auf die gerundet wird
 ### wenn rundung etwas ganzzahliges ergibt, soll trotzdem 4.0 angezeigt werden statt 4
+  #browser()
+  cron_alpha <- format(round(psy::cronbach(dat[,allNam[["vc"]]])[["alpha"]], digits = 2), nsmall = 2)
+  cron_alpha <- sub("^-0", "-", sub("^0", "", cron_alpha))
+
   ret <- list(data.frame ( v1 = as.character(c(length(stats::na.omit(dat[,allNam[["sc"]]])),
                                  format(round(mean( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 2), nsmall = 2),
                                  format(round(stats::sd( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 2),nsmall = 2),
                                  format(round(min( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 1),nsmall = 1),
                                  format(round(max( dat[,allNam[["sc"]]], na.rm=TRUE),digits = 1),nsmall = 1),
                                  length(which(is.na(dat[,allNam[["sc"]]]))),
-                                 format(round(psy::cronbach(dat[,allNam[["vc"]]])[["alpha"]], digits = 2), nsmall = 2))), stringsAsFactors = FALSE))
+                                 cron_alpha)), stringsAsFactors = FALSE))
   colnames(ret[[1]]) <- allNam[["sc"]]
   rownames(ret[[1]]) <- c("N.valid", "mean.valid", "sd.valid", "min.valid", "max.valid", "sysmis.totalabs", "alpha")
 ### 3. Itemkennwerte (zweites Objekt der zurueckgegebenen Liste)
