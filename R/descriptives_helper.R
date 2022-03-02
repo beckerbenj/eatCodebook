@@ -170,11 +170,16 @@ variableCols <- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"]
            rs <- paste(mv , " = " , "NA",sep="", collapse="; ")
            dat[,i] <- car::recode(dat[,i], rs)
       } }
+      
+# part-whole correlation
+  pwc <- psych::alpha(dat[,allNam[["vc"]]])[["item.stats"]]
+  desc<- rbind(desc, eatTools::crop(format(round(pwc[,"r.drop"], digits=2), nsmall = 2)))
+  rownames(desc)[nrow(desc)] <- "cor.valid"
 
 ### 2. Skalenkennwerte (erstes Objekt der zurueckgegebenen Liste)
 ### Rueckgabe sind alles character-Werte mit unterschiedlicher Stellenanzahl, auf die gerundet wird
 ### wenn rundung etwas ganzzahliges ergibt, soll trotzdem 4.0 angezeigt werden statt 4
-  #browser()
+  # browser()
   cron_alpha <- format(round(psy::cronbach(dat[,allNam[["vc"]]])[["alpha"]], digits = 2), nsmall = 2)
   cron_alpha <- sub("^-0", "-", sub("^0", "", cron_alpha))
 
