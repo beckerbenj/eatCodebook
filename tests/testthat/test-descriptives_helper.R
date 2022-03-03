@@ -150,7 +150,7 @@ test_that("descriptives pooled categorical", {
 })
 
 test_that("descriptives metric scale", {
-  inputForDescr <- createInputForDescriptives(gd)
+  capture_output(inputForDescr <- createInputForDescriptives(gd))
   sub_inputForDescr <- inputForDescr[inputForDescr$group == "skala1", ]
   out <- kennwerte.skala(gd, sub.inputForDescriptives = sub_inputForDescr, verbose = FALSE)
   expect_equal(out[[1]]["N.valid", ], "9")
@@ -163,7 +163,7 @@ test_that("descriptives metric scale", {
 
   expect_equal(as.character(out[[2]][1, ]), rep("9", 3))
   expect_equal(as.character(out[[2]]["mean.valid", ]), c("2.78", "2.11", "2.89"))
-  expect_equal(as.character(out[[2]]["cor.valid", ]), c(".00", ".61", ".09"))
+  expect_equal(as.character(out[[2]]["cor.valid", ]), c(".00", "-.61", ".09"))
 })
 
 

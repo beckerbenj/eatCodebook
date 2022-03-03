@@ -170,10 +170,12 @@ variableCols <- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"]
            rs <- paste(mv , " = " , "NA",sep="", collapse="; ")
            dat[,i] <- car::recode(dat[,i], rs)
       } }
-      
+
 # part-whole correlation
-  pwc <- psych::alpha(dat[,allNam[["vc"]]])[["item.stats"]]
-  desc<- rbind(desc, eatTools::crop(format(round(pwc[,"r.drop"], digits=2), nsmall = 2)))
+  out <- capture_output(suppressWarnings(pwc <- psych::alpha(dat[,allNam[["vc"]]])[["item.stats"]]))
+  pwc <- eatTools::crop(format(round(pwc[,"r.drop"], digits=2), nsmall = 2))
+  pwc <- gsub("^-0", "-", sub("^0", "", pwc))
+  desc<- rbind(desc, pwc)
   rownames(desc)[nrow(desc)] <- "cor.valid"
 
 ### 2. Skalenkennwerte (erstes Objekt der zurueckgegebenen Liste)
