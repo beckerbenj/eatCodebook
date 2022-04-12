@@ -54,7 +54,8 @@ createMissings.GADSdat <- function(GADSdat, inputForDescriptives){
 }
 #'@export
 createMissings.list <- function(GADSdat, inputForDescriptives){
-  lapply(GADSdat, function(x) {
-    createMissings(x)
-  })
+  Map(function(g, i) {
+    createMissings(g, inputForDescriptives = i)
+  }, g = GADSdat, i = inputForDescriptives)
+
 }

@@ -42,3 +42,17 @@ test_that("with pooled variables", {
   expect_equal(out$Zeilenumbruch_vor_Wert, rep("nein", 6))
   expect_equal(out$missing, rep("nein", 6))
 })
+
+
+test_that("with list", {
+  dfSAV2 <- eatGADS::changeMissings(dfSAV, "VAR2", value = 2, missings = "miss")
+  input4descr <- createInputForDescriptives(dfSAV2)
+
+  df_list <- list(df1 = dfSAV2, df2 = dfSAV2)
+  input_list <- list(df1 = input4descr, df2 = input4descr)
+
+  out <- createMissings(df_list, inputForDescriptives = input_list)
+  expect_equal(names(out$df1), c("Var.name", "Wert", "missing", "LabelSH", "Zeilenumbruch_vor_Wert"))
+  expect_equal(out$df1$Zeilenumbruch_vor_Wert, rep("nein", 2))
+  expect_equal(out$df1$missing, c("nein", "ja"))
+})
