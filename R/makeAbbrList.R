@@ -37,8 +37,8 @@ makeAbbrList <- function(filePath, captions=list("Akronyme"= "Abkuerzungen", "St
     v.code <- NULL
 
     if(nrow(v) >= 1){
-      v.code <- c(paste0("\\begin{longtabu}{l",rep("Q",dim(v)[2]-1),"}"),
-                  paste0("\\caption*{\\cellcolor{white} \\textbf{",captions[i],"}}\\\\"),
+      v.code <- c(paste0("\\captionof*{table}{\\textbf{",captions[i],"}}"),
+                  paste0("\\begin{xltabular}{\\textwidth}{l",rep("X",dim(v)[2]-1),"}"),
                   "\\toprule",
                   "\\headrow",
                   paste0(paste0("\\textbf{" , names(v) , "}" , collapse=" & ") , "\\\\"),
@@ -47,10 +47,10 @@ makeAbbrList <- function(filePath, captions=list("Akronyme"= "Abkuerzungen", "St
                   paste0("\\hline \\multicolumn{",dim(v)[2],"}{@{}c@{}}{\\cellcolor{white} \\textit{Fortsetzung auf der nächsten Seite}}\\\\\\hline"),
                   "\\endfoot",
                   "\\endlastfoot",
-                  "\\taburowcolors{white .. lg}",
+                  #"\\taburowcolors{white .. lg}",
                   paste0(sapply(1:dim(v)[1] , function(d) paste0(v[d,] , collapse=" & " )) , "\\\\"),
                   "\\nobreakbottomrule",
-                  "\\end{longtabu}\n")
+                  "\\end{xltabular}\n")
     }
     v.code
   })

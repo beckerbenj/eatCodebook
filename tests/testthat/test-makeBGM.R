@@ -14,8 +14,9 @@ test_that("single data.frame", {
   expect_message(out <- makeBGM(varueInfo2),
   "Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geaendert.")
   expect_equal(out[1], "\\clearpage")
-  expect_equal(out[18], "VAR1 & \\multil{-} & Variable 1 \\\\")
-  expect_equal(out[19], "VAR2 & \\multil{-} & Variable 2 \\\\")
+  expect_equal(out[17], "VAR1 & \\multil{-} & Variable 1 \\\\")
+  expect_equal(out[18], "VAR2 & \\multil{-} & Variable 2 \\\\")
+  expect_equal(out[20], "\\end{xltabular}")
 })
 
 
@@ -32,6 +33,6 @@ test_that("multiple data.frame", {
   expect_message(out <- makeBGM(varueInfo_l2),
                  "Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geaendert.")
   expect_equal(out[1], "\\clearpage")
-  expect_equal(out[18], "VAR1 & \\multil{-} & Variable 1 \\\\")
-  expect_equal(out[19], "VAR2 & \\multil{-} & Variable 2 \\\\")
+  expect_equal(out[17], "VAR1 & \\multil{-} & Variable 1 \\\\")
+  expect_equal(out[18], "VAR2 & \\multil{-} & Variable 2 \\\\")
 })

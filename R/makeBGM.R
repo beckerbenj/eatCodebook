@@ -69,8 +69,8 @@ makeBGM.data.frame <- function(varueInfo) {
                  "\\section*{Hintergrundmodell}\n",
                  "\\addcontentsline{toc}{section}{Hintergrundmodell}",
                  "\\ihead[\\leftmark]{\\leftmark \\newline \\textsc{Hintergrundmodell}}",
-                 "\\begin{longtabu}{llQ} % die ersten beiden Spalten sind so breit wie sie mindestens sein muessen + linksbuendig (Spaltentyp l). Die letzte Spalte ist linksbuendig+kein Blocksatz + Breite ist gleich dem Rest, der nach Rechts noch frei ist (Spaltentyp Q)",
-                 "\\caption*{\\cellcolor{white} \\textbf{Variablen im Hintergrundmodell}}\\\\",
+                 "\\captionof*{table}{\\textbf{Variablen im Hintergrundmodell}}",
+                 "\\begin{xltabular}{\\textwidth}{llX} % die ersten beiden Spalten sind so breit wie sie mindestens sein muessen + linksbuendig (Spaltentyp l). Die letzte Spalte ist linksbuendig+kein Blocksatz + Breite ist gleich dem Rest, der nach Rechts noch frei ist (Spaltentyp Q)",
                  "\\toprule",
                  "\\headrow",
                  "\\textbf{Hintergrundvariable} & \\textbf{Erstellt aus } & \\textbf{Inhalt der Hintergrundvariable}  \\\\",
@@ -79,10 +79,10 @@ makeBGM.data.frame <- function(varueInfo) {
                  "\\hline \\multicolumn{3}{c}{\\cellcolor{white} \\textit{Fortsetzung auf der nächsten Seite}}\\\\\\hline",
                  "\\endfoot",
                  "\\endlastfoot",
-                 "\\taburowcolors{white .. lg}",
+                 #"\\taburowcolors{white .. lg}",
                  paste0(hint.info$Var.Name, " & ", hint.info$HGM.Variable.erstellt.aus, " & ", hint.info$LabelSH, " \\\\"),
                  "\\bottomrule",
-                 "\\end{longtabu}")
+                 "\\end{xltabular}")
     skript
   }
 }
