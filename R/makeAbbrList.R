@@ -47,7 +47,7 @@ makeAbbrList <- function(filePath, captions=list('Akronyme'= 'Abk{\\"u}rzungen',
                   paste0('\\hline \\multicolumn{',dim(v)[2],'}{@{}c@{}}{\\cellcolor{white} \\textit{Fortsetzung auf der n{\\"a}chsten Seite}}\\\\\\hline'),
                   '\\endfoot',
                   '\\endlastfoot',
-                  #'\\taburowcolors{white .. lg}',
+                  # '\\taburowcolors{white .. lg}',
                   paste0(sapply(1:dim(v)[1] , function(d) paste0(v[d,] , collapse=' & ' )) , '\\\\'),
                   '\\nobreakbottomrule',
                   '\\end{xltabular}\n')

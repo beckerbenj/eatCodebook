@@ -114,8 +114,8 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
                         z[,"scale"] <- NA
                         return(z)
                    }
-                   if ( class(GADSdat[["dat"]][,z[["varName"]]]) == "character") {scale <- "nominal"}
-                   if ( class(GADSdat[["dat"]][,z[["varName"]]]) == "numeric") {
+                   if ( is.character(GADSdat[["dat"]][,z[["varName"]]])) {scale <- "nominal"}
+                   if ( is.numeric(GADSdat[["dat"]][,z[["varName"]]])) {
                         mis    <- GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == z[["varName"]]),]
                         mis    <- mis[which(mis[,"missings"] == "miss"),"value"]
                         nonmis <- sort(setdiff(unique(GADSdat[["dat"]][,z[["varName"]]]), mis))
@@ -146,7 +146,7 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
                         }
     ### wenn das erste Kriterium fuer numerisch nicht erfuellt wurde, soll hier das zweite geprueft werden: wenn eine variable nur missings als definierte labels hat, dann soll sie numerisch sein
                         if (scale != "numeric") {
-                            if ( all(na.omit(GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == z[["varName"]]),"missings"]) == "miss")) {
+                            if ( all(stats::na.omit(GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == z[["varName"]]),"missings"]) == "miss")) {
                                  # message(paste0("'",z[["varName"]],"': only missing labels are defined in in the labels sheet of the GADSdat object. Hence, '",z[["varName"]],"' is expected to be numeric. Change 'scale' value from '",scale,"' to 'numeric'."))
                                  scale <- "numeric"
                             }

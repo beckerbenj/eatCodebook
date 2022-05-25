@@ -79,7 +79,7 @@ makeBGM.data.frame <- function(varueInfo) {
                  '\\hline \\multicolumn{3}{c}{\\cellcolor{white} \\textit{Fortsetzung auf der n{\\"a}chsten Seite}}\\\\\\hline',
                  '\\endfoot',
                  '\\endlastfoot',
-                 #'\\taburowcolors{white .. lg}',
+                 # '\\taburowcolors{white .. lg}',
                  paste0(hint.info$Var.Name, ' & ', hint.info$HGM.Variable.erstellt.aus, ' & ', hint.info$LabelSH, ' \\\\'),
                  '\\bottomrule',
                  '\\end{xltabular}')

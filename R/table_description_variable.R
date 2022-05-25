@@ -114,10 +114,10 @@ table_description_variable <- function(name, varue.info, varue.missings=NULL, va
     #### 16.04.: Hotfix Benjamin: Bug bei Skalen-Variablen: length(name) ist hier nicht groesser 1, obwohl das erwartet wurde -> else if statement eingebaut!!
 
     # Skript für Bericht der Missingkategorien vorbereiten - Form: "$ZAHL=$~\\textit{LabelSH};" bzw. "Fehlende Werte: -96 -- -99", wenn keine Labels vergeben wurden
-    if (class(werte) == "list") { ### 16.04.: Hotfix
+    if (is.list(werte) && !is.data.frame(werte)) { ### 16.04.: Hotfix
       werte <- c("sysmis.totalabs" =as.character(max(as.numeric(werte[[length(werte)]]["sysmis.totalabs",]), na.rm=TRUE) ))
     } else {
-      if(class(werte) %in% c("matrix" , "data.frame")){
+      if(is.data.frame(werte) || is.matrix(werte)){
         werte <- c("sysmis.totalabs" =as.character(max(as.numeric(werte["sysmis.totalabs",]), na.rm=TRUE) ))
       }
     }

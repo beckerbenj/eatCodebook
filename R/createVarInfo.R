@@ -37,7 +37,7 @@ createVarInfo.GADSdat <- function(GADSdat, inputForDescriptives, encodingList = 
     newRow <- var_labs2[var_labs2$varName == first_entry, ]
     newRow[, "varName"] <- i
 
-    var_labs2 <- insertRows(var_labs2, newRow = newRow, index = which(var_labs2$varName == first_entry))
+    var_labs2 <- insertRows(var_labs2, newRows = newRow, index = which(var_labs2$varName == first_entry))
   }
 
   ## network variables

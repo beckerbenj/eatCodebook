@@ -6,8 +6,8 @@
 \usage{
 makeAbbrList(
   filePath,
-  captions = list(Akronyme = "Abkuerzungen", `Statistische Formelzeichen` =
-    "Statistische Formelzeichen"),
+  captions = list(Akronyme =
+    "Abk{\\\\\\"u}rzungen", `Statistische Formelzeichen` = "Statistische Formelzeichen"),
   sort.entries = TRUE
 )
 }

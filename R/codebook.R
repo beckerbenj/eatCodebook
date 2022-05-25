@@ -140,7 +140,7 @@ codebook <- function( varue.info ,
     return(paste0(g, ".", r))
   } ) ) )
 
-  alleEbenen <- list( "Chapter"=as.character(as.roman(1:(length(fbshort)+1))),
+  alleEbenen <- list( "Chapter"=as.character(utils::as.roman(1:(length(fbshort)+1))),
                       "Section"=unique(unlist(sapply( alleEbenen , function(d) paste0(unlist(strsplit(d , ""))[ 1:(which(unlist(strsplit(d , "")) %in% ".")[1]-1) ]  , collapse="")
                       ) ) ),
                       "SubSection"=unique(sapply( alleEbenen , function(d) {
