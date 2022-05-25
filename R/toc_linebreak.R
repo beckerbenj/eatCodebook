@@ -1,7 +1,7 @@
 # Funktion, um im Inhaltsverzeichnis einen Zeilenumbruch zu setzen
 toc_linebreak <- function( var_title, bold , space_title, do.print=TRUE ){
   if(do.print){
-    message("Check, ob Zeilenumbrüche ins Inhaltsverzeichnis muessen (rekursive Funktion).")
+    message("Check, ob Zeilenumbrueche ins Inhaltsverzeichnis muessen (rekursive Funktion).")
   }
   k <- 1
   while(sum(sapply(1:k , function(v) Latex.length( unname(unlist(strsplit(var_title , " ")))[v] , bold=bold , FALSE) +  Latex.length( " " , bold=bold, FALSE)) ) < space_title){
