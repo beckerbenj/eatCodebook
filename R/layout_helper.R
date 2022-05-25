@@ -145,18 +145,18 @@ layout.kategorial <- function(name , kennwerte.var = NULL, id.fb, varue.info, va
                                            'missing'=varval,
                                            'LabelSH'=labelsh,
                                            stringsAsFactors = FALSE )
-    if( is.null(kennwerte.var) ){
-      werte <- kennwerte.kategorial.variation( name=name, varue.missings=varue.missings , Gesamtdatensatz=Gesamtdatensatz)
-    } else {
+    #if( is.null(kennwerte.var) ){
+    #  werte <- kennwerte.kategorial.variation( name=name, varue.missings=varue.missings , Gesamtdatensatz=Gesamtdatensatz)
+    #} else {
       werte <- kennwerte.var
-    }
-  } else {
+    #}
+  #} else {
     # Kennwerte einlesen bzw. berechnen
-    if( is.null(kennwerte.var) ){
-      werte <- kennwerte( name=name, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
+    #if( is.null(kennwerte.var) ){
+     # werte <- kennwerte( name=name, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
     } else {
       werte <- kennwerte.var
-    }
+    #}
   }
 
   # Sonderzeichen fuer Latex
@@ -202,12 +202,8 @@ layout.ordinal <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue
   varue.info.aktuell <- varue.info[varue.info$Var.Name %in% name,]
   varue.missings.aktuell <- varue.missings[varue.missings$Var.name %in% name, ]
 
-  # Kennwerte einlesen bzw. berechnen
-  if( is.null(kennwerte.var) ){
-    werte <- kennwerte( name=name, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  } else {
-    werte <- kennwerte.var
-  }
+  # Kennwerte
+  werte <- kennwerte.var
 
   # Kennwerte-names: bekommen automatisch den namen der Variable rangepastet
   names(werte) <- sub( paste0(name,'\\.(.*)$') , '\\1' , names(werte) )
@@ -261,12 +257,8 @@ layout.metrisch <- function(name , kennwerte.var = NULL, id.fb, varue.info, varu
   # Reduzierte Varue
   varue.info.aktuell <- varue.info[varue.info$Var.Name %in% name,]
   varue.missings.aktuell <- varue.missings[varue.missings$Var.name %in% name,]
-  # Kennwerte einlesen bzw. berechnen
-  if( is.null(kennwerte.var) ){
-    werte <- kennwerte( name=name, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  } else {
-    werte <- kennwerte.var
-  }
+  # Kennwerte
+  werte <- kennwerte.var
 
   # Kennwerte-names: bekommen automatisch den namen der Variable rangepastet
   names(werte) <- sub( paste0(name,'\\.(.*)$') , '\\1' , names(werte) )
@@ -345,12 +337,8 @@ layout.skala <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.m
   # Reduzierte Item-Varue der Variableninformationen
   varue.info.item <- varue.info[varue.info$varName %in% skala.items[1],]
 
-  # Kennwerte berechnen bzw. nutzen
-  if( is.null(kennwerte.var) ){
-    werte <- kennwerte( name=name, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  } else {
-    werte <- kennwerte.var
-  }
+  # Kennwerte
+  werte <- kennwerte.var
 
   # Sonderzeichen fuer Latex
   nameSH <- gsub( '_' , '\\_' , name , fixed = TRUE)
@@ -439,12 +427,8 @@ layout.skala.fake <- function(name , kennwerte.var = NULL, id.fb, varue.info, va
   # Reduzierte Item-Varue der Variableninformationen
   varue.info.item <- varue.info[varue.info$Var.Name %in% skala.items[1],]
 
-  # Kennwerte berechnen bzw. nutzen
-  if( is.null(kennwerte.var) ){
-    werte <- kennwerte( name=name, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  } else {
-    werte <- kennwerte.var
-  }
+  # Kennwerte
+  werte <- kennwerte.var
 
   # Sonderzeichen fuer Latex
   nameSH <- gsub( '_' , '\\_' , name , fixed = TRUE)
@@ -495,12 +479,8 @@ layout.gepoolt.metrisch <- function(name , kennwerte.var = NULL, id.fb, varue.in
   # Reduzierte Skala-Varue der Variableninformationen
   varue.info.aktuell <- varue.info[varue.info$Var.Name %in% name,]
 
-  # Kennwerte berechnen bzw. uebernehmen
-  if( is.null(kennwerte.var) ){
-    werte <- kennwerte( name=name, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  } else {
-    werte <- kennwerte.var
-  }
+  # Kennwerte
+  werte <- kennwerte.var
 
   # Items der gepoolten Variable
   skala.items <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Items_der_Skala' ], ',', fixed = TRUE ) ) )
@@ -568,12 +548,8 @@ layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, id.fb, varue.
   varue.info.aktuell <- varue.info[varue.info$Var.Name %in% name,]
   varue.missings.aktuell <-  varue.missings[varue.missings$Var.name %in% name, ]
 
-  # Kennwerte uebernehemen bzw. berechnen
-  if( is.null(kennwerte.var) ){
-    werte <- kennwerte( name=name, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  } else {
-    werte <- kennwerte.var
-  }
+  # Kennwerte
+  werte <- kennwerte.var
 
   # Items der gepoolten Variable
   skala.items <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Items_der_Skala' ], ',', fixed = TRUE ) ) )
