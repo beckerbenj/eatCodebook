@@ -152,7 +152,7 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
 
     # Skript fuer Bericht der Missingkategorien vorbereiten - Form: '$ZAHL=$~\\textit{LabelSH};' bzw. 'Fehlende Werte: -96 -- -99', wenn keine Labels vergeben wurden
     if(length(name)>1){
-      if(class(werte)=='list'){
+      if(is.list(werte) && !is.data.frame(werte)){
         werte <- c('sysmis.totalabs' =as.character(max(as.numeric(werte[[length(werte)]]['sysmis.totalabs',]), na.rm=TRUE) ))
       } else {
         werte <- c('sysmis.totalabs' =as.character(max(as.numeric(werte['sysmis.totalabs',]), na.rm=TRUE) ))
@@ -160,7 +160,7 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
     } else if (length(name) == 1 && class(werte) == 'list') { ### 16.04.: Hotfix
       werte <- c('sysmis.totalabs' =as.character(max(as.numeric(werte[[length(werte)]]['sysmis.totalabs',]), na.rm=TRUE) ))
     } else {
-      if(class(werte) %in% c('matrix' , 'data.frame')){
+      if(is.data.frame(werte) || is.matrix(werte)){
         werte <- c('sysmis.totalabs' =as.character(max(as.numeric(werte['sysmis.totalabs',]), na.rm=TRUE) ))
       }
     }
