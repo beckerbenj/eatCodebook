@@ -172,7 +172,7 @@ variableCols <- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"]
       } }
 
 # part-whole correlation
-  out <- capture.output(suppressWarnings(pwc <- psych::alpha(dat[,allNam[["vc"]]])[["item.stats"]]))
+  out <- utils::capture.output(suppressWarnings(pwc <- psych::alpha(dat[,allNam[["vc"]]])[["item.stats"]]))
   pwc <- eatTools::crop(format(round(pwc[,"r.drop"], digits=2), nsmall = 2))
   pwc <- gsub("^-0", "-", sub("^0", "", pwc))
   desc<- rbind(desc, pwc)
