@@ -5,15 +5,14 @@
 #'
 #' Create the complete codebook latex script.
 #'
-#'@param varue.info Liste mit data.frames der Uebersichten der Variableninformationen
-#'@param varue.missings Liste mit data.frames der Uebersichten der Werteinformationen
-#'@param varue.gliederung Liste mit data.frames der Uebersichten der Gliederungsinformationen
-#'@param skalen.info data.frame, Skaleninformationen ueber alle Fragebogen
-#'@param varue.reg Liste mit data.frames der Uebersichten der Registerinformationen
+#'@param varInfo Liste mit data.frames der Uebersichten der Variableninformationen
+#'@param missings Liste mit data.frames der Uebersichten der Werteinformationen
+#'@param struc Liste mit data.frames der Uebersichten der Gliederungsinformationen
+#'@param scaleInfo data.frame, Skaleninformationen ueber alle Fragebogen
+#'@param register Liste mit data.frames der Uebersichten der Registerinformationen
 #'@param make.reg tbd
-#'@param Gesamtdatensatz Liste mit data.frames der Datensaetze
+#'@param dat Liste mit data.frames der Datensaetze
 #'@param Kennwertedatensatz Liste mit data.frames der Kennwertedatensaetze
-#'@param variablen Liste mit character-Vektoren der zu berichtenden Variablen
 #'@param id tbd
 #'@param fbshort Character-Vektor, Fragebogenkuerzel
 #'@param fblong Character-Vektor, Namen der Fragebogen, wie sie im Skalenhandbuch ausformuliert genannt werden
@@ -24,7 +23,6 @@
 #'@param hintmod Character-Vektor, Tabelle Hintergrundmodell
 #'@param lastpage Character-Vektor, Letzte Seite
 #'
-#'@param varue.info tbd
 #'
 #'@return Codebook latex script.
 #'
@@ -32,70 +30,28 @@
 #'#tbd
 #'
 #'@export
-codebook <- function( varue.info ,
-                     varue.missings,
-                     varue.gliederung,
-                     skalen.info,
-                     varue.reg,
-                     make.reg=NULL,
-                     Gesamtdatensatz,
-                     Kennwertedatensatz,
-                     variablen,
-                     id,
-                     fbshort,
-                     fblong,
-                     deckblatt,
-                     intro,
-                     literatur,
-                     abkuerzverz,
-                     hintmod,
-                     lastpage) {
+codebook <- function(varInfo, missings, struc, scaleInfo, register,
+                     make.reg = NULL, dat, Kennwertedatensatz, id,
+                     fbshort, fblong,
+                     deckblatt, intro, literatur, abkuerzverz, hintmod, lastpage) {
 
-  if(any(is.null(fbshort))){
-    stop()
+  # allow input as single data.frames
+  if(is.data.frame(varInfo)) {
+    varInfo <- list(varInfo)
+    missings <- list(missings)
+    dat = list(dat)
+    Kennwertedatensatz = list(Kennwertedatensatz)
+    fblong <- list(fblong)
+    names(varInfo) <- names(missings) <- names(dat) <- names(Kennwertedatensatz) <- names(fblong) <- fbshort
   }
 
-  ### names anpassen (zur Sicherheit) ###
-  if(length(Gesamtdatensatz)!=length(fbshort)) stop()
-  if( ! all(names(Gesamtdatensatz) %in% fbshort)){
-      names(Gesamtdatensatz) <- fbshort
-  }
+  check_codebook_input(varInfo = varInfo, missings = missings, struc = struc, register = register,
+                       dat = dat, Kennwertedatensatz = Kennwertedatensatz, fbshort = fbshort, fblong = fblong)
 
-  if( length(varue.info)!=length(fbshort)) stop()
-  if( ! all(names(varue.info) %in% fbshort)){
-      names(varue.info) <- fbshort
-  }
-
-  if( length(varue.missings)!=length(fbshort)) stop()
-  if( ! all(names(varue.missings) %in% fbshort)){
-      names(varue.missings) <- fbshort
-  }
-
-  if( length(varue.gliederung)!=length(fbshort)) stop()
-  if( ! all(names(varue.gliederung) %in% fbshort)){
-      names(varue.gliederung) <- fbshort
-  }
-
-  if( length(varue.reg)!=length(fbshort)) stop()
-  if( ! all(names(varue.reg) %in% fbshort)){
-      names(varue.reg) <- fbshort
-  }
-
-  if( length(Kennwertedatensatz)!=length(fbshort)) stop()
-  if( ! all(names(Kennwertedatensatz) %in% fbshort)){
-    names(Kennwertedatensatz) <- fbshort
-  }
-
-  if( length(variablen)!=length(fbshort)) stop()
-  if( ! all(names(variablen) %in% fbshort)){
-      names(variablen) <- fbshort
-  }
-
-  if( length(fblong)!=length(fbshort)) stop()
-  if( ! all(names(fblong) %in% fbshort)){
-      names(fblong) <- fbshort
-  }
-
+  # SH-Variablen
+  variablen <- lapply(varInfo, function(single_varInfo) {
+    single_varInfo[single_varInfo$in.DS.und.SH %in% c("ja", "sh"), "Var.Name"]
+  })
 
   #### Skript erstellen ####
   # Doppelte Variablen
@@ -103,37 +59,21 @@ codebook <- function( varue.info ,
   double.vars <- names( table(double.vars)[table(double.vars)>1])
 
   # TRUE/FALSE pro Instrument, ob Register erstellt werden soll (falls nicht schon uebergeben)
-  if(is.null(make.reg)){
+  if(is.null(make.reg) || ! is.logical(make.reg) || ! length(make.reg)==length(fbshort)){
     make.reg <- unlist(lapply( fbshort , function(d) {
-      bool <- all(sapply( names(varue.reg[[d]]) , function(k) all(is.null(varue.reg[[d]][[k]])) ) )
-      bool <- bool |  all(sapply( names(varue.reg[[d]]) , function(k) all( gsub("\\s" , "" , varue.reg[[d]][[k]]) %in% "" ) ) )
-      return(!bool)
-    } ) )
-
-    names(make.reg) <- fbshort
-  } else if( ! class(make.reg)=="boolean"){
-    make.reg <- unlist(lapply( fbshort , function(d) {
-      bool <- all(sapply( names(varue.reg[[d]]) , function(k) all(is.null(varue.reg[[d]][[k]])) ) )
-      bool <- bool |  all(sapply( names(varue.reg[[d]]) , function(k) all( gsub("\\s" , "" , varue.reg[[d]][[k]]) %in% "" ) ) )
-      return(!bool)
-    } ) )
-
-    names(make.reg) <- fbshort
-  } else if( ! length(make.reg)==length(fbshort)) {
-    make.reg <- unlist(lapply( fbshort , function(d) {
-      bool <- all(sapply( names(varue.reg[[d]]) , function(k) all(is.null(varue.reg[[d]][[k]])) ) )
-      bool <- bool |  all(sapply( names(varue.reg[[d]]) , function(k) all( gsub("\\s" , "" , varue.reg[[d]][[k]]) %in% "" ) ) )
+      bool <- all(sapply( names(register[[d]]) , function(k) all(is.null(register[[d]][[k]])) ) )
+      bool <- bool |  all(sapply( names(register[[d]]) , function(k) all( gsub("\\s" , "" , register[[d]][[k]]) %in% "" ) ) )
       return(!bool)
     } ) )
 
     names(make.reg) <- fbshort
   }
 
-
+  #browser()
   # Praeambel
   alleEbenen <- unique(unlist(sapply(1:length(fbshort) , function(d) {
-    g <- paste0(varue.info[[d]]$Gliederung[ varue.info[[d]]$in.DS.und.SH %in% c("ja","sh") ] )
-    r <- varue.info[[d]]$Reihenfolge[varue.info[[d]]$in.DS.und.SH %in% c("ja","sh")]
+    g <- paste0(varInfo[[d]]$Gliederung[ varInfo[[d]]$in.DS.und.SH %in% c("ja","sh") ] )
+    r <- varInfo[[d]]$Reihenfolge[varInfo[[d]]$in.DS.und.SH %in% c("ja","sh")]
 
     r[ r %in% "-"] <- 0
 
@@ -167,7 +107,7 @@ codebook <- function( varue.info ,
 
   # Skript der Variablen erstellen
   skript.fb <- lapply( fbshort , function(d) {
-    #												lastcountervar <- varue.info[[d]]$Var.Name[ varue.info[[d]]$in.DS.und.SH %in% c("ja","sh") ][length( varue.info[[d]]$Var.Name[varue.info[[d]]$in.DS.und.SH %in% c("ja","sh")] )]
+    #												lastcountervar <- varInfo[[d]]$Var.Name[ varInfo[[d]]$in.DS.und.SH %in% c("ja","sh") ][length( varInfo[[d]]$Var.Name[varInfo[[d]]$in.DS.und.SH %in% c("ja","sh")] )]
     message(paste0("\n Erstelle Layout-Skripte fuer: ", d, "\n"))
     ret. <- c( "\\phantomsection" ,
                paste0("\\chapter{",fblong[d],"}"),
@@ -178,11 +118,11 @@ codebook <- function( varue.info ,
                              fb=tolower(d),
                              id.fb=id[d],
                              kennwerte.var = unlist(Kennwertedatensatz[[d]][ names(Kennwertedatensatz[[d]]) %in% v] , recursive=FALSE),
-                             varue.info=varue.info[[d]],
-                             varue.missings=varue.missings[[d]],
-                             Gesamtdatensatz=Gesamtdatensatz[[d]],
-                             skalen.info=skalen.info[ skalen.info$Quelle %in% d,],
-                             varue.gliederung=varue.gliederung[[d]],
+                             varue.info = varInfo[[d]],
+                             varue.missings=missings[[d]],
+                             Gesamtdatensatz=dat[[d]],
+                             skalen.info=scaleInfo[ scaleInfo$Quelle %in% d,],
+                             varue.gliederung=struc[[d]],
                              double.vars=double.vars,
                              makeCounter=make.reg[d],
                              all_length=all_length)
@@ -200,7 +140,7 @@ codebook <- function( varue.info ,
       return(NULL)
     } else {
       # Erstelle Register
-      return(makeRegister(fblong = fblong, fb.akt=d , varue.reg=varue.reg[[d]] , double.vars=double.vars) )
+      return(makeRegister(fblong = fblong, fb.akt=d , varue.reg=register[[d]] , double.vars=double.vars) )
     }
   } )
 
@@ -222,4 +162,39 @@ codebook <- function( varue.info ,
   skript <- c(layout.prae.ges, intro, skript.fb, anhang, "\\end{document}")
   skript
 }
+
+
+
+# -----------------------------------------------------------------------------
+check_codebook_input <- function(varInfo, missings, struc, register,
+                                 dat, Kennwertedatensatz, fbshort, fblong) {
+  if(any(is.null(fbshort))){
+    stop()
+  }
+
+  ### names anpassen (zur Sicherheit) ###
+  if(length(dat)!=length(fbshort)) stop()
+  if( ! all(names(dat) %in% fbshort)) stop()
+
+  if( length(varInfo)!=length(fbshort)) stop()
+  if( ! all(names(varInfo) %in% fbshort)) stop()
+
+  if( length(missings)!=length(fbshort)) stop()
+  if( ! all(names(missings) %in% fbshort)) stop()
+
+  if( length(struc)!=length(fbshort)) stop()
+  if( ! all(names(struc) %in% fbshort)) stop()
+
+  if( length(register)!=length(fbshort)) stop()
+  if( ! all(names(register) %in% fbshort)) stop()
+
+  if( length(Kennwertedatensatz)!=length(fbshort)) stop()
+  if( ! all(names(Kennwertedatensatz) %in% fbshort)) stop()
+
+  if( length(fblong)!=length(fbshort)) stop()
+  if( ! all(names(fblong) %in% fbshort)) stop()
+
+  NULL
+}
+
 

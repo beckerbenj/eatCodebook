@@ -102,14 +102,11 @@ meta_final <- makeMetadata("inst/extdata/example_meta.xlsx")
 
 ## Sonstiges Zeug von Felix
 # --------------------------------------------------
-# SH-Variablen
-variablen.all <- varInfo_final2[varInfo_final2$in.DS.und.SH %in% c("ja", "sh"), "Var.Name"]
-
 # ID-Variablen
 id <- c(dat = "id")
 
 
-## Codebook (tbd)
+## Codebook
 # --------------------------------------------------
 struc_final2 <- struc_final
 names(struc_final2) <- "dat"
@@ -120,19 +117,18 @@ descr2 <- descr
 descr2$skala1[[2]] <- as.data.frame(descr2$skala1[[2]])
 
 
-latex_skript <- codebook(varue.info = list(dat = varInfo_final2), varue.missings = list(dat = miss_final), varue.gliederung = struc_final2,
-         skalen.info = scaleInfo_final,
-         varue.reg = register_final, make.reg = NULL, Gesamtdatensatz = list(dat = eatGADS::extractData(gd)),
-         Kennwertedatensatz = list(dat = descr2),
-         variablen = list(dat = variablen.all),
-         id = id, fbshort = "dat", fblong = c(dat = "dat"), deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
-         lastpage = "")
+latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
+                         scaleInfo = scaleInfo_final, register = register_final, make.reg = NULL, dat = eatGADS::extractData(gd),
+                         Kennwertedatensatz = descr2, id = id, fbshort = "dat", fblong = "Datensatz",
+                         deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
+                         lastpage = "")
 
 #### SKRIPTE SCHREIBEN ####
 write.table(latex_skript , file = "other_code/minimal_example/minimal_example.tex" , fileEncoding="UTF-8" ,
             col.names=FALSE , row.names=FALSE , quote = FALSE )
 write.table(meta_final , file = "other_code/minimal_example/minimal_example_meta.xmpdata", fileEncoding="UTF-8" ,
             col.names=FALSE , row.names=FALSE , quote = FALSE )
+
 
 
 
@@ -154,11 +150,4 @@ str(Kennwertedatensatz$Salgsf)
 Kennwertedatensatz$stufe_deu_hoeren_gepoolt
 
 
-## Codebook (tbd)
-# --------------------------------------------------
-# eigentlich sollte es mit diesem Call laufen?
-codebook(varue.info = varInfo_final2, varue.missings = miss_final, varue.gliederung = struc_final, skalen.info = scaleInfo_final,
-         varue.reg = register_final, make.reg = NULL, Gesamtdatensatz = gd, Kennwertedatensatz = descr, variablen = variablen.all,
-         id = id, fbshort = "", fblong = "", deckblatt = "", intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
-         lastpage = "")
 

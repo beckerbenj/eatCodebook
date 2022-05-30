@@ -133,7 +133,7 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
 
   # Anmerkung: 	Im Folgenden werden die Ueberschriften für ein evtl. neu zu beginnendes Kapitel, ein evtl. neu zu beginnender
   #				Abschnitt und den auf jeden Fall neu zu beginnenden Unterabschnitt definiert.
-  #				Beim Einfügen von Fußnoten in die Ueberschrift kann es zu Problemen im Inhaltsverzeichnis und den Bookmarks kommen.
+  #				Beim Einfuegen von Fussnoten in die Ueberschrift kann es zu Problemen im Inhaltsverzeichnis und den Bookmarks kommen.
   #				Die Probleme sind dergestalt, dass der Text für den Titel den Latex-Befehl für das Setzen der Fußnote beinhaltet, also
   #				von der Form "Kapiteltitelanfang\footnote{fußnotentext}Kapiteltitelende" ist. Um das zu korrigieren wird abgefragt, ob
   #				im Titel eine Fußnote gesetzt wird und ein Kurztitel mit "\section[Kurztitel]{Langtitel} gesetzt, der dem Langtitel ohne
