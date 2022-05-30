@@ -132,6 +132,20 @@ write.table(meta_final , file = "other_code/minimal_example/minimal_example_meta
 
 
 
+## Codebook ohne Register
+# --------------------------------------------------
+latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
+                         scaleInfo = scaleInfo_final, register = register_final, make.reg = FALSE, dat = eatGADS::extractData(gd),
+                         Kennwertedatensatz = descr2, id = id, fbshort = "dat", fblong = "Datensatz",
+                         deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
+                         lastpage = "")
+
+#### SKRIPTE SCHREIBEN ####
+write.table(latex_skript , file = "other_code/minimal_example/minimal_example_noregister.tex" , fileEncoding="UTF-8" ,
+            col.names=FALSE , row.names=FALSE , quote = FALSE )
+
+
+
 ## Ueberlegungen
 # --------------------------------------------------
 # getExcel umschreiben, sodass im Zweifelsfall doch immer eine Liste (bei Input df -> Laenge 1 rauskommt?)

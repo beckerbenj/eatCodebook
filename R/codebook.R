@@ -65,9 +65,8 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register,
       bool <- bool |  all(sapply( names(register[[d]]) , function(k) all( gsub("\\s" , "" , register[[d]][[k]]) %in% "" ) ) )
       return(!bool)
     } ) )
-
-    names(make.reg) <- fbshort
   }
+  names(make.reg) <- fbshort
 
   #browser()
   # Praeambel
