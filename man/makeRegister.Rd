@@ -4,17 +4,19 @@
 \alias{makeRegister}
 \title{Create register.}
 \usage{
-makeRegister(fblong, fb.akt, varue.reg, double.vars)
+makeRegister(fbshort, fblong, fb.akt, varue.reg, double.vars)
 }
 \arguments{
+\item{fbshort}{Short name of data set}
+
 \item{fblong}{Full name of data set}
 
-\item{fb.akt}{Fragebogenkuerzel aus fbshort}
+\item{fb.akt}{Relevant entry from \code{fbshort}.}
 
 \item{varue.reg}{Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
 Zeilen sind VarNamen. Eintraege sind \code{"x"} oder \code{""}, ob Variable unter dem Schlagwort im Register aufgelistet werden soll.}
 
-\item{double.vars}{tbd}
+\item{double.vars}{Character vector containing duplicate variable names between different data sets.}
 }
 \value{
 Returns a (character vector) latex snippet.

@@ -5,15 +5,14 @@
 \title{Create codebook script.}
 \usage{
 codebook(
-  varue.info,
-  varue.missings,
-  varue.gliederung,
-  skalen.info,
-  varue.reg,
+  varInfo,
+  missings,
+  struc,
+  scaleInfo,
+  register,
   make.reg = NULL,
-  Gesamtdatensatz,
+  dat,
   Kennwertedatensatz,
-  variablen,
   id,
   fbshort,
   fblong,
@@ -26,41 +25,39 @@ codebook(
 )
 }
 \arguments{
-\item{varue.info}{tbd}
+\item{varInfo}{\code{data.frame} or list of \code{data.frames} containing the variable information, imported via \code{\link{getVarInfo}}.}
 
-\item{varue.missings}{Liste mit data.frames der Uebersichten der Werteinformationen}
+\item{missings}{\code{data.frame} or list of \code{data.frames} containing the missing information, imported via \code{\link{getMissings}}.}
 
-\item{varue.gliederung}{Liste mit data.frames der Uebersichten der Gliederungsinformationen}
+\item{struc}{\code{data.frame} containing the structure of the codebook, imported via \code{\link{getStructure}}.}
 
-\item{skalen.info}{data.frame, Skaleninformationen ueber alle Fragebogen}
+\item{scaleInfo}{\code{data.frame} containing the information on scales, imported via \code{\link{getScaleInfo}}.}
 
-\item{varue.reg}{Liste mit data.frames der Uebersichten der Registerinformationen}
+\item{register}{\code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.}
 
-\item{make.reg}{tbd}
+\item{make.reg}{Logical. Should a register be created?}
 
-\item{Gesamtdatensatz}{Liste mit data.frames der Datensaetze}
+\item{dat}{\code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{eatGADS::import_spss}}.}
 
-\item{Kennwertedatensatz}{Liste mit data.frames der Kennwertedatensaetze}
+\item{Kennwertedatensatz}{\code{data.frame} or list of \code{data.frame} containing the descriptive statistics, imported via \code{\link{calculateDescriptives}}.}
 
-\item{variablen}{Liste mit character-Vektoren der zu berichtenden Variablen}
+\item{id}{Named character vector containing the identifier variable in each data set.}
 
-\item{id}{tbd}
+\item{fbshort}{Character vector with the short names of the data sets.}
 
-\item{fbshort}{Character-Vektor, Fragebogenkuerzel}
+\item{fblong}{Character vector with the long names of the data sets as they should appear in the codebook.}
 
-\item{fblong}{Character-Vektor, Namen der Fragebogen, wie sie im Skalenhandbuch ausformuliert genannt werden}
+\item{deckblatt}{Character vector with the cover page, created via \code{\link{makeCover}}.}
 
-\item{deckblatt}{tbd}
+\item{intro}{Character vector, introduction.}
 
-\item{intro}{Character-Vektor, Einleitung}
+\item{literatur}{Character vector with the literature information, created via \code{\link{makeLit}}.}
 
-\item{literatur}{Character-Vektor, Literaturverzeichnis}
+\item{abkuerzverz}{Character vector with the abbreviations, created via \code{\link{makeAbbrList}}.}
 
-\item{abkuerzverz}{Character-Vekotr, Tabelle Abkuerzungsverzeichnis}
+\item{hintmod}{Character vector with the information on the background model, created via \code{\link{makeBGM}}.}
 
-\item{hintmod}{Character-Vektor, Tabelle Hintergrundmodell}
-
-\item{lastpage}{Character-Vektor, Letzte Seite}
+\item{lastpage}{Character vektor, last page.}
 }
 \value{
 Codebook latex script.

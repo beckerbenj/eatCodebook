@@ -5,24 +5,23 @@
 #'
 #' Create the complete codebook latex script.
 #'
-#'@param varInfo Liste mit data.frames der Uebersichten der Variableninformationen
-#'@param missings Liste mit data.frames der Uebersichten der Werteinformationen
-#'@param struc Liste mit data.frames der Uebersichten der Gliederungsinformationen
-#'@param scaleInfo data.frame, Skaleninformationen ueber alle Fragebogen
-#'@param register Liste mit data.frames der Uebersichten der Registerinformationen
-#'@param make.reg tbd
-#'@param dat Liste mit data.frames der Datensaetze
-#'@param Kennwertedatensatz Liste mit data.frames der Kennwertedatensaetze
-#'@param id tbd
-#'@param fbshort Character-Vektor, Fragebogenkuerzel
-#'@param fblong Character-Vektor, Namen der Fragebogen, wie sie im Skalenhandbuch ausformuliert genannt werden
-#'@param deckblatt tbd
-#'@param intro Character-Vektor, Einleitung
-#'@param literatur Character-Vektor, Literaturverzeichnis
-#'@param abkuerzverz Character-Vekotr, Tabelle Abkuerzungsverzeichnis
-#'@param hintmod Character-Vektor, Tabelle Hintergrundmodell
-#'@param lastpage Character-Vektor, Letzte Seite
-#'
+#'@param varInfo \code{data.frame} or list of \code{data.frames} containing the variable information, imported via \code{\link{getVarInfo}}.
+#'@param missings \code{data.frame} or list of \code{data.frames} containing the missing information, imported via \code{\link{getMissings}}.
+#'@param struc \code{data.frame} containing the structure of the codebook, imported via \code{\link{getStructure}}.
+#'@param scaleInfo \code{data.frame} containing the information on scales, imported via \code{\link{getScaleInfo}}.
+#'@param register \code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.
+#'@param make.reg Logical. Should a register be created?
+#'@param dat \code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{eatGADS::import_spss}}.
+#'@param Kennwertedatensatz \code{data.frame} or list of \code{data.frame} containing the descriptive statistics, imported via \code{\link{calculateDescriptives}}.
+#'@param id Named character vector containing the identifier variable in each data set.
+#'@param fbshort Character vector with the short names of the data sets.
+#'@param fblong Character vector with the long names of the data sets as they should appear in the codebook.
+#'@param deckblatt Character vector with the cover page, created via \code{\link{makeCover}}.
+#'@param intro Character vector, introduction.
+#'@param literatur Character vector with the literature information, created via \code{\link{makeLit}}.
+#'@param abkuerzverz Character vector with the abbreviations, created via \code{\link{makeAbbrList}}.
+#'@param hintmod Character vector with the information on the background model, created via \code{\link{makeBGM}}.
+#'@param lastpage Character vektor, last page.
 #'
 #'@return Codebook latex script.
 #'
@@ -30,10 +29,8 @@
 #'#tbd
 #'
 #'@export
-codebook <- function(varInfo, missings, struc, scaleInfo, register,
-                     make.reg = NULL, dat, Kennwertedatensatz, id,
-                     fbshort, fblong,
-                     deckblatt, intro, literatur, abkuerzverz, hintmod, lastpage) {
+codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = NULL, dat, Kennwertedatensatz, id,
+                     fbshort, fblong, deckblatt, intro, literatur, abkuerzverz, hintmod, lastpage) {
 
   # allow input as single data.frames
   if(is.data.frame(varInfo)) {

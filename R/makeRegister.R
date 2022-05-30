@@ -6,10 +6,10 @@
 #'
 #'@param fbshort Short name of data set
 #'@param fblong Full name of data set
-#'@param fb.akt Fragebogenkuerzel aus fbshort
+#'@param fb.akt Relevant entry from \code{fbshort}.
 #'@param varue.reg Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
 #'		   Zeilen sind VarNamen. Eintraege sind \code{"x"} oder \code{""}, ob Variable unter dem Schlagwort im Register aufgelistet werden soll.
-#'@param double.vars tbd
+#'@param double.vars Character vector containing duplicate variable names between different data sets.
 #'
 #'@return Returns a (character vector) latex snippet.
 #'
