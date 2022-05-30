@@ -37,7 +37,7 @@ codebook(
 
 \item{make.reg}{Logical. Should a register be created?}
 
-\item{dat}{\code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{eatGADS::import_spss}}.}
+\item{dat}{\code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{import_spss}}.}
 
 \item{Kennwertedatensatz}{\code{data.frame} or list of \code{data.frame} containing the descriptive statistics, imported via \code{\link{calculateDescriptives}}.}
 

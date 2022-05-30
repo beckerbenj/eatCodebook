@@ -11,7 +11,7 @@
 #'@param scaleInfo \code{data.frame} containing the information on scales, imported via \code{\link{getScaleInfo}}.
 #'@param register \code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.
 #'@param make.reg Logical. Should a register be created?
-#'@param dat \code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{eatGADS::import_spss}}.
+#'@param dat \code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{import_spss}}.
 #'@param Kennwertedatensatz \code{data.frame} or list of \code{data.frame} containing the descriptive statistics, imported via \code{\link{calculateDescriptives}}.
 #'@param id Named character vector containing the identifier variable in each data set.
 #'@param fbshort Character vector with the short names of the data sets.
