@@ -3,6 +3,7 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/beckerbenj/eatCodebook/workflows/R-CMD-check/badge.svg)](https://github.com/beckerbenj/eatCodebook/actions)
+[![Codecov test coverage](https://codecov.io/gh/beckerbenj/eatCodebook/branch/main/graph/badge.svg)](https://app.codecov.io/gh/beckerbenj/eatCodebook?branch=main)
 <!-- badges: end -->
 
 eatCodebook allows the automatic creation of a nicely formatted codebook via `LaTeX`.
