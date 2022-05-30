@@ -4,6 +4,7 @@
 #'
 #' Create register latex snippet.
 #'
+#'@param fbshort Short name of data set
 #'@param fblong Full name of data set
 #'@param fb.akt Fragebogenkuerzel aus fbshort
 #'@param varue.reg Informationen zum Register: data.frame, Spalten sind Schlagwoerter, die im Register aufgelistet sind,
@@ -16,7 +17,7 @@
 #'#tbd
 #'
 #'@export
-makeRegister <- function(fblong, fb.akt, varue.reg, double.vars) {
+makeRegister <- function(fbshort, fblong, fb.akt, varue.reg, double.vars) {
   # Funktion fuer gesamtes Register eines Instruments
 
   #### Vorbereitung ####
@@ -38,7 +39,7 @@ makeRegister <- function(fblong, fb.akt, varue.reg, double.vars) {
                   "\\renewcommand*{\\thefootnote}{\\fnsymbol{footnote}}",
                   "\\renewcommand*{\\thefootnotemark}{\\fnsymbol{footnote}}",
                   "\\begin{register}",
-                  unname( unlist( sapply( schlagwoerter , register.sw, fb.akt=fb.akt , varue.reg=varue.reg ,double.vars=double.vars) ) ),
+                  unname(unlist(sapply(schlagwoerter, register.sw, fb.akt=fb.akt, varue.reg=varue.reg, double.vars=double.vars, fbshort = fbshort))),
                   "\\end{register}"
                   # Hotfix Versuch Benjamin 06.05.19 Formatierung Register
                   , "\\pagebreak"
@@ -50,7 +51,7 @@ makeRegister <- function(fblong, fb.akt, varue.reg, double.vars) {
 
 
 # Funktion, um fuer ein Schlagwort den Registereintrag zu erstellen
-register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars) {
+register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars, fbshort) {
   # INPUT:
   #	schlagwort: Schlagwort, wie es im Register in der Varue vorkommt
   #	fb.akt: Fragebogen-Kuerzel aus fbshort
@@ -68,7 +69,7 @@ register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars) {
   numbers <- 	which( tolower( varue.reg[ ,schlagwort] ) %in% "x" )
 
   # unsortierte Befehle bestimmen
-  counter <- pages ( numbers=numbers , fb=fb.akt , varue.reg=varue.reg , double.vars=double.vars)
+  counter <- pages ( numbers=numbers , fb=fb.akt , varue.reg=varue.reg , double.vars=double.vars, fbshort = fbshort)
 
   # Identifikation der Befehle, die Counter setzen
   sets <- counter[ sub( "^(\\\\setcounter).*" , "\\1" , counter ) %in% "\\setcounter"  ]
@@ -91,7 +92,7 @@ register.sw <- function ( schlagwort, fb.akt , varue.reg,double.vars) {
 
 
 # Funktion zur Aufbereitung der Seitenzahlen im Register
-pages <- function( numbers , fb , varue.reg, double.vars) {
+pages <- function( numbers , fb , varue.reg, double.vars, fbshort) {
   # INPUT:
   #	numbers: numerischer Vektor, numerische Position der Variablen im Skalenhandbuch
   #	fb: Character, Fragebogenkuezel aus fbshort
