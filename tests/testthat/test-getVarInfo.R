@@ -15,6 +15,7 @@ test_that("get simple varue info", {
   expect_equal(names(out)[1], "Var.Name")
   expect_equal(out$LabelSH[1], "Variable 1")
   expect_equal(out$Anmerkung.Var[1], "-")
+  expect_equal(out$Reihenfolge, c("0", "0", "0"))
 })
 
 test_that("check_varInfo", {

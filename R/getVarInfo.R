@@ -33,8 +33,7 @@ prepareVarInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" 
   varue.info$Instruktionen <- gsub("/" , "\\slash " , varue.info$Instruktionen , fixed=TRUE)
   # Reihenfolge bearbeiten
   varue.info$Reihenfolge <- sub( "^\\s*(.*)\\s*$" , "\\1" , varue.info$Reihenfolge )
-  varue.info$Reihenfolge[which(toupper(varue.info$Reihenfolge) %in% "NA")] <- 0
-  varue.info$Reihenfolge[which(toupper(varue.info$Reihenfolge) %in% "NULL" )] <- 0
+  varue.info$Reihenfolge[which(toupper(varue.info$Reihenfolge) %in% c("NA", "NULL", "-"))] <- 0
   varue.info$Reihenfolge[which(varue.info$Reihenfolge %in% "")] <- 0
   varue.info$Reihenfolge[which(is.na(varue.info$Reihenfolge))] <- 0
   varue.info$Reihenfolge[which(is.null(varue.info$Reihenfolge))] <- 0
@@ -75,6 +74,11 @@ prepareVarInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" 
         }
       }
     }
+  }
+
+  # fix special signs
+  for(i in c("LabelSH", "Anmerkung.Var", "Titel", "Instruktionen")) {
+    varue.info[[i]] <- sonderzeichen.aufbereiten(varue.info[[i]])
   }
 
 

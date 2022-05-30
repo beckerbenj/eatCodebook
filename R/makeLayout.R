@@ -48,8 +48,10 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
     ebene.zuvor <- as.numeric( varue.info.sh$Gliederung[ which( varue.info.sh$Var.Name %in% name ) -1 ] )
   }
 
-  ebenen.var0 <- paste0(varue.info.sh$Gliederung[ which( varue.info.sh$Var.Name %in% name ) -1]  ,"." , varue.info.sh$Reihenfolge[ which( varue.info.sh$Var.Name %in% name ) -1])
-  ebenen.var1 <- paste0(varue.info.sh$Gliederung[ varue.info.sh$Var.Name %in% name ]  ,"." , varue.info.sh$Reihenfolge[ varue.info.sh$Var.Name %in% name ])
+  ebenen.var0 <- paste0(varue.info.sh$Gliederung[ which( varue.info.sh$Var.Name %in% name ) -1]  ,"." ,
+                        varue.info.sh$Reihenfolge[ which( varue.info.sh$Var.Name %in% name ) -1])
+  ebenen.var1 <- paste0(varue.info.sh$Gliederung[ varue.info.sh$Var.Name %in% name ]  ,"." ,
+                        varue.info.sh$Reihenfolge[ varue.info.sh$Var.Name %in% name ])
 
   while(grepl("\\." , ebenen.var0[1] )) {
     ebenen.var0 <- c(sub("(^.*)(\\..*$)" , "\\1" , ebenen.var0[1]),ebenen.var0)
@@ -60,6 +62,7 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
     ebenen.var1 <- c(sub("(^.*)(\\..*$)" , "\\1" , ebenen.var1[1]),ebenen.var1)
   }
 
+  #browser()
 
   all_indents <- c(0 , 0 , 30 , 70) # Einzug für Chapter, Section, Subsection und Subsubsection in Latex (in pt)
 
