@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------------
 #file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
 file <- "inst/extdata/example1_clean.sav"
-gd   <- eatGADS::import_spss(file)                                          ### inputliste erzeugen
+gd   <- eatGADS::import_spss(file)
 
 str(gd)
 
@@ -20,12 +20,12 @@ miss_final <- getMissings("inst/extdata/example_miss.xlsx")
 varInfo <- createVarInfo(gd, inputForDescriptives = inputForDescr)
 # Gliederung
 # Instruktion und Quellen (Beispiele rein)
-varInfo[3, "QuelleSH"] <- "Mueller (2019)"
-varInfo[c(2, 3, 8), "Hintergrundmodell"] <- "ja"
-varInfo[c(1), "Titel"] <- "Schueler-ID"
-varInfo[, "Unterteilung.im.Skalenhandbuch"] <- c(rep("BG", 4), rep("Scale", 4), rep("PVs", 12))
-varInfo[, "Gliederung"] <- c(rep("1.1", 4), rep("1.2", 4), rep("2.1", 12))
-varInfo[c(9, 15), "Titel"] <- c("Plausible Value", "categorical plausible value")
+varInfo[4, "QuelleSH"] <- "Mueller (2019)"
+varInfo[c(3, 4, 9), "Hintergrundmodell"] <- "ja"
+varInfo[c(1, 2), "Titel"] <- c("Schueler-ID", "School-ID")
+varInfo[, "Unterteilung.im.Skalenhandbuch"] <- c(rep("BG", 5), rep("Scale", 4), rep("PVs", 12))
+varInfo[, "Gliederung"] <- c(rep("1.1", 5), rep("1.2", 4), rep("2.1", 12))
+varInfo[c(10, 16), "Titel"] <- c("Plausible Value", "categorical plausible value")
 #eatAnalysis::write_xlsx(varInfo, "inst/extdata/example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("inst/extdata/example_varInfo.xlsx")
 varInfo_final2 <- inferLayout(varInfo_final, GADSdat = gd, inputForDescriptives = inputForDescr)
@@ -46,8 +46,8 @@ scaleInfo_final$Quelle <- "dat"
 
 ## Register
 register <- createRegister(inputForDescr, keywordList = c("kw1", "kw2"))
-register[c(1, 3, 4), "kw1"] <- "x"
-register[c(7), "kw2"] <- "x"
+register[c(1, 4, 5), "kw1"] <- "x"
+register[c(8), "kw2"] <- "x"
 #eatAnalysis::write_xlsx(list(dat = register), "inst/extdata/example_register.xlsx", row.names = FALSE)
 register_final <- getRegister("inst/extdata/example_register.xlsx")
 
@@ -134,14 +134,14 @@ write.table(meta_final , file = "other_code/minimal_example/minimal_example_meta
 
 ## Codebook ohne Register
 # --------------------------------------------------
-latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
+latex_skript_noreg <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
                          scaleInfo = scaleInfo_final, register = register_final, make.reg = FALSE, dat = eatGADS::extractData(gd),
                          Kennwertedatensatz = descr2, id = id, fbshort = "dat", fblong = "Datensatz",
                          deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
                          lastpage = "")
 
 #### SKRIPTE SCHREIBEN ####
-write.table(latex_skript , file = "other_code/minimal_example/minimal_example_noregister.tex" , fileEncoding="UTF-8" ,
+write.table(latex_skript_noreg, file = "other_code/minimal_example/minimal_example_noregister.tex" , fileEncoding="UTF-8" ,
             col.names=FALSE , row.names=FALSE , quote = FALSE )
 
 

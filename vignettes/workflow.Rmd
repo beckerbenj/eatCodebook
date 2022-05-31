@@ -34,7 +34,7 @@ The template should be exported to `.xlsx`, modified and reimported to `R`.
 
 ```{r export varinfo, eval=FALSE}
 eatAnalysis::write_xlsx(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
-inputForDescriptives_edited <- readxl::read_excel("file_path/inputForDescriptives.xlsx")
+inputForDescriptives_edited <- getInputForDescriptives("file_path/inputForDescriptives.xlsx")
 ```
 
 ```{r edit varinfo, echo=FALSE}
