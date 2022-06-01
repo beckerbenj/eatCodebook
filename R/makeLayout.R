@@ -144,7 +144,7 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
 
   #### Skript schreiben ####
 
-  if(!i %in% 0:9) stop("Invalid value of 'i'.")
+  if(!i %in% 0:10) stop("Invalid value of 'i'.")
   # Aufruf der Layout-Funktion abhaengig von Layout-typ
   if (i==0) layout.typ.var <- layout.id( name=name , varue.info=varue.info )
   if (i==1) layout.typ.var <- layout.string( name=name , varue.info=varue.info)
@@ -156,6 +156,7 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
   if (i==7) layout.typ.var <- layout.gepoolt.kategorial(name=name , kennwerte.var=kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
   if (i==8) layout.typ.var <- layout.numerisch.geleert( name=name , varue.info=varue.info)
   if (i==9) layout.typ.var <- layout.skala.fake(name=name , kennwerte.var = kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
+  if (i==10) layout.typ.var <- "Layout fuer Netzwerkvariablen fehlt noch."
 
 
 

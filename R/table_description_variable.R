@@ -1,4 +1,6 @@
 
+## former table.descriptives, now just for variables (not the items of a scale!)
+
 table_description_variable <- function(name, varue.info, varue.missings=NULL, var.typ, skala.items=NULL, Gesamtdatensatz=NULL, werte=NULL,
                                        show.kategorien=TRUE, gepoolt=FALSE){
   stopifnot(length(name) == 1)
@@ -51,8 +53,8 @@ table_description_variable <- function(name, varue.info, varue.missings=NULL, va
       }
     } else {
       # fehlen Werte-Label?
-      value_noMissings <- tolower(varue.missings.aktuell$Wert[varue.missings.aktuell$missing %in% "nein"])
-      valueLabel_noMissings <- tolower(varue.missings.aktuell$LabelSH[varue.missings.aktuell$missing %in% "nein"])
+      value_noMissings <- tolower(varue.missings.aktuell[varue.missings.aktuell$missing %in% "nein", "Wert"])
+      valueLabel_noMissings <- tolower(varue.missings.aktuell[varue.missings.aktuell$missing %in% "nein", "LabelSH"])
       bool.kat <- is.na(valueLabel_noMissings) |
         gsub("\\s" , "" , valueLabel_noMissings) %in% "" |
         grepl("kein label vergeben", valueLabel_noMissings, fixed=TRUE)
@@ -122,8 +124,8 @@ table_description_variable <- function(name, varue.info, varue.missings=NULL, va
       }
     }
 
-    value_missings <- varue.missings.aktuell$Wert[ tolower(varue.missings.aktuell$missing) %in% "ja" ]
-    valueLabel_missings <- varue.missings.aktuell$LabelSH[ tolower(varue.missings.aktuell$missing) %in% "ja" ]
+    value_missings <- varue.missings.aktuell[ tolower(varue.missings.aktuell$missing) %in% "ja", "Wert"]
+    valueLabel_missings <- varue.missings.aktuell[ tolower(varue.missings.aktuell$missing) %in% "ja", "LabelSH"]
 
     if(werte[ "sysmis.totalabs" ] %in% "0" &
        length(value_missings) >1 &
@@ -132,25 +134,25 @@ table_description_variable <- function(name, varue.info, varue.missings=NULL, va
       maxVal <- max(abs(as.numeric(value_missings)) , na.rm=TRUE)
       missings <- paste0( "Fehlende Werte:& " , minVal, "--", maxVal, "\\\\" )
     } else {
-      varue.missings.aktuell$LabelSH[ is.na(varue.missings.aktuell$LabelSH) & varue.missings.aktuell$missing %in% "ja"] <- "(kein Label vergeben)"
-      varue.missings.aktuell$LabelSH[ gsub("\\s" , "" , varue.missings.aktuell$LabelSH) %in% "" & varue.missings.aktuell$missing %in% "ja" ] <- "(kein Label vergeben)"
+      varue.missings.aktuell[is.na(varue.missings.aktuell$LabelSH) & varue.missings.aktuell$missing %in% "ja", "LabelSH"] <- "(kein Label vergeben)"
+      varue.missings.aktuell[gsub("\\s" , "" , varue.missings.aktuell$LabelSH) %in% "" & varue.missings.aktuell$missing %in% "ja", "LabelSH"] <- "(kein Label vergeben)"
       # wobei hier zusaetzlich Sysmis (falls vorhanden) eingefügt werden und nach der Anzahl der Kategorien (für das Setzen des ";") unterschieden wird
-      if( ! werte[ "sysmis.totalabs" ] %in% "0" & length( which( tolower ( varue.missings.aktuell$missing ) %in% "ja" ) )>0 ) { # Fall: Es gibt Sysmis und mindestens eine sonsitge Missingkategorie
+      if(!werte[ "sysmis.totalabs" ] %in% "0" & length( which( tolower ( varue.missings.aktuell$missing ) %in% "ja" ) )>0 ) { # Fall: Es gibt Sysmis und mindestens eine sonsitge Missingkategorie
         label.miss <- paste0("~$=$~\\textit{", varue.missings.aktuell$LabelSH[ tolower ( varue.missings.aktuell$missing ) %in% "ja"] , "}; ")
         label.miss <- c( label.miss , "~$=$~\\textit{kein Dateneintrag}" )
         label.miss <- cbind( c( value_missings, "." ) , label.miss )
-      } else if ( werte[ "sysmis.totalabs" ] %in% "0" & length( which( tolower ( varue.missings.aktuell$missing ) %in% "ja" ) )>1 ) { # Fall: Es gibt keine Sysmis und mehr als eine sonsige Missingkategorie
+      } else if(werte[ "sysmis.totalabs" ] %in% "0" & length( which( tolower ( varue.missings.aktuell$missing ) %in% "ja" ) )>1 ) { # Fall: Es gibt keine Sysmis und mehr als eine sonsige Missingkategorie
         label.miss <- paste0("~$=$~\\textit{", varue.missings.aktuell$LabelSH[ tolower ( varue.missings.aktuell$missing ) %in% "ja"] , "}")
         label.miss[1:(length(label.miss)-1)] <- paste0( label.miss[1:(length(label.miss)-1)] , "; " )
         label.miss <- cbind( value_missings , label.miss )
-      } else if (  werte[ "sysmis.totalabs" ] %in% "0" & length( which( tolower ( varue.missings.aktuell$missing ) %in% "ja" ) )==1 ) { # Fall: Es gibt keine Sysmis und genau eine sonsitge Missingkategorie
+      } else if(werte[ "sysmis.totalabs" ] %in% "0" & length( which( tolower ( varue.missings.aktuell$missing ) %in% "ja" ) )==1 ) { # Fall: Es gibt keine Sysmis und genau eine sonsitge Missingkategorie
         label.miss <- paste0("~$=$~\\textit{", varue.missings.aktuell$LabelSH[ tolower ( varue.missings.aktuell$missing ) %in% "ja"] , "}" )
         label.miss <- cbind( value_missings , label.miss )
-      } else if ( length( value_missings ) == 0 ) { # Fall: Es sind keine Missingkategorie in der Varue definiert --> es wird dann Standardmaessig Sysmis in Beschreibungstabelle aufgefuehrt.
+      } else if(length( value_missings ) == 0 ) { # Fall: Es sind keine Missingkategorie in der Varue definiert --> es wird dann Standardmaessig Sysmis in Beschreibungstabelle aufgefuehrt.
 
         label.miss <-  cbind(".","~$=$~\\textit{kein Dateneintrag}")
         #### 29.03. Benjamin: Korrektur der Missinglabel-Anzeige: nur wenn Missings vorkommen!
-        # Achtung: passiert das für anderen Faelle (gibt auch andere Missingkategorien) auch? -> überprüfen!!
+        # Achtung: passiert das für anderen Faelle (gibt auch andere Missingkategorien) auch? -> ueberpruefen!!
         # ohje, würde das die Latex-Tabelle kaputt machen? Johanna fragen, ob das notwendig ist?
         if(werte["sysmis.totalabs"] == 0) label.miss <- cbind("", "")
       }
