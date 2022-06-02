@@ -92,11 +92,10 @@ layout.string <- function( name , varue.info) {
   return( skript )
 }
 
-layout.kategorial <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
+layout.kategorial <- function(name , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Character, Name der Variable, wie sie in der Varue erscheint
   #	kennwerte.var: Character-Vektor, gelabelter Vektor mit Kennwerten im Character-Format
-  #	id.fb: Character, Name der Identifikiationsvariable im Datensatz
   #	varue.info: data.frame, Uebersicht der Variableninformationen
   #	varue.missings: data.frame, Variablenuebersicht der Werteinformationen
   #	Gesamtdatensatz: data.frame, Datensatz des Fragebogens
@@ -176,11 +175,10 @@ layout.kategorial <- function(name , kennwerte.var = NULL, id.fb, varue.info, va
 
 }
 
-layout.ordinal <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
+layout.ordinal <- function(name , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Character, Name der Variable, wie sie in der Varue erscheint
   #	kennwerte.var: Character-Vektor, gelabelter Vektor mit Kennwerten im Character-Format
-  #	id.fb: Character, Name der Identifikiationsvariable im Datensatz
   #	varue.info: data.frame, Uebersicht der Variableninformationen
   #	varue.missings: data.frame, Variablenuebersicht der Werteinformationen
   #	Gesamtdatensatz: data.frame, Datensatz des Fragebogens
@@ -237,11 +235,10 @@ layout.ordinal <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue
   return( skript )
 }
 
-layout.metrisch <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
+layout.metrisch <- function(name , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Character, Name der Variable, wie sie in der Varue erscheint
   #	kennwerte.var: Character-Vektor, gelabelter Vektor mit Kennwerten im Character-Format
-  #	id.fb: Character, Name der Identifikiationsvariable im Datensatz
   #	varue.info: data.frame, Uebersicht der Variableninformationen
   #	varue.missings: data.frame, Variablenuebersicht der Werteinformationen
   #	Gesamtdatensatz: data.frame, Datensatz des Fragebogens
@@ -289,11 +286,10 @@ layout.metrisch <- function(name , kennwerte.var = NULL, id.fb, varue.info, varu
 
 }
 
-layout.skala <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
+layout.skala <- function(name , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Character, Name der Variable, wie sie in der Varue erscheint
   #	kennwerte.var: Character-Vektor, gelabelter Vektor mit Kennwerten im Character-Format
-  #	id.fb: Character, Name der Identifikiationsvariable im Datensatz
   #	varue.info: data.frame, Uebersicht der Variableninformationen
   #	varue.missings: data.frame, Variablenuebersicht der Werteinformationen
   #	Gesamtdatensatz: data.frame, Datensatz des Fragebogens
@@ -387,11 +383,10 @@ layout.skala <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.m
   return( skript )
 }
 
-layout.skala.fake <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
+layout.skala.fake <- function(name , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Character, Name der Variable, wie sie in der Varue erscheint
   #	kennwerte.var: Character-Vektor, gelabelter Vektor mit Kennwerten im Character-Format
-  #	id.fb: Character, Name der Identifikiationsvariable im Datensatz
   #	varue.info: data.frame, Uebersicht der Variableninformationen
   #	varue.missings: data.frame, Variablenuebersicht der Werteinformationen
   #	Gesamtdatensatz: data.frame, Datensatz des Fragebogens
@@ -455,11 +450,10 @@ layout.skala.fake <- function(name , kennwerte.var = NULL, id.fb, varue.info, va
   return( skript )
 }
 
-layout.gepoolt.metrisch <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
+layout.gepoolt.metrisch <- function(name , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Character, Name der Variable, wie sie in der Varue erscheint
   #	kennwerte.var: Character-Vektor, gelabelter Vektor mit Kennwerten im Character-Format
-  #	id.fb: Character, Name der Identifikiationsvariable im Datensatz
   #	varue.info: data.frame, Uebersicht der Variableninformationen
   #	varue.missings: data.frame, Variablenuebersicht der Werteinformationen
   #	Gesamtdatensatz: data.frame, Datensatz des Fragebogens
@@ -523,11 +517,10 @@ layout.gepoolt.metrisch <- function(name , kennwerte.var = NULL, id.fb, varue.in
 
 }
 
-layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, id.fb, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
+layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Character, Name der Variable, wie sie in der Varue erscheint
   #	kennwerte.var: Character-Vektor, gelabelter Vektor mit Kennwerten im Character-Format
-  #	id.fb: Character, Name der Identifikiationsvariable im Datensatz
   #	varue.info: data.frame, Uebersicht der Variableninformationen
   #	varue.missings: data.frame, Variablenuebersicht der Werteinformationen
   #	Gesamtdatensatz: data.frame, Datensatz des Fragebogens

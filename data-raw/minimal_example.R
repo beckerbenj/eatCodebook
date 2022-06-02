@@ -100,10 +100,12 @@ meta_final <- makeMetadata("inst/extdata/example_meta.xlsx")
 
 # Inkonsistenzen in make vs get ueberarbeiten
 
-## Sonstiges Zeug von Felix
+## Chapters
 # --------------------------------------------------
-# ID-Variablen
-id <- c(dat = "id")
+chapters <- createChapters(varInfo_final2)
+chapters[, 2] <- "Datensatz"
+#eatAnalysis::write_xlsx(list(dat = chapters), "inst/extdata/example_chapters.xlsx", row.names = FALSE)
+chapters_final <- getChapters("inst/extdata/example_chapters.xlsx")
 
 
 ## Codebook
@@ -119,7 +121,7 @@ descr2$skala1[[2]] <- as.data.frame(descr2$skala1[[2]])
 
 latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
                          scaleInfo = scaleInfo_final, register = register_final, make.reg = NULL, dat = eatGADS::extractData(gd),
-                         Kennwertedatensatz = descr2, id = id, fbshort = "dat", fblong = "Datensatz",
+                         Kennwertedatensatz = descr2, chapters = chapters_final,
                          deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
                          lastpage = "")
 
@@ -136,7 +138,7 @@ write.table(meta_final , file = "other_code/minimal_example/minimal_example_meta
 # --------------------------------------------------
 latex_skript_noreg <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
                          scaleInfo = scaleInfo_final, register = register_final, make.reg = FALSE, dat = eatGADS::extractData(gd),
-                         Kennwertedatensatz = descr2, id = id, fbshort = "dat", fblong = "Datensatz",
+                         Kennwertedatensatz = descr2, chapters = chapters_final,
                          deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
                          lastpage = "")
 

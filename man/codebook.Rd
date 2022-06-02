@@ -13,9 +13,7 @@ codebook(
   make.reg = NULL,
   dat,
   Kennwertedatensatz,
-  id,
-  fbshort,
-  fblong,
+  chapters,
   deckblatt,
   intro,
   literatur,
@@ -41,11 +39,8 @@ codebook(
 
 \item{Kennwertedatensatz}{\code{data.frame} or list of \code{data.frame} containing the descriptive statistics, imported via \code{\link{calculateDescriptives}}.}
 
-\item{id}{Named character vector containing the identifier variable in each data set.}
-
-\item{fbshort}{Character vector with the short names of the data sets.}
-
-\item{fblong}{Character vector with the long names of the data sets as they should appear in the codebook.}
+\item{chapters}{\code{data.frame} or list of \code{data.frames} containing the chapter information, imported via \code{\link{getChapters}}.
+Determines the order of chapters in the codebook.}
 
 \item{deckblatt}{Character vector with the cover page, created via \code{\link{makeCover}}.}
 

@@ -1,5 +1,5 @@
 # Layout-Funktion für beliebige Variablen
-layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info, varue.gliederung, makeCounter , all_length ) {
+layout.var <- function(name , fb, double.vars , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info, varue.gliederung, makeCounter , all_length ) {
   # INPUT
   #	name: Character, Name der Variable, wie sie in der Varue erscheint
   #	kennwerte.var: gelabelter Vektor mit Kennwerten
@@ -148,14 +148,14 @@ layout.var <- function(name , fb, id.fb , double.vars , kennwerte.var = NULL, va
   # Aufruf der Layout-Funktion abhaengig von Layout-typ
   if (i==0) layout.typ.var <- layout.id( name=name , varue.info=varue.info )
   if (i==1) layout.typ.var <- layout.string( name=name , varue.info=varue.info)
-  if (i==2) layout.typ.var <- layout.kategorial(name=name , kennwerte.var=kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  if (i==3) layout.typ.var <- layout.ordinal(name=name , kennwerte.var=kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  if (i==4) layout.typ.var <- layout.metrisch(name=name , kennwerte.var=kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  if (i==5) layout.typ.var <- layout.skala(name=name , kennwerte.var=kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  if (i==6) layout.typ.var <- layout.gepoolt.metrisch(name=name , kennwerte.var=kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  if (i==7) layout.typ.var <- layout.gepoolt.kategorial(name=name , kennwerte.var=kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
+  if (i==2) layout.typ.var <- layout.kategorial(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
+  if (i==3) layout.typ.var <- layout.ordinal(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
+  if (i==4) layout.typ.var <- layout.metrisch(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
+  if (i==5) layout.typ.var <- layout.skala(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
+  if (i==6) layout.typ.var <- layout.gepoolt.metrisch(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
+  if (i==7) layout.typ.var <- layout.gepoolt.kategorial(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
   if (i==8) layout.typ.var <- layout.numerisch.geleert( name=name , varue.info=varue.info)
-  if (i==9) layout.typ.var <- layout.skala.fake(name=name , kennwerte.var = kennwerte.var, id.fb=id.fb, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
+  if (i==9) layout.typ.var <- layout.skala.fake(name=name , kennwerte.var = kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
   if (i==10) layout.typ.var <- "Layout fuer Netzwerkvariablen fehlt noch."
 
 

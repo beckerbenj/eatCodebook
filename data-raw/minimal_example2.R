@@ -106,10 +106,15 @@ meta_final <- makeMetadata("inst/extdata/example_meta.xlsx")
 
 # Inkonsistenzen in make vs get ueberarbeiten
 
-## Sonstiges Zeug von Felix
+
+## Chapters
 # --------------------------------------------------
-# ID-Variablen
-id <- c(Students = "id", Schools = "IDSCH")
+chapters <- createChapters(varInfo_final2)
+chapters[, 2] <- c("SFB", "SLFB")
+chapters <- chapters[c(2, 1), ]
+#eatAnalysis::write_xlsx(list(dat = chapters), "inst/extdata/example2_chapters.xlsx", row.names = FALSE)
+chapters_final <- getChapters("inst/extdata/example2_chapters.xlsx")
+
 
 
 ## Codebook
@@ -122,9 +127,8 @@ descr2[["Students"]]$skala1[[2]] <- as.data.frame(descr2[["Students"]]$skala1[[2
 
 
 latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
-                         scaleInfo = scaleInfo_final, register = register_final, make.reg = NULL, dat = lapply(dat_list, extractData),
-                         Kennwertedatensatz = descr2, id = id, fbshort = c("Students", "Schools"),
-                         fblong = c(Students = "Students", Schools = "School Questionaire"),
+                         scaleInfo = scaleInfo_final, register = register_final, make.reg = NULL, dat = lapply(dat_list, eatGADS::extractData),
+                         Kennwertedatensatz = descr2, chapters = chapters_final,
                          deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
                          lastpage = "")
 
@@ -134,20 +138,6 @@ write.table(latex_skript , file = "other_code/minimal_example/minimal_example2.t
 write.table(meta_final , file = "other_code/minimal_example/minimal_example2_meta.xmpdata", fileEncoding="UTF-8" ,
             col.names=FALSE , row.names=FALSE , quote = FALSE )
 
-
-
-
-## Codebook ohne Register
-# --------------------------------------------------
-latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
-                         scaleInfo = scaleInfo_final, register = register_final, make.reg = FALSE, dat = eatGADS::extractData(gd),
-                         Kennwertedatensatz = descr2, id = id, fbshort = "dat", fblong = "Datensatz",
-                         deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
-                         lastpage = "")
-
-#### SKRIPTE SCHREIBEN ####
-write.table(latex_skript , file = "other_code/minimal_example/minimal_example_noregister.tex" , fileEncoding="UTF-8" ,
-            col.names=FALSE , row.names=FALSE , quote = FALSE )
 
 
 

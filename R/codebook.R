@@ -13,9 +13,8 @@
 #'@param make.reg Logical. Should a register be created?
 #'@param dat \code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{import_spss}}.
 #'@param Kennwertedatensatz \code{data.frame} or list of \code{data.frame} containing the descriptive statistics, imported via \code{\link{calculateDescriptives}}.
-#'@param id Named character vector containing the identifier variable in each data set.
-#'@param fbshort Character vector with the short names of the data sets.
-#'@param fblong Character vector with the long names of the data sets as they should appear in the codebook.
+#'@param chapters \code{data.frame} or list of \code{data.frames} containing the chapter information, imported via \code{\link{getChapters}}.
+#'Determines the order of chapters in the codebook.
 #'@param deckblatt Character vector with the cover page, created via \code{\link{makeCover}}.
 #'@param intro Character vector, introduction.
 #'@param literatur Character vector with the literature information, created via \code{\link{makeLit}}.
@@ -29,8 +28,8 @@
 #'#tbd
 #'
 #'@export
-codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = NULL, dat, Kennwertedatensatz, id,
-                     fbshort, fblong, deckblatt, intro, literatur, abkuerzverz, hintmod, lastpage) {
+codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = NULL, dat, Kennwertedatensatz,
+                     chapters, deckblatt, intro, literatur, abkuerzverz, hintmod, lastpage) {
 
   # allow input as single data.frames
   if(is.data.frame(varInfo)) {
@@ -38,12 +37,15 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = N
     missings <- list(missings)
     dat = list(dat)
     Kennwertedatensatz = list(Kennwertedatensatz)
-    fblong <- list(fblong)
-    names(varInfo) <- names(missings) <- names(dat) <- names(Kennwertedatensatz) <- names(fblong) <- fbshort
+    names(varInfo) <- names(missings) <- names(dat) <- names(Kennwertedatensatz) <- chapters[["dataName"]]
   }
 
   check_codebook_input(varInfo = varInfo, missings = missings, struc = struc, register = register,
-                       dat = dat, Kennwertedatensatz = Kennwertedatensatz, fbshort = fbshort, fblong = fblong)
+                       dat = dat, Kennwertedatensatz = Kennwertedatensatz, chapters = chapters)
+
+  fbshort <- chapters[["dataName"]]
+  fblong <- chapters[["chapterName"]]
+  names(fblong) <- chapters[["dataName"]]
 
   # SH-Variablen
   variablen <- lapply(varInfo, function(single_varInfo) {
@@ -112,7 +114,6 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = N
                  #browser()
                  layout.var( name=v,
                              fb=tolower(d),
-                             id.fb=id[d],
                              kennwerte.var = unlist(Kennwertedatensatz[[d]][ names(Kennwertedatensatz[[d]]) %in% v] , recursive=FALSE),
                              varue.info = varInfo[[d]],
                              varue.missings=missings[[d]],
@@ -163,32 +164,27 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = N
 
 # -----------------------------------------------------------------------------
 check_codebook_input <- function(varInfo, missings, struc, register,
-                                 dat, Kennwertedatensatz, fbshort, fblong) {
-  if(any(is.null(fbshort))){
-    stop()
-  }
+                                 dat, Kennwertedatensatz, chapters) {
+  fbshort <- chapters[["dataName"]]
 
   ### names anpassen (zur Sicherheit) ###
-  if(length(dat)!=length(fbshort)) stop("'dat' and 'fbshort' have different lengths.")
-  if( ! all(names(dat) %in% fbshort)) stop("'dat' is differently named than the entries in 'fbshort'.")
+  if(length(dat)!=length(fbshort)) stop("'dat' and 'chapters' have different lengths.")
+  if( ! all(names(dat) %in% fbshort)) stop("'dat' is differently named than the 'dataName' entries in 'chapters'.")
 
-  if( length(varInfo)!=length(fbshort)) stop("'varInfo' and 'fbshort' have different lengths.")
-  if( ! all(names(varInfo) %in% fbshort)) stop("'varInfo' is differently named than the entries in 'fbshort'.")
+  if( length(varInfo)!=length(fbshort)) stop("'varInfo' and 'chapters' have different lengths.")
+  if( ! all(names(varInfo) %in% fbshort)) stop("'varInfo' is differently named than the 'dataName' entries in 'chapters'.")
 
-  if( length(missings)!=length(fbshort)) stop("'missings' and 'fbshort' have different lengths.")
-  if( ! all(names(missings) %in% fbshort)) stop("'missings' is differently named than the entries in 'fbshort'.")
+  if( length(missings)!=length(fbshort)) stop("'missings' and 'chapters' have different lengths.")
+  if( ! all(names(missings) %in% fbshort)) stop("'missings' is differently named than the 'dataName' entries in 'chapters'.")
 
-  if( length(struc)!=length(fbshort)) stop("'struc' and 'fbshort' have different lengths.")
-  if( ! all(names(struc) %in% fbshort)) stop("'struc' is differently named than the entries in 'fbshort'.")
+  if( length(struc)!=length(fbshort)) stop("'struc' and 'chapters' have different lengths.")
+  if( ! all(names(struc) %in% fbshort)) stop("'struc' is differently named than the 'dataName' entries in 'chapters'.")
 
-  if( length(register)!=length(fbshort)) stop("'register' and 'fbshort' have different lengths.")
-  if( ! all(names(register) %in% fbshort)) stop("'register' is differently named than the entries in 'fbshort'.")
+  if( length(register)!=length(fbshort)) stop("'register' and 'chapters' have different lengths.")
+  if( ! all(names(register) %in% fbshort)) stop("'register' is differently named than the 'dataName' entries in 'chapters'.")
 
-  if( length(Kennwertedatensatz)!=length(fbshort)) stop("'Kennwertedatensatz' and 'fbshort' have different lengths.")
-  if( ! all(names(Kennwertedatensatz) %in% fbshort)) stop("'Kennwertedatensatz' is differently named than the entries in 'fbshort'.")
-
-  if( length(fblong)!=length(fbshort)) stop("'fblong' and 'fbshort' have different lengths.")
-  if( ! all(names(fblong) %in% fbshort)) stop("'fblong' is differently named than the entries in 'fbshort'.")
+  if( length(Kennwertedatensatz)!=length(fbshort)) stop("'Kennwertedatensatz' and 'chapters' have different lengths.")
+  if( ! all(names(Kennwertedatensatz) %in% fbshort)) stop("'Kennwertedatensatz' is differently named than the 'dataName' entries in 'chapters'.")
 
   NULL
 }
