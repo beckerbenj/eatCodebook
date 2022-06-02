@@ -35,9 +35,10 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register = NULL, dat, 
   if(is.data.frame(varInfo)) {
     varInfo <- list(varInfo)
     missings <- list(missings)
-    dat = list(dat)
-    Kennwertedatensatz = list(Kennwertedatensatz)
-    names(varInfo) <- names(missings) <- names(dat) <- names(Kennwertedatensatz) <- chapters[["dataName"]]
+    dat <- list(dat)
+    Kennwertedatensatz <- list(Kennwertedatensatz)
+    struc <- list(struc)
+    names(varInfo) <- names(missings) <- names(dat) <- names(Kennwertedatensatz) <- names(struc) <- chapters[["dataName"]]
   }
 
   # input validation

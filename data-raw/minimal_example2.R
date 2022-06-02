@@ -119,7 +119,6 @@ chapters_final <- getChapters("inst/extdata/example2_chapters.xlsx")
 
 ## Codebook
 # --------------------------------------------------
-
 # try to hotfix (maybe kennwerte needs a data.frame sometimes?) -> fix this after JB has fixed the example with Felix's syntax
 #str(descr$skala1[[2]])
 descr2 <- descr

@@ -30,17 +30,15 @@ abbr <- makeAbbrList(system.file("extdata", "example_abbrList.xlsx", package = "
 lit <- makeLit(litInfo_final)
 suppressMessages(hint <- makeBGM(varInfo_final))
 meta_final <- makeMetadata(system.file("extdata", "example_meta.xlsx", package = "eatCodebook"))
-# --------------------------------------------------
-struc_final2 <- struc_final
-names(struc_final2) <- "dat"
 
+# --------------------------------------------------
 # try to hotfix (maybe kennwerte needs a data.frame sometimes?) -> fix this after JB has fixed the example with Felix's syntax
 descr2 <- descr
 descr2$skala1[[2]] <- as.data.frame(descr2$skala1[[2]])
 
 
 test_that("normal codebook", {
-  suppressMessages(latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
+  suppressMessages(latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
                            scaleInfo = scaleInfo_final, register = register_final, dat = eatGADS::extractData(gd),
                            Kennwertedatensatz = descr2, chapters = chapters_final,
                            deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
@@ -51,7 +49,7 @@ test_that("normal codebook", {
 })
 
 test_that("codebook without register", {
-  suppressMessages(latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
+  suppressMessages(latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
                                             scaleInfo = scaleInfo_final, dat = eatGADS::extractData(gd),
                                             Kennwertedatensatz = descr2, chapters = chapters_final,
                                             deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,

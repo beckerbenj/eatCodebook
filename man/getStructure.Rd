@@ -10,7 +10,7 @@ getStructure(filePath)
 \item{filePath}{Path to excel file.}
 }
 \value{
-structure information.
+Structure information.
 }
 \description{
 Import structure information.

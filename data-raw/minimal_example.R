@@ -110,16 +110,13 @@ chapters_final <- getChapters("inst/extdata/example_chapters.xlsx")
 
 ## Codebook
 # --------------------------------------------------
-struc_final2 <- struc_final
-names(struc_final2) <- "dat"
-
 # try to hotfix (maybe kennwerte needs a data.frame sometimes?) -> fix this after JB has fixed the example with Felix's syntax
 #str(descr$skala1[[2]])
 descr2 <- descr
 descr2$skala1[[2]] <- as.data.frame(descr2$skala1[[2]])
 
 
-latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
+latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
                          scaleInfo = scaleInfo_final, register = register_final, make.reg = NULL, dat = eatGADS::extractData(gd),
                          Kennwertedatensatz = descr2, chapters = chapters_final,
                          deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
