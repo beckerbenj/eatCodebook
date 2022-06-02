@@ -9,8 +9,7 @@ codebook(
   missings,
   struc,
   scaleInfo,
-  register,
-  make.reg = NULL,
+  register = NULL,
   dat,
   Kennwertedatensatz,
   chapters,
@@ -31,9 +30,8 @@ codebook(
 
 \item{scaleInfo}{\code{data.frame} containing the information on scales, imported via \code{\link{getScaleInfo}}.}
 
-\item{register}{\code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.}
-
-\item{make.reg}{Logical. Should a register be created?}
+\item{register}{\code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.
+If \code{NULL}, now register is created. If there are registers for some data sets but not all, the missing registers are simply omitted.}
 
 \item{dat}{\code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{import_spss}}.}
 

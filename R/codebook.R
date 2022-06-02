@@ -10,7 +10,7 @@
 #'@param struc \code{data.frame} containing the structure of the codebook, imported via \code{\link{getStructure}}.
 #'@param scaleInfo \code{data.frame} containing the information on scales, imported via \code{\link{getScaleInfo}}.
 #'@param register \code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.
-#'@param make.reg Logical. Should a register be created?
+#'If \code{NULL}, now register is created. If there are registers for some data sets but not all, the missing registers are simply omitted.
 #'@param dat \code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{import_spss}}.
 #'@param Kennwertedatensatz \code{data.frame} or list of \code{data.frame} containing the descriptive statistics, imported via \code{\link{calculateDescriptives}}.
 #'@param chapters \code{data.frame} or list of \code{data.frames} containing the chapter information, imported via \code{\link{getChapters}}.
@@ -28,7 +28,7 @@
 #'#tbd
 #'
 #'@export
-codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = NULL, dat, Kennwertedatensatz,
+codebook <- function(varInfo, missings, struc, scaleInfo, register = NULL, dat, Kennwertedatensatz,
                      chapters, deckblatt, intro, literatur, abkuerzverz, hintmod, lastpage) {
 
   # allow input as single data.frames
@@ -40,12 +40,18 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = N
     names(varInfo) <- names(missings) <- names(dat) <- names(Kennwertedatensatz) <- chapters[["dataName"]]
   }
 
+  # input validation
   check_codebook_input(varInfo = varInfo, missings = missings, struc = struc, register = register,
                        dat = dat, Kennwertedatensatz = Kennwertedatensatz, chapters = chapters)
 
+  # recreate fbshort and fblong
   fbshort <- chapters[["dataName"]]
   fblong <- chapters[["chapterName"]]
   names(fblong) <- chapters[["dataName"]]
+
+  # recreate make.reg
+  make.reg <- fbshort %in% names(register)
+  names(make.reg) <- fbshort
 
   # SH-Variablen
   variablen <- lapply(varInfo, function(single_varInfo) {
@@ -56,16 +62,6 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = N
   # Doppelte Variablen
   double.vars <- unname(unlist(variablen))
   double.vars <- names( table(double.vars)[table(double.vars)>1])
-
-  # TRUE/FALSE pro Instrument, ob Register erstellt werden soll (falls nicht schon uebergeben)
-  if(is.null(make.reg) || ! is.logical(make.reg) || ! length(make.reg)==length(fbshort)){
-    make.reg <- unlist(lapply( fbshort , function(d) {
-      bool <- all(sapply( names(register[[d]]) , function(k) all(is.null(register[[d]][[k]])) ) )
-      bool <- bool |  all(sapply( names(register[[d]]) , function(k) all( gsub("\\s" , "" , register[[d]][[k]]) %in% "" ) ) )
-      return(!bool)
-    } ) )
-  }
-  names(make.reg) <- fbshort
 
   #browser()
   # Praeambel
@@ -99,7 +95,7 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = N
   max.Subsec <-paste0(gsub("\\d" , "0" , alleEbenen[["SubSection"]][which.max(sapply(alleEbenen[["SubSection"]] , function(d) length(unlist(strsplit(d , ""))) ))] ) , "0")
   max.Subsubsec <- paste0(gsub("\\d" , "0" , alleEbenen[["SubSubSection"]][which.max(sapply(alleEbenen[["SubSubSection"]] , function(d) length(unlist(strsplit(d , ""))) ))] ) , "0")
 
-  layout.prae.ges <- layout.prae(variablen , fbshort=fbshort , double.vars=double.vars , deckblatt=deckblatt , makeCounter=make.reg,maxLength.Chap=max.Chap, maxLength.Sec=max.Sec,maxLength.Subsec=max.Subsec, maxLength.Subsubsec=max.Subsubsec)
+  layout.prae.ges <- layout.prae(variablen , fbshort=fbshort , double.vars=double.vars , deckblatt=deckblatt , makeCounter=make.reg, maxLength.Chap=max.Chap, maxLength.Sec=max.Sec,maxLength.Subsec=max.Subsec, maxLength.Subsubsec=max.Subsubsec)
 
   all_length <- c(max.Chap , max.Sec , max.Subsec ,max.Subsubsec)
 
@@ -132,14 +128,9 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register, make.reg = N
 
 
 
-  register.fb <- lapply( fbshort , function(d) {
-    if(! make.reg[d]) {
-      return(NULL)
-    } else {
-      # Erstelle Register
-      return(makeRegister(fblong = fblong, fb.akt=d , varue.reg=register[[d]] , double.vars=double.vars) )
-    }
-  } )
+  register.fb <- lapply(names(register) , function(d) {
+    makeRegister(fblong = fblong, fb.akt=d , varue.reg=register[[d]] , double.vars=double.vars)
+  })
 
 
   # Formatieren
@@ -180,8 +171,7 @@ check_codebook_input <- function(varInfo, missings, struc, register,
   if( length(struc)!=length(fbshort)) stop("'struc' and 'chapters' have different lengths.")
   if( ! all(names(struc) %in% fbshort)) stop("'struc' is differently named than the 'dataName' entries in 'chapters'.")
 
-  if( length(register)!=length(fbshort)) stop("'register' and 'chapters' have different lengths.")
-  if( ! all(names(register) %in% fbshort)) stop("'register' is differently named than the 'dataName' entries in 'chapters'.")
+  if( ! all(names(register) %in% fbshort)) stop("'register' contains entries that are not in the 'dataName' entries in 'chapters'.")
 
   if( length(Kennwertedatensatz)!=length(fbshort)) stop("'Kennwertedatensatz' and 'chapters' have different lengths.")
   if( ! all(names(Kennwertedatensatz) %in% fbshort)) stop("'Kennwertedatensatz' is differently named than the 'dataName' entries in 'chapters'.")
