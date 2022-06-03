@@ -44,6 +44,12 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register = NULL, dat, 
   # input validation
   check_codebook_input(varInfo = varInfo, missings = missings, struc = struc, register = register,
                        dat = dat, Kennwertedatensatz = Kennwertedatensatz, chapters = chapters)
+  if(!is.character(deckblatt)) stop("'Deckblatt' needs to be a character vector.")
+  if(!is.character(intro)) stop("'intro' needs to be a character vector.")
+  if(!is.character(literatur)) stop("'literatur' needs to be a character vector.")
+  if(!is.character(abkuerzverz)) stop("'abkuerzverz' needs to be a character vector.")
+  if(!is.character(hintmod)) stop("'hintmod' needs to be a character vector.")
+  if(!is.character(lastpage)) stop("'lastpage' needs to be a character vector.")
 
   # recreate fbshort and fblong
   fbshort <- chapters[["dataName"]]
