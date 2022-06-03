@@ -15,8 +15,11 @@
 #'
 #'@export
 makeLit <- function(litInfo){
-  names(litInfo)[names(litInfo) == "in.Literaturverzeichnis"] <- "in_Literaturverzeichnis"
+  check_litInfo(litInfo)
+
+  #names(litInfo)[names(litInfo) == "in.Literaturverzeichnis"] <- "in_Literaturverzeichnis"
   litInfo$in_Literaturverzeichnis[ tolower(litInfo$in_Literaturverzeichnis) %in% c("ja", "wahr", "yes", "true")] <- TRUE
+  litInfo$in_Literaturverzeichnis[ tolower(litInfo$in_Literaturverzeichnis) %in% c("nein", "no", "false")] <- FALSE
   litInfo$in_Literaturverzeichnis <- as.logical(litInfo$in_Literaturverzeichnis)
 
   literatur <- NULL
