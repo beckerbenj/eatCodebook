@@ -7,7 +7,7 @@
 calculateDescriptives(
   GADSdat,
   inputForDescriptives,
-  verbose = TRUE,
+  verbose = FALSE,
   showCallOnly = FALSE
 )
 }

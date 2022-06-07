@@ -30,12 +30,12 @@
 #'# tbd
 #'
 #'@export
-calculateDescriptives <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
+calculateDescriptives <- function( GADSdat, inputForDescriptives, verbose = FALSE, showCallOnly = FALSE) {
   UseMethod("calculateDescriptives")
 }
 
 #'@export
-calculateDescriptives.list <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
+calculateDescriptives.list <- function( GADSdat, inputForDescriptives, verbose = FALSE, showCallOnly = FALSE) {
     ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
     ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
            #fwa    <- createFunNameWithArgs(funName = "calculateDescriptives")   ### 'fwa' = function with arguments
@@ -46,7 +46,7 @@ calculateDescriptives.list <- function( GADSdat, inputForDescriptives, verbose =
            return(loop)}
 
 #'@export
-calculateDescriptives.GADSdat <- function( GADSdat, inputForDescriptives, verbose = TRUE, showCallOnly = FALSE) {
+calculateDescriptives.GADSdat <- function( GADSdat, inputForDescriptives, verbose = FALSE, showCallOnly = FALSE) {
 ### showCallOnly: nur zum checken, welche Funktion gecalled wird
 ### checks, dass inputForDescriptives korrekt spezifiziert ... es muss u.a. ein data.frame sein
   if ("tbl" %in% class(inputForDescriptives)) {

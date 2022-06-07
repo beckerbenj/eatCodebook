@@ -59,7 +59,7 @@
 #'variables names (i.e., \code{"friend"}) will be used to identify the group.
 #'@param nwLastOccurrence Logical: If \code{nwVarNameSeparatorImp} occurrs multiple times within a string, \code{nwLastOccurrence}
 #'defines whether the last occurrence should be used for splitting
-#'@param verbose tbd
+#'@param verbose Should scale identification be reported?
 #'
 #'@return Returns a \code{data.frame} with variable information with following columns
 #'\itemize{
@@ -76,11 +76,11 @@
 #'varInfo <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value")
 #'
 #'@export
-createInputForDescriptives <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = TRUE) {
+createInputForDescriptives <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = FALSE) {
   UseMethod("createInputForDescriptives")
 }
 #'@export
-createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = TRUE) {
+createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = FALSE) {
     ### wenn es missings in der Format-Spalte des GADSdat-Labels-Objekt gibt, soll zuvor eatGADS::checkFormat aufgerufen werden
            if(any(is.na( GADSdat[["labels"]][,"format"]))) {
               message("Call 'checkFormat()' from the 'eatGADS' package.")
@@ -204,7 +204,7 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
            return(vari)}
 
 #'@export
-createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = TRUE) {
+createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = FALSE) {
     ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
     ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
            #fwa    <- createFunNameWithArgs(funName = "createInputForDescriptives")# 'fwa' = function with arguments

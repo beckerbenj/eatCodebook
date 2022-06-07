@@ -18,7 +18,7 @@ createInputForDescriptives(
   nwVarNameSeparatorImp = "_",
   nwNcharSeparatorImp = 6,
   nwLastOccurrence = TRUE,
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -83,7 +83,7 @@ variables names (i.e., \code{"friend"}) will be used to identify the group.}
 \item{nwLastOccurrence}{Logical: If \code{nwVarNameSeparatorImp} occurrs multiple times within a string, \code{nwLastOccurrence}
 defines whether the last occurrence should be used for splitting}
 
-\item{verbose}{tbd}
+\item{verbose}{Should scale identification be reported?}
 }
 \value{
 Returns a \code{data.frame} with variable information with following columns

@@ -4,8 +4,8 @@ file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
 gd   <- eatGADS::import_spss(file)
 
 ## Descriptives
-inputForDescr <- createInputForDescriptives(gd, verbose = FALSE)
-suppressWarnings(descr  <- calculateDescriptives(gd, inputForDescr, verbose = FALSE))
+inputForDescr <- createInputForDescriptives(gd)
+descr  <- calculateDescriptives(gd, inputForDescr)
 
 miss_final <- getMissings(system.file("extdata", "example_miss.xlsx", package = "eatCodebook"))
 varInfo_final <- getVarInfo(system.file("extdata", "example_varInfo.xlsx", package = "eatCodebook"))
