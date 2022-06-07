@@ -222,7 +222,20 @@ check_inputForDescriptives <- function(inputForDescriptives){
   if(any(!inputForDescriptives$scale %in% c("numeric", "ordinal", "nominal", NA))) stop("The column 'scale' in 'inputForDescriptives' can only contain the entries 'numeric', 'ordinal', 'nominal'.")
   if(!length(unique(inputForDescriptives[,"varName"])) == length(inputForDescriptives[,"varName"])) {stop("'varName' column in 'inputForDescriptives' must be unique.")}
   if(tibble::is_tibble(inputForDescriptives)) inputForDescriptives <- as.data.frame(inputForDescriptives)
+  checkItemScaleConsistency(inputForDescriptives)
   inputForDescriptives
+}
+
+checkItemScaleConsistency <- function (ifd) {
+    if ( "scale" %in% ifd[,"type"]) {
+         groups <- unique(ifd[which(ifd[,"type"] == "scale"),"group"])
+         chk    <- lapply(groups, FUN = function(g) {
+                   ifdg <- ifd[which(ifd[,"group"] == g),]
+                   tab  <- table(ifdg[,"type"], useNA = "ifany")
+                   if ( length(which(is.na(names(tab)))) > 0) {cat("Error : Scale definition must not contain any NA values if several items belong to one scale: \n"); print(ifdg, row.names=FALSE); stop()}
+                   if ( "nominal" %in% names(tab)) {cat("Error: 'nominal' is not allowed for scale column for items which belong to one scale: \n"); print(ifdg, row.names=FALSE); stop()}
+         })
+    }
 }
 
 # teste:
