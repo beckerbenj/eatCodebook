@@ -54,3 +54,15 @@ test_that("list input and default options", {
   out <- createInputForDescriptives(l)
   expect_equal(names(out), c("dat1", "dat2"))
 })
+
+
+gd1   <- eatGADS::import_spss("example1_clean.sav")
+
+test_that("checkItemScaleConsistency", {
+  inputForDescr2 <- inputForDescr <- createInputForDescriptives(gd1)
+  inputForDescr[6:8,"scale"] <- "nominal"
+  expect_error(out <- capture_output(checkItemScaleConsistency(inputForDescr)))
+
+  inputForDescr2[7,"scale"] <- NA
+  expect_error(out <- capture_output(checkItemScaleConsistency(inputForDescr2)))
+})

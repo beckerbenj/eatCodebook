@@ -232,8 +232,16 @@ checkItemScaleConsistency <- function (ifd) {
          chk    <- lapply(groups, FUN = function(g) {
                    ifdg <- ifd[which(ifd[,"group"] == g),]
                    tab  <- table(ifdg[,"scale"], useNA = "ifany")
-                   if ( length(which(is.na(names(tab)))) > 0) {cat("Error : Scale definition must not contain any NA values if several items belong to one scale: \n"); print(ifdg, row.names=FALSE); stop()}
-                   if ( "nominal" %in% names(tab)) {cat("Error: 'nominal' is not allowed for scale column for items which belong to one scale: \n"); print(ifdg, row.names=FALSE); stop()}
+                   if ( length(which(is.na(names(tab)))) > 0) {
+                     cat("Error : Scale definition must not contain any NA values if several items belong to one scale: \n")
+                     print(ifdg, row.names=FALSE)
+                     stop()
+                  }
+                   if ( "nominal" %in% names(tab)) {
+                     cat("Error: 'nominal' is not allowed for scale column for items which belong to one scale: \n")
+                     print(ifdg, row.names=FALSE)
+                     stop()
+                  }
          })
     }
 }
