@@ -1,8 +1,8 @@
 ---
-title: "General Workflow"
+title: "Full Workflow"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{General Workflow}
+  %\VignetteIndexEntry{Full Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignettes describes the typical workflow of creating a codebook via the `eatCodebook` package. For illustrative purposes we use a small example package which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
+This vignettes describes the full workflow of creating a codebook via the `eatCodebook` package. For illustrative purposes we use a small example data set which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
 
 ```{r setup}
 library(eatCodebook)
@@ -33,7 +33,7 @@ head(inputForDescriptives)
 The template should be exported to `.xlsx`, modified and reimported to `R`.
 
 ```{r export varinfo, eval=FALSE}
-eatAnalysis::write_xlsx(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
+writeExcel(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
 inputForDescriptives_edited <- getInputForDescriptives("file_path/inputForDescriptives.xlsx")
 ```
 
@@ -67,7 +67,7 @@ head(missings)
 In this case, the resulting object `missings` has to be written to `xlsx` and imported via `getMissings()`. Note that alle the `getXXX` functions perform important cleaning and preparation steps, therefore the exporting to `xlsx` is obligatory.
 
 ```{r write missings, eval = FALSE}
-eatAnalysis::write_xlsx(miss, "example_miss.xlsx", row.names = FALSE)
+writeExcel(miss, "example_miss.xlsx", row.names = FALSE)
 miss_final <- getMissings("example_miss.xlsx")
 ```
 
@@ -87,13 +87,15 @@ head(varInfo)
 ```
 
 ```{r write varInfo, eval = FALSE}
-eatAnalysis::write_xlsx(miss, "example_varInfo.xlsx", row.names = FALSE)
+writeExcel(miss, "example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("example_varInfo.xlsx")
+varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, inputForDescriptives = inputForDescriptives_edited)
 ```
 
 ```{r load varInfo, eval = TRUE, echo = FALSE}
 varInfo_file <- system.file("extdata", "example_varInfo.xlsx", package = "eatCodebook")
 varInfo_final <- getVarInfo(varInfo_file)
+varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, inputForDescriptives = inputForDescriptives_edited)
 head(varInfo_final)
 ```
 
@@ -106,7 +108,7 @@ head(struc)
 ```
 
 ```{r write struc, eval = FALSE}
-eatAnalysis::write_xlsx(struc, "example_struc.xlsx", row.names = FALSE)
+writeExcel(struc, "example_struc.xlsx", row.names = FALSE)
 struc_final <- getStructure("example_struc.xlsx")
 ```
 
@@ -125,13 +127,17 @@ head(scaleInfo)
 ```
 
 ```{r write scaleInfo, eval = FALSE}
-eatAnalysis::write_xlsx(scaleInfo, "example_scaleInfo.xlsx", row.names = FALSE)
+writeExcel(scaleInfo, "example_scaleInfo.xlsx", row.names = FALSE)
 scaleInfo_final <- getScaleInfo("example_scaleInfo.xlsx")
+# workaround, should be done automatically, but currently problem with non list inputs for createScaleInfo
+scaleInfo_final$Quelle <- "dat"
 ```
 
 ```{r load scaleInfo, eval = TRUE, echo = FALSE}
 scaleInfo_file <- system.file("extdata", "example_scaleInfo.xlsx", package = "eatCodebook")
 scaleInfo_final <- getScaleInfo(scaleInfo_file)
+# workaround, should be done automatically, but currently problem with non list inputs for createScaleInfo
+scaleInfo_final$Quelle <- "dat"
 head(scaleInfo_final)
 ```
 
@@ -144,7 +150,7 @@ head(register)
 ```
 
 ```{r write register, eval = FALSE}
-eatAnalysis::write_xlsx(register, "example_register.xlsx", row.names = FALSE)
+writeExcel(register, "example_register.xlsx", row.names = FALSE)
 register_final <- getRegister("example_register.xlsx")
 ```
 
@@ -163,7 +169,7 @@ head(litInfo)
 ```
 
 ```{r write litInfo, eval = FALSE}
-eatAnalysis::write_xlsx(register, "example_litInfo.xlsx", row.names = FALSE)
+writeExcel(register, "example_litInfo.xlsx", row.names = FALSE)
 litInfo_final <- getLitInfo("example_litInfo.xlsx")
 ```
 
@@ -183,7 +189,7 @@ abbrList
 ```
 
 ```{r write abbrList, eval = FALSE}
-eatAnalysis::write_xlsx(abbrList, "example_abbrList.xlsx", row.names = FALSE)
+writeExcel(abbrList, "example_abbrList.xlsx", row.names = FALSE)
 abbrList_final <- makeAbbrList("example_abbrList.xlsx")
 ```
 
@@ -217,7 +223,7 @@ meta[1, "Subject"] <- "test"
 ```
 
 ```{r write meta data, eval = FALSE}
-eatAnalysis::write_xlsx(abbrList, "example_meta.xlsx", row.names = FALSE)
+writeExcel(abbrList, "example_meta.xlsx", row.names = FALSE)
 meta_final <- makeMetadata("example_meta.xlsx")
 ```
 
@@ -230,7 +236,36 @@ meta_final <- makeMetadata(meta_file)
 Further make steps are required.
 
 ```{r make steps}
-hint <- makeBGM(varInfo_final)
+cover <- makeCover(maintitle = "Study of Achievement", subtitle = "Codebook of Study of Achievement",
+                   authors = "Some Person", addAuthors = "With the help of some other persons",
+                   schriftenreihe = "Book 9 of Studies of Achievement", bibinfo = "test")
 
-id <- c(dat = "id")
+lit <- makeLit(litInfo_final)
+
+hint <- makeBGM(varInfo_final)
 ```
+
+## Chapters
+Create the chapter structure.
+
+```{r chapters}
+chapters <- createChapters(varInfo_final2)
+chapters[, 2] <- "Datensatz"
+```
+
+
+## Codebook
+Now we create the actual codebook script via calling the `codebook()` function. 
+
+```{r codebook}
+descStatistics2 <- descStatistics
+descStatistics2$skala1[[2]] <- as.data.frame(descStatistics2$skala1[[2]])
+
+
+latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
+                         scaleInfo = scaleInfo_final, register = register_final, dat = eatGADS::extractData(dat),
+                         Kennwertedatensatz = descStatistics2, chapters = chapters,
+                         deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbrList_final, hintmod = hint,
+                         lastpage = "")
+```
+

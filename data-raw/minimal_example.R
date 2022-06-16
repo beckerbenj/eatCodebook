@@ -117,7 +117,7 @@ descr2$skala1[[2]] <- as.data.frame(descr2$skala1[[2]])
 
 
 latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
-                         scaleInfo = scaleInfo_final, register = register_final, make.reg = NULL, dat = eatGADS::extractData(gd),
+                         scaleInfo = scaleInfo_final, register = register_final, dat = eatGADS::extractData(gd),
                          Kennwertedatensatz = descr2, chapters = chapters_final,
                          deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
                          lastpage = "")
@@ -134,7 +134,7 @@ write.table(meta_final , file = "other_code/minimal_example/minimal_example_meta
 ## Codebook ohne Register
 # --------------------------------------------------
 latex_skript_noreg <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final2,
-                         scaleInfo = scaleInfo_final, register = register_final, make.reg = FALSE, dat = eatGADS::extractData(gd),
+                         scaleInfo = scaleInfo_final, register = register_final, dat = eatGADS::extractData(gd),
                          Kennwertedatensatz = descr2, chapters = chapters_final,
                          deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbr, hintmod = hint,
                          lastpage = "")

@@ -13,7 +13,7 @@
 #'
 #'@examples
 #' f <- tempfile(fileext = ".xlsx")
-#' write_xlsx(mtcars, filePath = f)
+#' writeExcel(mtcars, filePath = f)
 #'
 #'@export
 writeExcel <- function(df_list, filePath, row.names = FALSE, col.names = TRUE) {

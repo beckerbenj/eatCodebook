@@ -162,13 +162,13 @@ meta_final <- makeMetadata(meta_file)
 ## Chapters
 Create the chapter structure.
 
-```{r make steps}
+```{r chapters}
 chapters <- createChapters(varInfo_final2)
 chapters[, 2] <- "Datensatz"
 ```
 
 ## Codebok
-Create the codebook.
+Now we create the actual codebook script via calling the `codebook()` function.
 
 ```{r codebook}
 latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
@@ -177,7 +177,7 @@ latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc 
 ```
 
 ## Save the Codebok
-Save the codebook.
+The resulting object and the meta data are then separately save to the hard drive. Both objects should be saved into the same folder.
 
 ```{r save codebook, eval = FALSE}
 write.table(latex_skript , file = "other_code/minimal_example.tex" , fileEncoding="UTF-8" ,
@@ -186,3 +186,5 @@ write.table(meta_final , file = "other_code/minimal_example_meta.xmpdata", fileE
             col.names=FALSE , row.names=FALSE , quote = FALSE )
 ```
 
+## Compilation
+The `LaTeX` script for the codebook has now been saved to the hard drive. This file should now be opened via a `Tex`-Editor and simply compiled. Sometimes multiple consecutive compilation steps are required for a clean output. Alternatively, the document can be compiled from within `R`, for example via `tools::texi2pdf()`.
