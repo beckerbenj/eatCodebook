@@ -25,7 +25,7 @@ makeBGM.data.frame <- function(varueInfo) {
   hint.info <- varueInfo
 
   if(all(hint.info$Hintergrundmodell %in% c('','nein') | is.na(hint.info$Hintergrundmodell))){
-    return(NULL)
+    return(character())
   } else {
     hint.info <- hint.info[ hint.info$Hintergrundmodell %in% 'ja',]
 

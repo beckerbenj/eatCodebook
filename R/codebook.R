@@ -29,7 +29,7 @@
 #'
 #'@export
 codebook <- function(varInfo, missings, struc, scaleInfo, register = NULL, dat, Kennwertedatensatz,
-                     chapters, deckblatt, intro, literatur, abkuerzverz, hintmod, lastpage) {
+                     chapters, deckblatt = "", intro = "", literatur = "", abkuerzverz = "", hintmod = "", lastpage = "") {
 
   # allow input as single data.frames
   if(is.data.frame(varInfo)) {
@@ -146,7 +146,9 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register = NULL, dat, 
 
 
   # Gesamter Anhang
-  if(all( unname( sapply( list(literatur, register.fb, abkuerzverz, hintmod, lastpage) , is.null) ) ) ){
+  if(all(sapply(list(literatur, register.fb, abkuerzverz, hintmod, lastpage) , is.null)) ||
+     length(c(literatur, register.fb, abkuerzverz, hintmod, lastpage)) == 0 ||
+     nchar(c(literatur, register.fb, abkuerzverz, hintmod, lastpage)) == 0) {
     anhang <- NULL
     skript.fb[length(skript.fb)] <- sub("\\clearpage" , "" , skript.fb[length(skript.fb)] , fixed=TRUE)
   } else {

@@ -7,7 +7,7 @@ test_that("single data.frame", {
   suppressMessages(input4descr <- createInputForDescriptives(dfSAV))
   varueInfo <- createVarInfo(dfSAV, input4descr)
   out <- makeBGM(varueInfo)
-  expect_equal(out, NULL)
+  expect_equal(out, character())
 
   varueInfo2 <- varueInfo
   varueInfo2$Hintergrundmodell[1:2] <- c("ja", "ja")
@@ -25,7 +25,7 @@ test_that("multiple data.frame", {
   suppressMessages(input4descr_l <- createInputForDescriptives(l))
   varueInfo_l <- createVarInfo(l, input4descr_l)
   out <- makeBGM(varueInfo_l)
-  expect_equal(out, NULL)
+  expect_equal(out, character())
 
   varueInfo_l2 <- varueInfo_l
   varueInfo_l2$dat1$Hintergrundmodell[1] <- "ja"

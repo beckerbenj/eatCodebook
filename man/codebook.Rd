@@ -13,12 +13,12 @@ codebook(
   dat,
   Kennwertedatensatz,
   chapters,
-  deckblatt,
-  intro,
-  literatur,
-  abkuerzverz,
-  hintmod,
-  lastpage
+  deckblatt = "",
+  intro = "",
+  literatur = "",
+  abkuerzverz = "",
+  hintmod = "",
+  lastpage = ""
 )
 }
 \arguments{
