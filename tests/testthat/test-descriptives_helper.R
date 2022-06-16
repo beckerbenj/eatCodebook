@@ -166,4 +166,23 @@ test_that("descriptives metric scale", {
   expect_equal(as.character(out[[2]]["cor.valid", ]), c(".00", "-.61", ".09"))
 })
 
+test_that("descriptives metric scale with missings", {
+  gd_miss <- eatGADS::changeMissings(gd, varName = "skala1", value = c(-99, -98), missings = c("miss", "miss"))
+  gd_miss$dat[c(1, 3), "skala1"] <- c(-99, -98)
+
+  capture_output(inputForDescr <- createInputForDescriptives(gd_miss))
+  sub_inputForDescr <- inputForDescr[inputForDescr$group == "skala1", ]
+  out <- kennwerte.skala(gd_miss, sub.inputForDescriptives = sub_inputForDescr, verbose = FALSE)
+  expect_equal(out[[1]]["N.valid", ], "7")
+  expect_equal(out[[1]]["mean.valid",], "2.67")
+  expect_equal(out[[1]]["sd.valid",], "0.47")
+  expect_equal(out[[1]]["min.valid",], "2.0")
+  expect_equal(out[[1]]["max.valid",], "3.3")
+  expect_equal(out[[1]]["sysmis.totalabs",], "2")
+  expect_equal(out[[1]]["alpha",], "-.68")
+
+  expect_equal(as.character(out[[2]][1, ]), rep("9", 3))
+  expect_equal(as.character(out[[2]]["mean.valid", ]), c("2.78", "2.11", "2.89"))
+  expect_equal(as.character(out[[2]]["cor.valid", ]), c(".00", "-.61", ".09"))
+})
 

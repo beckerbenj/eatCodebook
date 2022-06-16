@@ -128,7 +128,7 @@ kennwerte.metrisch <- function(x, value_table) {
 
 # how to integrate variable sets (items of scales?)
 ### kennwerte.skala(dat=dat, scaleCol = "DM_erfahrung", c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
-kennwerte.skala <- function(GADSdat,sub.inputForDescriptives, verbose) {
+kennwerte.skala <- function(GADSdat, sub.inputForDescriptives, verbose) {
   # erzeugt denselben output wie die originale kennwerte.skala
   # INPUT
   #	dat: Datensatz (data.frame)
@@ -144,6 +144,7 @@ variableCols <- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"]
 
 # erstmal keine checks, die passieren auf hoeherer Ebene
   dat   <- GADSdat[["dat"]]
+  dat_noMiss <- eatGADS::extractData(GADSdat, convertMiss = TRUE, convertLabels = "numeric")
   allVar<- list(sc = scaleCol, vc = variableCols)
   allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
 
@@ -166,9 +167,7 @@ variableCols <- sub.inputForDescriptives[which(sub.inputForDescriptives[,"type"]
   for ( i in c(allNam[["vc"]], allNam[["sc"]]) ) {
       sublab <- GADSdat[["labels"]][which(GADSdat[["labels"]][,"varName"] == i),]
       if ( "miss" %in% sublab[,"missings"]) {
-           mv <- sublab[which(sublab[,"missings"] == "miss"),"value"]
-           rs <- paste(mv , " = " , "NA",sep="", collapse="; ")
-           dat[,i] <- car::recode(dat[,i], rs)
+        dat[,i] <- dat_noMiss[, i]
       } }
 
 # part-whole correlation
