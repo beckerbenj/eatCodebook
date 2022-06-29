@@ -70,7 +70,7 @@ makeBGM.data.frame <- function(varueInfo) {
                  '\\addcontentsline{toc}{section}{Hintergrundmodell}',
                  '\\ihead[\\leftmark]{\\leftmark \\newline \\textsc{Hintergrundmodell}}',
                  '\\captionof*{table}{\\textbf{Variablen im Hintergrundmodell}}',
-                 '\\begin{xltabular}{\\textwidth}{lq{5cm}X} % die ersten beiden Spalten sind so breit wie sie mindestens sein muessen + linksbuendig (Spaltentyp l). Die letzte Spalte ist linksbuendig+kein Blocksatz + Breite ist gleich dem Rest, der nach Rechts noch frei ist (Spaltentyp Q)',
+                 '\\begin{xltabular}{\\textwidth}{lq{5cm}Q} % die ersten beiden Spalten sind so breit wie sie mindestens sein muessen + linksbuendig (Spaltentyp l). Die letzte Spalte ist linksbuendig+kein Blocksatz + Breite ist gleich dem Rest, der nach Rechts noch frei ist (Spaltentyp Q)',
                  '\\toprule',
                  '\\headrow',
                  '\\textbf{Hintergrundvariable} & \\textbf{Erstellt aus } & \\textbf{Inhalt der Hintergrundvariable}  \\\\',
