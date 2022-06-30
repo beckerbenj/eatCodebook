@@ -23,6 +23,6 @@ An existing file is overwritten.
 }
 \examples{
 f <- tempfile(fileext = ".xlsx")
-write_xlsx(mtcars, filePath = f)
+writeExcel(mtcars, filePath = f)
 
 }

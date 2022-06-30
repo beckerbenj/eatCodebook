@@ -79,23 +79,23 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register = NULL, dat, 
     r[ r %in% "-"] <- 0
 
     return(paste0(g, ".", r))
-  } ) ) )
+  })))
 
-  alleEbenen <- list( "Chapter"=as.character(utils::as.roman(1:(length(fbshort)+1))),
-                      "Section"=unique(unlist(sapply( alleEbenen , function(d) paste0(unlist(strsplit(d , ""))[ 1:(which(unlist(strsplit(d , "")) %in% ".")[1]-1) ]  , collapse="")
-                      ) ) ),
-                      "SubSection"=unique(sapply( alleEbenen , function(d) {
-                        if( length(which(unlist(strsplit(d , "")) %in% ".")) <2){
+  alleEbenen <- list("Chapter" = as.character(utils::as.roman(1:(length(fbshort)+1))),
+                      "Section" = unique(unlist(sapply(alleEbenen, function(d) paste0(unlist(strsplit(d , ""))[ 1:(which(unlist(strsplit(d , "")) %in% ".")[1]-1) ], collapse="")
+                      ))),
+                      "SubSection"= unique(sapply(alleEbenen, function(d) {
+                        if(length(which(unlist(strsplit(d , "")) %in% ".")) < 2){
                           return(d)
                         } else {
                           return(paste0(unlist(strsplit(d , ""))[ 1:(which(unlist(strsplit(d , "")) %in% ".")[2]-1) ] , collapse="") )
-                        } } ) ),
+                        }})),
                       "SubSubSection"=unique(sapply( alleEbenen , function(d) {
-                        if( length(which(unlist(strsplit(d , "")) %in% "."))<3){
+                        if(length(which(unlist(strsplit(d , "")) %in% ".")) < 3){
                           return(d)
                         } else {
                           return(paste0(unlist(strsplit(d , ""))[ 1:(which(unlist(strsplit(d , "")) %in% ".")[3]-1) ] , collapse="") )
-                        } } ) ) )
+                        }})))
 
   max.Chap <- paste0(rep("X",max(nchar(alleEbenen[["Chapter"]]) ) ) , collapse="")
   max.Sec <- paste0(gsub("\\d" , "0" , alleEbenen[["Section"]][which.max(sapply(alleEbenen[["Section"]] , function(d) length(unlist(strsplit(d , ""))) ))] ) , "0")
@@ -144,11 +144,11 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register = NULL, dat, 
   skript.fb <- unname(unlist(skript.fb))
   register.fb <- unname(unlist(register.fb))
 
-
+  #browser()
   # Gesamter Anhang
   if(all(sapply(list(literatur, register.fb, abkuerzverz, hintmod, lastpage) , is.null)) ||
      length(c(literatur, register.fb, abkuerzverz, hintmod, lastpage)) == 0 ||
-     nchar(c(literatur, register.fb, abkuerzverz, hintmod, lastpage)) == 0) {
+     sum(nchar(c(literatur, register.fb, abkuerzverz, hintmod, lastpage))) == 0) {
     anhang <- NULL
     skript.fb[length(skript.fb)] <- sub("\\clearpage" , "" , skript.fb[length(skript.fb)] , fixed=TRUE)
   } else {

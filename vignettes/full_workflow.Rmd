@@ -257,15 +257,15 @@ chapters[, 2] <- "Datensatz"
 ## Codebook
 Now we create the actual codebook script via calling the `codebook()` function. 
 
-```{r codebook}
+```{r codebook, message=TRUE}
 descStatistics2 <- descStatistics
 descStatistics2$skala1[[2]] <- as.data.frame(descStatistics2$skala1[[2]])
 
 
 latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
-                         scaleInfo = scaleInfo_final, register = register_final, dat = eatGADS::extractData(dat),
-                         Kennwertedatensatz = descStatistics2, chapters = chapters,
-                         deckblatt = cover, intro = "", literatur = lit, abkuerzverz = abbrList_final, hintmod = hint,
-                         lastpage = "")
+                         scaleInfo = scaleInfo_final, register = register_final, 
+                         dat = eatGADS::extractData(dat), Kennwertedatensatz = descStatistics2, 
+                         chapters = chapters, deckblatt = cover, intro = "", literatur = lit, 
+                         abkuerzverz = abbrList_final, hintmod = hint, lastpage = "")
 ```
 
