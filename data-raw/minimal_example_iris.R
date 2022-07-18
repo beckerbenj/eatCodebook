@@ -72,5 +72,19 @@ write.table(latex_skript , file = "other_code/minimal_example.tex" , fileEncodin
 write.table(meta_final , file = "other_code/minimal_example_meta.xmpdata", fileEncoding="UTF-8" ,
             col.names=FALSE , row.names=FALSE , quote = FALSE )
 
+## Codebook with predefined cover
+# --------------------------------------------------
+pdf_cover <- '\\includepdf[pages=-]{q:/BT2018/BT/90_Skalenhandbuch/08_Einleitungstexte/cover_page.pdf}'
+
+latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
+                         scaleInfo = scaleInfo_final, dat = eatGADS::extractData(gd),
+                         Kennwertedatensatz = descr, chapters = chapters_final,
+                         deckblatt = pdf_cover)
+
+#### SKRIPTE SCHREIBEN ####
+write.table(latex_skript , file = "other_code/minimal_example_pdf_cover.tex" , fileEncoding="UTF-8" ,
+            col.names=FALSE , row.names=FALSE , quote = FALSE )
+write.table(meta_final , file = "other_code/minimal_example_meta.xmpdata", fileEncoding="UTF-8" ,
+            col.names=FALSE , row.names=FALSE , quote = FALSE )
 
 
