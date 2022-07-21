@@ -34,6 +34,16 @@ test_that("check_varInfo", {
 })
 
 
+### currently the ordering follows specific defaults; somewhen redo and document?
+# test_that("ordering of additional variables", {
+#   #out <- getVarInfo("tests/testthat/helper_varInfo_bgm.xlsx")
+#   out <- getVarInfo("helper_varInfo_bgm.xlsx")
+#   expect_equal(names(out)[1], "Var.Name")
+#   expect_equal(out$LabelSH[1], "Variable 1")
+#   expect_equal(out$Anmerkung.Var[1], "-")
+#   expect_equal(out$Reihenfolge, c("0", "0", "0"))
+# })
+
 
 # sheets.varue.info <- c("sfb_tr_ach","lfb","slfb")
 # fbshort <- c("sfb" ,"lfb" ,"slfb" )

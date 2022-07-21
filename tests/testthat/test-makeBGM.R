@@ -36,3 +36,26 @@ test_that("multiple data.frame", {
   expect_equal(out[17], "VAR1 & \\multil{-} & Variable 1 \\\\")
   expect_equal(out[18], "VAR2 & \\multil{-} & Variable 2 \\\\")
 })
+
+
+test_that("single data.frame with additional variables", {
+  suppressMessages(input4descr <- createInputForDescriptives(dfSAV))
+  varueInfo <- createVarInfo(dfSAV, input4descr)
+  varueInfo[4:5, "Var.Name"] <- c("VAR1_class", "VAR2_class")
+  varueInfo[4:5, "in.DS.und.SH"] <- "nein"
+  varueInfo$Hintergrundmodell[c(1:2, 4:5)] <- "ja"
+  suppressMessages(out <- makeBGM(varueInfo))
+
+  expect_equal(out[17], "VAR1 & \\multil{-} & Variable 1 \\\\")
+  expect_equal(out[18], "VAR2 & \\multil{-} & Variable 2 \\\\")
+  expect_equal(out[19], "VAR1\\_class & \\multil{-} & NA \\\\")
+  expect_equal(out[20], "VAR2\\_class & \\multil{-} & NA \\\\")
+
+  varueInfo$HGM.Reihenfolge <- "-"
+  suppressMessages(out <- makeBGM(varueInfo))
+
+  expect_equal(out[17], "VAR1 & \\multil{-} & Variable 1 \\\\")
+  expect_equal(out[18], "VAR2 & \\multil{-} & Variable 2 \\\\")
+  expect_equal(out[19], "VAR1\\_class & \\multil{-} & NA \\\\")
+  expect_equal(out[20], "VAR2\\_class & \\multil{-} & NA \\\\")
+})
