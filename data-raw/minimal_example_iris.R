@@ -88,3 +88,17 @@ write.table(meta_final , file = "other_code/minimal_example_meta.xmpdata", fileE
             col.names=FALSE , row.names=FALSE , quote = FALSE )
 
 
+## Codebook with introduction
+# --------------------------------------------------
+intro_pages <- readLines("Q:/BT2018/BT/90_Skalenhandbuch/08_Einleitungstexte/Latex_Intro_snippet.tex")
+
+latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
+                         scaleInfo = scaleInfo_final, dat = eatGADS::extractData(gd),
+                         Kennwertedatensatz = descr, chapters = chapters_final,
+                         intro = intro_pages)
+
+#### SKRIPTE SCHREIBEN ####
+write.table(latex_skript , file = "other_code/minimal_example_pdf_intro.tex" , fileEncoding="UTF-8" ,
+            col.names=FALSE , row.names=FALSE , quote = FALSE )
+write.table(meta_final , file = "other_code/minimal_example_meta.xmpdata", fileEncoding="UTF-8" ,
+            col.names=FALSE , row.names=FALSE , quote = FALSE )
