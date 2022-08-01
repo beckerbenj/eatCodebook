@@ -60,7 +60,7 @@ makeBGM.data.frame <- function(varueInfo) {
         hint.info <- rbind(hint.info[grepl( '\\d' , hint.info$HGM.Reihenfolge),][ order(as.numeric(hint.info$HGM.Reihenfolge[grepl( '\\d' ,hint.info$HGM.Reihenfolge)])) ,]  , hint.info[! grepl( '\\d' , gsub(' ' , '' , hint.info$HGM.Reihenfolge)),] )
       }
     } else {
-      message('Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geaendert.')
+      message('Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geaendert. Achtung: Durch das Einlesen mithilfe von getVarInfo() kann sich die Variablen-Reihenfolge im Vorfeld geaendert haben!')
     }
 
     skript <- c( '\\clearpage',
