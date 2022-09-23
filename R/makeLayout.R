@@ -156,7 +156,7 @@ layout.var <- function(name , fb, double.vars , kennwerte.var = NULL, varue.info
   if (i==7) layout.typ.var <- layout.gepoolt.kategorial(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
   if (i==8) layout.typ.var <- layout.numerisch.geleert( name=name , varue.info=varue.info)
   if (i==9) layout.typ.var <- layout.skala.fake(name=name , kennwerte.var = kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
-  if (i==10) layout.typ.var <- "Layout fuer Netzwerkvariablen fehlt noch."
+  if (i==10) layout.typ.var <- layout.id( name=name , varue.info=varue.info ) # netzwerkvariablen
 
 
 
