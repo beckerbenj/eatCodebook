@@ -74,12 +74,15 @@ Latex.length <- function(word , bold , in.cm=FALSE){
 
 # Funktion, um Sonderzeichen fuer Latex-Skript zu bearbeiten
 sonderzeichen.aufbereiten <- function(skript, check.tilde=FALSE){
+  stopifnot(is.character(skript))
+
+  skript <- subQuotationMarks(skript)
+
+  sonder <- c("&","%","$","#","_")
+  change.to <- c("\\&","\\%","\\$","\\#","\\_")
   if(check.tilde){
-    sonder <- c("&","%","$","~","#","_")
-    change.to <- c("\\&","\\%","\\$","\\textasciitilde","\\#","\\_")
-  } else {
-    sonder <- c("&","%","$","#","_")
-    change.to <- c("\\&","\\%","\\$","\\#","\\_")
+    sonder <- c(sonder, "~")
+    change.to <- c(change.to, "\\textasciitilde")
   }
   names(change.to) <- sonder
 
@@ -91,5 +94,16 @@ sonderzeichen.aufbereiten <- function(skript, check.tilde=FALSE){
   return(skript)
 }
 
+subQuotationMarks <- function(vec) {
+  unlist(lapply(vec, function(x) {
+    x_old <- x
+    while(grepl('"', x)) {
+    x <- sub('"', '\\\\glqq ', x = x)
+    if(!grepl('"', x)) stop("Detected an uneven number of quotation marks in: ", x_old)
+    x <- sub('"', '\\\\grqq{}', x = x)
+  }
+  x
+  }))
+}
 
 

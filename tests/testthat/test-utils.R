@@ -1,3 +1,16 @@
+
+test_that("quotation marks", {
+  out <- subQuotationMarks(c('This contains no quotation marks.', 'This contains "quotation" marks.',
+                             'This contains "multiple" "quotation" "marks".'))
+  expect_equal(out[1], 'This contains no quotation marks.')
+  expect_equal(out[2], 'This contains \\glqq quotation\\grqq{} marks.')
+  expect_equal(out[3], 'This contains \\glqq multiple\\grqq{} \\glqq quotation\\grqq{} \\glqq marks\\grqq{}.')
+
+  expect_error(subQuotationMarks(c('This is a "problem.')),
+                                 'Detected an uneven number of quotation marks in: This is a "problem.')
+  })
+
+
 test_that("special signs", {
   out <- sonderzeichen.aufbereiten(c("a", "b", "x%", "\\", "ab#a_"))
   expect_equal(out, c("a", "b", "x\\%", "\\", "ab\\#a\\_"))
