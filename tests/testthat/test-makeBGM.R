@@ -12,7 +12,7 @@ test_that("single data.frame", {
   varueInfo2 <- varueInfo
   varueInfo2$Hintergrundmodell[1:2] <- c("ja", "ja")
   expect_message(out <- makeBGM(varueInfo2),
-  "Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geaendert.")
+  "Es liegen keine numerischen Angaben für die Reihenfolge vor. Durch das Einlesen mithilfe von getVarInfo() kann sich die Variablen-Reihenfolge geändert haben. Diese wird nun als Grundlage genutzt.", fixed = TRUE)
   expect_equal(out[1], "\\clearpage")
   expect_equal(out[17], "VAR1 & \\multil{-} & Variable 1 \\\\")
   expect_equal(out[18], "VAR2 & \\multil{-} & Variable 2 \\\\")
@@ -31,7 +31,7 @@ test_that("multiple data.frame", {
   varueInfo_l2$dat1$Hintergrundmodell[1] <- "ja"
   varueInfo_l2$dat2$Hintergrundmodell[2] <- "ja"
   expect_message(out <- makeBGM(varueInfo_l2),
-                 "Da keine numerische Angaben vorliegen, wird nichts an der Reihenfolge geaendert.")
+                 "Es liegen keine numerischen Angaben für die Reihenfolge vor. Durch das Einlesen mithilfe von getVarInfo() kann sich die Variablen-Reihenfolge geändert haben. Diese wird nun als Grundlage genutzt.", fixed = TRUE)
   expect_equal(out[1], "\\clearpage")
   expect_equal(out[17], "VAR1 & \\multil{-} & Variable 1 \\\\")
   expect_equal(out[18], "VAR2 & \\multil{-} & Variable 2 \\\\")

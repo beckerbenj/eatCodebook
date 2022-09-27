@@ -157,7 +157,7 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
       } else {
         werte <- c('sysmis.totalabs' =as.character(max(as.numeric(werte['sysmis.totalabs',]), na.rm=TRUE) ))
       }
-    } else if (length(name) == 1 && class(werte) == 'list') { ### 16.04.: Hotfix
+    } else if (length(name) == 1 && is.list(werte) && !is.data.frame(werte)) { ### 16.04.: Hotfix
       werte <- c('sysmis.totalabs' =as.character(max(as.numeric(werte[[length(werte)]]['sysmis.totalabs',]), na.rm=TRUE) ))
     } else {
       if(is.data.frame(werte) || is.matrix(werte)){
