@@ -93,7 +93,10 @@ layout.prae <- function(var.all , fbshort , double.vars, deckblatt, makeCounter,
               '\n',
               '%%%% Silbentrennung',
               '\\renewcommand{\\slash}{/\\penalty\\exhyphenpenalty\\hspace{0pt}} % mit diesem Befehl wird garantiert, dass nach dem slash noch ein zeilenumbruch stattfinden kann',
-              '\\hyphenation{Schü-ler-ge-samt-ge-wicht}', ## specific hyphenations, someday maybe in separate function for manual extensions?
+              ## specific hyphenations, someday maybe in separate function for manual extensions?
+              '\\hyphenation{Sch\u00FC-ler-ge-samt-ge-wicht}',
+              '\\hyphenation{Sch\u00FC-ler-in}',
+              '\\hyphenation{Sch\u00FC-ler-innen}',
               '\n',
               '%%%% Tabellenbezogene Befehle %%%%\n',
               '\\newcommand{\\fk}[1]{\\textbf{\\textit{#1}}\\arraybackslash} % Fett-und-kursiv-Befehl, der innerhalb Tabellen benutzt wird',
