@@ -48,6 +48,7 @@ prepareVarInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" 
   }
 
  # Sortierung der Variablen nach Gliederung und Reihenfolge
+  varue.info$Gliederung <- prepareStructure(varue.info$Gliederung, varNames = varue.info$Var.Name, in.DS.und.SH = varue.info$in.DS.und.SH)
   gd <- varue.info$Gliederung
   re <- varue.info$Reihenfolge
 
@@ -61,18 +62,12 @@ prepareVarInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" 
       }
     }
 
-    if(suppressWarnings( is.na(as.numeric(g)))){
-      if(any(! varue.info$in.DS.und.SH[ gd %in% g] %in% "nein")){
-        stop(paste0("   Die Variablen " , paste0( varue.info$Var.Name[ ! varue.info$in.DS.und.SH %in% "nein" & gd %in% g] , collapse=", ") , " sollen ins Skalenhandbuch, besitzen aber keinen validen Gliederungspunkt (der Form \'Zahl.Zahl\').\n\n"))
-      } else {
-        if(is.na(g)){
-          re[ is.na(gd)] <- 0
-          gd[ is.na(gd)] <- 0
-        } else {
-          re[ gd %in% g] <- 0
-          gd[ gd %in% g] <- 0
-        }
-      }
+    if(is.na(g)){
+      re[ is.na(gd)] <- 0
+      gd[ is.na(gd)] <- 0
+    } else {
+      re[ gd %in% g] <- 0
+      gd[ gd %in% g] <- 0
     }
   }
 
@@ -93,6 +88,22 @@ replaceNASignes <- function(char_vec) {
   char_vec[which(toupper(char_vec) %in% c("NA", "NULL", ""))] <- "-"
   char_vec[which(is.na(char_vec))] <- "-"
   char_vec
+}
+
+prepareStructure <- function(struc, varNames, in.DS.und.SH) {
+  # strings to na
+  no_struc <- is.na(suppressWarnings(as.numeric(struc)))
+  struc[no_struc] <- NA
+
+  if(all(is.na(struc[!in.DS.und.SH %in% "nein"]))) {
+    struc[!in.DS.und.SH %in% "nein"] <- "1.1"
+    return(struc)
+  }
+  if(!any(is.na(struc[!in.DS.und.SH %in% "nein"]))) return(struc)
+
+  # if some variables in the codebook have Gliederungspunkte, others don't
+  missing_struc <- varNames[!in.DS.und.SH %in% "nein" & is.na(struc)]
+  stop("The following variable(s) should be in the codebook but contain no valid 'Gliederungspunkt' ('number.number'): ", paste(missing_struc, collapse = ", "))
 }
 
 # tbd: check structure, check that Titel column does not contain any missings (!)
