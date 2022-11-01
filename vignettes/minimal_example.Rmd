@@ -33,8 +33,8 @@ head(inputForDescriptives)
 The template should be exported to `.xlsx`, modified and reimported to `R`.
 
 ```{r export varinfo, eval=FALSE}
-writeExcel(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
-inputForDescriptives_edited <- getInputForDescriptives("file_path/inputForDescriptives.xlsx")
+writeExcel(inputForDescriptives, "inputForDescriptives.xlsx")
+inputForDescriptives_edited <- getInputForDescriptives("inputForDescriptives.xlsx")
 ```
 
 ```{r edit varinfo, echo=FALSE}
@@ -45,13 +45,9 @@ inputForDescriptives_edited <- inputForDescriptives
 This input is then used to calculate descriptive statistics via `calculateDescriptives()`.
 
 ```{r calculate descr}
-# just show function calls
-showFunctions <- calculateDescriptives(GADSdat = dat, inputForDescriptives = inputForDescriptives_edited, showCallOnly = TRUE)
-showFunctions <- data.frame(varName = names(showFunctions), functionName = as.vector(showFunctions), stringsAsFactors = FALSE)
-showFunctions
-
-# acutally calculate descriptives
-descStatistics <- calculateDescriptives(GADSdat = dat, inputForDescriptives = inputForDescriptives_edited, showCallOnly = FALSE)
+# calculate descriptives
+descStatistics <- calculateDescriptives(GADSdat = dat, 
+                                        inputForDescriptives = inputForDescriptives_edited)
 descStatistics[[3]]
 ```
 
@@ -89,7 +85,8 @@ head(varInfo)
 ```{r write varInfo, eval = FALSE}
 writeExcel(miss, "example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("example_varInfo.xlsx")
-varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, inputForDescriptives = inputForDescriptives_edited)
+varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, 
+                              inputForDescriptives = inputForDescriptives_edited)
 ```
 
 ```{r load varInfo, eval = TRUE, echo = FALSE}
@@ -150,7 +147,7 @@ meta[1, "Subject"] <- "test"
 ```
 
 ```{r write meta data, eval = FALSE}
-writeExcel(abbrList, "example_meta.xlsx", row.names = FALSE)
+writeExcel(meta, "example_meta.xlsx", row.names = FALSE)
 meta_final <- makeMetadata("example_meta.xlsx")
 ```
 
@@ -164,7 +161,7 @@ Create the chapter structure.
 
 ```{r chapters}
 chapters <- createChapters(varInfo_final2)
-chapters[, 2] <- "Datensatz"
+chapters[1, 2] <- "Iris Datensatz"
 ```
 
 ## Codebok
@@ -180,9 +177,9 @@ latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc 
 The resulting object and the meta data are then separately save to the hard drive. Both objects should be saved into the same folder.
 
 ```{r save codebook, eval = FALSE}
-write.table(latex_skript , file = "other_code/minimal_example.tex" , fileEncoding="UTF-8" ,
+write.table(latex_skript , file = "minimal_example.tex" , fileEncoding="UTF-8" ,
             col.names=FALSE , row.names=FALSE , quote = FALSE )
-write.table(meta_final , file = "other_code/minimal_example_meta.xmpdata", fileEncoding="UTF-8" ,
+write.table(meta_final , file = "minimal_example_meta.xmpdata", fileEncoding="UTF-8" ,
             col.names=FALSE , row.names=FALSE , quote = FALSE )
 ```
 
