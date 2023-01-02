@@ -54,21 +54,25 @@ prepareVarInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" 
 
   for( g in gd ){
     if(! is.na(g)){
-      bool <- suppressWarnings( is.na(as.numeric(re[gd %in% g])))
-      if(all(bool)){
-        re[gd %in% g] <- 1:length(which(bool))
-      } else if(any(bool)){
-        re[gd %in% g][bool] <- as.numeric(max(re[gd %in% g][! bool] , na.rm=TRUE))+(1:length(which(bool)))
+      re_of_g <- re[gd %in% g]
+      # why should re be not numeric? instead early input validation?
+      isNA_or_char_re_of_g <- suppressWarnings(is.na(as.numeric(re_of_g)))
+
+      ## substitute missings/invalid entries in re (Reihenfolge), partially or fully
+      if(all(isNA_or_char_re_of_g)){
+        re[gd %in% g] <- 1:length(re_of_g)
+      } else if(any(isNA_or_char_re_of_g)){
+        re[gd %in% g][isNA_or_char_re_of_g] <- as.numeric(max(re[gd %in% g][! isNA_or_char_re_of_g] , na.rm=TRUE))+(1:length(re_of_g))
       }
     }
 
-    if(is.na(g)){
+    if(is.na(g)){             ## this is overly and redundant substitution
       re[ is.na(gd)] <- 0
       gd[ is.na(gd)] <- 0
-    } else {
-      re[ gd %in% g] <- 0
-      gd[ gd %in% g] <- 0
-    }
+    } #else {                 ## this does not make sense
+      #re[ gd %in% g] <- 0
+      #gd[ gd %in% g] <- 0
+    #}
   }
 
   # fix special signs
@@ -78,6 +82,7 @@ prepareVarInfo <- function(varue.info , col.sonderzeichen=c("LabelSH" , "Titel" 
 
 
   # Sortieren nach Gliederung -> Die Funktion zur Generierung des Gesamt-Tex-Skripts benoetigt einen Vektor mit Variablennamen, die sortiert eingegeben werden.
+  #browser()
   varue.info <- varue.info[ order( as.numeric(gd) , as.numeric(re) ), ]
   varue.info
 }

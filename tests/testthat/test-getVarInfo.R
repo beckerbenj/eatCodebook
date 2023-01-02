@@ -47,6 +47,15 @@ test_that("no structure", {
   expect_equal(out$Gliederung, c("1.1", "1.1", "1.1"))
 })
 
+test_that("unsorted", {
+  #out <- getVarInfo("tests/testthat/helper_varInfo_unsorted.xlsx")
+  out <- getVarInfo("helper_varInfo_unsorted.xlsx")
+  expect_equal(out$Var.Name, c("VAR1", "VAR2", "VAR4", "VAR5", "VAR3"))
+  expect_equal(out$Reihenfolge, c("0", "0", "1", "2", "0"))
+  expect_equal(out$Gliederung, c("1.01", "1.02", "1.03", "1.03", "2.01"))
+})
+
+
 test_that("check_varInfo", {
   #varInfo <- getVarInfo("tests/testthat/helper_varInfo.xlsx")
   varInfo1 <- varInfo2 <- varInfo3 <- varInfo4 <- varInfo5 <- varInfo6 <- getVarInfo("helper_varInfo.xlsx")
