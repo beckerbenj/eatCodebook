@@ -275,7 +275,7 @@ kennwerte.gepoolt.metrisch <- function( datWide, imputedVariableCols) {
 ### Berechnung der gepoolten Kennwerte
   means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",
                             na.rm = TRUE, verbose = FALSE, progress = FALSE )
-  resM  <- eatRep::report(means, exclude = "var")
+  resM  <- eatRep::report(means, exclude = c("var", "Ncases"))
 
 # Minimum - kleinster Wert aller aufsummierten Imputationswerte einer Person
   min.valid <- formatC ( min( rowSums(datWide[, allNam[["vc"]]] , na.rm = FALSE )/length(allNam[["vc"]]) , na.rm=TRUE), format = "f" , digits = 1 )
@@ -311,7 +311,7 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
   if(verbose){cat("Analysis of valid values: ")}
   res  <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = FALSE,
                             na.rm=TRUE, verbose = FALSE, progress = FALSE ))
-  ret  <- eatRep::report(res)
+  ret  <- eatRep::report(res, exclude="Ncases")
   retA <- formatC(100*ret[,"est"], format="f", digits=1)                        ### aufbereiten
   names(retA) <- paste(ret[,"parameter"], "valid", sep=".")
 ### alle Werte
@@ -321,7 +321,7 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
       if(verbose){cat("Analysis of total values: ")}
       res1 <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE,
                                 na.rm=FALSE, forceTable=TRUE, verbose = FALSE, progress = FALSE ))
-      ret1 <- eatRep::report(res1)
+      ret1 <- eatRep::report(res1, exclude="Ncases")
       weg  <- match(".NA.", ret1[,"parameter"])                                 ### Ergebnisse aufbereiten, in der richtigen Reihenfolge
       ret1A<- formatC(100* c(ret1[-weg,"est"],ret1[weg,"est"]), format="f", digits=1)
       names(ret1A) <- c(paste(ret1[-weg,"parameter"], "total", sep="."),"sysmis.total")
