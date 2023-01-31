@@ -1,12 +1,13 @@
----
+--- 
 title: "Full Workflow"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Full Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
+  
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -23,17 +24,52 @@ dat <- eatGADS::import_spss(file)
 ```
 
 ## Descriptive Statistics
-On of the key elements of a codebook are descriptive statistics shortly describing each variable in the data set. What kind of descriptive statistics is reported for each variable depends on the type of the variable. The function `createInputForDescriptives()` creates a template to provide the information that is needed to calculate the descriptive statistics for an `GADSdat` object.
+One of the key elements of a codebook are descriptive statistics shortly describing each variable in the data set. What kind of descriptive statistics is reported for each variable depends on the type of the variable. The function `createInputForDescriptives()` creates a template to provide the information that is needed to calculate the descriptive statistics for an `GADSdat` object. The function has some arguments you can use to get a better result and less manual editing in the next step.
 
 ```{r createInputForDescriptives}
 inputForDescriptives <- createInputForDescriptives(GADSdat = dat)
 head(inputForDescriptives)
 ```
 
-The template should be exported to `.xlsx`, modified and reimported to `R`.
+The template should be exported to `.xlsx`, modified and reimported to `R`. Some information may need to be modified because the function does not label it correctly. For this, it is necessary to understand the functionality and check the variable entries.  
 
 ```{r export varinfo, eval=FALSE}
 writeExcel(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
+```
+
+In the **varName**, **varLabel** and **format** columns are information about the variables of the dataset. You don't have to edit anything.  
+**imp** can be set to *WAHR* or *FALSCH*. If there are several variables to be displayed on one page, this column must be set to *WAHR* for these variables and they must be assigned to the same group at **group**.  
+**type** can be set to *variable* or *scale*. If it is a scale consisting of several individual variables, the scale variable is set to *scale* and the individual items to *variable*. All other variables should always get *variable* as an entry.  
+The **scale** column specifies how the variable is to be displayed. If it is empty, no descreptives are displayed. *numeric* is a variable without labelled categories. For *ordinal*, it is a categorical variable that has labelled values.
+
+Consequently, to get a codebook page that represents the variable without any descriptives, the entry must look like this:  
+<img src="./pictures/input_IDs.PNG" alt="input_IDs" />  
+This can be the case, for example, with ID variables or character variables. The page would then be displayed as follows:  
+<img src="./pictures/codebook_IDs.PNG" alt="codebook_IDs" />  
+
+To create an entry for a numeric variable without labelled values, the Excel must look like this:  
+<img src="./pictures/input_numeric.PNG" alt="input_numeric" />  
+This creates the following page. This can be used, for example, for variables that represent an age or variables with values in the decimal range. Nevertheless, these variables can contain labels for values. If they are defined as missing, these values are not taken into account in the calculations but are still reported.  
+<img src="./pictures/codebook_numeric.PNG" alt="codebook_numeric" /> 
+
+
+To display a categorical variable, the Excel should be edited as follows:  
+<img src="./pictures/input_ordinal.PNG" alt="input_ordinal" />  
+This creates the following page in the codebook, which is well suited for variables that only have labelled categories:  
+<img src="./pictures/codebook_ordinal.PNG" alt="codebook_ordinal" />
+
+If there is a scale and individual items in the data set, then these must be labelled in Excel as follows. The individual items are labelled as *ordinal* and the scale as *numeric*. They must all have the same name at **group** so that they are displayed together.  
+<img src="./pictures/input_scale.PNG" alt="input_scale" />  
+This logic leads to the following entries in the scale manual for the variables:  
+<img src="./pictures/codebook_scale1.PNG" alt="codebook_scale1" /><img src="./pictures/codebook_scale2.PNG" alt="codebook_scale2" /><img src="./pictures/codebook_scale3.PNG" alt="codebook_scale3" />
+
+For variables where an averaged value is to be determined and displayed, the **imp** column becomes relevant. This must be set to *WAHR* for these variables. In addition, the variables also need a common name in **group** and, depending on whether they are to be represented categorically or numerically, the corresponding designation in **scale**.  
+<img src="./pictures/input_imp.PNG" alt="input_imp" />  
+Depending on what was specified in **scale**, it results in the following pages in the codebook:  
+<img src="./pictures/codebook_imp1.PNG" alt="codebook_imp1" /><img src="./pictures/codebook_imp2.PNG" alt="codebook_imp2" />  
+After the table has been adjusted accordingly, it must be read in again with the function `getInputForDescriptives()`.
+
+```{r import varinfo, eval=FALSE}
 inputForDescriptives_edited <- getInputForDescriptives("file_path/inputForDescriptives.xlsx")
 ```
 
@@ -49,12 +85,12 @@ This input is then used to calculate descriptive statistics via `calculateDescri
 showFunctions <- calculateDescriptives(GADSdat = dat, inputForDescriptives = inputForDescriptives_edited, showCallOnly = TRUE)
 showFunctions <- data.frame(varName = names(showFunctions), functionName = as.vector(showFunctions), stringsAsFactors = FALSE)
 showFunctions
-
 # acutally calculate descriptives
 descStatistics <- calculateDescriptives(GADSdat = dat, inputForDescriptives = inputForDescriptives_edited, showCallOnly = FALSE)
 descStatistics[[5]]
 ```
 
+If you want to document several data sets in the codebook, you must go through these steps for all data sets and summarise the results in lists. These lists can then be used instead of the individual objects for the following functions. 
 
 ## Value and Missing Labels
 Another imported part of a codebook is documentation of the value labels of valid and missing values. A respective overview is created via `createMissings()`.
@@ -79,12 +115,25 @@ head(miss_final)
 
 
 ## Variable Information
-A key element of the `eatCodebook` package is that various forms of variable information can be supplied.
+With `createVarInfo()` the most important part of the codebook is created.
 
 ```{r create varInfo}
 varInfo <- createVarInfo(dat, inputForDescriptives = inputForDescriptives_edited)
 head(varInfo)
 ```
+
+This object has to be saved again in an Excel, which has to be adjusted by some manual steps.  
+The **in.DS.und.SH** column indicates whether a variable only appears in the data set but does not get its own page (*ds*), whether it appears both in the codebook and in the data set (*ja*), whether it only appears in the scale manual (*sh*) or neither (*nein*). *ds* is assigned, for example, for the items of the scale variables, as they do not receive their own pages. *sh* for pooled variables, as they are shown in the codebook but do not exist in the actual data set. *nein* can be assigned for variables that are added independently. This can be the case, for example, if you want to include them in the BGM information, but the variables do not exist in the data set.  
+The **Layout** column is automatically created after reading in using `inferLayout()`. In the **Anmerkung.Var** column, comments can be inserted (special text highlighting or breaks must be in the latex logic), which are displayed as annotations on the respective codebook page.  
+The **Unterteilung.im.Skalenhandbuch** column gives the name for the subchapters. In the **Gliederung** column, the chapter numbers must be inserted. Subchapters such as "1.1", "1.2",... "2.1". The naming of the corresponding upper chapters is done in a later function. The naming of the subchapters and the corresponding numbers must always be identical for the variables.  
+In the **Reihenfolge** column, the order of the variables for the codebook can be specified. However, the order of the subchapters is superordinate to this sorting. If the column is left empty, the order in the table corresponds to the order in the codebook.  
+The **Titel** column specifies the title for the page and defaults to the variable label.  
+If a variable has been recoded in the course of previous editing, this can be marked with a *ja* in the **rekodiert** column and the variable gets a corresponding note in the codebook.  
+In **QuelleSH**, the short version of a bibliography can be specified. Based on this, there is a later function that creates the bibliography and in which one can specify the long version of the source.  
+In the **Instruktionen** column, you can use a latex code to indicate which instruction was used to collect the variable in a questionnaire.  
+With `eatCodebook` you can also create a page for a background model (BGM).  
+<img src="./pictures/BGM.PNG" alt="BGM" />   
+For the variable to appear there, the **Hintergrundmodell** column must be set to *ja*. Otherwise, there must be a *nein*. With **HGM.Reihenfolge** you can control the order in the codebook. In the **HGM.Variable.erstellt.aus** column, variables can be specified that make up the variable in question. These are then displayed in the position marked yellow in the image.
 
 ```{r write varInfo, eval = FALSE}
 writeExcel(miss, "example_varInfo.xlsx", row.names = FALSE)
@@ -100,7 +149,7 @@ head(varInfo_final)
 ```
 
 ## Structure
-A key element of the `eatCodebook` package is that various forms of variable information can be supplied.
+The first foundations for the chapter structure are already laid in the VarInfo. The function `createStructure()` is needed to name the upper chapters. 
 
 ```{r create struc}
 struc <- createStructure(varInfo_final)
@@ -119,7 +168,7 @@ head(struc_final)
 ```
 
 ## Scale Information
-A key element of the `eatCodebook` package is that various forms of variable information can be supplied.
+In order to display the scales correctly, it also needs the function `createScaleInfo()`. 
 
 ```{r create scaleInfo}
 scaleInfo <- createScaleInfo(inputForDescriptives_edited)
@@ -141,27 +190,9 @@ scaleInfo_final$Quelle <- "dat"
 head(scaleInfo_final)
 ```
 
-## Register
-Optionally, a register can be created. Thereby, keywords can be connected with certain variables.
-
-```{r create register}
-register <- createRegister(inputForDescriptives_edited, keywordList = c("kw1", "kw2"))
-head(register)
-```
-
-```{r write register, eval = FALSE}
-writeExcel(register, "example_register.xlsx", row.names = FALSE)
-register_final <- getRegister("example_register.xlsx")
-```
-
-```{r load register, eval = TRUE, echo = FALSE}
-register_file <- system.file("extdata", "example_register.xlsx", package = "eatCodebook")
-register_final <- getRegister(register_file)
-head(register_final)
-```
 
 ## Literature Information
-The literature information contains the sources which should be cited within the codebook. It builds on the references mentioned in the variable information.
+The literature information contains the sources which should be cited within the codebook. It builds on the references mentioned in the VarInfo. The latex code must also be used here.
 
 ```{r create litInfo}
 litInfo <- createLitInfo(varInfo_final)
@@ -181,7 +212,7 @@ head(litInfo_final)
 
 
 ## Abbreviation List
-An abbreviation list can be added which explains abbreviations or statistical symbols used throughout the codebook.
+An abbreviation list can be added which explains abbreviations or statistical symbols used throughout the codebook. The latex code must also be used here.
 
 ```{r create abbrList}
 abbrList <- createAbbrList()
@@ -199,7 +230,7 @@ abbrList_final <- makeAbbrList(abbrList_file)
 ```
 
 ## Cover Page
-A cover page can be added to the codebook.
+A cover page can be added to the codebook. On the one hand, there is this possibility.
 
 ```{r create cover}
 cover <- makeCover(logoFile = NULL,
@@ -210,6 +241,8 @@ cover <- makeCover(logoFile = NULL,
                    schriftenreihe = "Book 9 of Studies of Achievement",
                    bibinfo = "test")
 ```
+
+However, this can also be done by reading in a self-designed PDF page. This must simply be assigned to the object.
 
 ## Meta data
 Meta data can be added to the codebook.
@@ -233,20 +266,15 @@ meta_final <- makeMetadata(meta_file)
 ```
 
 ## Further make steps
-Further make steps are required.
+Finally, the previously prepared bibliography and background model still need to be finalised. This is done using the following syntax.
 
 ```{r make steps}
-cover <- makeCover(maintitle = "Study of Achievement", subtitle = "Codebook of Study of Achievement",
-                   authors = "Some Person", addAuthors = "With the help of some other persons",
-                   schriftenreihe = "Book 9 of Studies of Achievement", bibinfo = "test")
-
 lit <- makeLit(litInfo_final)
-
 hint <- makeBGM(varInfo_final)
 ```
 
 ## Chapters
-Create the chapter structure.
+Create the chapter structure. Furthermore, the name of the top chapter is assigned here. The name of the data set.
 
 ```{r chapters}
 chapters <- createChapters(varInfo_final2)
@@ -255,17 +283,14 @@ chapters[, 2] <- "Datensatz"
 
 
 ## Codebook
-Now we create the actual codebook script via calling the `codebook()` function. 
+Now we create the actual codebook script via calling the `codebook()` function. Here, latex code can also be inserted at **intro** and **lastpage**, for example to write introductory texts or to design a last page.
 
 ```{r codebook, message=TRUE}
 descStatistics2 <- descStatistics
 descStatistics2$skala1[[2]] <- as.data.frame(descStatistics2$skala1[[2]])
-
-
 latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
-                         scaleInfo = scaleInfo_final, register = register_final, 
+                         scaleInfo = scaleInfo_final, 
                          dat = eatGADS::extractData(dat), Kennwertedatensatz = descStatistics2, 
                          chapters = chapters, deckblatt = cover, intro = "", literatur = lit, 
                          abkuerzverz = abbrList_final, hintmod = hint, lastpage = "")
 ```
-
