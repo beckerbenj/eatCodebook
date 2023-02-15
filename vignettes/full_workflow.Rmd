@@ -173,7 +173,7 @@ The **Layout** column is automatically created after reading in using `inferLayo
 The **Unterteilung.im.Skalenhandbuch** column gives the name for the subchapters. In the **Gliederung** column, the chapter numbers must be inserted. Subchapters such as "1.1", "1.2",... "2.1". The naming of the corresponding upper chapters is done in a later function. The naming of the subchapters and the corresponding numbers must always be identical for the variables.  
 In the **Reihenfolge** column, the order of the variables for the codebook can be specified. However, the order of the subchapters is superordinate to this sorting. If the column is left empty, the order in the table corresponds to the order in the codebook.  
 The **Titel** column specifies the title for the page and defaults to the variable label.  
-If a variable has been recoded in the course of previous editing, this can be marked with a *ja* in the **rekodiert** column and the variable gets a corresponding note in the codebook.  
+If a variable has been recoded in the course of previous editing, this can be marked with a *ja* in the **rekodiert** column and the variable gets a corresponding note in the codebook as inverted if it is an item of a scale.  
 In **QuelleSH**, the short version of a bibliography can be specified. Based on this, there is a later function that creates the bibliography and in which one can specify the long version of the source.  
 In the **Instruktionen** column, you can use a latex code to indicate which instruction was used to collect the variable in a questionnaire.  
 With `eatCodebook` you can also create a page for a background model (BGM).  
