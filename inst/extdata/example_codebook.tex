@@ -1,0 +1,572 @@
+\documentclass[paper=a4, hidelinks, twoside=false, numbers=noenddot]{scrbook}
+
+
+%%%% Pakete laden %%%%
+\usepackage[stable, hang]{footmisc} % Fussnoten gestalten
+\usepackage{scrlayer-scrpage} % u.a. Kopf- und Fusszeile und Seitenstile
+\usepackage[T1]{fontenc} % Festlegung der Sprache
+\usepackage[utf8]{inputenc} % Festlegung der Sprache
+\usepackage[german]{babel} % Festlegung der Sprache
+\usepackage{fixmath} % Befehl \mathbold fuer boldfont in mathmode
+\usepackage{txfonts} %Schriftart Times New Roman
+\usepackage{mathptmx} % Schriftart und Mathe-Symbole in Times New Roman
+\usepackage[onehalfspacing]{setspace} % Zeilenabstand
+\usepackage[table]{xcolor} % Zur Farbdefinition
+\usepackage{booktabs} % verschiedene Befehle zur Tabellengetaltung, u.a. \toprule, \midrule und \bottomrule
+\usepackage{tabularx} % Tabellenumgebung tabularx
+\usepackage{multirow} % Zur Verwendung von \multirow und \multicolumn in Tabellen
+\usepackage{graphicx} % Zur Einbidnung von Graphiken
+\usepackage[export]{adjustbox} % Paket, mit dem Graphiken positioniert werden koennen (hier fuer IQB-Logo)
+\usepackage[justification=RaggedRight, singlelinecheck=false, labelfont=bf, format=hang, font=doublespacing]{caption} % Paket, um die Tabellen- und Abbildungsbeschrfitungen zu formatieren
+\captionsetup[figure]{position=below} % setzt fuer figure-Umgebungen die Beschriftung unterhalb der Abbildung
+\usepackage{pgf} % Eigentlich ein Paket, das in Verbidung mit tikz Graphiken erzeugen kann. Hier lediglich fuer den Befehl \pgfmathsetmacro zur Berechnung im Befehl \getlength verwendet
+\usepackage{tocloft} % Zur Formatierung von Eintraegen im Inhalts-, Tabellen und Abbildungsverzeichnis
+\usepackage{array} % Noetig fuer Tabellenpakete
+\usepackage[a-1b]{pdfx} % Anforderung vom edoc-Server: PDF/A-1b-Konformitaet
+\usepackage{hyperref} % Zur Setzung von Referenzeren innerhalb des Dokuments
+\hypersetup{bookmarksnumbered=true} % Anforderung vom edoc-Server: Nummerierte Bookmarks
+\hypersetup{pdfa} % Anforderung vom edoc-Server: PDF/A-1b-Konformitaet
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,includeheadfoot]{geometry}
+
+\usepackage{float} % force tables at specific position
+\usepackage{xltabular} % page breaks within tables
+\usepackage{pdfpages} % insert complete pdf pages (optional cover)
+
+
+%%%% Seitenlayout %%%%
+%% Seiteneinstellungen
+\headsep40pt
+\parindent 0pt
+\setlength{\parskip}{1ex}
+\clubpenalty100000
+\widowpenalty100000
+
+\renewcommand*{\footnotemargin}{1em}
+\definecolor{iqbrot}{HTML}{821123} % Aus xcolor
+
+
+%% Header-Foot
+\renewcommand{\chaptermark}[1]{\markleft{\textsc{\thechapter \ #1}}{}}
+\renewcommand{\sectionmark}[1]{ \markright{\textsc{\thesection\ #1}}{}}
+%\clearscrheadfoot
+\PreventPackageFromLoading{fancyhdr}
+\DeclarePageStyleAlias{fancy}{scrheadings}
+
+ %% Ueberschriften und Eintraege im Inhaltsverzeichnis
+\AtBeginDocument{ \renewcaptionname{german}\contentsname{\bfseries Inhaltsverzeichnis} }
+
+
+\makeatletter
+\@addtoreset{section}{chapter}
+\makeatother
+
+\renewcommand{\thefigure}{\arabic{figure}}
+\setkomafont{chapter}{\bfseries\Large\rmfamily}
+\setkomafont{section}{\Large\bfseries\rmfamily}
+\setkomafont{subsection}{\bfseries\rmfamily}
+\setkomafont{subsubsection}{\bfseries\rmfamily}
+\renewcommand{\cftchapfont}{\large\bfseries} % noetig, um den Name der Chapter im Inhaltsverzeichnis in der richtigen Schriftart zu haben
+\renewcommand{\cftchappagefont}{\large\bfseries} % noetig, um die Seitenzahlen der Chapter im Inhaltsverzeichnis in der richtigen Schriftart zu haben
+\renewcommand{\cftsecfont}{\large\bfseries} % noetig, um den Name der Section im Inhaltsverzeichnis in der richtigen Schriftart zu haben
+\renewcommand{\cftsecpagefont}{\large\bfseries} % noetig, um die Seitenzahlen der Section im Inhaltsverzeichnis in der richtigen Schriftart zu haben
+\makeatletter
+\setlength{\cftbeforetoctitleskip}{3.5ex \@plus 1ex \@minus .2ex}
+\setlength{\cftaftertoctitleskip}{2.3ex \@plus.2ex}
+\makeatother
+\renewcommand{\cftchapafterpnum}{\vskip10pt}
+\renewcommand{\cfttoctitlefont}{\Huge\bfseries} % noetig, um den Name des Inhaltsverzeichnisses in der richtigen Schriftart zu haben
+\setlength{\cftsecindent}{0pt}
+\settowidth{\cftsecnumwidth}{00} % Veraendert die Breite im Inhaltsverzeichnis, die fuer die Gliederungszahlen der Kapiteln vorgesehen ist. Bspw. in '1 Testdesign' wird hier die Breite, die fuer die '1' (und alle anderen Eingtraege auf dieser Ebene) vorgesehen ist, auf die Breite festgelegt, die fuer den Text 000 benoetigt wird. Bei zu kleinen Werten, wuerde der Text 'Testdesign' ueber der Zahl geschrieben stehen.
+\settowidth{\cftsubsecnumwidth}{0.00} % Veraendert die Breite im Inhaltsverzeichnis, die fuer die Gliederungszahlen der Unterkapitel vorgesehen ist. S. oben fuer Beispielerlkaerung.
+\settowidth{\cftsubsubsecnumwidth}{0.0.00} % Veraendert die Breite im Inhaltsverzeichnis, die fuer die Gliederungszahlen der Unterunterkapitel. vorgesehen ist. S. oben fuer Beispielerklaerung
+\settowidth{\cftchapnumwidth}{XX} % Veraendert die Breite im Inhaltsverzeichnis, die fuer die Gliederungszahlen der Insturment-ueberschriften (Roemische Zahlen) vorgesehen ist. S. oben fuer Beispielerklaerung
+\renewcommand{\thechapter}{\Roman{chapter}}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\cftsetindents{chapter}{0pt}{\the\cftchapnumwidth}
+\cftsetindents{section}{0pt}{\the\cftsecnumwidth}
+\cftsetindents{subsection}{30pt}{\the\cftsubsecnumwidth}
+\cftsetindents{subsubsection}{70pt}{\the\cftsubsubsecnumwidth}
+
+
+%%%% Silbentrennung
+\renewcommand{\slash}{/\penalty\exhyphenpenalty\hspace{0pt}} % mit diesem Befehl wird garantiert, dass nach dem slash noch ein zeilenumbruch stattfinden kann
+\hyphenation{Schü-ler-ge-samt-ge-wicht}
+\hyphenation{Schü-ler-in}
+\hyphenation{Schü-ler-innen}
+
+
+%%%% Tabellenbezogene Befehle %%%%
+
+\newcommand{\fk}[1]{\textbf{\textit{#1}}\arraybackslash} % Fett-und-kursiv-Befehl, der innerhalb Tabellen benutzt wird
+\newlength{\sizefst} % Laenge fuer Tabelle
+\newlength{\sizesnd} % Laenge fuer Tabelle
+\newlength{\sizevn} % Laenge fuer Tabelle - Wird zu Beginn des Dokuments auf die Laenge von Variablenname gesetzt, ist nur fuer tabnormallong
+\newlength{\sizekat} % Laenge fuer Tabelle - Wird zu Beginn des Dokuments auf die Laenge von Kategorie gesetzt, ist nur fuer tabcoloredlong
+\newlength{\adj} % Laenge fuer Befehl \getlengths
+\newlength{\result} % Ausgabelaenge fuer Befehl \getlengths
+\newcommand*{\getlengths}[1]{% Befehl, um Breite zu bestimmen, die in einer Tabelle den rechten Einzug bestimmt, sodass alle Eintraege rechtsbuendig-zentriert erscheinen
+\pgfmathsetmacro#1{(\the\hsize-\the\adj)/2}%
+}
+
+\newcommand*{\rulefiller}{%
+\arrayrulecolor{white}% change to cell colour
+\specialrule{\lightrulewidth}{0pt}{-\lightrulewidth}% invisible rule
+\arrayrulecolor{black}% revert to regular line colour
+}
+
+\makeatletter
+\newlength\oriarrayrulewidth
+\newcount\orilowpenalty
+\newcommand\nobreakbottomrule{%
+\noalign{\global\oriarrayrulewidth\arrayrulewidth\relax
+\global\orilowpenalty\@lowpenalty\relax
+\global\@lowpenalty=\numexpr-10000\relax%
+\global\arrayrulewidth\heavyrulewidth\relax}
+\hline
+\noalign{\global\@lowpenalty=\orilowpenalty\relax%
+\global\arrayrulewidth\oriarrayrulewidth\relax}}
+\makeatother
+%%% Spaltentypen %%%% 
+
+\newcolumntype{Q}{>{\raggedright \arraybackslash} X }
+\newcolumntype{q}[1]{>{\raggedright \arraybackslash}p{#1}}
+\newcolumntype{Y}{@{}>{\raggedleft\arraybackslash}X}
+\newcolumntype{y}{>{\getlengths{\result}\raggedleft\arraybackslash} X <{\hspace*{\result pt}}}
+\newcolumntype{v}[1]{>{\getlengths{\result}\raggedleft\arraybackslash} p{#1} <{\hspace*{\result pt}}}
+\newcolumntype{Z}{>{\centering\arraybackslash}X}
+\newcolumntype{z}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{t}{@{\quad}p{15cm}@{\quad}}
+\newcommand{\zf}[1]{\multicolumn{1}{Z}{ $\mathbf{#1}$}}
+\definecolor{lg}{gray}{0.9} % Aus xcolor
+\definecolor{dg}{gray}{0.8} % Aus xcolor
+\newcommand{\anmerkung}[2]{ \hiderowcolors \multicolumn{#1}{t}{ \footnotesize \textit{Anmerkung.} #2} }
+\newcommand{\anmerkungen}[2]{ \hiderowcolors \multicolumn{#1}{t}{ \footnotesize \textit{Anmerkungen.} #2} }
+\newcommand{\headrow}{\rowcolor{dg}}
+\newcommand{\z}[1]{\multicolumn{1}{Z}{#1}}
+\newcommand{\multic}[1]{\multicolumn{1}{c}{#1}}
+\newcommand{\multil}[1]{\multicolumn{1}{l}{#1}}
+\newcommand*{\restartrowcolors}[1]{%
+\ifhmode\unskip\fi
+\global\rownum=#1 %
+}
+
+
+%%%% Tabellenumgebungen %%%%
+
+\newenvironment{tabcolored}[2]{%
+\captionof*{table}{\textbf{#2}}
+\tabularx{\textwidth}{@{\hspace*{\tabcolsep}}#1}
+\toprule \headrow
+}{%
+\endtabularx}
+
+
+\newenvironment{tabcoloredNoCaption}[1]{%
+\tabularx{\textwidth}{@{\hspace*{\tabcolsep}}#1}
+\toprule \headrow
+}{%
+\endtabularx}
+
+
+\newenvironment{tabcoloredlong}{%
+\captionof*{table}{\textbf{H{\"a}ufigkeitsverteilung}}
+\xltabular{\textwidth}{@{\hspace*{\tabcolsep}}q{\sizekat}q{7.9cm}yy}
+\toprule \headrow
+\textbf{Kategorie} & \textbf{Label} & \multicolumn{2}{c}{\textbf{Relative H{\"a}ufigkeiten}} \\ \rulefiller \cmidrule[\lightrulewidth](lr){3-4}
+\headrow
+& & \multicolumn{1}{c}{\small G{\"u}ltige Werte} & \multicolumn{1}{c}{\small Alle Werte}\\
+\midrule
+\endhead
+\hline \multicolumn{4}{@{}c@{}}{\cellcolor{white} \textit{Fortsetzung auf der n{\"a}chsten Seite}}\\
+\hline
+\endfoot
+\endlastfoot
+}{%
+\endxltabular}
+
+\newenvironment{tabcoloreditem}[3]{%
+\captionof*{table}{\textbf{H{\"a}ufigkeitsverteilung}}
+\xltabular{\textwidth}{@{\hspace*{\tabcolsep}}#1}
+\toprule
+\headrow
+\textbf{Variablenname} & \multicolumn{#2}{c}{\textbf{G{\"u}ltige Werte}} & \multicolumn{#3}{c}{\textbf{Fehlende Werte}} \\
+}{%
+\xltabular}
+
+
+
+\newenvironment{tabnormallong}[1]{%
+\captionof*{table}{ \textbf{#1}}
+\xltabular{\textwidth}{@{\hspace*{\tabcolsep}}lQ}
+\endhead
+\hline \multicolumn{2}{@{}c@{}}{\cellcolor{white} \textit{Fortsetzung auf der n{\"a}chsten Seite}} \\
+\hline
+\endfoot
+\endlastfoot
+}{%
+\endtabularx}
+
+
+%%%% Register %%%%
+\makeatletter
+\newcommand \Dotfill {\leavevmode \cleaders \hb@xt@ 5pt{\hss .\hss }\hfill \kern \z@}	% Neuer Befehl fuer Auffuellung der Zeile mit Punkten (diese haben Abstand von 0.4em zueinander)
+\makeatother
+
+
+\newlength{\ml}
+\makeatletter
+\newcommand{\regitem}[2]{%
+\settowidth{\ml}{#2}
+\begingroup
+#1 \nobreak \Dotfill\makebox[\ml][r]{\textnormal{#2}}  \par
+\endgroup }
+\makeatother 
+
+\newenvironment{register}{%
+\parskip6pt \parindent0pt
+}{\par\ignorespaces}
+
+
+%%%% Literaturverzeichnis %%%%
+
+
+\newenvironment{literatur}{%
+\parskip6pt \parindent0pt }{\par\ignorespaces}
+\newcommand{\lititem}[1]{\hangindent=0.7cm \hangafter1 #1 \par}
+
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+
+\newcounter{lit}
+\newcounter{secDAT}
+\begin{document}
+\thispagestyle{empty}
+\pagenumbering{gobble} % frisst die Seitenzahlen
+\frontmatter % definiert die Deckblattseiten (frontmatter) =/= Hauptteil (mainmatter)
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\setlength{\extrarowheight}{0ex}
+\settowidth{\adj}{00.0}
+\settowidth{\sizesnd}{$\mathbold{N_{valid}}$}
+\addtolength{\sizesnd}{0.4cm}
+\settowidth{\sizevn}{\textbf{Fehlende Werte}}
+%\addtolength{\sizevn}{0.5cm}
+\settowidth{\sizekat}{\textbf{Kategorie}}
+\thispagestyle{empty}
+\vspace*{75mm}
+\begin{Huge}
+\color{iqbrot} \textbf{Study of Achievement} \par \medskip
+\end{Huge}
+\begin{Large}
+\textbf{Codebook of Study of Achievement}\par \bigskip
+\end{Large}
+\begin{large}
+Some Person
+\end{large}
+\bigskip
+
+\vfill
+Stand: \today \par
+With the help of some other persons\par
+Book 9 of Studies of Achievement 
+
+\pagebreak
+\thispagestyle{empty}
+\pagenumbering{gobble} % frisst die Seitenzahlen
+\quad
+\vfill
+
+\textbf{Bibliographische Informationen} \par
+test
+\par \bigskip
+Alle Rechte vorbehalten.
+\cleardoublepage
+\clearscrheadfoot
+\ihead[\textsc{Inhaltsverzeichnis}]{\textsc{Inhaltsverzeichnis}}
+\cfoot[\pagemark]{\pagemark}
+\pagenumbering{roman}
+\setcounter{page}{1}
+\pdfbookmark{\contentsname}{toc}\tableofcontents
+\pagebreak
+\clearscrheadfoot
+\pagestyle{headings}
+\ihead[\leftmark]{\leftmark \newline \rightmark}
+\cfoot[\pagemark]{\pagemark}
+\mainmatter % defintion des Hauptteils (mainmatter)
+\pagenumbering{arabic}
+
+\phantomsection
+\chapter{Datensatz}
+\setcounter{secDAT}{\thepage}
+
+% ========================================================================== %
+%                                  ID %
+% ========================================================================== %
+
+\section{Background}
+\subsection{BG}
+\subsubsection{Schueler-ID}
+\begin{tabnormallong}{Beschreibung der Variable}
+Variablenname:&ID\\
+Label:&NA\\
+Variablentyp:& Zeichenfolge \\
+\end{tabnormallong}
+\clearpage
+
+% ========================================================================== %
+%                                  IDSCH %
+% ========================================================================== %
+
+\subsubsection{School-ID}
+\begin{tabnormallong}{Beschreibung der Variable}
+Variablenname:&IDSCH\\
+Label:&NA\\
+Anmerkungen:&This is an example.\\
+\end{tabnormallong}
+\clearpage
+
+% ========================================================================== %
+%                                  varMetrisch %
+% ========================================================================== %
+
+\subsubsection{metrische Beispielvariable, Kompetenzwert}
+\begin{tabnormallong}{Beschreibung der Variable}
+Variablenname:&varMetrisch\\
+Label:&metrische Beispielvariable, Kompetenzwert\\
+Fehlende Werte:& -98~$=$~\textit{omission}; -99~$=$~\textit{not reached}\\
+\end{tabnormallong}
+\settowidth{\sizefst}{\textbf{Variablenname}}
+\begin{tabcoloredNoCaption}{q{\sizefst}*{5}{Z}}{}
+\textbf{Variablenname} & $\mathbold{N_{valid}}$& \fk{M}& \fk{SD}& \fk{Min.}& \fk{Max.}\\
+\midrule
+varMetrisch & 7& 484.19& 83.36& 362.1& 609.1\\
+\bottomrule
+\anmerkungen{6}{$N =$ Fallzahl; $M =$ Mittelwert; $SD =$ Standardabweichung; $Min. =$ Minimum; $Max. =$ Maximum. $N_{total}$~=~9.}
+\end{tabcoloredNoCaption}
+\clearpage
+
+% ========================================================================== %
+%                                  varOrdinal %
+% ========================================================================== %
+
+\subsubsection{ordinale Beispielvariable, Kompetenzstufe}
+\begin{tabnormallong}{Beschreibung der Variable}
+Variablenname:&varOrdinal\\
+Label:&ordinale Beispielvariable, Kompetenzstufe\\
+Quelle:&Mueller (2019)\\
+Kategorien:& 1~$=$~\textit{sehr schlecht}; 2~$=$~\textit{schlecht}; 3~$=$~\textit{gut}; 4~$=$~\textit{sehr gut}\\
+
+\end{tabnormallong}
+\settowidth{\sizefst}{\textbf{Variablenname}}
+\begin{tabcoloredNoCaption}{q{\sizefst}*{3}{Z}}{}
+\textbf{Variablenname} & $\mathbold{N_{valid}}$& \fk{M}& \fk{SD}\\
+\midrule
+varOrdinal & 9& 2.89& 0.93\\
+\bottomrule
+\anmerkungen{4}{$N =$ Fallzahl; $M =$ Mittelwert; $SD =$ Standardabweichung.}
+\end{tabcoloredNoCaption}
+\begin{tabcoloredlong}
+1 & sehr schlecht & 11.1 & 11.1\\
+2 & schlecht & 11.1 & 11.1\\
+3 & gut & 55.6 & 55.6\\
+4 & sehr gut & 22.2 & 22.2\\
+\nobreakbottomrule
+\anmerkungen{4}{Es werden gerundete relative H{"a}ufigkeiten in Prozent in Bezug auf die Fallzahl der g{\"u}ltigen Werte ($N_{valid}~=~9$) und in Bezug auf die Fallzahl aller Werte ($N_{total}~=~9$) berichtet. Dadurch kann die Summe der Prozente minimal von 100 abweichen. Kategorien fehlender Werte werden berichtet, wenn bei diesen mindestens eine Angabe vorliegt.}
+\end{tabcoloredlong}
+\clearpage
+
+% ========================================================================== %
+%                                  varCat %
+% ========================================================================== %
+
+\subsubsection{nominale Beispielvariable}
+\begin{tabnormallong}{Beschreibung der Variable}
+Variablenname:&varCat\\
+Label:&nominale Beispielvariable\\
+Variablentyp:& Zeichenfolge \\
+\end{tabnormallong}
+\clearpage
+
+% ========================================================================== %
+%                                  skala1 %
+% ========================================================================== %
+
+\subsection{Scale}
+\subsubsection{Skala: Likert-Skalenwert}
+\begin{tabnormallong}{Beschreibung der Variable}
+Variablenname:&skala1\\
+Label:&Skala: Likert-Skalenwert\\
+Anzahl der Items: & 3\\
+\end{tabnormallong}
+\settowidth{\sizefst}{\textbf{Variablenname}}
+\begin{tabcoloredNoCaption}{q{\sizefst}*{6}{Z}}{}
+\textbf{Variablenname} & $\mathbold{N_{valid}}$& \fk{M}& \fk{SD}& \fk{Min.}& \fk{Max.}& $\mathbold{\alpha}$\\
+\midrule
+skala1 & 9& 2.52& 0.53& 1.7& 3.3& -.68\\
+\bottomrule
+\anmerkungen{7}{$N =$ Fallzahl; $Min. =$ Minimum; $Max. =$ Maximum; $\alpha =$~Cronbachs Alpha (Cronbach, 1951). F{\"u}r die Reliabilit{\"a}tsanalyse wurden nur Teilnehmende einbezogen, die auf allen Items g{\"u}ltige Werte besitzen.}
+\end{tabcoloredNoCaption}
+\clearpage
+\begin{tabnormallong}{Beschreibung der Items}
+Kategorien:& 1~$=$~\textit{stimme nicht zu}; 2~$=$~\textit{stimme etwas zu}; 3~$=$~\textit{stimme zu}; 4~$=$~\textit{stimme voll zu}\\
+
+\end{tabnormallong}
+\begin{tabcoloredNoCaption}{lX}
+\textbf{Variablen} & \textbf{Labels} \\
+\midrule
+skala1\_item1 & Likert-Skalenindikator\\
+skala1\_item2 & Likert-Skalenindikator\\
+skala1\_item3 & Likert-Skalenindikator\\
+\bottomrule
+\end{tabcoloredNoCaption}
+\clearpage
+\settowidth{\sizefst}{\textbf{Variablenname}}
+\begin{tabcolored}{q{\sizefst}*{4}{Z}}{Itemanalyse}
+\textbf{Variablenname} & $\mathbold{N_{valid}}$& \fk{M}& \fk{SD}& $\mathbold{r_{pw}}$\\
+\midrule
+skala1\_item1 & 9& 2.78& 1.09& .00\\
+skala1\_item2 & 9& 2.11& 1.05& -.61\\
+skala1\_item3 & 9& 2.89& 1.27& .09\\
+\bottomrule
+\anmerkungen{5}{$N_{valid}$ gibt pro Item die Anzahl aller F{\"a}lle mit g{\"u}ltigen Werten an. Bei der Trennsch{\"a}rfe~$r_{pw}$ handelt es sich um die part-whole-korrigierte Korrelation des jeweiligen Items mit der Skala.}
+\end{tabcolored}
+\begin{tabcoloreditem}{q{\sizefst}*{5}{y}}{4}{1}
+\rulefiller \cmidrule[\lightrulewidth](lr){2-5} \cmidrule[\lightrulewidth](lr){6-6}
+\headrow
+ & \multic{\textbf{1}} & \multic{\textbf{2}} & \multic{\textbf{3}} & \multic{\textbf{4}} & \multic{\textbf{.}} \\
+\midrule
+\endhead
+\hline \multicolumn{6}{@{}c@{}}{\cellcolor{white} \textit{Fortsetzung auf der n{\"a}chsten Seite}}\\
+\hline
+\endfoot
+\endlastfoot
+skala1\_item1 & 11.1 & 33.3 & 22.2 & 33.3 & 0.0\\
+skala1\_item2 & 33.3 & 33.3 & 22.2 & 11.1 & 0.0\\
+skala1\_item3 & 22.2 & 11.1 & 22.2 & 44.4 & 0.0\\
+\nobreakbottomrule
+\anmerkungen{6}{Es werden gerundete relative H{\"a}ufigkeiten in Prozent in Bezug auf die Fallzahl aller Werte ($N_{total}~=~9$) berichtet. Dadurch kann die Summe der Prozente minimal von 100 abweichen. }
+\end{tabcoloreditem}
+\clearpage
+
+% ========================================================================== %
+%                                  pv_pooled %
+% ========================================================================== %
+
+\section{Competences}
+\subsection{PVs}
+\subsubsection{Plausible Value}
+\begin{tabnormallong}{Beschreibung der Variable}
+Variablenname:&pv\_pooled\\
+Label:&NA\\
+Anzahl der Imputationen: & 5\\
+\end{tabnormallong}
+\settowidth{\sizefst}{\textbf{Variablenname}}
+\begin{tabcoloredNoCaption}{q{\sizefst}*{5}{Z}}{}
+\textbf{Variablenname} & $\mathbold{N_{valid}}$& \fk{M}& \fk{SD}& \fk{Min.}& \fk{Max.}\\
+\midrule
+pv\_pooled & 8& 0.50& 1.03& -0.9& 2.1\\
+\bottomrule
+\anmerkungen{6}{$N =$ Fallzahl; $Min. =$ Minimum; $Max. =$ Maximum. \textit{Min.} bzw. \textit{Max.} gibt das Minimum bzw. Maximum {\"u}ber die gepoolten Werte aller Imputationen an.}
+\end{tabcoloredNoCaption}
+\clearpage
+
+% ========================================================================== %
+%                                  pvkat_pooled %
+% ========================================================================== %
+
+\subsubsection{categorical plausible value}
+\begin{tabnormallong}{Beschreibung der Variable}
+Variablenname:&pvkat\_pooled\\
+Label:&NA\\
+Anzahl der Imputationen: & 5\\
+Kategorien:& 1~$=$~\textit{Kompetenzstufe 1}; 2~$=$~\textit{Kompetenzstufe 2}; 3~$=$~\textit{Kompetenzstufe 3}; 4~$=$~\textit{Kompetenzstufe 4}; 5~$=$~\textit{Kompetenzstufe 5}\\
+Fehlende Werte:& .~$=$~\textit{kein Dateneintrag}\\
+\end{tabnormallong}
+\begin{tabcoloredlong}
+1 & Kompetenzstufe 1 & 2.5 & 2.2\\
+2 & Kompetenzstufe 2 & 27.5 & 24.4\\
+3 & Kompetenzstufe 3 & 35.0 & 31.1\\
+4 & Kompetenzstufe 4 & 25.0 & 22.2\\
+5 & Kompetenzstufe 5 & 10.0 & 8.9\\
+. & kein Dateneintrag & \multic{--} & 11.1\\
+\nobreakbottomrule
+\anmerkungen{4}{Es werden gerundete relative H{"a}ufigkeiten in Prozent in Bezug auf die Fallzahl der g{\"u}ltigen Werte ($N_{valid}~=~8$) und in Bezug auf die Fallzahl aller Werte ($N_{total}~=~9$) berichtet. Dadurch kann die Summe der Prozente minimal von 100 abweichen. Kategorien fehlender Werte werden berichtet, wenn bei diesen mindestens eine Angabe vorliegt.}
+\end{tabcoloredlong}
+\clearpage
+\pagebreak
+\chapter{Anhang}
+\phantomsection
+\section*{Literaturverzeichnis}
+\setcounter{lit}{\thepage}
+\addcontentsline{toc}{section}{Literaturverzeichnis}
+%\clearscrheadings
+\ihead[\leftmark]{\leftmark \newline \textsc{Literaturverzeichnis}}
+%\cfoot[\pagemark]{\pagemark}
+%\fancyhead[L]{Literaturverzeichnis}
+\begin{literatur}
+\lititem{Mueller, M. (2020). Titel.}
+\end{literatur}
+\pagebreak
+\clearpage
+\phantomsection
+\section*{Abk{\"u}rzungsverzeichnis}
+
+\addcontentsline{toc}{section}{Abk{\"u}rzungsverzeichnis}
+%\clearscrheadings
+%\cfoot[\pagemark]{\pagemark}
+\ihead[\leftmark]{\leftmark \newline \textsc{Abk{\"u}rzungsverzeichnis}}
+\captionof*{table}{\textbf{Abk{\"u}rzungen}}
+\begin{xltabular}{\textwidth}{lX}
+\toprule
+\headrow
+\textbf{Abkuerzung} & \textbf{Bedeutung}\\
+\midrule
+\endhead
+\hline \multicolumn{2}{@{}c@{}}{\cellcolor{white} \textit{Fortsetzung auf der n{\"a}chsten Seite}}\\\hline
+\endfoot
+\endlastfoot
+MW & Mittelwert\\
+\nobreakbottomrule
+\end{xltabular}
+
+\captionof*{table}{\textbf{Statistische Formelzeichen}}
+\begin{xltabular}{\textwidth}{lX}
+\toprule
+\headrow
+\textbf{Symbol} & \textbf{Bedeutung}\\
+\midrule
+\endhead
+\hline \multicolumn{2}{@{}c@{}}{\cellcolor{white} \textit{Fortsetzung auf der n{\"a}chsten Seite}}\\\hline
+\endfoot
+\endlastfoot
+M & Mittelwert\\
+\nobreakbottomrule
+\end{xltabular}
+
+\clearpage
+\phantomsection
+\label{Tab:hintmod}
+\section*{Hintergrundmodell}
+
+\addcontentsline{toc}{section}{Hintergrundmodell}
+\ihead[\leftmark]{\leftmark \newline \textsc{Hintergrundmodell}}
+\captionof*{table}{\textbf{Variablen im Hintergrundmodell}}
+\begin{xltabular}{\textwidth}{lq{5cm}Q} % die ersten beiden Spalten sind so breit wie sie mindestens sein muessen + linksbuendig (Spaltentyp l). Die letzte Spalte ist linksbuendig+kein Blocksatz + Breite ist gleich dem Rest, der nach Rechts noch frei ist (Spaltentyp Q)
+\toprule
+\headrow
+\textbf{Hintergrundvariable} & \textbf{Erstellt aus } & \textbf{Inhalt der Hintergrundvariable}  \\
+\midrule
+\endhead
+\hline \multicolumn{3}{c}{\cellcolor{white} \textit{Fortsetzung auf der n{\"a}chsten Seite}}\\\hline
+\endfoot
+\endlastfoot
+varMetrisch & \multil{-} & metrische Beispielvariable, Kompetenzwert \\
+varOrdinal & \multil{-} & ordinale Beispielvariable, Kompetenzstufe \\
+skala1 & \multil{-} & Skala: Likert-Skalenwert \\
+\bottomrule
+\end{xltabular}
+
+\end{document}

@@ -37,36 +37,61 @@ The template should be exported to `.xlsx`, modified and reimported to `R`. Some
 writeExcel(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
 ```
 
+Here is a brief overview of the different columns in this object:  
+
+* **varName**: The name of the variable of the GADS-object
+* **varLabel**: The label of the variable of the GADS-object
+* **format**: The format of the variable of the GADS-object
+* **imp**: Indicator if imputed variables are involved
+* **type**: Indicator of whether it is a variable of a scale
+* **scale**: Indicator of how the variable is to be represented
+* **group**: Possibility to group variables
+
 In the **varName**, **varLabel** and **format** columns are information about the variables of the dataset. You don't have to edit anything.  
 **imp** can be set to *WAHR* or *FALSCH*. If there are several variables to be displayed on one page, this column must be set to *WAHR* for these variables and they must be assigned to the same group at **group**.  
 **type** can be set to *variable* or *scale*. If it is a scale consisting of several individual variables, the scale variable is set to *scale* and the individual items to *variable*. All other variables should always get *variable* as an entry.  
 The **scale** column specifies how the variable is to be displayed. If it is empty, no descreptives are displayed. *numeric* is a variable without labelled categories. For *ordinal*, it is a categorical variable that has labelled values.
 
 Consequently, to get a codebook page that represents the variable without any descriptives, the entry must look like this:  
+
 <img src="./pictures/input_IDs.PNG" alt="input_IDs" />  
+
 This can be the case, for example, with ID variables or character variables. The page would then be displayed as follows:  
+
 <img src="./pictures/codebook_IDs.PNG" alt="codebook_IDs" />  
+<br> <br>
+To create an entry for a numeric variable without labelled values, the Excel must look like this: 
 
-To create an entry for a numeric variable without labelled values, the Excel must look like this:  
 <img src="./pictures/input_numeric.PNG" alt="input_numeric" />  
+
 This creates the following page. This can be used, for example, for variables that represent an age or variables with values in the decimal range. Nevertheless, these variables can contain labels for values. If they are defined as missing, these values are not taken into account in the calculations but are still reported.  
+
 <img src="./pictures/codebook_numeric.PNG" alt="codebook_numeric" /> 
-
-
+<br> <br>
 To display a categorical variable, the Excel should be edited as follows:  
+
 <img src="./pictures/input_ordinal.PNG" alt="input_ordinal" />  
+
 This creates the following page in the codebook, which is well suited for variables that only have labelled categories:  
+
 <img src="./pictures/codebook_ordinal.PNG" alt="codebook_ordinal" />
-
+<br> <br>
 If there is a scale and individual items in the data set, then these must be labelled in Excel as follows. The individual items are labelled as *ordinal* and the scale as *numeric*. They must all have the same name at **group** so that they are displayed together.  
-<img src="./pictures/input_scale.PNG" alt="input_scale" />  
-This logic leads to the following entries in the scale manual for the variables:  
-<img src="./pictures/codebook_scale1.PNG" alt="codebook_scale1" /><img src="./pictures/codebook_scale2.PNG" alt="codebook_scale2" /><img src="./pictures/codebook_scale3.PNG" alt="codebook_scale3" />
 
+<img src="./pictures/input_scale.PNG" alt="input_scale" />  
+
+This logic leads to the following entries in the scale manual for the variables:  
+
+<img src="./pictures/codebook_scale1.PNG" alt="codebook_scale1" /><img src="./pictures/codebook_scale2.PNG" alt="codebook_scale2" /><img src="./pictures/codebook_scale3.PNG" alt="codebook_scale3" />
+<br> <br>
 For variables where an averaged value is to be determined and displayed, the **imp** column becomes relevant. This must be set to *WAHR* for these variables. In addition, the variables also need a common name in **group** and, depending on whether they are to be represented categorically or numerically, the corresponding designation in **scale**.  
+
 <img src="./pictures/input_imp.PNG" alt="input_imp" />  
+
 Depending on what was specified in **scale**, it results in the following pages in the codebook:  
+
 <img src="./pictures/codebook_imp1.PNG" alt="codebook_imp1" /><img src="./pictures/codebook_imp2.PNG" alt="codebook_imp2" />  
+<br> <br>
 After the table has been adjusted accordingly, it must be read in again with the function `getInputForDescriptives()`.
 
 ```{r import varinfo, eval=FALSE}
@@ -122,7 +147,27 @@ varInfo <- createVarInfo(dat, inputForDescriptives = inputForDescriptives_edited
 head(varInfo)
 ```
 
-This object has to be saved again in an Excel, which has to be adjusted by some manual steps.  
+This object has to be saved again in an Excel, which has to be adjusted by some manual steps. 
+Here is a brief overview of the different columns in this object:
+
+* **Var.Name**: The name of the variable
+* **in.DS.und.SH**: Indicator whether the variable is in the codebook and data set
+* **Unterteilung.im.Skalenhandbuch**: Chapter Naming Overview
+* **Layout**: Assignment of the layout options
+* **LabelSH**: The label of the variable
+* **Anmerkung.Var**: Assignment of annotations in the codebook
+* **Gliederung**: Overview of chapter numbering
+* **Reihenfolge**: Order of variables in the codebook
+* **Titel**: Title of the codebook page of the variable
+* **rekodiert**: Display whether a variable was previously recoded
+* **QuelleSH**: Specification of the source of the variable in a questionnaire
+* **Instruktionen**: Specification of the instructions of the variable in a questionnaire
+* **Hintergrundmodell**: Indication of whether the variable is in the background model
+* **HGM.Reihenfolge**: the order for the background model
+* **HGM.Variable.erstellt.aus**: Indication for the background model from which variables the variable was created
+* **intern.extern**: Indication of whether the variable is for internal or external use
+* **Seitenumbruch.im.Inhaltsverzeichnis**: Indication whether there is a pagination in the table of contents for the title
+
 The **in.DS.und.SH** column indicates whether a variable only appears in the data set but does not get its own page (*ds*), whether it appears both in the codebook and in the data set (*ja*), whether it only appears in the scale manual (*sh*) or neither (*nein*). *ds* is assigned, for example, for the items of the scale variables, as they do not receive their own pages. *sh* for pooled variables, as they are shown in the codebook but do not exist in the actual data set. *nein* can be assigned for variables that are added independently. This can be the case, for example, if you want to include them in the BGM information, but the variables do not exist in the data set.  
 The **Layout** column is automatically created after reading in using `inferLayout()`. In the **Anmerkung.Var** column, comments can be inserted (special text highlighting or breaks must be in the latex logic), which are displayed as annotations on the respective codebook page.  
 The **Unterteilung.im.Skalenhandbuch** column gives the name for the subchapters. In the **Gliederung** column, the chapter numbers must be inserted. Subchapters such as "1.1", "1.2",... "2.1". The naming of the corresponding upper chapters is done in a later function. The naming of the subchapters and the corresponding numbers must always be identical for the variables.  
@@ -132,7 +177,9 @@ If a variable has been recoded in the course of previous editing, this can be ma
 In **QuelleSH**, the short version of a bibliography can be specified. Based on this, there is a later function that creates the bibliography and in which one can specify the long version of the source.  
 In the **Instruktionen** column, you can use a latex code to indicate which instruction was used to collect the variable in a questionnaire.  
 With `eatCodebook` you can also create a page for a background model (BGM).  
+
 <img src="./pictures/BGM.PNG" alt="BGM" />   
+
 For the variable to appear there, the **Hintergrundmodell** column must be set to *ja*. Otherwise, there must be a *nein*. With **HGM.Reihenfolge** you can control the order in the codebook. In the **HGM.Variable.erstellt.aus** column, variables can be specified that make up the variable in question. These are then displayed in the position marked yellow in the image.
 
 ```{r write varInfo, eval = FALSE}
