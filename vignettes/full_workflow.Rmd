@@ -97,8 +97,6 @@ To get these pages the individual items must be labelled as *ordinal* and the sc
 
 #### Imputation Variables
 
-
-
 For variables where an averaged value is to be determined and displayed and depending on what was specified in **scale**, it results in the following pages in the codebook:  
 <br>
 <img src="./pictures/codebook_imp1.PNG" alt="codebook_imp1" /><img src="./pictures/codebook_imp2.PNG" alt="codebook_imp2" />  
