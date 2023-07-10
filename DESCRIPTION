@@ -10,7 +10,8 @@ Description: Create automatic codebooks.
 Depends: R (>= 3.5.0)
 Imports: eatTools, eatGADS (>= 0.18.0), eatRep (>= 0.14.6), reshape2, tibble, psych, psy, openxlsx, stats, plyr, utils
 License: GPL (>= 2)
-URL: https://github.com/beckerbenj/eatCodebook
+URL: https://github.com/beckerbenj/eatCodebook,
+    https://beckerbenj.github.io/eatCodebook/
 Encoding: UTF-8
 LazyData: true
 Suggests: 
@@ -21,4 +22,3 @@ Suggests:
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-
