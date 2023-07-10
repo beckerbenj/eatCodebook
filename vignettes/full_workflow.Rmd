@@ -52,46 +52,61 @@ In the **varName**, **varLabel** and **format** columns are information about th
 **type** can be set to *variable* or *scale*. If it is a scale consisting of several individual variables, the scale variable is set to *scale* and the individual items to *variable*. All other variables should always get *variable* as an entry.  
 The **scale** column specifies how the variable is to be displayed. If it is empty, no descreptives are displayed. *numeric* is a variable without labelled categories. For *ordinal*, it is a categorical variable that has labelled values.
 
-Consequently, to get a codebook page that represents the variable without any descriptives, the entry must look like this:  
+Now follow the possibilities of how variables can be represented in the codebook and how the table must be edited for this.
 
-<img src="./pictures/input_IDs.PNG" alt="input_IDs" />  
+#### Variables without Descriptives
 
 This can be the case, for example, with ID variables or character variables. The page would then be displayed as follows:  
-
+<br>
 <img src="./pictures/codebook_IDs.PNG" alt="codebook_IDs" />  
-<br> <br>
-To create an entry for a numeric variable without labelled values, the Excel must look like this: 
+<br>
+The entry must look like this:  
+<br>
+<img src="./pictures/input_IDs.PNG" alt="input_IDs" />  
 
+#### Numeric Variables without labelled Values
+
+This can be used, for example, for variables that represent an age or variables with values in the decimal range. Nevertheless, these variables can contain labels for values. If they are defined as missing, these values are not taken into account in the calculations but are still reported.  
+<br>
+<img src="./pictures/codebook_numeric.PNG" alt="codebook_numeric" />  
+<br>
+To create an entry for a numeric variable without labelled values, the Excel must look like this:  
+<br>
 <img src="./pictures/input_numeric.PNG" alt="input_numeric" />  
 
-This creates the following page. This can be used, for example, for variables that represent an age or variables with values in the decimal range. Nevertheless, these variables can contain labels for values. If they are defined as missing, these values are not taken into account in the calculations but are still reported.  
+#### Categorial Variables
 
-<img src="./pictures/codebook_numeric.PNG" alt="codebook_numeric" /> 
-<br> <br>
-To display a categorical variable, the Excel should be edited as follows:  
-
-<img src="./pictures/input_ordinal.PNG" alt="input_ordinal" />  
-
-This creates the following page in the codebook, which is well suited for variables that only have labelled categories:  
-
+This is the page in the codebook, which is well suited for variables that only have labelled categories:  
+<br>
 <img src="./pictures/codebook_ordinal.PNG" alt="codebook_ordinal" />
-<br> <br>
-If there is a scale and individual items in the data set, then these must be labelled in Excel as follows. The individual items are labelled as *ordinal* and the scale as *numeric*. They must all have the same name at **group** so that they are displayed together.  
+<br>  
+To create it, the Excel should be edited as follows:  
+<br>
+<img src="./pictures/input_ordinal.PNG" alt="input_ordinal" />  
+<br>
 
+#### Scale Variables with individual items
+
+It is possible to get the following entries in the codebook for a scale and the items it is made of:  
+<br>
+<img src="./pictures/codebook_scale1.PNG" alt="codebook_scale1" /><img src="./pictures/codebook_scale2.PNG" alt="codebook_scale2" /><img src="./pictures/codebook_scale3.PNG" alt="codebook_scale3" />
+<br>  
+To get these pages the individual items must be labelled as *ordinal* and the scale as *numeric*. They must all have the same name at **group** so that they are displayed together.
+<br>  
 <img src="./pictures/input_scale.PNG" alt="input_scale" />  
 
-This logic leads to the following entries in the scale manual for the variables:  
+#### Imputation Variables
 
-<img src="./pictures/codebook_scale1.PNG" alt="codebook_scale1" /><img src="./pictures/codebook_scale2.PNG" alt="codebook_scale2" /><img src="./pictures/codebook_scale3.PNG" alt="codebook_scale3" />
-<br> <br>
-For variables where an averaged value is to be determined and displayed, the **imp** column becomes relevant. This must be set to *WAHR* for these variables. In addition, the variables also need a common name in **group** and, depending on whether they are to be represented categorically or numerically, the corresponding designation in **scale**.  
-
-<img src="./pictures/input_imp.PNG" alt="input_imp" />  
-
-Depending on what was specified in **scale**, it results in the following pages in the codebook:  
-
+For variables where an averaged value is to be determined and displayed and depending on what was specified in **scale**, it results in the following pages in the codebook:  
+<br>
 <img src="./pictures/codebook_imp1.PNG" alt="codebook_imp1" /><img src="./pictures/codebook_imp2.PNG" alt="codebook_imp2" />  
-<br> <br>
+<br>
+For getting this the **imp** column becomes relevant. It must be set to *WAHR* for these variables. In addition, the variables also need a common name in **group** and, depending on whether they are to be represented categorically or numerically, the corresponding designation in **scale**.  
+<br>
+<img src="./pictures/input_imp.PNG" alt="input_imp" />  
+<br>
+
+
 After the table has been adjusted accordingly, it must be read in again with the function `getInputForDescriptives()`.
 
 ```{r import varinfo, eval=FALSE}
