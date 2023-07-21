@@ -83,8 +83,8 @@ head(varInfo)
 ```
 
 ```{r write varInfo, eval = FALSE}
-writeExcel(missings, "example_varInfo.xlsx", row.names = FALSE)
-varInfo_final <- getVarInfo("example_varInfo.xlsx") 
+writeExcel(varInfo, "example_varInfo.xlsx", row.names = FALSE)
+varInfo_final <- getVarInfo("example_varInfo.xlsx")
 varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, 
                               inputForDescriptives = inputForDescriptives_edited)
 ```
