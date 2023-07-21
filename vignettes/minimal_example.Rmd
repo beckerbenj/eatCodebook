@@ -23,7 +23,7 @@ dat <- eatGADS::checkFormat(dat)
 ```
 
 ## Descriptive Statistics
-On of the key elements of a codebook are descriptive statistics shortly describing each variable in the data set. What kind of descriptive statistics is reported for each variable depends on the type of the variable. The function `createInputForDescriptives()` creates a template to provide the information that is needed to calculate the descriptive statistics for an `GADSdat` object.
+One of the key elements of a codebook are descriptive statistics shortly describing each variable in the data set. What kind of descriptive statistics is reported for each variable depends on the type of the variable. The function `createInputForDescriptives()` creates a template to provide the information that is needed to calculate the descriptive statistics for an `GADSdat` object.
 
 ```{r createInputForDescriptives}
 inputForDescriptives <- createInputForDescriptives(GADSdat = dat)
@@ -53,17 +53,17 @@ descStatistics[[3]]
 
 
 ## Value and Missing Labels
-Another important part of a codebook is documentation of the value labels of valid and missing values. A respective overview is created via `createMissings()`.
+Another important part of a codebook is the documentation of the value labels of valid and missing values. A respective overview is created via `createMissings()`.
 
 ```{r create missings}
 missings <- createMissings(dat, inputForDescriptives = inputForDescriptives_edited)
 head(missings)
 ```
 
-In this case, the resulting object `missings` has to be written to `xlsx` and imported via `getMissings()`. Note that alle the `getXXX` functions perform important cleaning and preparation steps, therefore the exporting to `xlsx` is obligatory.
+In this case, the resulting object `missings` has to be written to `xlsx` and imported via `getMissings()`. Note that all the `getXXX` functions perform important cleaning and preparation steps, therefore the exporting to `xlsx` is obligatory.
 
 ```{r write missings, eval = FALSE}
-writeExcel(miss, "example_miss.xlsx", row.names = FALSE)
+writeExcel(missings, "example_miss.xlsx", row.names = FALSE)
 miss_final <- getMissings("example_miss.xlsx")
 ```
 
@@ -83,8 +83,8 @@ head(varInfo)
 ```
 
 ```{r write varInfo, eval = FALSE}
-writeExcel(miss, "example_varInfo.xlsx", row.names = FALSE)
-varInfo_final <- getVarInfo("example_varInfo.xlsx")
+writeExcel(missings, "example_varInfo.xlsx", row.names = FALSE)
+varInfo_final <- getVarInfo("example_varInfo.xlsx") 
 varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, 
                               inputForDescriptives = inputForDescriptives_edited)
 ```
