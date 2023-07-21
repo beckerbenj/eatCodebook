@@ -102,7 +102,7 @@ information to the meta data of the data set.</p>
 <div class="section level2">
 <h2 id="descriptive-statistics">Descriptive Statistics<a class="anchor" aria-label="anchor" href="#descriptive-statistics"></a>
 </h2>
-<p>On of the key elements of a codebook are descriptive statistics
+<p>One of the key elements of a codebook are descriptive statistics
 shortly describing each variable in the data set. What kind of
 descriptive statistics is reported for each variable depends on the type
 of the variable. The function <code><a href="../reference/createInputForDescriptives.html">createInputForDescriptives()</a></code>
@@ -138,9 +138,9 @@ reimported to <code>R</code>.</p>
 <div class="section level2">
 <h2 id="value-and-missing-labels">Value and Missing Labels<a class="anchor" aria-label="anchor" href="#value-and-missing-labels"></a>
 </h2>
-<p>Another important part of a codebook is documentation of the value
-labels of valid and missing values. A respective overview is created via
-<code><a href="../reference/createMissings.html">createMissings()</a></code>.</p>
+<p>Another important part of a codebook is the documentation of the
+value labels of valid and missing values. A respective overview is
+created via <code><a href="../reference/createMissings.html">createMissings()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">missings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createMissings.html">createMissings</a></span><span class="op">(</span><span class="va">dat</span>, inputForDescriptives <span class="op">=</span> <span class="va">inputForDescriptives_edited</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">missings</span><span class="op">)</span></span>
@@ -150,11 +150,11 @@ labels of valid and missing values. A respective overview is created via
 <span><span class="co">#&gt; 7  Species    3    nein  virginica                   nein</span></span></code></pre></div>
 <p>In this case, the resulting object <code>missings</code> has to be
 written to <code>xlsx</code> and imported via
-<code><a href="../reference/getMissings.html">getMissings()</a></code>. Note that alle the <code>getXXX</code>
+<code><a href="../reference/getMissings.html">getMissings()</a></code>. Note that all the <code>getXXX</code>
 functions perform important cleaning and preparation steps, therefore
 the exporting to <code>xlsx</code> is obligatory.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/writeExcel.html">writeExcel</a></span><span class="op">(</span><span class="va">miss</span>, <span class="st">"example_miss.xlsx"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/writeExcel.html">writeExcel</a></span><span class="op">(</span><span class="va">missings</span>, <span class="st">"example_miss.xlsx"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">miss_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getMissings.html">getMissings</a></span><span class="op">(</span><span class="st">"example_miss.xlsx"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;   Var.name Wert missing    LabelSH Zeilenumbruch_vor_Wert</span></span>
 <span><span class="co">#&gt; 1  Species    1    nein     setosa                   nein</span></span>
@@ -194,7 +194,7 @@ forms of variable information can be supplied.</p>
 <span><span class="co">#&gt; 4                                nein</span></span>
 <span><span class="co">#&gt; 5                                nein</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/writeExcel.html">writeExcel</a></span><span class="op">(</span><span class="va">miss</span>, <span class="st">"example_varInfo.xlsx"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/writeExcel.html">writeExcel</a></span><span class="op">(</span><span class="va">varInfo</span>, <span class="st">"example_varInfo.xlsx"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">varInfo_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getVarInfo.html">getVarInfo</a></span><span class="op">(</span><span class="st">"example_varInfo.xlsx"</span><span class="op">)</span></span>
 <span><span class="va">varInfo_final2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inferLayout.html">inferLayout</a></span><span class="op">(</span><span class="va">varInfo_final</span>, GADSdat <span class="op">=</span> <span class="va">dat</span>, </span>
 <span>                              inputForDescriptives <span class="op">=</span> <span class="va">inputForDescriptives_edited</span><span class="op">)</span></span></code></pre></div>
