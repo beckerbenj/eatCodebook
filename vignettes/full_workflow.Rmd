@@ -143,7 +143,7 @@ head(missings)
 In this case, the resulting object `missings` has to be written to `xlsx` and imported via `getMissings()`. Note that alle the `getXXX` functions perform important cleaning and preparation steps, therefore the exporting to `xlsx` is obligatory.
 
 ```{r write missings, eval = FALSE}
-writeExcel(miss, "example_miss.xlsx", row.names = FALSE)
+writeExcel(missings, "example_miss.xlsx", row.names = FALSE)
 miss_final <- getMissings("example_miss.xlsx")
 ```
 
@@ -198,7 +198,7 @@ With `eatCodebook` you can also create a page for a background model (BGM).
 For the variable to appear there, the **Hintergrundmodell** column must be set to *ja*. Otherwise, there must be a *nein*. With **HGM.Reihenfolge** you can control the order in the codebook. In the **HGM.Variable.erstellt.aus** column, variables can be specified that make up the variable in question. These are then displayed in the position marked yellow in the image.
 
 ```{r write varInfo, eval = FALSE}
-writeExcel(miss, "example_varInfo.xlsx", row.names = FALSE)
+writeExcel(varInfo, "example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("example_varInfo.xlsx")
 varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, inputForDescriptives = inputForDescriptives_edited)
 ```
