@@ -71,7 +71,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Full Workflow</h1>
             
-            <h4 data-toc-skip class="date">2023-07-21</h4>
+            <h4 data-toc-skip class="date">2023-08-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/beckerbenj/eatCodebook/blob/HEAD/vignettes/full_workflow.Rmd" class="external-link"><code>vignettes/full_workflow.Rmd</code></a></small>
       <div class="d-none name"><code>full_workflow.Rmd</code></div>
@@ -265,7 +265,7 @@ written to <code>xlsx</code> and imported via
 functions perform important cleaning and preparation steps, therefore
 the exporting to <code>xlsx</code> is obligatory.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/writeExcel.html">writeExcel</a></span><span class="op">(</span><span class="va">miss</span>, <span class="st">"example_miss.xlsx"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/writeExcel.html">writeExcel</a></span><span class="op">(</span><span class="va">missings</span>, <span class="st">"example_miss.xlsx"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">miss_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getMissings.html">getMissings</a></span><span class="op">(</span><span class="st">"example_miss.xlsx"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      Var.name Wert missing       LabelSH Zeilenumbruch_vor_Wert</span></span>
 <span><span class="co">#&gt; 1 varMetrisch  -98      ja      omission                   nein</span></span>
@@ -421,7 +421,7 @@ codebook. In the <strong>HGM.Variable.erstellt.aus</strong> column,
 variables can be specified that make up the variable in question. These
 are then displayed in the position marked yellow in the image.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/writeExcel.html">writeExcel</a></span><span class="op">(</span><span class="va">miss</span>, <span class="st">"example_varInfo.xlsx"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/writeExcel.html">writeExcel</a></span><span class="op">(</span><span class="va">varInfo</span>, <span class="st">"example_varInfo.xlsx"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">varInfo_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getVarInfo.html">getVarInfo</a></span><span class="op">(</span><span class="st">"example_varInfo.xlsx"</span><span class="op">)</span></span>
 <span><span class="va">varInfo_final2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/inferLayout.html">inferLayout</a></span><span class="op">(</span><span class="va">varInfo_final</span>, GADSdat <span class="op">=</span> <span class="va">dat</span>, inputForDescriptives <span class="op">=</span> <span class="va">inputForDescriptives_edited</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;       Var.Name in.DS.und.SH Unterteilung.im.Skalenhandbuch Layout</span></span>
