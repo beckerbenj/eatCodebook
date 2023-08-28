@@ -27,6 +27,31 @@ test_that("infer layout scale", {
   expect_equal(out$Layout, c(0, NA, NA, NA, 5))
 })
 
+test_that("infer layout pseudo scale", {
+  suppressMessages(gads_b <- eatGADS::removeVars(gads, "constr"))
+  suppressMessages(gads2 <- eatGADS::checkFormat(gads_b))
+  #gads2$labels
+  input <- createInputForDescriptives(gads2)
+  input$scale[1] <- NA
+  input$group[2:4] <- "constr"
+  varInfo <- createVarInfo(gads2, input)
+  out <- inferLayout(varInfo, GADSdat = gads2, inputForDescriptives = input)
+  expect_equal(out$Layout, c(0, 6, NA, NA, NA))
+})
+
+test_that("infer layout pseudo ordinal scale", {
+  suppressMessages(gads_b <- eatGADS::removeVars(gads, "constr"))
+  suppressMessages(gads2 <- eatGADS::checkFormat(gads_b))
+  #gads2$labels
+  input <- createInputForDescriptives(gads2)
+  input$scale[1] <- NA
+  input$scale[2:4] <- "ordinal"
+  input$group[2:4] <- "constr"
+  varInfo <- createVarInfo(gads2, input)
+  out <- inferLayout(varInfo, GADSdat = gads2, inputForDescriptives = input)
+  expect_equal(out$Layout, c(0, 7, NA, NA, NA))
+})
+
 test_that("infer layout pisa", {
   #suppressMessages(gads2 <- eatGADS::checkFormat(gads))
   #gads2$labels
