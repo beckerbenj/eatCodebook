@@ -319,7 +319,7 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
   ## berechnung relative haeufigkeiten mit Missings drin
   if(any(is.na(z[,"value"]))) {
       if(verbose){cat("Analysis of total values: ")}
-      res1 <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE,
+      res1 <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "imp",  separate.missing.indicator = TRUE,
                                 na.rm=FALSE, forceTable=TRUE, verbose = FALSE, progress = FALSE ))
       ret1 <- eatRep::report(res1, exclude="Ncases")
       weg  <- match(".NA.", ret1[,"parameter"])                                 ### Ergebnisse aufbereiten, in der richtigen Reihenfolge
