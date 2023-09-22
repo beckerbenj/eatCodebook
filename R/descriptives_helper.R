@@ -270,10 +270,10 @@ kennwerte.gepoolt.metrisch <- function( datWide, imputedVariableCols) {
 ### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
   datWide[,"id"] <- paste0("P", 1:nrow(datWide))
 ### long format datensatz
-  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=TRUE)
+  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=TRUE, variable.name="imp")
 
 ### Berechnung der gepoolten Kennwerte
-  means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",
+  means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "imp",
                             na.rm = TRUE, verbose = FALSE, progress = FALSE )
   resM  <- eatRep::report(means, exclude = c("var", "Ncases"))
 
