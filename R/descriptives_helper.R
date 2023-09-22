@@ -306,10 +306,10 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
 ### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
   datWide[,"id"] <- paste0("P", 1:nrow(datWide))
 ### long format datensatz
-  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE)
+  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE, variable.name="imp")
 ### nur valide werte
   if(verbose){cat("Analysis of valid values: ")}
-  res  <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = FALSE,
+  res  <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "imp",  separate.missing.indicator = FALSE,
                             na.rm=TRUE, verbose = FALSE, progress = FALSE ))
   ret  <- eatRep::report(res, exclude="Ncases")
   retA <- formatC(100*ret[,"est"], format="f", digits=1)                        ### aufbereiten
