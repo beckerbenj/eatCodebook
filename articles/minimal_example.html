@@ -88,12 +88,12 @@ also run the <code>checkFormat()</code> function from the
 information to the meta data of the data set.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/beckerbenj/eatCodebook" class="external-link">eatCodebook</a></span><span class="op">)</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/eatGADS/man/import_DF.html" class="external-link">import_DF</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://beckerbenj.github.io/eatGADS/reference/import_DF.html" class="external-link">import_DF</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Sepal.Length has been renamed to Sepal_Length</span></span>
 <span><span class="co">#&gt; Sepal.Width has been renamed to Sepal_Width</span></span>
 <span><span class="co">#&gt; Petal.Length has been renamed to Petal_Length</span></span>
 <span><span class="co">#&gt; Petal.Width has been renamed to Petal_Width</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/eatGADS/man/checkFormat.html" class="external-link">checkFormat</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://beckerbenj.github.io/eatGADS/reference/checkFormat.html" class="external-link">checkFormat</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Format of Variable Sepal_Length will be changed from character(0) to F3.1</span></span>
 <span><span class="co">#&gt; Format of Variable Sepal_Width will be changed from character(0) to F3.1</span></span>
 <span><span class="co">#&gt; Format of Variable Petal_Length will be changed from character(0) to F3.1</span></span>
@@ -294,7 +294,7 @@ forms of variable information can be supplied.</p>
 <code><a href="../reference/codebook.html">codebook()</a></code> function.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">latex_skript</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/codebook.html">codebook</a></span><span class="op">(</span>varInfo <span class="op">=</span> <span class="va">varInfo_final2</span>, missings <span class="op">=</span> <span class="va">miss_final</span>, struc <span class="op">=</span> <span class="va">struc_final</span>,</span>
-<span>                         scaleInfo <span class="op">=</span> <span class="va">scaleInfo_final</span>, dat <span class="op">=</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/eatGADS/man/extractData.html" class="external-link">extractData</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>,</span>
+<span>                         scaleInfo <span class="op">=</span> <span class="va">scaleInfo_final</span>, dat <span class="op">=</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://beckerbenj.github.io/eatGADS/reference/extractData.html" class="external-link">extractData</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>,</span>
 <span>                         Kennwertedatensatz <span class="op">=</span> <span class="va">descStatistics</span>, chapters <span class="op">=</span> <span class="va">chapters</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Erstelle Layout-Skripte fuer: dat</span></span>

@@ -71,7 +71,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Full Workflow</h1>
             
-            <h4 data-toc-skip class="date">2023-08-28</h4>
+            <h4 data-toc-skip class="date">2023-10-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/beckerbenj/eatCodebook/blob/HEAD/vignettes/full_workflow.Rmd" class="external-link"><code>vignettes/full_workflow.Rmd</code></a></small>
       <div class="d-none name"><code>full_workflow.Rmd</code></div>
@@ -89,7 +89,7 @@ variables, scales). We import the data set using the
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/beckerbenj/eatCodebook" class="external-link">eatCodebook</a></span><span class="op">)</span></span>
 <span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example1_clean.sav"</span>, package <span class="op">=</span> <span class="st">"eatCodebook"</span><span class="op">)</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/eatGADS/man/import_spss.html" class="external-link">import_spss</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://beckerbenj.github.io/eatGADS/reference/import_spss.html" class="external-link">import_spss</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="descriptive-statistics">Descriptive Statistics<a class="anchor" aria-label="anchor" href="#descriptive-statistics"></a>
 </h2>
@@ -613,7 +613,7 @@ write introductory texts or to design a last page.</p>
 <span><span class="va">descStatistics2</span><span class="op">$</span><span class="va">skala1</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">descStatistics2</span><span class="op">$</span><span class="va">skala1</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">latex_skript</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/codebook.html">codebook</a></span><span class="op">(</span>varInfo <span class="op">=</span> <span class="va">varInfo_final2</span>, missings <span class="op">=</span> <span class="va">miss_final</span>, struc <span class="op">=</span> <span class="va">struc_final</span>,</span>
 <span>                         scaleInfo <span class="op">=</span> <span class="va">scaleInfo_final</span>, </span>
-<span>                         dat <span class="op">=</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/eatGADS/man/extractData.html" class="external-link">extractData</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, Kennwertedatensatz <span class="op">=</span> <span class="va">descStatistics2</span>, </span>
+<span>                         dat <span class="op">=</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://beckerbenj.github.io/eatGADS/reference/extractData.html" class="external-link">extractData</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, Kennwertedatensatz <span class="op">=</span> <span class="va">descStatistics2</span>, </span>
 <span>                         chapters <span class="op">=</span> <span class="va">chapters</span>, deckblatt <span class="op">=</span> <span class="va">cover</span>, intro <span class="op">=</span> <span class="st">""</span>, literatur <span class="op">=</span> <span class="va">lit</span>, </span>
 <span>                         abkuerzverz <span class="op">=</span> <span class="va">abbrList_final</span>, hintmod <span class="op">=</span> <span class="va">hint</span>, lastpage <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
