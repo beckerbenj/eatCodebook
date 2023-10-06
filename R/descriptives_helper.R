@@ -270,10 +270,10 @@ kennwerte.gepoolt.metrisch <- function( datWide, imputedVariableCols) {
 ### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
   datWide[,"id"] <- paste0("P", 1:nrow(datWide))
 ### long format datensatz
-  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=TRUE)
+  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=TRUE, variable.name="imp")
 
 ### Berechnung der gepoolten Kennwerte
-  means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",
+  means <- eatRep::repMean( datL=z, ID = "id" , dependent = "value" ,  imp = "imp",
                             na.rm = TRUE, verbose = FALSE, progress = FALSE )
   resM  <- eatRep::report(means, exclude = c("var", "Ncases"))
 
@@ -306,10 +306,10 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
 ### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
   datWide[,"id"] <- paste0("P", 1:nrow(datWide))
 ### long format datensatz
-  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE)
+  z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE, variable.name="imp")
 ### nur valide werte
   if(verbose){cat("Analysis of valid values: ")}
-  res  <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = FALSE,
+  res  <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "imp",  separate.missing.indicator = FALSE,
                             na.rm=TRUE, verbose = FALSE, progress = FALSE ))
   ret  <- eatRep::report(res, exclude="Ncases")
   retA <- formatC(100*ret[,"est"], format="f", digits=1)                        ### aufbereiten
@@ -319,7 +319,7 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
   ## berechnung relative haeufigkeiten mit Missings drin
   if(any(is.na(z[,"value"]))) {
       if(verbose){cat("Analysis of total values: ")}
-      res1 <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "variable",  separate.missing.indicator = TRUE,
+      res1 <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "imp",  separate.missing.indicator = TRUE,
                                 na.rm=FALSE, forceTable=TRUE, verbose = FALSE, progress = FALSE ))
       ret1 <- eatRep::report(res1, exclude="Ncases")
       weg  <- match(".NA.", ret1[,"parameter"])                                 ### Ergebnisse aufbereiten, in der richtigen Reihenfolge
