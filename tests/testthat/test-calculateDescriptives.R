@@ -16,8 +16,8 @@ test_that("descriptives scale", {
   vari[grep("skala1item", vari[,"varName"]),"scale"] <- "ordinal"
   expect_equal(dim(vari), c(22,7))                                            ### data.frame mit 22 Zeilen, 7 Spalten
   tab  <- table(vari[,"type"])
-  expect_equal(names(tab), c("scale", "variable"))                            ### beide eintraege sollen vorkommen
-  expect_equal(as.vector(tab), c(1,21))                                       ### scale nur einmal, variable 21-mal
+  expect_equal(names(tab), c("item", "scale", "variable"))                    ### drei eintraege sollen vorkommen
+  expect_equal(as.vector(tab), c(13,1,8))                                     ### scale nur einmal, variable 8-mal, item 13-mal
   vari[which(vari[,"varName"] == "skalenwert_fake"),"type"] <- "scale"        ### ein eintrag in der varinfo muss jetzt haendisch geaendert werden (das geschieht spaeter fuer das
   warns <- capture_warnings(res  <- suppressMessages(calculateDescriptives(gd, vari, verbose = FALSE)))### tatsaechliche Skalenhandbuch bei Bedarf in Excel)
 })
