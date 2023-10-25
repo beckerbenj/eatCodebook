@@ -21,3 +21,14 @@ test_that("descriptives scale", {
   vari[which(vari[,"varName"] == "skalenwert_fake"),"type"] <- "scale"        ### ein eintrag in der varinfo muss jetzt haendisch geaendert werden (das geschieht spaeter fuer das
   warns <- capture_warnings(res  <- suppressMessages(calculateDescriptives(gd, vari, verbose = FALSE)))### tatsaechliche Skalenhandbuch bei Bedarf in Excel)
 })
+
+
+test_that("create descriptives", {
+    clean2 <- eatGADS::import_spss("helper_clean2.sav")
+    expect_warning(clean_input2 <- createInputForDescriptives(clean2),
+               "Identification of fake scales cannot be done completely automatically. Please check if the assignment of which items belong to a common scale is correct.")
+    deskr <- calculateDescriptives(clean2, inputForDescriptives = clean_input2)
+    deskr2<- readRDS("helper_descriptives.RDS")
+    lapply(names(deskr), FUN = function(nam) {expect_equal(deskr[[nam]], deskr2[[nam]])})
+})
+

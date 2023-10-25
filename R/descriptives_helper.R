@@ -219,44 +219,6 @@ if ( length(scaleCol) ==0 ) {
   return(ret)}
 
 
-### kennwerte.skala.fake(dat=dat, variableCols = c("Semz19_a", "Semz19_b", "Semz19_c", "Semz19_d"), missingValues = c(-98,-99))
-#kennwerte.skala.fake <- function(dat,variableCols, missingValues = NULL) {
-  # INPUT
-  #	dat: Datensatz (data.frame)
-  #	scaleCol: Spaltennummer oder Name der Variable, die die Skalenwerte enthaelt
-  #	variableCols: Spaltennummern oder Namen der Einzelitems der Skala
-  #	missingValues: optional, Vektor aus numerischen Werten, die missings bezeichnen sollen
-#  allVar<- list(vc = variableCols)
-#  allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = dat, variable=ii)})
-### 1. Itemkennwerte umkodieren, falls noetig
-  # wenn missing values gegeben sind, daten umkodieren!
-#  if(!is.null(missingValues)) {
-#     for ( j in allNam[["vc"]] ) {
-#         if (any(missingValues %in% dat[,j])) {
-#             dat[which(dat[,j] %in% missingValues),j] <- NA
-#         }
-#     }
-#  }
-### 2. Itemkennwerte zurueckgeben
-#  allValues <- names(eatTools::tableUnlist(dat[,allNam[["vc"]]]))
-#  ret2<- lapply(allNam[["vc"]], FUN = function ( vname ) {
-#         tab     <- eatTools::tablePattern(dat[,vname], pattern = allValues)
-#         results <- data.frame ( v1 = as.character(c(length(stats::na.omit(dat[,vname])), length(dat[,vname]),
-#                                 format(round(mean( dat[,vname], na.rm=TRUE),digits = 2), nsmall = 2),
-#                                 format(round(stats::sd( dat[,vname], na.rm=TRUE),digits = 2),nsmall = 2),
-#                                 eatTools::crop(format(round( 100*as.vector(tab/sum(tab)) ,digits = 2),nsmall = 2)),
-#                                 eatTools::crop(format(round(100*length(which(is.na(dat[,vname]))) / nrow(dat),digits = 2),nsmall = 2)),
-#                                 as.vector(tab),
-#                                 length(which(is.na(dat[,vname]))))),stringsAsFactors = FALSE)
-#         return(results)})
-#  ret2<- do.call("cbind", ret2)
-#  colnames(ret2) <- allNam[["vc"]]
-#  rowNames       <- c("N.valid", "N.total", "mean.valid", "sd.valid", paste(allValues, "total", sep="."), "sysmis.total", paste(allValues, "totalabs", sep="."), "sysmis.totalabs")
-#  stopifnot(length(rowNames) == nrow(ret2))
-#  rownames(ret2) <- rowNames
-#  ret2 <- list(as.matrix(ret2))                                                 ### urspruengliche Struktur von Felix replizieren (Liste mit einem Objekt, einer character-Matrix)
-#  return(ret2)}
-
 ## check:
 ## load("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/tests/testthat/dat.rda")
 ## kennwerte.gepoolt.metrisch(datWide = dat, imputedVariableCols = 3:6)

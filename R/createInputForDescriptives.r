@@ -22,8 +22,10 @@
 #'@param scaleExpr Regular expression to identify scale or fake scale variables from variable labels in GADSdat
 #'object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1,
 #'at least one expression should match to identify the variable as a scale variable)
-#'@param itemExpr Regular expression to identify items which constitute a true scale.
-#'@param fakeItemExpr Regular expression to identify fake items which constitute a fake scale.
+#'@param itemExpr Regular expression to identify items which constitute a true scale from the variable
+#'labels in GADSdat object
+#'@param fakeItemExpr Regular expression to identify fake items which constitute a fake scale from the variable
+#'labels in GADSdat object
 #'@param nwExpr Regular expression to identify network variables from variable labels in GADSdat object
 #'(Note: for multiple expressions, i.e. if \code{nwExpr} is a character vector of length > 1, at least
 #'one expression should match to identify the variable as a network variable)
@@ -226,7 +228,7 @@ check_inputForDescriptives <- function(inputForDescriptives){
   if(!is.data.frame(inputForDescriptives)) stop("'inputForDescriptives' needs to be a data.frame.")
   if(!identical(names(inputForDescriptives), c('varName', 'varLabel', 'format', 'imp', 'type', 'scale', 'group'))) {stop("The column names of 'inputForDescriptives' need to be: 'varName', 'varLabel', 'format', 'imp', 'type', 'scale', 'group'.")}
   if(!is.logical(inputForDescriptives$imp)) stop("The column 'imp' in 'inputForDescriptives' must be logical.")
-  if(any(!inputForDescriptives$type %in% c("variable", "scale","", "item", "fake_item", NA))) stop("The column 'type' in 'inputForDescriptives' can only contain the entries 'variable' and 'scale'.")
+  if(any(!inputForDescriptives$type %in% c("variable", "scale","", "item", "fake_item", NA))) stop("The column 'type' in 'inputForDescriptives' can only contain the entries 'variable', 'scale', 'item', and 'fake_item'.")
   if(any(!inputForDescriptives$scale %in% c("numeric", "ordinal", "nominal", NA))) stop("The column 'scale' in 'inputForDescriptives' can only contain the entries 'numeric', 'ordinal', 'nominal'.")
   if(!length(unique(inputForDescriptives[,"varName"])) == length(inputForDescriptives[,"varName"])) {stop("'varName' column in 'inputForDescriptives' must be unique.")}
   if(tibble::is_tibble(inputForDescriptives)) inputForDescriptives <- as.data.frame(inputForDescriptives)

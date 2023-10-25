@@ -43,7 +43,7 @@ test_that("check inputForDescriptives", {
                "The column 'imp' in 'inputForDescriptives' must be logical.")
   input4[2, "type"] <- "a"
   expect_error(check_inputForDescriptives(input4),
-               "The column 'type' in 'inputForDescriptives' can only contain the entries 'variable' and 'scale'.")
+               "The column 'type' in 'inputForDescriptives' can only contain the entries 'variable', 'scale', 'item', and 'fake_item'.")
   input5[2, "scale"] <- "a"
   expect_error(check_inputForDescriptives(input5),
                "The column 'scale' in 'inputForDescriptives' can only contain the entries 'numeric', 'ordinal', 'nominal'.")
