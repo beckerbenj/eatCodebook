@@ -49,10 +49,7 @@ calculateDescriptives.list <- function( GADSdat, inputForDescriptives, verbose =
 calculateDescriptives.GADSdat <- function( GADSdat, inputForDescriptives, verbose = FALSE, showCallOnly = FALSE) {
 ### showCallOnly: nur zum checken, welche Funktion gecalled wird
 ### checks, dass inputForDescriptives korrekt spezifiziert ... es muss u.a. ein data.frame sein
-  if ("tbl" %in% class(inputForDescriptives)) {
-       if(verbose){message("'inputForDescriptives' has class '",paste(class(inputForDescriptives), collapse="', '"), "'. Transform 'inputForDescriptives' into 'data.frame'.")}
-       inputForDescriptives <- as.data.frame(inputForDescriptives)
-  }
+  inputForDescriptives <- eatTools::makeDataFrame(inputForDescriptives)
   check_inputForDescriptives(inputForDescriptives)
 ### welche variablen werden ignoriert?
   vars <- c("type",  "scale", "imp")
@@ -97,16 +94,16 @@ varStats <- function(GADSdat, sub.inputForDescriptives, verbose, showCallOnly = 
          }
      }  else  {
 ### differenzieren, ob es skala (es gibt eine separate skalenvariale) oder fake.skala (es gibt keine separate skalenvariale) ist
-         if ( "scale" %in% sub.inputForDescriptives[,"type"] ) {
-             if(length(which("scale" == sub.inputForDescriptives[,"type"])) != 1) {cat("Error: Activate browser.\n"); browser()}
+#         if ( "scale" %in% sub.inputForDescriptives[,"type"] ) {
+             if(length(which("scale" == sub.inputForDescriptives[,"type"])) > 1) {cat("Error: Activate browser.\n"); browser()}
              if ( isTRUE(showCallOnly) ) {return("kennwerte.skala")}
              if ( verbose) {cat("Use function 'kennwerte.skala'.\n")}
              stats <- kennwerte.skala (GADSdat=GADSdat,sub.inputForDescriptives=sub.inputForDescriptives, verbose=verbose)
-         }  else  {
-             if ( isTRUE(showCallOnly) ) {return("kennwerte.skala.fake")}
-             if ( verbose) {cat("Use function 'kennwerte.skala.fake'.\n")}
-             stats <- kennwerte.skala.fake (dat=GADSdat[["dat"]],variableCols=sub.inputForDescriptives[,"varName"], missingValues = NULL)
-         }
+#         }  else  {
+#             if ( isTRUE(showCallOnly) ) {return("kennwerte.skala.fake")}
+#             if ( verbose) {cat("Use function 'kennwerte.skala.fake'.\n")}
+#             stats <- kennwerte.skala.fake (dat=GADSdat[["dat"]],variableCols=sub.inputForDescriptives[,"varName"], missingValues = NULL)
+#         }
      }
   }  else  {
      if (sub.inputForDescriptives[,"scale"] == "nominal") {

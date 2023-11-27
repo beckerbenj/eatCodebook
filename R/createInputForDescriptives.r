@@ -19,9 +19,13 @@
 #'@param impExpr Regular expression to identify imputed variables from variable labels in GADSdat
 #'object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1,
 #'at least one expression should match to identify the variable as an imputed variable)
-#'@param scaleExpr Regular expression to identify scale variables from variable labels in GADSdat
+#'@param scaleExpr Regular expression to identify scale or fake scale variables from variable labels in GADSdat
 #'object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1,
 #'at least one expression should match to identify the variable as a scale variable)
+#'@param itemExpr Regular expression to identify items which constitute a true scale from the variable
+#'labels in GADSdat object
+#'@param fakeItemExpr Regular expression to identify fake items which constitute a fake scale from the variable
+#'labels in GADSdat object
 #'@param nwExpr Regular expression to identify network variables from variable labels in GADSdat object
 #'(Note: for multiple expressions, i.e. if \code{nwExpr} is a character vector of length > 1, at least
 #'one expression should match to identify the variable as a network variable)
@@ -76,11 +80,11 @@
 #'varInfo <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value")
 #'
 #'@export
-createInputForDescriptives <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = FALSE) {
+createInputForDescriptives <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", itemExpr = "plausible|indikator", fakeItemExpr = "fake", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = FALSE) {
   UseMethod("createInputForDescriptives")
 }
 #'@export
-createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = FALSE) {
+createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", itemExpr = "plausible|indikator", fakeItemExpr = "fake", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = FALSE) {
     ### wenn es missings in der Format-Spalte des GADSdat-Labels-Objekt gibt, soll zuvor eatGADS::checkFormat aufgerufen werden
            if(any(is.na( GADSdat[["labels"]][,"format"]))) {
               message("Call 'checkFormat()' from the 'eatGADS' package.")
@@ -92,6 +96,8 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
            for ( i in impExpr) {  vari[grep(i, vari[,"varLabel"]),"imp"] <- TRUE  }
            vari[,"type"] <- "variable"
            for ( i in scaleExpr) { vari[grep(i, vari[,"varLabel"]),"type"] <- "scale"}
+           for ( i in itemExpr) { vari[grep(i, vari[,"varLabel"]),"type"] <- "item"}
+           for ( i in fakeItemExpr) { vari[grep(i, vari[,"varLabel"]),"type"] <- "fake_item"}
     ### scale-Eintrag vergeben
            vari[,"laufnummer"] <- 1:nrow(vari)                                  ### dieses, damit die Reihenfolge der varinfo so ist wie im labels sheet
     ### Hilfsvariable anlegen, um Netzwerkvariablen zu identifizieren (wird spaeter wieder geloescht)
@@ -174,6 +180,10 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
                               if (verbose) {cat(paste0("Scale '",sc,"' (not imputed): Found following ",length(items)," items: '",paste(items, collapse="', '"),"'.\n"))}
                               v[eatTools::whereAre(c(items, sc), v[,"varName"], verbose=FALSE),"group"] <- sc
                         }
+                        if ("fake_item" %in% v[,"type"]) {
+                              v[grep("fake_item",v[,"type"]) ,"group"] <- eatTools::removeNumeric(v[grep("fake_item",v[,"type"]) ,"varName"])
+                              warning("Identification of fake scales cannot be done completely automatically. Please check if the assignment of which items belong to a common scale is correct.")
+                        }
                         v[which(is.na(v[,"group"])),"group"] <- v[which(is.na(v[,"group"])),"varName"]
                    }  else  {                                                   ### hier beginnt die Behandlung fuer imputierte Variablen
                         if (is.null(varNameSeparatorImp) || is.na(varNameSeparatorImp) || varNameSeparatorImp == "") {
@@ -183,7 +193,7 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
                         }
                    }
                    return(v)}))
-    ### ggf, nachtaeglich die group-zuordnung nur fuer die netzwerk-variablen anpassen
+    ### ggf, nachtraeglich die group-zuordnung nur fuer die netzwerk-variablen anpassen
            if (any(vari[,"nw"] == TRUE)) {
                if (is.null(nwVarNameSeparatorImp) || is.na(nwVarNameSeparatorImp) || nwVarNameSeparatorImp == "") {
                    vari[which(vari[,"nw"] == TRUE),"group"] <- substr(vari[which(vari[,"nw"] == TRUE),"group"],1, nwNcharSeparatorImp)
@@ -194,7 +204,7 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
     ### nach Laufnummer sortieren und dann die Laufnummer- und Netzwerk-Spalte entfernen
            vari <- data.frame(vari[sort(vari[,"laufnummer"],decreasing=FALSE,index.return=TRUE)$ix,-match(c("laufnummer","nw"), colnames(vari))])
     ### consistency checks
-           variV<- vari[which(vari[,"type"] == "variable"),]
+           variV<- vari[which(vari[,"type"] %in% c("variable", "item", "fake_item")),]
            chk2 <- by(data = variV, INDICES = variV[,"group"], FUN = function ( x ) {
                    if ( nrow(x)>1) {
                         if ( length(unique(x[,"scale"])) > 1) {
@@ -204,7 +214,7 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
            return(vari)}
 
 #'@export
-createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = FALSE) {
+createInputForDescriptives.list <- function ( GADSdat, idExpr = "^ID", impExpr = c("IMPUTATION\\s+{0,1}[[:digit:]]{1,2}", "PV\\s+{0,1}[[:digit:]]{1,2}"), scaleExpr = "^Skala", itemExpr = "plausible|indikator", fakeItemExpr = "fake", nwExpr = "IDinClass", varNameSeparatorImp = "_", ncharSeparatorImp = 2, lastOccurrence =TRUE, groupSuffixImp = "imp", nCatsForOrdinal = c(2:5), nwVarNameSeparatorImp = "_", nwNcharSeparatorImp = 6, nwLastOccurrence = TRUE, verbose = FALSE) {
     ### Achtung! wenn mehrere GADSdat-Objekte als Liste uebergeben werden, koennen die weiteren Argumente ebenfalls als Liste uebergeben werden,
     ### oder man kann ein Argument fuer alle GADSdat-Objekte benutzen. welches von beiden hier der Fall ist, muss ermittelt werden
            #fwa    <- createFunNameWithArgs(funName = "createInputForDescriptives")# 'fwa' = function with arguments
@@ -218,7 +228,7 @@ check_inputForDescriptives <- function(inputForDescriptives){
   if(!is.data.frame(inputForDescriptives)) stop("'inputForDescriptives' needs to be a data.frame.")
   if(!identical(names(inputForDescriptives), c('varName', 'varLabel', 'format', 'imp', 'type', 'scale', 'group'))) {stop("The column names of 'inputForDescriptives' need to be: 'varName', 'varLabel', 'format', 'imp', 'type', 'scale', 'group'.")}
   if(!is.logical(inputForDescriptives$imp)) stop("The column 'imp' in 'inputForDescriptives' must be logical.")
-  if(any(!inputForDescriptives$type %in% c("variable", "scale","", NA))) stop("The column 'type' in 'inputForDescriptives' can only contain the entries 'variable' and 'scale'.")
+  if(any(!inputForDescriptives$type %in% c("variable", "scale","", "item", "fake_item", NA))) stop("The column 'type' in 'inputForDescriptives' can only contain the entries 'variable', 'scale', 'item', and 'fake_item'.")
   if(any(!inputForDescriptives$scale %in% c("numeric", "ordinal", "nominal", NA))) stop("The column 'scale' in 'inputForDescriptives' can only contain the entries 'numeric', 'ordinal', 'nominal'.")
   if(!length(unique(inputForDescriptives[,"varName"])) == length(inputForDescriptives[,"varName"])) {stop("'varName' column in 'inputForDescriptives' must be unique.")}
   if(tibble::is_tibble(inputForDescriptives)) inputForDescriptives <- as.data.frame(inputForDescriptives)

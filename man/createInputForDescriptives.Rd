@@ -9,6 +9,8 @@ createInputForDescriptives(
   idExpr = "^ID",
   impExpr = c("IMPUTATION\\\\s+{0,1}[[:digit:]]{1,2}", "PV\\\\s+{0,1}[[:digit:]]{1,2}"),
   scaleExpr = "^Skala",
+  itemExpr = "plausible|indikator",
+  fakeItemExpr = "fake",
   nwExpr = "IDinClass",
   varNameSeparatorImp = "_",
   ncharSeparatorImp = 2,
@@ -33,9 +35,15 @@ should match to identify the variable as ID variable)}
 object (Note: for multiple expressions, i.e. if \code{impExpr} is a character vector of length > 1,
 at least one expression should match to identify the variable as an imputed variable)}
 
-\item{scaleExpr}{Regular expression to identify scale variables from variable labels in GADSdat
+\item{scaleExpr}{Regular expression to identify scale or fake scale variables from variable labels in GADSdat
 object (Note: for multiple expressions, i.e. if \code{scaleExpr} is a character vector of length > 1,
 at least one expression should match to identify the variable as a scale variable)}
+
+\item{itemExpr}{Regular expression to identify items which constitute a true scale from the variable
+labels in GADSdat object}
+
+\item{fakeItemExpr}{Regular expression to identify fake items which constitute a fake scale from the variable
+labels in GADSdat object}
 
 \item{nwExpr}{Regular expression to identify network variables from variable labels in GADSdat object
 (Note: for multiple expressions, i.e. if \code{nwExpr} is a character vector of length > 1, at least

@@ -5,8 +5,8 @@
 \title{Create abbreviation list template.}
 \usage{
 createAbbrList(
-  headings = list(Akronyme = c("Abkuerzung", "Bedeutung"), `Statistische Formelzeichen`
-    = c("Symbol", "Bedeutung"))
+  headings = list(Akronyme = c("Abkuerzung", "Bedeutung"), `Statistische Formelzeichen` =
+    c("Symbol", "Bedeutung"))
 )
 }
 \arguments{
