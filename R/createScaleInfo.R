@@ -2,7 +2,7 @@
 #############################################################################
 #' Create scale information.
 #'
-#' Create information on scale aggregation.
+#' Create information on scale aggregation. Scales, 'fake scales', and imputed variables are listed.
 #'
 #'@param inputForDescriptives \code{inputForDescriptives} object as created by the \code{createInputForDescriptives} function
 #         source character string of length 1: source information of the data, for example \code{"sfb"}, \code{"lfb"}, etc.
@@ -28,8 +28,9 @@ createScaleInfo.data.frame <- function(inputForDescriptives){
                           Anzahl_valider_Werte = character(),	Items_der_Skala = character(), stringsAsFactors = FALSE)
 
   ## Scales
+  #browser()
   inputForDescriptives <- check_inputForDescriptives(inputForDescriptives)
-  scales_inputForDescriptives <- inputForDescriptives[which(inputForDescriptives$type == "scale"), ]
+  scales_inputForDescriptives <- inputForDescriptives[which(inputForDescriptives$type %in% c("scale", "fake_item")), ]
   scales <- scales_inputForDescriptives[!duplicated(scales_inputForDescriptives$group), "group"]
 
   ## Inputed
@@ -50,7 +51,8 @@ createScaleInfo.data.frame <- function(inputForDescriptives){
       next
     }
     scaleInfo[i, "varName"] <- unique(single_inputForDescriptives$group)
-    scaleInfo[i, "Items_der_Skala"] <- paste(single_inputForDescriptives[single_inputForDescriptives$type == "variable", "varName"], collapse = ",")
+    items <- single_inputForDescriptives[single_inputForDescriptives$type %in% c("item", "fake_item"), "varName"]
+    scaleInfo[i, "Items_der_Skala"] <- paste(items, collapse = ",")
     scaleInfo[i, "Anzahl_valider_Werte"] <- "-"
     scaleInfo[i, "Quelle"] <- source
   }
@@ -63,7 +65,8 @@ createScaleInfo.list <- function(inputForDescriptives){
     createScaleInfo(x)
   })
 
-  scaleInfo <- eatTools::do_call_rbind_withName(scaleInfo_list, colName = "Quelle2")[, c("varName", "Quelle2", "Anzahl_valider_Werte",
+  scaleInfo <- eatTools::do_call_rbind_withName(scaleInfo_list, colName = "Quelle2")[, c("varName", "Quelle2",
+                                                                                         "Anzahl_valider_Werte",
                                                                                          "Items_der_Skala")]
   names(scaleInfo)[2] <- "Quelle"
   scaleInfo

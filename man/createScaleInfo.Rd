@@ -13,7 +13,7 @@ createScaleInfo(inputForDescriptives)
 Returns the scale information.
 }
 \description{
-Create information on scale aggregation.
+Create information on scale aggregation. Scales, 'fake scales', and imputed variables are listed.
 }
 \examples{
 #tbd
