@@ -19,7 +19,7 @@ This vignettes describes the full workflow of creating a codebook via the `eatCo
 
 ```{r setup}
 library(eatCodebook)
-file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
+file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
 dat <- eatGADS::import_spss(file)
 ```
 
