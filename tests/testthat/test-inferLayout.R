@@ -1,12 +1,8 @@
 
-#gads <- readRDS("tests/testthat/helper_scaleDF.RDS")
-gads <- readRDS("helper_scaleDF.RDS")
-#gads_catPV <- eatGADS::import_spss("tests/testthat/helper_clean.sav")
-gads_catPV <- eatGADS::import_spss("helper_clean.sav")
-#input_catPV <- readRDS("tests/testthat/helper_inputForDescriptives_clean.RDS")
-input_catPV <- readRDS("helper_inputForDescriptives_clean.RDS")
-#varInfo_catPV <- readRDS("tests/testthat/helper_varInfo_clean.RDS")
-varInfo_catPV <- readRDS("helper_varInfo_clean.RDS")
+gads <- readRDS(test_path("helper_scaleDF.RDS"))
+gads_catPV <- eatGADS::import_spss(test_path("helper_clean.sav"))
+input_catPV <- readRDS(test_path("helper_inputForDescriptives_clean.RDS"))
+varInfo_catPV <- readRDS(test_path("helper_varInfo_clean.RDS"))
 
 
 test_that("infer layout errors", {
@@ -31,12 +27,12 @@ test_that("infer layout pseudo scale", {
   suppressMessages(gads_b <- eatGADS::removeVars(gads, "constr"))
   suppressMessages(gads2 <- eatGADS::checkFormat(gads_b))
   #gads2$labels
-  input <- createInputForDescriptives(gads2)
+  suppressWarnings(input <- createInputForDescriptives(gads2, fakeItemExpr = "Construct"))
   input$scale[1] <- NA
   input$group[2:4] <- "constr"
   varInfo <- createVarInfo(gads2, input)
   out <- inferLayout(varInfo, GADSdat = gads2, inputForDescriptives = input)
-  expect_equal(out$Layout, c(0, 6, NA, NA, NA))
+  expect_equal(out$Layout, c(0, 5, NA, NA, NA))
 })
 
 test_that("infer layout pseudo ordinal scale", {

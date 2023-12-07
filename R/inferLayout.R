@@ -27,20 +27,24 @@ inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
 
   for(i in seq_along(all_names)) {
     nam <- all_names[i]
-    #if(nam == "pv_kat_pooled") browser()
     spss_format <- NULL
     if(nam %in% ds_names) spss_format <- unique(eatGADS::extractMeta(GADSdat, nam)$format)
 
     input <- inputForDescriptives[inputForDescriptives$varName == nam, ]
+    # workaround for pseudo/fake scales: pick first row for information, set scale metric to numeric
+    # (instead of ordinal as is appropriate for items)
+    if(nrow(input) == 0) {
+      input <- inputForDescriptives[inputForDescriptives$group == nam, ]
+      input <- input[1, ]
+      input[1, "scale"] <- "numeric"
+    }
     input_imp <- input[["imp"]]
     input_type <- input[["type"]]
     input_scale <- input[["scale"]]
 
-    #browser()
-
-    #if(nam == "constr_1") browser()
+    #if(nam == "skala_fake_item") browser()
     # pooled variables early and separately
-    if(nam %in% only_sh_names) {
+    if(nam %in% only_sh_names && !"fake_item" %in% input_type) {
       input_scale <- unique(inputForDescriptives[inputForDescriptives$group == nam, "scale"])
       stopifnot(length(input_scale) == 1)
 
@@ -57,12 +61,12 @@ inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
       next
     }
 
-    if(is.na(spss_format)) stop("'format' information is missing in 'GADSdat' for variable ", nam, ".")
-    if(grepl("^F", spss_format) && is.na(input$scale)) {
+    if(!is.null(spss_format) && is.na(spss_format)) stop("'format' information is missing in 'GADSdat' for variable ", nam, ".")
+    if(!is.null(spss_format) && grepl("^F", spss_format) && is.na(input$scale)) {
       varInfo[i, "Layout"] <- 0 ## id
       next
     }
-    if(grepl("^A", spss_format) && is.na(input$scale)) {
+    if(!is.null(spss_format) && grepl("^A", spss_format) && is.na(input$scale)) {
       varInfo[i, "Layout"] <- 1 ## string
       next
     }
@@ -71,6 +75,7 @@ inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
     if(!input_imp && input_type == "variable" && input_scale == "ordinal") varInfo[i, "Layout"] <- 3 ## ordinal
     if(!input_imp && input_type == "variable" && input_scale == "numeric") varInfo[i, "Layout"] <- 4 ## metric
     if(!input_imp && input_type == "scale" && input_scale == "numeric") varInfo[i, "Layout"] <- 5 ## scale
+    if(!input_imp && input_type == "fake_item" && input_scale == "numeric") varInfo[i, "Layout"] <- 5 ## fake/pseudo scale
 
     # this is slightly experimental, but in theory this should work (this variables do not appear in the codebook)
     # prior layout-column was also used for scale items (and maybe imputed variables?)

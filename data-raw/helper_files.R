@@ -3,10 +3,16 @@ pisa_input <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Val
 saveRDS(pisa_input, "tests/testthat/helper_inputForDescriptives_pisa.RDS")
 
 clean <- eatGADS::import_spss("tests/testthat/helper_clean.sav")
-clean_input <- createInputForDescriptives(clean)
+clean_input <- createInputForDescriptives(clean, fakeItemExpr = "gibt es nicht")
 clean_varinfo <- createVarInfo(clean, inputForDescriptives = clean_input)
 saveRDS(clean_input, "tests/testthat/helper_inputForDescriptives_clean.RDS")
 saveRDS(clean_varinfo, "tests/testthat/helper_varInfo_clean.RDS")
+
+clean2 <- eatGADS::import_spss("tests/testthat/helper_clean2.sav")
+clean2_input <- createInputForDescriptives(clean2)
+clean2_varinfo <- createVarInfo(clean2, inputForDescriptives = clean2_input)
+saveRDS(clean2_input, "tests/testthat/helper_inputForDescriptives_clean2.RDS")
+saveRDS(clean2_varinfo, "tests/testthat/helper_varInfo_clean2.RDS")
 
 
 # usethis::use_data(DATASET, overwrite = TRUE)
@@ -41,7 +47,7 @@ saveRDS(imputed_scale, "tests/testthat/helper_inputedForDescriptives_imputedScal
 netw <- data.frame(id = 1:2,
                     friend_1 = c(0, 1),
                     friend_2 = c(0, 0))
-netw_g <- eatGADS::import_DF(netzw)
+netzw_g <- eatGADS::import_DF(netw)
 input_netw <- createInputForDescriptives(netzw_g)
 input_netw[2:3, "group"] <- "friend"
 input_netw[2:3, "scale"] <- NA
