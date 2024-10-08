@@ -1,5 +1,5 @@
 
-# eatCodebook <a href="https://beckerbenj.github.io/eatCodebook/"><img src="man/figures/logo.svg" align="right" height="139" alt="eatCodebook website" /></a>
+# eatCodebook <a href="https://beckerbenj.github.io/eatCodebook/"><img src="man/figures/logo.png" align="right" height="120" alt="eatCodebook website" /></a>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/beckerbenj/eatCodebook/workflows/R-CMD-check/badge.svg)](https://github.com/beckerbenj/eatCodebook/actions)
