@@ -55,9 +55,9 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.svg" class="logo" alt=""><h1>Full Workflow</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Full Workflow</h1>
             
-            <h4 data-toc-skip class="date">2024-08-02</h4>
+            <h4 data-toc-skip class="date">2024-10-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/beckerbenj/eatCodebook/blob/main/vignettes/full_workflow.Rmd" class="external-link"><code>vignettes/full_workflow.Rmd</code></a></small>
       <div class="d-none name"><code>full_workflow.Rmd</code></div>
@@ -158,7 +158,7 @@ the codebook and how the table must be edited for this.</p>
 <h4 id="variables-without-descriptives">Variables without Descriptives<a class="anchor" aria-label="anchor" href="#variables-without-descriptives"></a>
 </h4>
 <p>This can be the case, for example, with ID variables or character
-variables. The page would then be displayed as follows:<br><br><img src="pictures/codebook_IDs.PNG" alt="codebook_IDs"><br><br> The entry must look like this:<br><br><img src="pictures/input_IDs.PNG" alt="input_IDs"></p>
+variables. The page would then be displayed as follows:<br><br><img src="pictures%2Fcodebook_IDs.PNG" alt="codebook_IDs"><br><br> The entry must look like this:<br><br><img src="pictures%2Finput_IDs.PNG" alt="input_IDs"></p>
 </div>
 <div class="section level4">
 <h4 id="numeric-variables-without-labelled-values">Numeric Variables without labelled Values<a class="anchor" aria-label="anchor" href="#numeric-variables-without-labelled-values"></a>
@@ -167,37 +167,37 @@ variables. The page would then be displayed as follows:<br><br><img src="picture
 variables with values in the decimal range. Nevertheless, these
 variables can contain labels for values. If they are defined as missing,
 these values are not taken into account in the calculations but are
-still reported.<br><br><img src="pictures/codebook_numeric.PNG" alt="codebook_numeric"><br><br> To create an entry for a numeric variable without labelled values,
-the Excel must look like this:<br><br><img src="pictures/input_numeric.PNG" alt="input_numeric"></p>
+still reported.<br><br><img src="pictures%2Fcodebook_numeric.PNG" alt="codebook_numeric"><br><br> To create an entry for a numeric variable without labelled values,
+the Excel must look like this:<br><br><img src="pictures%2Finput_numeric.PNG" alt="input_numeric"></p>
 </div>
 <div class="section level4">
 <h4 id="categorial-variables">Categorial Variables<a class="anchor" aria-label="anchor" href="#categorial-variables"></a>
 </h4>
 <p>This is the page in the codebook, which is well suited for variables
-that only have labelled categories:<br><br><img src="pictures/codebook_ordinal.PNG" alt="codebook_ordinal"><br><br>
-To create it, the Excel should be edited as follows:<br><br><img src="pictures/input_ordinal.PNG" alt="input_ordinal"><br><br></p>
+that only have labelled categories:<br><br><img src="pictures%2Fcodebook_ordinal.PNG" alt="codebook_ordinal"><br><br>
+To create it, the Excel should be edited as follows:<br><br><img src="pictures%2Finput_ordinal.PNG" alt="input_ordinal"><br><br></p>
 </div>
 <div class="section level4">
 <h4 id="scale-variables-with-individual-items">Scale Variables with individual items<a class="anchor" aria-label="anchor" href="#scale-variables-with-individual-items"></a>
 </h4>
 <p>It is possible to get the following entries in the codebook for a
-scale and the items it is made of:<br><br><img src="pictures/codebook_scale1.PNG" alt="codebook_scale1"><img src="pictures/codebook_scale2.PNG" alt="codebook_scale2"><img src="pictures/codebook_scale3.PNG" alt="codebook_scale3"><br><br>
+scale and the items it is made of:<br><br><img src="pictures%2Fcodebook_scale1.PNG" alt="codebook_scale1"><img src="pictures%2Fcodebook_scale2.PNG" alt="codebook_scale2"><img src="pictures%2Fcodebook_scale3.PNG" alt="codebook_scale3"><br><br>
 To get these pages the individual items must be labelled as
 <em>ordinal</em> and the scale as <em>numeric</em>. They must all have
 the same name at <strong>group</strong> so that they are displayed
-together. <br><br><img src="pictures/input_scale.PNG" alt="input_scale"></p>
+together. <br><br><img src="pictures%2Finput_scale.PNG" alt="input_scale"></p>
 </div>
 <div class="section level4">
 <h4 id="imputation-variables">Imputation Variables<a class="anchor" aria-label="anchor" href="#imputation-variables"></a>
 </h4>
 <p>For variables where an averaged value is to be determined and
 displayed and depending on what was specified in <strong>scale</strong>,
-it results in the following pages in the codebook:<br><br><img src="pictures/codebook_imp1.PNG" alt="codebook_imp1"><img src="pictures/codebook_imp2.PNG" alt="codebook_imp2"><br><br> For getting this the <strong>imp</strong> column becomes relevant.
+it results in the following pages in the codebook:<br><br><img src="pictures%2Fcodebook_imp1.PNG" alt="codebook_imp1"><img src="pictures%2Fcodebook_imp2.PNG" alt="codebook_imp2"><br><br> For getting this the <strong>imp</strong> column becomes relevant.
 It must be set to <em>WAHR</em> for these variables. In addition, the
 variables also need a common name in <strong>group</strong> and,
 depending on whether they are to be represented categorically or
 numerically, the corresponding designation in
-<strong>scale</strong>.<br><br><img src="pictures/input_imp.PNG" alt="input_imp"><br><br></p>
+<strong>scale</strong>.<br><br><img src="pictures%2Finput_imp.PNG" alt="input_imp"><br><br></p>
 <p>After the table has been adjusted accordingly, it must be read in
 again with the function <code><a href="../reference/getInputForDescriptives.html">getInputForDescriptives()</a></code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -398,7 +398,7 @@ to indicate which instruction was used to collect the variable in a
 questionnaire.<br>
 With <code>eatCodebook</code> you can also create a page for a
 background model (BGM).</p>
-<p><img src="pictures/BGM.PNG" alt="BGM"></p>
+<p><img src="pictures%2FBGM.PNG" alt="BGM"></p>
 <p>For the variable to appear there, the
 <strong>Hintergrundmodell</strong> column must be set to <em>ja</em>.
 Otherwise, there must be a <em>nein</em>. With
@@ -626,7 +626,7 @@ write introductory texts or to design a last page.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
