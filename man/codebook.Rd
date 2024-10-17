@@ -33,7 +33,7 @@ codebook(
 \item{register}{\code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.
 If \code{NULL}, now register is created. If there are registers for some data sets but not all, the missing registers are simply omitted.}
 
-\item{dat}{\code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{import_spss}}.}
+\item{dat}{\code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link[eatGADS]{import_spss}}.}
 
 \item{Kennwertedatensatz}{\code{data.frame} or list of \code{data.frame} containing the descriptive statistics, imported via \code{\link{calculateDescriptives}}.}
 

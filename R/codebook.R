@@ -11,7 +11,7 @@
 #'@param scaleInfo \code{data.frame} containing the information on scales, imported via \code{\link{getScaleInfo}}.
 #'@param register \code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.
 #'If \code{NULL}, now register is created. If there are registers for some data sets but not all, the missing registers are simply omitted.
-#'@param dat \code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link{import_spss}}.
+#'@param dat \code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link[eatGADS]{import_spss}}.
 #'@param Kennwertedatensatz \code{data.frame} or list of \code{data.frame} containing the descriptive statistics, imported via \code{\link{calculateDescriptives}}.
 #'@param chapters \code{data.frame} or list of \code{data.frames} containing the chapter information, imported via \code{\link{getChapters}}.
 #'Determines the order of chapters in the codebook.
