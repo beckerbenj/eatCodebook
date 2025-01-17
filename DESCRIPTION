@@ -7,7 +7,7 @@ Authors@R: c(
     person("Felix", "Milles", role = c("aut")),
     person("Johanna", "Busse", role = c("aut")))
 Description: Create automatic codebooks.
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.0.0)
 Imports: eatTools, eatGADS (>= 0.18.0), eatRep (>= 0.14.6), reshape2, tibble, psych, psy, openxlsx, stats, plyr, utils
 License: GPL (>= 2)
 URL: https://github.com/beckerbenj/eatCodebook,
