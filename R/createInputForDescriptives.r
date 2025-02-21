@@ -129,6 +129,12 @@ createInputForDescriptives.GADSdat <- function ( GADSdat, idExpr = "^ID", impExp
                              warning(paste0("Variable '",z[["varName"]],"': Missing values in sorted integer entries found. This should only occur for pseudo-numeric values, i.e. id variables."))
                              scale <- NA
                         }  else  {
+    ### wenn sie ausschliesslich fehlende Werte hat und daher kein skalenniveau identifiziert werden kann, soll NA eingetragen werden
+                            if ( length(nonmis) == 0) {
+                                 message(paste0("Variable '",z[["varName"]],"' only has missing values. Scale level is not identifiable (set 'scale' entry to NA)."))
+                                 z[,"scale"] <- NA
+                                 return(z)
+                            }
                             if ( !all(nonmis == as.integer(nonmis)) ) {
                                  scale <- "numeric"
                             }  else  {
