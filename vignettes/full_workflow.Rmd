@@ -50,7 +50,7 @@ Here is a brief overview of the different columns in this object:
 In the **varName**, **varLabel** and **format** columns are information about the variables of the dataset. You don't have to edit anything.  
 **imp** can be set to *WAHR* or *FALSCH*. If there are several variables to be displayed on one page, this column must be set to *WAHR* for these variables and they must be assigned to the same group at **group**.  
 **type** can be set to *variable* or *scale*. If it is a scale consisting of several individual variables, the scale variable is set to *scale* and the individual items to *variable*. All other variables should always get *variable* as an entry.  
-The **scale** column specifies how the variable is to be displayed. If it is empty, no descreptives are displayed. *numeric* is a variable without labelled categories. For *ordinal*, it is a categorical variable that has labelled values.
+The **scale** column specifies how the variable is to be displayed. If it is empty, no descreptives are displayed. *numeric* is a variable without labeled categories. For *ordinal*, it is a categorical variable that has labeled values.
 
 Now follow the possibilities of how variables can be represented in the codebook and how the table must be edited for this.
 
@@ -64,19 +64,19 @@ The entry must look like this:
 <br>
 <img src="./pictures/input_IDs.PNG" alt="input_IDs" />  
 
-#### Numeric Variables without labelled Values
+#### Numeric Variables without labeled Values
 
 This can be used, for example, for variables that represent an age or variables with values in the decimal range. Nevertheless, these variables can contain labels for values. If they are defined as missing, these values are not taken into account in the calculations but are still reported.  
 <br>
 <img src="./pictures/codebook_numeric.PNG" alt="codebook_numeric" />  
 <br>
-To create an entry for a numeric variable without labelled values, the Excel must look like this:  
+To create an entry for a numeric variable without labeled values, the Excel must look like this:  
 <br>
 <img src="./pictures/input_numeric.PNG" alt="input_numeric" />  
 
 #### Categorial Variables
 
-This is the page in the codebook, which is well suited for variables that only have labelled categories:  
+This is the page in the codebook, which is well suited for variables that only have labeled categories:  
 <br>
 <img src="./pictures/codebook_ordinal.PNG" alt="codebook_ordinal" />
 <br>  
@@ -91,9 +91,9 @@ It is possible to get the following entries in the codebook for a scale and the 
 <br>
 <img src="./pictures/codebook_scale1.PNG" alt="codebook_scale1" /><img src="./pictures/codebook_scale2.PNG" alt="codebook_scale2" /><img src="./pictures/codebook_scale3.PNG" alt="codebook_scale3" />
 <br>  
-To get these pages the individual items must be labelled as *ordinal* and the scale as *numeric*. They must all have the same name at **group** so that they are displayed together.
+To get these pages the individual items must be labeled as *ordinal* and the scale as *numeric*. They must all have the same name at **group** so that they are displayed together.
 <br>  
-<img src="./pictures/input_scale.PNG" alt="input_scale" />  
+<img src="./pictures/input_scale.PNG" alt="input_scale_new" />  
 
 #### Imputation Variables
 
