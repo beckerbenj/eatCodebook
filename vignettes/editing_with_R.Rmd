@@ -31,13 +31,39 @@ dat <- eatGADS::import_spss(file)
 
 When editing all the created files in R, the script can get very long, so I recommend to use several .R documents to maintain an overview. 
 
-First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. You now have all the .R templates that you need, but you have to create your issues yourself.
+First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. 
+
+![](.\\pictures\\repo_template.png)
+
+You now have all the .R templates that you need, but you have to create your issues yourself. You can find the following files:
+
+| File | Description|
+|--|--|
+|`SH_main`| The main file you work in. You can work with just this file and ignore the others, if you want.  You first have to create all the Excel files with this script, then you can edit them manually or with R Code (either in this file or in the separate ones).  I recommend using this file for smaller changes and the separate files for more complex changes. |
+| `SH_kennwerte`| For editing the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here.|
+| `SH_varinfo`| You have to edit the varinfo-file a lot. `eatCodebook` creates the file structure with Variable names and labels on its own, but you have to add literature, structure and much more. |
+| `SH_gliederung`| The information read from `varinfo` is usually incomplete |
+| `SH_literatur`| You have to match the short references to the long ones. You also have to add proper latex syntax for cursive Text or URLs.|
+|`SH_Erstellung_kurz`| When you edited most/all of the files and just want to create the .tex file to render the pdf, you can use this (short) script where you needn't worry about changing or recreating files by accident.| 
 
 
-```{r}
+Pull the repo and start with the file `SH_main.R`.
 
 
-```
+## Starting with the Skalenhandbuch
+
+tbd
+
+### Editing varinfo
+
+### Editing Gliederung
+
+### Editing Literaturverzeichnis/references
+
+
+
+
+
 
 
 
