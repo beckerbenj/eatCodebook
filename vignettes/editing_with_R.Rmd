@@ -31,7 +31,14 @@ dat <- eatGADS::import_spss(file)
 
 When editing all the created files in R, the script can get very long, so I recommend to use several .R documents to maintain an overview. 
 
-tbd
+First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. You now have all the .R templates that you need, but you have to create your issues yourself.
+
+
+```{r}
+
+
+```
+
 
 
 
