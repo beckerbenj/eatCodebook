@@ -46,7 +46,7 @@ checkScaleConsistency.GADSdat <- function ( GADSdat, inputForDescriptives, id, t
 #                             return(ret)
 #                         }  else  {
 #                         m2r<- eatRep::report(m2)
-                         m3r<- mean(rowMeans(dat[,vars[["variable"]]], na.rm=TRUE), na.rm=TRUE)
+                         m3r<- mean(rowMeans(dat[,vars[["item"]]], na.rm=TRUE), na.rm=TRUE)
                          if ( abs(m1 - m3r) > abs(tolerance)) {
                                message("Scale '",vars[["scale"]],"': Mean of scale variable ",round(m1, digits = 3), " does not equal the pooled mean of the items '",paste(vars[["variable"]], collapse="', '"),"' (",round(m3r, digits = 3),").")
                                ret <- data.frame ( scale = vars[["scale"]], nItems = length(vars[["variable"]]), items = paste0("'", paste(vars[["variable"]], collapse = "', '"),"'"),  checkOK = FALSE, scaleMean = m1, pooledMean = m3r, reason = "scale mean and pooled mean differ", stringsAsFactors = FALSE)
