@@ -1,0 +1,41 @@
+---
+title: "Editing Excels with R"
+author: "Edna Grewers"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Full Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+For illustrative purposes we use a small example data set which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
+
+```{r eatcodebook setup}
+library(eatCodebook)
+file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
+dat <- eatGADS::import_spss(file)
+```
+
+
+#### Setup
+
+When editing all the created files in R, the script can get very long, so I recommend to use several .R documents to maintain an overview. 
+
+tbd
+
+
+
+
+
+
+
