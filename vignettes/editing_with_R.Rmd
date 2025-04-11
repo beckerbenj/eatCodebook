@@ -4,7 +4,7 @@ author: "Edna Grewers"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Full Workflow}
+  %\VignetteIndexEntry{Editing with R}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -46,14 +46,15 @@ You now have all the .R templates that you need, but you have to create the issu
 | `SH_literatur`| You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs.|
 |`SH_Erstellung_kurz`| When you edited most/all of the files and just want to create the .tex file to render the pdf, you can use this (short) script where you needn't worry about changing or recreating files by accident.| 
 
-Pull the repo and start with the file `SH_main.R`. At the start you see all the packages that you need to install or load before starting. 
+Pull the repo and start with the file `SH_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust. 
+
+At the start you see all the packages that you need to install or load before starting. 
 
 ```{r loading packages}
 library(eatCodebook)
 library(eatGADS)
 library(eatAnalysis)
 ```
-
 
 ## Starting with the Skalenhandbuch
 
