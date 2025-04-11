@@ -91,7 +91,7 @@ writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus.xlsx")
 
 Now you have to check, whether everything is the way you need it to be. If not, you have to either make changes in the Excel file manually and save your changes under `descriptives_dat_bearbeitet.xlsx`, so you don't need to recreate the original Excel; or you can check the file and make changes in RStudio (see below). For a detailed explanation on how the `input for descriptives` is supposed to look like, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#descriptive-statistics).
 
-After you made the changes, you read in your edited file and store it in a new object. For some data sets you need to check for `scale consistency`, that is whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptive file. Then you need to create a `kennwerte` object, again for each data set. This syntax might look like this:
+After you made the changes, you read in your edited file and store it in a new object. For some data sets you need to check for `scale consistency`, that is whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptive file. Then you need to create a `kennwerte` object with `calculateDescriptives`, again for each data set. This syntax might look like this:
 
 ```{r check scale and kennwerte, eval=FALSE}
 # read in edited Excel file
@@ -102,10 +102,36 @@ check_scale_sus <- checkScaleConsistency(daten_sus, descriptives_sus_bearbeitet,
 kennwerte_sus <- calculateDescriptives(GADSdat = daten_sus, inputForDescriptives = descriptives_sus_bearbeitet, showCallOnly = FALSE)
 ```
 
-#### Editing Descriptive Statistics in R
+After you created the `inputForDescriptives` and `kennwerte` for each data set, you again store them in two separate lists, analog to `datenliste`. Then you save these two lists as an .RDS file and read them in again with `readRDS`. You don't create a new folder, but put them in the `excel_files` folder as well.
 
-For 
+```{r save inputForDescriptices and kennwerte, eval=FALSE}
+# create two lists
+kennwerte <- list(sus = kennwerte_sus,
+                  lfb = kennwerte_lfb)
+input_descriptives <- list(sus = descriptives_sus_bearbeitet,
+                           lfb = descriptives_lfb_bearbeitet)
+# save files
+saveRDS(kennwerte, ".\\excel_files\\kennwerte.RDS")
+saveRDS(input_descriptives, ".\\excel_files\\input_descriptives.RDS")
+# load files
+kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
+input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
+```
 
+#### Editing `InputForDescriptives` in R
+
+Depending on how much you need to adjust you can make changes in the `SH_main.R` file or switch to `SH_kennwerte.R`. The latter has some example code for typical changes, like adjusting the input for `descriptives$scale` or `descriptives$type`. 
+
+Sometimes `createInputForDescriptives` creates a different scale level for variables that they actually have. The column `scale` is later important for how the variable is shown in the finished Skalenhandbuch. For example when variables get the scale `nominal`, when they should have `ordinal`.   
+
+You can adjust that by extracting all relevant variables, for instance by name, using `grep`, to identify the position of all variables that start with a certain name in `descriptives_sus`. Sometimes you need to recreate the descriptives objects/files and the position might change, but usually not the variables that are affected. In this case you wouldn't have to adjust your code and can just rerun it. With the position of the affected variables, you can make changes for all affected variables at the same time.
+
+```{r editing descriptives1, eval=FALSE}
+# extracting the position of variables Lname_a - Lname_d
+pos <- grep("Lname", descriptives_sus$varName)
+# adjusting the input for the column `scale`
+descriptives_sus$scale[pos] <- "ordinal"
+```
 
 
 ### Editing varinfo
