@@ -1,0 +1,185 @@
+---
+title: "Editing Excels with R"
+author: "Edna Grewers"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Editing Excels with R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+For illustrative purposes we use a small example data set which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
+
+```{r eatcodebook setup}
+library(eatCodebook)
+file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
+dat <- eatGADS::import_spss(file)
+```
+
+
+#### Setup
+
+When editing all the created files in R, the script can get very long, so I recommend to use several .R documents to maintain an overview. 
+
+First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. 
+
+![](.\\pictures\\repo_template.png)
+
+You now have all the .R templates that you need, but you have to create the issues yourself. You can find the following files:
+
+| File | Description|
+|--|--|
+|`SH_main`| The main file you work in. You can work with just this file and ignore the others, if you want.  You first have to create all the Excel files with this script, then you can edit them manually or with R Code (either in this file or in the separate ones).  I recommend using this file for smaller changes and the separate files for more complex changes. |
+| `SH_kennwerte`| For editing the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here.|
+| `SH_varinfo`| You have to edit the varinfo-file a lot. `eatCodebook` creates the file structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
+| `SH_gliederung`| The information read from `varinfo` is usually incomplete, so you have to add missing titles. |
+| `SH_literatur`| You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs.|
+|`SH_Erstellung_kurz`| When you edited most/all of the files and just want to create the .tex file to render the pdf, you can use this (short) script where you needn't worry about changing or recreating files by accident.| 
+
+Pull the repo and start with the file `SH_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust. 
+
+## Starting with the Skalenhandbuch
+
+You open the file `SH_main.R` and install and load the all packages you see in `setup`, otherwise some functions might not work. 
+
+```{r loading packages}
+library(eatCodebook)
+library(eatGADS)
+library(eatAnalysis)
+```
+
+### 1. Importing Data
+
+You start by importing the data, usually several SPSS data files. You can use the `import_spss` or `readRDS` function, depending on the type of data. You just need the file path as a string. For `.sav` (SPSS) files, you need to use `import_spss` from the `eatGADS` package. In the example below, you need to exchange `file` for your file path, they usually lie on `Q:`. 
+
+```{r data import, eval=FALSE}
+daten_sus <- import_spss("Q:\\filepath\\Daten_sus.sav")
+daten_lfb <- import_spss("Q:\\filepath\\Daten_lfb.sav")
+```
+
+Give the data sets meaningful names, like `daten_sus`, `daten_lfb` and so on. After importing the data, you save them in a list called `datenliste` and name them accordingly, but you just need the suffix; `sus`, `lfb`, etc., so it might look like this:
+
+```{r datenliste, eval=FALSE}
+datenliste <- list(sus = daten_sus,
+                   lfb = daten_lfb)
+```
+
+
+### 2. Descriptive Statistics
+
+For each imported data set, you create a new object with `createInputForDescriptives` containing important descriptive information about the each variables like their name, label, format information for the pdf in the end, scale level or which variables are grouped together. You name them according to you data sets like `descriptives_sus` or `descriptives_lfb`. 
+
+```{r creating input for descriptives, eval=FALSE}
+descriptives_sus <- createInputForDescriptives(GADSdat = daten_sus, nCatsForOrdinal = 4)
+```
+
+Then you save each `descriptives` object in its own Excel file. For that you create a new folder in your repo called `excel_files` and use following code. All the file paths for files within your repo should already be correct in the script, you just need to adjust the file names when you copy and paste the code for the other data sets.
+
+```{r saving descriptives, eval=FALSE}
+writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus.xlsx")
+```
+
+Now you have to check, whether everything is the way you need it to be. If not, you have to either make changes in the Excel file manually and save your changes under `descriptives_dat_bearbeitet.xlsx`, so you don't need to recreate the original Excel; or you can check the file and make changes in RStudio (see below). For a detailed explanation on how the `input for descriptives` is supposed to look like, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#descriptive-statistics).
+
+After you made the changes, you read in your edited file and store it in a new object. For some data sets you need to check for `scale consistency`, that is whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptive file. Then you need to create a `kennwerte` object with `calculateDescriptives`, again for each data set. This syntax might look like this:
+
+```{r check scale and kennwerte, eval=FALSE}
+# read in edited Excel file
+descriptives_sus_bearbeitet <- getInputForDescriptives(".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
+# optional: check for scale consistency
+check_scale_sus <- checkScaleConsistency(daten_sus, descriptives_sus_bearbeitet, 1:nrow(descriptives_sus_bearbeitet))
+# create Kennwerte object
+kennwerte_sus <- calculateDescriptives(GADSdat = daten_sus, inputForDescriptives = descriptives_sus_bearbeitet, showCallOnly = FALSE)
+```
+
+After you created the `inputForDescriptives` and `kennwerte` for each data set, you again store them in two separate lists, analog to `datenliste`. Then you save these two lists as an .RDS file and read them in again with `readRDS`. You don't create a new folder, but put them in the `excel_files` folder as well.
+
+```{r save inputForDescriptices and kennwerte, eval=FALSE}
+# create two lists
+kennwerte <- list(sus = kennwerte_sus,
+                  lfb = kennwerte_lfb)
+input_descriptives <- list(sus = descriptives_sus_bearbeitet,
+                           lfb = descriptives_lfb_bearbeitet)
+# save files
+saveRDS(kennwerte, ".\\excel_files\\kennwerte.RDS")
+saveRDS(input_descriptives, ".\\excel_files\\input_descriptives.RDS")
+# load files
+kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
+input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
+```
+
+#### Editing `InputForDescriptives` in R
+
+Depending on how much you need to adjust you can make changes in the `SH_main.R` file or switch to `SH_kennwerte.R`. The latter has some example code for typical changes, like adjusting the input for `descriptives$scale` or `descriptives$type`. 
+
+Sometimes `createInputForDescriptives` creates a different scale level for variables that they actually have. The column `scale` is later important for how the variable is shown in the finished Skalenhandbuch. For example when variables get the scale `nominal`, when they should have `ordinal`.   
+
+You can adjust that by extracting all relevant variables, for instance by name, using `grep`, to identify the position of all variables that start with a certain name in `descriptives_sus`. Sometimes you need to recreate the descriptives objects/files and the position might change, but usually not the variables that are affected. In this case you wouldn't have to adjust your code and can just rerun it. With the position of the affected variables, you can make changes for all affected variables at the same time.
+
+```{r editing descriptives1, eval=FALSE}
+# extracting the position of variables Lname_a - Lname_d
+pos <- grep("Lname", descriptives_sus$varName)
+# adjusting the input for the column `scale`
+descriptives_sus$scale[pos] <- "ordinal"
+```
+
+
+
+```{r editing descriptives2, eval=FALSE}
+
+```
+
+When you're done with making changes, you can save them in a new Excel file like before. 
+
+```{r saving descriptives2, eval=FALSE}
+writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
+```
+
+### 3. Missings
+
+### 4. Scales
+
+### 5. Abbreveation List
+
+### 6. Varinfo
+
+#### Editing varinfo with R
+
+### 7. Structure/Gliederung
+
+#### Editing structure with R
+
+### 8. References
+
+#### Editing Literaturverzeichnis/references with R
+
+### 9. Background Model (HGM)
+
+### 10. Cover
+
+### 11. Meta Data
+
+### 12. Chapters
+
+### 13. Other Texts
+
+### 14. create and save Skalenhandbuch
+
+
+
+
+
+
+
+
+
