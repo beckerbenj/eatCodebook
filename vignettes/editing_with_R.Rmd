@@ -48,15 +48,15 @@ You now have all the .R templates that you need, but you have to create the issu
 
 Pull the repo and start with the file `SH_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust. 
 
-At the start you see all the packages that you need to install or load before starting. 
+## Starting with the Skalenhandbuch
+
+You open the file `SH_main.R` and install and load the all packages you see in `setup`, otherwise some functions might not work. 
 
 ```{r loading packages}
 library(eatCodebook)
 library(eatGADS)
 library(eatAnalysis)
 ```
-
-## Starting with the Skalenhandbuch
 
 ### Importing Data
 
@@ -133,6 +133,17 @@ pos <- grep("Lname", descriptives_sus$varName)
 descriptives_sus$scale[pos] <- "ordinal"
 ```
 
+
+
+```{r editing descriptives2, eval=FALSE}
+
+```
+
+When you're done with making changes, you can save them in a new Excel file like before. 
+
+```{r saving descriptives2, eval=FALSE}
+writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
+```
 
 ### Editing varinfo
 
