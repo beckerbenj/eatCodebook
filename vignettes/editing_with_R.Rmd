@@ -58,7 +58,7 @@ library(eatGADS)
 library(eatAnalysis)
 ```
 
-### Importing Data
+### 1. Importing Data
 
 You start by importing the data, usually several SPSS data files. You can use the `import_spss` or `readRDS` function, depending on the type of data. You just need the file path as a string. For `.sav` (SPSS) files, you need to use `import_spss` from the `eatGADS` package. In the example below, you need to exchange `file` for your file path, they usually lie on `Q:`. 
 
@@ -75,7 +75,7 @@ datenliste <- list(sus = daten_sus,
 ```
 
 
-### Descriptive Statistics
+### 2. Descriptive Statistics
 
 For each imported data set, you create a new object with `createInputForDescriptives` containing important descriptive information about the each variables like their name, label, format information for the pdf in the end, scale level or which variables are grouped together. You name them according to you data sets like `descriptives_sus` or `descriptives_lfb`. 
 
@@ -145,15 +145,35 @@ When you're done with making changes, you can save them in a new Excel file like
 writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
 ```
 
-### Editing varinfo
+### 3. Missings
 
-### Editing Gliederung
+### 4. Scales
 
-### Editing Literaturverzeichnis/references
+### 5. Abbreveation List
 
+### 6. Varinfo
 
+#### Editing varinfo with R
 
+### 7. Structure/Gliederung
 
+#### Editing structure with R
+
+### 8. References
+
+#### Editing Literaturverzeichnis/references with R
+
+### 9. Background Model (HGM)
+
+### 10. Cover
+
+### 11. Meta Data
+
+### 12. Chapters
+
+### 13. Other Texts
+
+### 14. create and save Skalenhandbuch
 
 
 
