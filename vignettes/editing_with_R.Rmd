@@ -55,7 +55,6 @@ You open the file `SH_main.R` and install and load the all packages you see in `
 ```{r loading packages}
 library(eatCodebook)
 library(eatGADS)
-library(eatAnalysis)
 ```
 
 ### 1. Importing Data
@@ -63,8 +62,8 @@ library(eatAnalysis)
 You start by importing the data, usually several SPSS data files. You can use the `import_spss` or `readRDS` function, depending on the type of data. You just need the file path as a string. For `.sav` (SPSS) files, you need to use `import_spss` from the `eatGADS` package. In the example below, you need to exchange `file` for your file path, they usually lie on `Q:`. 
 
 ```{r data import, eval=FALSE}
-daten_sus <- import_spss("Q:\\filepath\\Daten_sus.sav")
-daten_lfb <- import_spss("Q:\\filepath\\Daten_lfb.sav")
+daten_sus <- eatGADS::import_spss("Q:\\filepath\\Daten_sus.sav")
+daten_lfb <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb.sav")
 ```
 
 Give the data sets meaningful names, like `daten_sus`, `daten_lfb` and so on. After importing the data, you save them in a list called `datenliste` and name them accordingly, but you just need the suffix; `sus`, `lfb`, etc., so it might look like this:
