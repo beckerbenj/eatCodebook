@@ -35,7 +35,7 @@ First set up a new private repository in the [`iqb-research` project](https://gi
 
 ![](.\\pictures\\repo_template.png)
 
-You now have all the .R templates that you need, but you have to create the issues yourself. You can find the following files:
+You now have all the .R templates that you need, but you have to create the issues yourself. You find the following files:
 
 | File | Description|
 |--|--|
@@ -52,7 +52,7 @@ Pull the repo and start with the file `SH_main.R`. You usually don't need to cop
 
 You open the file `SH_main.R` and install and load the all packages you see in `setup`, otherwise some functions might not work. 
 
-```{r loading packages}
+```{r loading packages, eval=FALSE}
 library(eatCodebook)
 library(eatGADS)
 ```
@@ -88,9 +88,9 @@ Then you save each `descriptives` object in its own Excel file. For that you cre
 writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus.xlsx")
 ```
 
-Now you have to check, whether everything is the way you need it to be. If not, you have to either make changes in the Excel file manually and save your changes under `descriptives_dat_bearbeitet.xlsx`, so you don't need to recreate the original Excel; or you can check the file and make changes in RStudio (see below). For a detailed explanation on how the `input for descriptives` is supposed to look like, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#descriptive-statistics).
+Now you have to check, whether everything is the way you need it to be. If not, you have to either make changes in the Excel file manually and save your changes under `descriptives_dat_bearbeitet.xlsx`, so you don't need to recreate the original Excel later if needed; or you can check and edit the file in RStudio (see below). For a detailed explanation on how the `input for descriptives` is supposed to look like, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#descriptive-statistics).
 
-After you made the changes, you read in your edited file and store it in a new object. For some data sets you need to check for `scale consistency`, that is whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptive file. Then you need to create a `kennwerte` object with `calculateDescriptives`, again for each data set. This syntax might look like this:
+After you made the changes, you read in your edited file and store it in a new object. The `getinputForDescriptives` function checks whether the data has the right format, as well. If it doesn't, it will tell you. For some data sets you need to check for `scale consistency`, that is whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptive file. Then you need to create a `kennwerte` object with `calculateDescriptives`, again for each data set. The syntax might look like this:
 
 ```{r check scale and kennwerte, eval=FALSE}
 # read in edited Excel file
@@ -133,9 +133,15 @@ descriptives_sus$scale[pos] <- "ordinal"
 ```
 
 
+Some variables represent a scale, others the items belonging to that scale, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#scale-variables-with-individual-items) for more information about that. In order for that to be displayed correctly later, you might need to adjust the `type` column. The scale needs the label `scale`, the items the label `item`. The code below shows you how to identify the scale item - which is usually labeled correctly - and how to identify and edit the label for the items. 
 
 ```{r editing descriptives2, eval=FALSE}
-
+# identifying the scale variable
+group <- descriptives_eins[descriptives_eins$type == "scale",]$group
+# adjusting the item varaibles
+for(var in group){
+  descriptives_eins[descriptives_eins$group == var & descriptives_eins$type == "variable",]$type <- "item" 
+}
 ```
 
 When you're done with making changes, you can save them in a new Excel file like before. 
@@ -146,9 +152,49 @@ writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
 
 ### 3. Missings
 
+You need to create one `missings.xlsx` Excel file for all the data sets combined. You need the two lists containing the data sets themselves (`datenliste`) and the created input for descriptives (`input_descriptives`). You just create the object, save it as an Excel file and read it in with `getMissings`. Usually you don't need to edit the missings file. 
+
+```{r missings, eval=FALSE}
+# creating the object
+missings <- createMissings(datenliste, input_descriptives)
+# save as an Excel file
+write_xlsx(df_list = missings, row.names = FALSE, filePath = ".\\excel_files\\missings.xlsx")
+# read in Excel file and check for right format
+missings <- getMissings(".\\excel_files\\missings.xlsx")
+```
+
 ### 4. Scales
 
-### 5. Abbreveation List
+You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scaled items. You just need the list `input_descriptives` for that. Usually you don't need to edit the skalen file. 
+
+```{r skalen, eval=FALSE}
+# creating the object
+skalen <- createScaleInfo(input_descriptives)
+# save as an Excel file
+write_xlsx(df_list = skalen, row.names = FALSE, filePath = ".\\excel_files\\skalen.xlsx")
+# read in Excel file and check for right format
+skalen <- getScaleInfo(".\\excel_files\\skalen.xlsx")
+```
+
+When `getScaleInfo` doesn't throw an error, you should look at the object `skalen` anyway to make sure it contains all scaled items, i.e. all scale variables and their item variables. If the scales aren't displayed correctly, there's usually an error in `input_descriptives`, for instance when the scaled items aren't labeled correctly.
+
+```{r checking skalen, eval=FALSE}
+View(skalen)
+```
+
+### 5. Abbreviation List/Abkürzungsverzeichnis
+
+
+
+```{r abbr_list, eval=FALSE}
+abbr_list <- createAbbrList()
+write_xlsx(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkuerzung.xlsx")
+
+# erstellt LaTeX Syntax
+abbr_list <- makeAbbrList(".\\excel_files\\abkuerzung.xlsx")
+
+```
+
 
 ### 6. Varinfo
 
