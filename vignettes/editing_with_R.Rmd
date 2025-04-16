@@ -29,7 +29,7 @@ dat <- eatGADS::import_spss(file)
 ```
 
 
-#### Setup
+### Setup
 
 When editing all the created files in R, the script can get very long, so I recommend to use several .R documents to maintain an overview. 
 
@@ -50,7 +50,7 @@ You now have all the .R templates that you need, but you have to create the issu
 
 Pull the repo and start with the file `SH_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust. 
 
-## Starting with the Skalenhandbuch
+# Starting with the Skalenhandbuch
 
 You open the file `SH_main.R` and install and load the all packages you see in `setup`, otherwise some functions might not work. 
 
@@ -59,7 +59,7 @@ library(eatCodebook)
 library(eatGADS)
 ```
 
-### 1. Importing Data
+## 1. Importing Data
 
 You start by importing the data, usually several SPSS data files. You can use the `import_spss` or `readRDS` function, depending on the type of data. You just need the file path as a string. For `.sav` (SPSS) files, you need to use `import_spss` from the `eatGADS` package. In the example below, you need to exchange `file` for your file path, they usually lie on `Q:`. 
 
@@ -76,7 +76,7 @@ datenliste <- list(sus = daten_sus,
 ```
 
 
-### 2. Descriptive Statistics
+## 2. Descriptive Statistics
 
 For each imported data set, you create a new object with `createInputForDescriptives` containing important descriptive information about the each variables like their name, label, format information for the pdf in the end, scale level or which variables are grouped together. You name them according to you data sets like `descriptives_sus` or `descriptives_lfb`. 
 
@@ -119,7 +119,7 @@ kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
 input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
 ```
 
-#### Editing `InputForDescriptives` in R
+### Editing `InputForDescriptives` in R
 
 Depending on how much you need to adjust you can make changes in the `SH_main.R` file or switch to `SH_kennwerte.R`. The latter has some example code for typical changes, like adjusting the input for `descriptives$scale` or `descriptives$type`. 
 
@@ -133,7 +133,6 @@ pos <- grep("Lname", descriptives_sus$varName)
 # adjusting the input for the column `scale`
 descriptives_sus$scale[pos] <- "ordinal"
 ```
-
 
 Some variables represent a scale, others the items belonging to that scale, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#scale-variables-with-individual-items) for more information about that. In order for that to be displayed correctly later, you might need to adjust the `type` column. The scale needs the label `scale`, the items the label `item`. The code below shows you how to identify the scale item - which is usually labeled correctly - and how to identify and edit the label for the items. 
 
@@ -152,7 +151,7 @@ When you're done with making changes, you can save them in a new Excel file like
 writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
 ```
 
-### 3. Missings
+## 3. Missings
 
 You need to create one `missings.xlsx` Excel file for all the data sets combined. You need the two lists containing the data sets themselves (`datenliste`) and the created input for descriptives (`input_descriptives`). You just create the object, save it as an Excel file and read it in with `getMissings`. Usually you don't need to edit the missings file. 
 
@@ -165,7 +164,7 @@ write_xlsx(df_list = missings, row.names = FALSE, filePath = ".\\excel_files\\mi
 missings <- getMissings(".\\excel_files\\missings.xlsx")
 ```
 
-### 4. Scales
+## 4. Scales
 
 You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scaled items. You just need the list `input_descriptives` for that. Usually you don't need to edit the skalen file. 
 
@@ -184,7 +183,7 @@ When `getScaleInfo` doesn't throw an error, you should look at the object `skale
 View(skalen)
 ```
 
-### 5. Abbreviation List/Abkürzungsverzeichnis
+## 5. Abbreviation List/Abkürzungsverzeichnis
 
 You create either a template object for the abbreviation list or read in the one from last year's BT and call it `abbr_list`, and save it in a new Excel file. The file has two sets of abbreviations: `Akronyme` and `statistische Formelzeichen`, that each get their own Excel sheet/list object. 
 
@@ -224,30 +223,75 @@ When you have all the abbreviations, you can create the LaTeX code that you need
 abbr_list <- makeAbbrList(".\\excel_files\\abkuerzung.xlsx")
 ```
 
+## 6. Varinfo
 
-### 6. Varinfo
+Creating and editing the `varinfo.xlsx` file/object is the main work of creating the Skalenhandbuch. This objects contains all information about the variables, their order and structure, as well as their references, instructions, remarks or information about the background model, as you can see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#variable-information). There is only one object/Excel file overall, but each data set has its own sheet, so you can edit them separately.
 
-#### Editing varinfo with R
+### varinfo setup
 
-### 7. Structure/Gliederung
+The setup is quite simple, you can do that in `SH_main.R`. You first create a varinfo object from the SPSS data list you read in at the beginning (`datenliste`) and from the input for descriptives list you created out of that (`input_descriptives`). It contains all variables for each data set and columns that you need, but you still need to add a lot of information from other files.
 
-#### Editing structure with R
+Then you add layout information for each variable. And save to Excel `varinfo.xlsx` as a backup or template, and `varinfo_bearbeitet.xlsx` as the file you actually work with. The you read in the created Excel and check the format with `getVarInfo`. 
 
-### 8. References
+```{r varinfo setup, eval=FALSE}
+# creating varinfo object
+varinfo <- createVarInfo(datenliste, input_descriptives)
+# Layout
+varinfo <- inferLayout(varinfo, datenliste, input_descriptives)
 
-#### Editing Literaturverzeichnis/references with R
+# save to Excel
+write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo.xlsx")
+write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo_bearbeitet.xlsx")
+# checking format
+varinfo <- getVarInfo(".\\excel_files\\varinfo.xlsx")
+```
 
-### 9. Background Model (HGM)
+With this, the setup is complete and I recommend to switch to `SH_varinfo.R`, so your main script doesn't get too long and you lose overview. You need to add the following information. The order in which you add them is up to you.
 
-### 10. Cover
+|Column in Varinfo| Where to get the Information from| Order|
+|--|--|--|
+| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set | usually like SPSS files|
+| `Gliederung` and `Unterteilung.im.Skalenhandbuch`| Often in one file called `Reihenfolge_Variable_final.xlsx` or similar, contains one sheet per data set| different from SPSS files|
+|`rekodiert`| Info in the variable name: all with `_r` at the end| no order|
+| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus`| in an extra Excel file, you probably have to ask about it| no order|
+| optional: `Anmerkung.Var`| in an file on Q:|check order|
 
-### 11. Meta Data
+The order of the variables in `varinfo` depends on the order from the SPSS files. However, the order of the variables files the BT-Team provides for you might be different. The files for `Quellen` and `Gliederung` usually contain all variables, whereas for the backgroundmodel/HGM or `rekodiert` you have to change the input for individual variables, so the order is not relevant. 
 
-### 12. Chapters
+I recommend starting with the files that have the same order as the original varinfo, so you only have to change the variable order once. For this vignette I'll just describe the procedure for one data set. 
 
-### 13. Other Texts
+### varinfo: adding references and instructions with R
 
-### 14. create and save Skalenhandbuch
+
+### varinfo:adding structure and division with R
+
+### varinfo: adding recoded info with R
+
+### varinfo: adding background model info with R
+
+### varinfo: adding remarks with R
+
+
+
+## 7. Structure/Gliederung
+
+### Editing structure with R
+
+## 8. References
+
+### Editing Literaturverzeichnis/references with R
+
+## 9. Background Model (HGM)
+
+## 10. Cover
+
+## 11. Meta Data
+
+## 12. Chapters
+
+## 13. Other Texts
+
+## 14. create and save Skalenhandbuch
 
 
 
