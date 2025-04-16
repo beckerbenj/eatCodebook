@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 
 This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
 
+The main function for creating a Skalenhandbuch is called `eatcodebook`. It takes the input from several lists and data frames that you create throughout this vignette and converts them into one long object containing LaTeX code. Because of this, you have to be mindful of special characters (like Greek characters) in string input from the data frames as they might throw errors down the line. Also, formatting in Excel is lost in the LaTeX script, so you may need to add LaTeX formatting in the Excel files. The most common occurrences are mentioned in the script. 
+
 For illustrative purposes we use a small example data set which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
 
 ```{r eatcodebook setup}
@@ -184,15 +186,42 @@ View(skalen)
 
 ### 5. Abbreviation List/Abkürzungsverzeichnis
 
-
+You create either a template object for the abbreviation list or read in the one from last year's BT and call it `abbr_list`, and save it in a new Excel file. The file has two sets of abbreviations: `Akronyme` and `statistische Formelzeichen`, that each get their own Excel sheet/list object. 
 
 ```{r abbr_list, eval=FALSE}
+# new object, without input
 abbr_list <- createAbbrList()
+# read in abbr_list from last BT 
+abbr_list <- getExcel("Q:\\filepath\\abkuerzung.xlsx")
+# save in Excel
 write_xlsx(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkuerzung.xlsx")
+```
 
-# erstellt LaTeX Syntax
+You can add or delete entries in R like with any other data.frame that is saved in a list. LaTeX can't display Greek characters when you just use the letter by itself. You might need to adjust the spelling. `$\alpha$` is LaTeX code and should be printed like the image shows. 
+
+```{r edit abbr_list 1, eval=FALSE}
+# add/edit entries in abbr_list
+abbr_list$`Statistische Formelzeichen`$Symbol[1] <- "$\alpha$"
+abbr_list$`Statistische Formelzeichen`$Bedeutung[1] <- "cronbachs Alpha"
+```
+
+![](.\\pictures\\abbr_list_alpha.png)
+
+When the Excel file from past BTs has commentary/extra columns in it, you can't use the function `makeAbbrList`. To make sure you only the have two columns per sheet/data frame, you can save just the first two columns per sheet in your `abbr_list` object. After that you need to save the changes to Excel.
+
+```{r edit abbr_list 2, eval=FALSE}
+# edit abbr_list
+abbr_list$Akronyme <- abbr_list21$Akronyme[,1:2]
+abbr_list$`Statistische Formelzeichen` <- abbr_list21$`Statistische Formelzeichen`[,1:2]
+# save in Excel
+write_xlsx(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkuerzung.xlsx")
+```
+
+When you have all the abbreviations, you can create the LaTeX code that you need directly from the Excel file. 
+
+```{r abbr_list2, eval=FALSE}
+# creates LaTeX syntax
 abbr_list <- makeAbbrList(".\\excel_files\\abkuerzung.xlsx")
-
 ```
 
 
