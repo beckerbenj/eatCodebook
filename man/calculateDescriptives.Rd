@@ -14,19 +14,56 @@ calculateDescriptives(
 \arguments{
 \item{GADSdat}{Object of class \code{GADSdat}, created for example by \code{import_spss} from the \code{eatGADS} package.}
 
-\item{inputForDescriptives}{\code{data.frame} with variable information. This table can be created from GADSdat object, using the \code{createInputForDescriptives} function}
+\item{inputForDescriptives}{\code{data.frame} with variable information. This table can either be created manually in
+Excel or generated from GADSdat object, using the function \code{createInputForDescriptives}. If you need a template
+of what this table should look like for different variables, you can use the \code{varInfo} object created in the examples below.
+Specifically, the \code{data.frame} must contain the following columns.
+\itemize{
+   \item \code{varName}: This character column should contain all variable names that are part of the GADS database.
+   \item \code{varLabel}: The variable label of the corresponding variable in the \code{varName} column
+   \item \code{format}: This character columns yields the format of the corresponding variable in the \code{varName} column, for example \code{F8.0}
+   \item \code{imp}: Logical column (i.e., \code{TRUE/FALSE}) which indicates whether the variable is imputed
+   \item \code{type}: Character column with possible entries \code{variable}, \code{item}, \code{fake_item} or \code{scale}.
+The entry \code{variable} should be used for individual variables in the \code{GADSdat} database that belong neither to a scale nor to a fake scale.
+The entry \code{item} should be used for items which belong to a scale. No distinction needs to be made as to which scale
+these items belong to.  It is only important that the database contains one or more scales for each of these items.
+Assume that the database contains the scales "self concept" and "interest", where "self concept" is measured with the
+items \code{SK_I1}, \code{SK_I2}, \code{SK_I3}, and "interest" is measured with the items \code{Int_I1}, \code{Int_I2},
+\code{Int_I3}, \code{Int_I4}. Then \code{SK_I1}, \code{SK_I2}, \code{SK_I3}, \code{Int_I1}, \code{Int_I2},
+\code{Int_I3}, and \code{Int_I4} should occur in the \code{varName} column, and the corresponding entry in \code{type}
+should be \code{item}. Note that the database also contains the scale variables of "self concept" and "interest".
+The entry \code{fake_item} should be used for items that theoretically constitute one or more latent scales, but for
+which no scale variable is contained in the database.
+   \item \code{scale}: Character column with the scale level of the corresponding variable. Possible entries
+are \code{numeric} for metric variables, \code{ordinal} for categorical (factor) variables, or \code{nominal}.
+   \item \code{group}: Character column which is only relevant for items, scales or fake scale variables.
+For all others, only the variable name is transferred here. For the other variables, an indicator is defined
+here that contains the assignment of items to their scales. Assume that the database contains the
+scale "self concept" which is measured with the items \code{SK_I1}, \code{SK_I2}, \code{SK_I3}. Let the scale
+variable of "self concept" be called \code{SC}. A common entry for \code{SK_I1}, \code{SK_I2},
+\code{SK_I3}, and \code{scaleSelfConcept} should be entered in the \code{group} column, for example \code{"scaleSelfConcept"}}}
 
 \item{verbose}{Print variable and function information to console?}
 
 \item{showCallOnly}{Logical: only for diagnostics. If TRUE, no calculation is proceed, and only the function which is called for calculation is returned.}
 }
 \value{
-Returns a list of descriptive statistics.
+Returns a list of descriptive statistics. This format may seem unsuitable for direct further
+processing in R, but is primarily used for the automatic creation of codebooks using Latex.
 }
 \description{
 Calculate descriptive statistics which should be included in the codebook.
 }
 \examples{
-# tbd
+# import spss exemplary data
+file <- system.file("tests/testthat", "helper_clean2.sav", package = "eatCodebook")
+dat   <- eatGADS::import_spss(file)
+# create variable information by the eatCodebbok function createInputForDescriptives
+# This table 'varInfo' can be exported to Excel for further inspection and used as a
+blueprint of what the necessary 'inputForDescriptives' argument for the
+calculateDescriptives() function should look like
+varInfo <- createInputForDescriptives(dat, impExpr = "plausible value")
+# calculate descriptives
+descr <- calculateDescriptives(dat, varInfo)
 
 }

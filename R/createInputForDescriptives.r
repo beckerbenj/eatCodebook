@@ -36,10 +36,10 @@
 #'@param itemExpr Regular expression to identify items which constitute a true scale from the variable
 #'labels in GADSdat object. Note: Only the regular expressions that identify the items must be entered here.
 #'The additional scale variables do not have to be specified. If several scales are defined in the data set
-#'(e.g. self-concept and interest), no distinction needs to be made here as to which items belong to which
-#'scale. (This is done elsewhere.) Assume that the self-concept is measured with the items \code{SK_I1},
+#'(e.g. "self concept" and interest), no distinction needs to be made here as to which items belong to which
+#'scale. (This is done elsewhere.) Assume that the "self concept" is measured with the items \code{SK_I1},
 #'\code{SK_I2}, \code{SK_I3}, and the scale variable is called \code{SK_scale}. Let us also assume that
-#'interest is measured with the items \code{Int_I1}, \code{Int_I2}, \code{Int_I3}, \code{Int_I4}, and
+#'"interest" is measured with the items \code{Int_I1}, \code{Int_I2}, \code{Int_I3}, \code{Int_I4}, and
 #'that the scale variable is called \code{Int_scale}. Then it could be specified
 #'here: \code{itemExpr = "I[1-4]{1}$"}
 #'@param fakeItemExpr Regular expression to identify fake items which constitute a fake scale from the variable
