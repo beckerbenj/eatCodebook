@@ -57,8 +57,8 @@
 #'dat   <- eatGADS::import_spss(file)
 #'# create variable information by the eatCodebbok function createInputForDescriptives
 #'# This table 'varInfo' can be exported to Excel for further inspection and used as a
-#'blueprint of what the necessary 'inputForDescriptives' argument for the
-#'calculateDescriptives() function should look like
+#'# blueprint of what the necessary 'inputForDescriptives' argument for the
+#'# calculateDescriptives() function should look like
 #'varInfo <- createInputForDescriptives(dat, impExpr = "plausible value")
 #'# calculate descriptives
 #'descr <- calculateDescriptives(dat, varInfo)
