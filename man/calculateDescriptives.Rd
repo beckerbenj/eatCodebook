@@ -56,7 +56,7 @@ Calculate descriptive statistics which should be included in the codebook.
 }
 \examples{
 # import spss exemplary data
-file <- system.file("tests/testthat", "helper_clean2.sav", package = "eatCodebook")
+file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
 dat   <- eatGADS::import_spss(file)
 # create variable information by the eatCodebbok function createInputForDescriptives
 # This table 'varInfo' can be exported to Excel for further inspection and used as a
