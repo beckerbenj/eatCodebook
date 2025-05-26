@@ -16,7 +16,7 @@ getScaleInfo <- function(filePath){
   skalen.info <- openxlsx::readWorkbook(xlsxFile = filePath, startRow = 1 )
   check_scaleInfo(skalen.info)
 
-  skalen.info$Anzahl_valider_Werte[is.na(skalen.info$Anzahl_valider_Werte) | grepl("\\s","",skalen.info$Anzahl_valider_Werte) %in% "" ] <- "-"
+  skalen.info$Anzahl_valider_Werte[is.na(skalen.info$Anzahl_valider_Werte) | grepl("",skalen.info$Anzahl_valider_Werte)] <- "-"
 
   skalen.info <- skalen.info.aufbereiten(skalen.info)
 
