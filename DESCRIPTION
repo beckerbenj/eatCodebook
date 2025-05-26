@@ -8,7 +8,7 @@ Authors@R: c(
     person("Johanna", "Busse", role = c("aut")))
 Description: Create automatic codebooks.
 Depends: R (>= 4.2.0)
-Imports: eatTools, eatGADS (>= 0.18.0), eatRep (>= 0.14.6), reshape2, tibble, psych, psy, openxlsx, stats, plyr, utils
+Imports: eatTools (>= 0.7.8), eatGADS (>= 1.2.0), eatRep (>= 0.15.2), reshape2, tibble, psych, psy, openxlsx, stats, plyr, utils
 License: GPL (>= 2)
 URL: https://github.com/beckerbenj/eatCodebook,
     https://beckerbenj.github.io/eatCodebook/
@@ -22,4 +22,4 @@ Suggests:
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-Remotes: beckerbenj/eatGADS
+
