@@ -61,7 +61,10 @@ litSort <- function( lit ) {
   x <- gsub( ",\\s*,", ",", x) # Doppelte Kommata loeschen
   x <- gsub( "\\.\\s*$" , "," , x ) # Restliche Punkte zu Kommata
   x <- gsub( "([-[:alpha:][:space:]]*)," , "\\(\\1\\)", x) # Alle durch Kommata getrennte Zeichenfolgen durch Klammern trennen
-  x[! grepl("^\\(" , x , fixed=FALSE) ] <- gsub("(^.*)(\\()" , "\\(\\1\\)\\2" , x[!grepl("^\\(" , x , fixed=FALSE)] , ")")
+
+  starts_with_bracket <- grepl("^\\(" , x , fixed=FALSE)
+  x[!starts_with_bracket] <- gsub("(^.*)(\\()" , "\\(\\1\\)\\2" , x[!starts_with_bracket])
+
   x <- gsub( "\\)\\s\\s*\\(", "\\)\\(", x) # Ueberfluessige Leerzeichen zwischen Klammern loeschen
   x <- gsub( "\\)\\s*" , "\\)" , x) # Ueberfluessige Leerzeichen am Ende loeschen
   x <- gsub( "(\\()\\s*(\\w+)" , "\\1\\2" , x ) # Leerzeichen am Anfang einer Klammer loeschen
