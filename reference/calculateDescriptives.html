@@ -60,7 +60,33 @@
 
 
 <dt id="arg-inputfordescriptives">inputForDescriptives<a class="anchor" aria-label="anchor" href="#arg-inputfordescriptives"></a></dt>
-<dd><p><code>data.frame</code> with variable information. This table can be created from GADSdat object, using the <code>createInputForDescriptives</code> function</p></dd>
+<dd><p><code>data.frame</code> with variable information. This table can either be created manually in
+Excel or generated from GADSdat object, using the function <code>createInputForDescriptives</code>. If you need a template
+of what this table should look like for different variables, you can use the <code>varInfo</code> object created in the examples below.
+Specifically, the <code>data.frame</code> must contain the following columns.</p><ul><li><p><code>varName</code>: This character column should contain all variable names that are part of the GADS database.</p></li>
+<li><p><code>varLabel</code>: The variable label of the corresponding variable in the <code>varName</code> column</p></li>
+<li><p><code>format</code>: This character columns yields the format of the corresponding variable in the <code>varName</code> column, for example <code>F8.0</code></p></li>
+<li><p><code>imp</code>: Logical column (i.e., <code>TRUE/FALSE</code>) which indicates whether the variable is imputed</p></li>
+<li><p><code>type</code>: Character column with possible entries <code>variable</code>, <code>item</code>, <code>fake_item</code> or <code>scale</code>.
+The entry <code>variable</code> should be used for individual variables in the <code>GADSdat</code> database that belong neither to a scale nor to a fake scale.
+The entry <code>item</code> should be used for items which belong to a scale. No distinction needs to be made as to which scale
+these items belong to.  It is only important that the database contains one or more scales for each of these items.
+Assume that the database contains the scales "self concept" and "interest", where "self concept" is measured with the
+items <code>SK_I1</code>, <code>SK_I2</code>, <code>SK_I3</code>, and "interest" is measured with the items <code>Int_I1</code>, <code>Int_I2</code>,
+<code>Int_I3</code>, <code>Int_I4</code>. Then <code>SK_I1</code>, <code>SK_I2</code>, <code>SK_I3</code>, <code>Int_I1</code>, <code>Int_I2</code>,
+<code>Int_I3</code>, and <code>Int_I4</code> should occur in the <code>varName</code> column, and the corresponding entry in <code>type</code>
+should be <code>item</code>. Note that the database also contains the scale variables of "self concept" and "interest".
+The entry <code>fake_item</code> should be used for items that theoretically constitute one or more latent scales, but for
+which no scale variable is contained in the database.</p></li>
+<li><p><code>scale</code>: Character column with the scale level of the corresponding variable. Possible entries
+are <code>numeric</code> for metric variables, <code>ordinal</code> for categorical (factor) variables, or <code>nominal</code>.</p></li>
+<li><p><code>group</code>: Character column which is only relevant for items, scales or fake scale variables.
+For all others, only the variable name is transferred here. For the other variables, an indicator is defined
+here that contains the assignment of items to their scales. Assume that the database contains the
+scale "self concept" which is measured with the items <code>SK_I1</code>, <code>SK_I2</code>, <code>SK_I3</code>. Let the scale
+variable of "self concept" be called <code>SC</code>. A common entry for <code>SK_I1</code>, <code>SK_I2</code>,
+<code>SK_I3</code>, and <code>scaleSelfConcept</code> should be entered in the <code>group</code> column, for example <code>"scaleSelfConcept"</code></p></li>
+</ul></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -73,12 +99,27 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a list of descriptive statistics.</p>
+    <p>Returns a list of descriptive statistics. This format may seem unsuitable for direct further
+processing in R, but is primarily used for the automatic creation of codebooks using Latex.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># tbd</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># import spss exemplary data</span></span></span>
+<span class="r-in"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example1_clean.sav"</span>, package <span class="op">=</span> <span class="st">"eatCodebook"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat</span>   <span class="op">&lt;-</span> <span class="fu">eatGADS</span><span class="fu">::</span><span class="fu"><a href="https://beckerbenj.github.io/eatGADS/reference/import_spss.html" class="external-link">import_spss</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># create variable information by the eatCodebbok function createInputForDescriptives</span></span></span>
+<span class="r-in"><span><span class="co"># This table 'varInfo' can be exported to Excel for further inspection and used as a</span></span></span>
+<span class="r-in"><span><span class="co"># blueprint of what the necessary 'inputForDescriptives' argument for the</span></span></span>
+<span class="r-in"><span><span class="co"># calculateDescriptives() function should look like</span></span></span>
+<span class="r-in"><span><span class="va">varInfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="createInputForDescriptives.html">createInputForDescriptives</a></span><span class="op">(</span><span class="va">dat</span>, impExpr <span class="op">=</span> <span class="st">"plausible value"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># calculate descriptives</span></span></span>
+<span class="r-in"><span><span class="va">descr</span> <span class="op">&lt;-</span> <span class="fu">calculateDescriptives</span><span class="op">(</span><span class="va">dat</span>, <span class="va">varInfo</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`report()` was deprecated in eatRep 0.15.0.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> For the original behavior of report() please use eatRep version 0.14.7:</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   'https://cran.r-project.org/src/contrib/Archive/eatRep/'</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">eatCodebook</span> package.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report the issue to the authors.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -91,7 +132,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
