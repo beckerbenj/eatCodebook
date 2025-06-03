@@ -7,7 +7,6 @@
 #'
 #'
 #'@param filePath Path to Excel file. The reference sheet should have two columns:the first containing short APA references, the second long APA references. Be mindful of formatting your references correctly in the Excel sheet, if there's more than one continuous italic sequence the function might not work.
-#'@param sheet number of the sheet where your APA references are.
 #'
 #'@return A \code{data.frame} with short and long APA references. The long references contain LaTeX code, so italic input and URLs are displayed correctly.
 #'
@@ -15,9 +14,9 @@
 #'
 #'@export
 
-getExcelAPA <- function(filePath){
+getAPAInfo <- function(filePath){
   # checks
-  checkmate::assert_character(filePath)
+  checkmate::assert_character(filePath, len = 1)
 
   # getting proper Excel sheet
   excelTable <- getExcel(filePath)
@@ -26,14 +25,14 @@ getExcelAPA <- function(filePath){
     excelTable_format <- tidyxl::xlsx_cells(filePath, include_blank_cells = FALSE)
   } else {
     for(i in 1:length(excelTable)){
-      if(is.null(check_litInfoAPA(excelTable[[i]]))){
+      if(is.null(check_APAInfo(excelTable[[i]]))){
         excelTable_format <- tidyxl::xlsx_cells(filePath, include_blank_cells = FALSE,
                                                 sheets = i)
         excelTable <- excelTable[[i]]
       }
     }
   }
-  check_litInfoAPA(excelTable)
+  check_APAInfo(excelTable)
 
   # selecting objects with proper format: from col 2 and without "Langangabe"
   format <- excelTable_format[excelTable_format$col == 2 & !excelTable_format$character == "Langangabe",]
@@ -88,7 +87,7 @@ addURL <- function(lang_neu){
 }
 
 
-check_litInfoAPA <- function(excelTable) {
+check_APAInfo <- function(excelTable) {
   #browser()
   if(!is.data.frame(excelTable)) stop("'litInfo' must be a data.frame.")
   if(!identical(names(excelTable), c("Kurzangabe", "Langangabe"))) stop("Column names in 'litInfoAPA' must 'Kurzangabe' and 'Langangabe'.")
