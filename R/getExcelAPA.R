@@ -15,28 +15,40 @@
 #'
 #'@export
 
-getExcelAPA <- function(filePath, sheet = 2){
+getExcelAPA <- function(filePath){
+  # checks
   checkmate::assert_character(filePath)
-  checkmate::assert_numeric(sheet, len = 1)
-  # reading in the proper Excel sheet
-  if(sheet == 1){
-    excelTable <- getExcel(filePath)
-  } else{
-    excelTable <- getExcel(filePath)[[sheet]]
+
+  # getting proper Excel sheet
+  excelTable <- getExcel(filePath)
+
+  if(is.data.frame(excelTable)){
+    excelTable_format <- tidyxl::xlsx_cells(filePath, include_blank_cells = FALSE)
+  } else {
+    for(i in 1:length(excelTable)){
+      if(is.null(check_litInfoAPA(excelTable[[i]]))){
+        excelTable_format <- tidyxl::xlsx_cells(filePath, include_blank_cells = FALSE,
+                                                sheets = i)
+        excelTable <- excelTable[[i]]
+      }
+    }
   }
+  check_litInfoAPA(excelTable)
+
+  # selecting objects with proper format: from col 2 and without "Langangabe"
+  format <- excelTable_format[excelTable_format$col == 2 & !excelTable_format$character == "Langangabe",]
+  View(format)
+
   # adding latex syntax for italic and URL input
-  long_new <- addItalic(filePath, sheet)
+  long_new <- addItalic(format)
   long_new <- addURL(long_new)
+
   # updating the data frame from the excel
   excelTable$Langangabe <- long_new
   return(excelTable)
 }
 
-addItalic <- function(filePath, sheet){
-  # reading in Excel with format
-  format <- xlsx_cells(filePath, sheet)
-  # find Langangaben/long reference
-  format <- format[format$col == 2 & !format$character == "Langangabe",]
+addItalic <- function(format){
   # saving format-info in a list
   longEntry <- format$character_formatted
 
@@ -74,4 +86,14 @@ addURL <- function(lang_neu){
   lang_neu[url_pos] <- url_neu
   return(lang_neu)
 }
+
+
+check_litInfoAPA <- function(excelTable) {
+  #browser()
+  if(!is.data.frame(excelTable)) stop("'litInfo' must be a data.frame.")
+  if(!identical(names(excelTable), c("Kurzangabe", "Langangabe"))) stop("Column names in 'litInfoAPA' must 'Kurzangabe' and 'Langangabe'.")
+ NULL
+}
+
+
 
