@@ -262,7 +262,7 @@ head(litInfo)
 ```
 
 ```{r write litInfo, eval = FALSE}
-writeExcel(register, "example_litInfo.xlsx", row.names = FALSE)
+writeExcel(litInfo, "example_litInfo.xlsx", row.names = FALSE)
 litInfo_final <- getLitInfo("example_litInfo.xlsx")
 ```
 
