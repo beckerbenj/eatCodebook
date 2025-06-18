@@ -300,7 +300,7 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, value_ta
   unique_values <- unique(value_table[c(which(is.na(value_table[,"missings"])),which(value_table[,"missings"] == "valid")),"value"])
   uvd  <- sort(setdiff(stats::na.omit(unique(z$value)), missings))
 
-  unique_values <- check_categorical_data(varName = value_table[1, "varName"],
+  unique_values <- check_categorical_data(varName = value_table[1, "varName"], #TODO: Currently just the first imputation, should be the grouping/pooled variable instead!
                                           actual_valid_data_values = uvd,
                                           labeled_valid_values = unique_values,
                                           miss_tagged_values = missings, var_class = class(z$value))
