@@ -3,8 +3,7 @@
 ### Achtung: wenn alle Probleme behoben sind, hier "suppressWarnings" entfernen und die
 ### Warnungen explizit abfangen (die soll es ja geben)
 
-#load("tests/testthat/helper_varinfo_vorlage.rda")
-load("helper_varinfo_vorlage.rda")
+load(test_path("helper_varinfo_vorlage.rda"))
 test_that("descriptives scale", {
   # create GADSdat
   file <- system.file("extdata", "example1.sav", package = "eatCodebook")
@@ -19,12 +18,14 @@ test_that("descriptives scale", {
   expect_equal(names(tab), c("item", "scale", "variable"))                    ### drei eintraege sollen vorkommen
   expect_equal(as.vector(tab), c(13,1,8))                                     ### scale nur einmal, variable 8-mal, item 13-mal
   vari[which(vari[,"varName"] == "skalenwert_fake"),"type"] <- "scale"        ### ein eintrag in der varinfo muss jetzt haendisch geaendert werden (das geschieht spaeter fuer das
+
+  vari[vari$varName %in% paste0("pv_kat", 1:5), "group"] <- "pv_kat"
   warns <- capture_warnings(res  <- suppressMessages(calculateDescriptives(gd, vari, verbose = FALSE)))### tatsaechliche Skalenhandbuch bei Bedarf in Excel)
 })
 
 
 test_that("create descriptives", {
-    clean2 <- eatGADS::import_spss("helper_clean2.sav")
+    clean2 <- eatGADS::import_spss(test_path("helper_clean2.sav"))
     expect_warning(clean_input2 <- createInputForDescriptives(clean2),
                "Identification of fake scales cannot be done completely automatically. Please check if the assignment of which items belong to a common scale is correct.")
     deskr <- calculateDescriptives(clean2, inputForDescriptives = clean_input2)

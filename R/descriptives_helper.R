@@ -1,9 +1,35 @@
 
+# check function for mainly comparing actual values in the data against labeled values in the meta data
+check_categorical_data <- function(varName, actual_valid_data_values, labeled_valid_values, miss_tagged_values, var_class) {
+  if(length(var_class) > 1) {
+    stop("This function is not designed for complex classes.")
+  }
+
+  all_valid_values <- union(actual_valid_data_values, labeled_valid_values)
+  if( !"numeric" %in% var_class && length(actual_valid_data_values)>50) {
+    warning("Variable '", varName,
+            "' has class '", var_class,
+            "' with ", length(all_valid_values), " unique values. '",
+            varName,
+            "' seems to stem from an open answer box in the questionnaire. Calculating descriptive statistics seems questionable.")
+  }
+
+  if(!identical(labeled_valid_values, actual_valid_data_values)) {
+    warning("Variable '", varName,
+            "': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. ",
+            "\n    'GADSdat' object: '",
+            paste(labeled_valid_values, collapse="', '"),
+            "'\n                data: '",
+            paste(actual_valid_data_values, collapse="', '"), "'")
+  }
+
+  sort(all_valid_values)
+}
+
+
 # INPUT
 #	x: actual data vector
 #	missings: vector of variable values which are missing codes
-
-
 kennwerte.kategorial <- function(x, value_table) {
   missings <- stats::na.omit(value_table[value_table$missings == "miss", "value"])
   unique_values <- value_table[c(which(is.na(value_table[,"missings"])),which(value_table[,"missings"] == "valid")),"value"]
@@ -12,20 +38,10 @@ kennwerte.kategorial <- function(x, value_table) {
 ### muessen sie aus den Daten ausgelesen werden
   uvd  <- sort(setdiff(stats::na.omit(unique(x)), missings))
 
-### check, ob es sich um freie antwortfelder handelt
-  if( !"numeric" %in% class(x) && length(uvd)>50) {
-      warning("Variable '",unique(value_table[,"varName"]), "' has class '",class(x),"' with ",length(uvd)," unique values. '",unique(value_table[,"varName"]), "' seems to stem from an open answer box in the questionnaire. Calculating descriptive statistics seems questionable.")
-  }
-  if(!identical(unique_values, uvd)) {
-      warning("Variable '",unique(value_table[["varName"]]),"': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. \n    'GADSdat' object: '",paste(unique_values, collapse="', '"), "'\n                data: '",paste(uvd,collapse="', '"), "'")
-      unique_values <- sort(unique(c(uvd, unique_values)))
-  }
-
-### schauen, ob fuer alle empirisch vorhandenen Werte auch wertelabels vorhanden sind
-  not_labeled_values <- setdiff(unique_values, value_table[,"value"])
-  if ( length(not_labeled_values)>0) {
-      warning("Variable '",unique(value_table[["varName"]]),"': Following values are not labeled in the 'labels' sheet of the 'GADSdat' object: '", paste(not_labeled_values, collapse="', '"), "'. Values will be used as labels.")
-  }
+  unique_values <- check_categorical_data(varName = value_table[1, "varName"],
+                                          actual_valid_data_values = uvd,
+                                          labeled_valid_values = unique_values,
+                                          miss_tagged_values = missings, var_class = class(x))
 
 ### Berechnung der Haeufigkeiten
   werte.valid <- x[!x %in% missings  & ! is.na(x)]
@@ -265,7 +281,7 @@ kennwerte.gepoolt.metrisch <- function( datWide, imputedVariableCols) {
 
 ## load("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/tests/testthat/dat.rda")
 ## kennwerte.gepoolt.kategorial ( datWide=dat, imputedVariableCols=3:6 )
-kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose ) {
+kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, value_table, verbose ) {
 ### wie mit benjamin besprochen: Funktion erlaubt nur NAs als missings, keine -98 etc.
   # INPUT
   # datWide: Datensatz im Wideformat (!!)
@@ -274,14 +290,27 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
   #	imputedVariableCols: Spaltennummern oder Namen der Imputationen der Variablen
   allVar<- list(vc = imputedVariableCols)
   allNam<- lapply(allVar, FUN=function(ii) {eatTools::existsBackgroundVariables(dat = datWide, variable=ii)})
-### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
+  ### pseudo-id erzeugen ... wenn es es wide-format Datensatz ist, muss keine id vorgegeben weren
   datWide[,"id"] <- paste0("P", 1:nrow(datWide))
-### long format datensatz
+  ### long format datensatz
   z <- reshape2::melt( data=datWide , id.vars = "id", measure.vars = allNam[["vc"]], na.rm=FALSE, variable.name="imp")
-### nur valide werte
+
+  # check-section as used by kennwerte.kategorial
+  missings <- stats::na.omit(value_table[value_table$missings == "miss", "value"])
+  unique_values <- unique(value_table[c(which(is.na(value_table[,"missings"])),which(value_table[,"missings"] == "valid")),"value"])
+  uvd  <- sort(setdiff(stats::na.omit(unique(z$value)), missings))
+
+  unique_values <- check_categorical_data(varName = value_table[1, "varName"],
+                                          actual_valid_data_values = uvd,
+                                          labeled_valid_values = unique_values,
+                                          miss_tagged_values = missings, var_class = class(z$value))
+
+
+  ### nur valide werte
   if(verbose){cat("Analysis of valid values: ")}
-  res  <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "imp",  separate.missing.indicator = FALSE,
-                            na.rm=TRUE, verbose = FALSE, progress = FALSE ))
+  res  <- suppressWarnings(eatRep::repTable(datL=z, ID = "id", dependent = "value", imp = "imp",
+                                            separate.missing.indicator = FALSE, na.rm=TRUE,
+                                            verbose = FALSE, progress = FALSE, expected.values = unique_values))
   ret  <- eatRep::report(res, exclude="Ncases")
   retA <- formatC(100*ret[,"est"], format="f", digits=1)                        ### aufbereiten
   names(retA) <- paste(ret[,"parameter"], "valid", sep=".")
@@ -290,8 +319,10 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
   ## berechnung relative haeufigkeiten mit Missings drin
   if(any(is.na(z[,"value"]))) {
       if(verbose){cat("Analysis of total values: ")}
-      res1 <- suppressWarnings(eatRep::repTable( datL=z, ID = "id" , dependent = "value" ,  imp = "imp",  separate.missing.indicator = TRUE,
-                                na.rm=FALSE, forceTable=TRUE, verbose = FALSE, progress = FALSE ))
+      res1 <- suppressWarnings(eatRep::repTable(datL=z, ID = "id", dependent = "value", imp = "imp",
+                                                separate.missing.indicator = TRUE, na.rm=FALSE,
+                                                forceTable=TRUE, verbose = FALSE, progress = FALSE,
+                                                expected.values = unique_values))
       ret1 <- eatRep::report(res1, exclude="Ncases")
       weg  <- match(".NA.", ret1[,"parameter"])                                 ### Ergebnisse aufbereiten, in der richtigen Reihenfolge
       ret1A<- formatC(100* c(ret1[-weg,"est"],ret1[weg,"est"]), format="f", digits=1)
@@ -308,8 +339,9 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, verbose 
 
 ### felix berechnet absolute Haeufigkeiten bei imputierter Variablen ... finde ich etwas komisch,
 ### aber der konsistenz zuliebe passiert es jetzt hier auch
-  allvals  <- names(eatTools::tableUnlist(datWide[,imputedVariableCols]))
-  absfreqs <- rowMeans(sapply(datWide[,imputedVariableCols], FUN = eatTools::tablePattern, pattern = allvals, useNA="al"))
+  #allvals  <- names(eatTools::tableUnlist(datWide[,imputedVariableCols]))
+  absfreqs <- rowMeans(sapply(datWide[,imputedVariableCols], FUN = eatTools::tablePattern,
+                              pattern = unique_values, useNA="al"))
   absf     <- as.character(round( absfreqs, digits = 0))
   names(absf) <- paste(c(names(absfreqs)[-length(absfreqs)], "sysmis"), "totalabs", sep=".")
   ret.var <- c( N.valid=as.character(N.valid) , N.total=as.character(nrow(datWide)) , retA, sysmis.valid = "\\multic{--}", ret1A, absf)

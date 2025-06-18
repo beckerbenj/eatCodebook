@@ -8,16 +8,18 @@ file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
 gd   <- eatGADS::import_spss(file)
 
 test_that("descriptives categorical", {
-  df <- data.frame(id = 1:5, v1 = c(1, 3, -99, -98, NA))
-  value_table <- data.frame(value = c(1, 2, 3, -98, -99),
+  df <- data.frame(id = 1:5, v1 = c(1, 5, -99, 3, NA))
+  value_table <- data.frame(varName = "Var1",
+                            value = c(1, 2, 3, -98, -99),
                             missings = c("valid", "valid", "valid", "miss", "miss"),
                             stringsAsFactors = FALSE)
-  out <- suppressWarnings(kennwerte.kategorial(df$v1, value_table))
-  expect_equal(out[["N.valid"]], "2")
+  warns <- capture_warnings(out <- kennwerte.kategorial(df$v1, value_table))
+  expect_equal(warns, "Variable 'Var1': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. \n    'GADSdat' object: '1', '2', '3'\n                data: '1', '3', '5'")
+  expect_equal(out[["N.valid"]], "3")
   expect_equal(out[["N.total"]], "5")
- expect_equal(out[["1.valid"]], "50.0")
+ expect_equal(out[["1.valid"]], "33.3")
   expect_equal(out[["2.valid"]], "0.0")
-  expect_equal(out[["3.valid"]], "50.0")
+  expect_equal(out[["3.valid"]], "33.3")
   expect_equal(out[["-98.valid"]], "\\multic{--}")
   expect_equal(out[["1.total"]], "20.0")
   expect_equal(out[["2.total"]], "0.0")
@@ -27,7 +29,7 @@ test_that("descriptives categorical", {
   expect_equal(out[["sysmis.valid"]], "\\multic{--}")
   expect_equal(out[["sysmis.total"]], "20.0")
   expect_equal(out[["sysmis.totalabs"]], "1")
-  expect_equal(names(out)[3:7], c("1.valid", "2.valid", "3.valid", "sysmis.valid", "-98.valid"))
+  expect_equal(names(out)[3:7], c("1.valid", "2.valid", "3.valid", "5.valid", "sysmis.valid"))
 })
 
 test_that("descriptives categorical with character", {
@@ -131,22 +133,34 @@ test_that("descriptives metric", {
 
 test_that("descriptives pooled categorical", {
   imputed_cols <- data.frame(imp1 = c(1, 2, 1, 2), imp2 = c(2, 2, 1, 1))
-  out <- kennwerte.gepoolt.kategorial(imputed_cols, imputedVariableCols = c("imp1", "imp2"), verbose = FALSE)
+  value_table <- data.frame(varName = "Var1",
+                            value = c(1, 2, 3),
+                            missings = c("valid", "valid", "valid"),
+                            stringsAsFactors = FALSE)
+  warns <- capture_warnings(out <- kennwerte.gepoolt.kategorial(imputed_cols, imputedVariableCols = c("imp1", "imp2"),
+                                      value_table = value_table, verbose = FALSE))
+  expect_equal(warns[1], "Variable 'Var1': Mismatch between values declared in 'labels' sheet of the 'GADSdat' object and data. \n    'GADSdat' object: '1', '2', '3'\n                data: '1', '2'")
   expect_equal(out[["N.valid"]], "4")
   expect_equal(out[["1.valid"]], "50.0")
   expect_equal(out[["2.valid"]], "50.0")
+  expect_equal(out[["3.valid"]], "0.0")
   expect_equal(out[["1.totalabs"]], "2")
-    expect_equal(out[["sysmis.totalabs"]], "0")
-  expect_equal(names(out), c("N.valid", "N.total", "1.valid", "2.valid", "sysmis.valid", "1.total", "2.total", "sysmis.total", "1.totalabs", "2.totalabs", "sysmis.totalabs"))
+  expect_equal(out[["sysmis.totalabs"]], "0")
+  expect_equal(names(out), c("N.valid", "N.total", "1.valid", "2.valid", "3.valid", "sysmis.valid",
+                             "1.total", "2.total", "3.total", "sysmis.total",
+                             "1.totalabs", "2.totalabs", "3.totalabs", "sysmis.totalabs"))
 
   imputed_cols <- data.frame(imp1 = c(1, 2, 1, NA), imp2 = c(2, 2, 1, NA))
-  suppressWarnings(out2 <- kennwerte.gepoolt.kategorial(imputed_cols, imputedVariableCols = c("imp1", "imp2"), verbose = FALSE))
+  suppressWarnings(out2 <- kennwerte.gepoolt.kategorial(imputed_cols, imputedVariableCols = c("imp1", "imp2"),
+                                                        value_table = value_table, verbose = FALSE))
   expect_equal(out2[["N.valid"]], "3")
   expect_equal(out2[["1.valid"]], "50.0")
   expect_equal(out2[["2.valid"]], "50.0")
   expect_equal(out2[["1.totalabs"]], "2")
   expect_equal(out2[["sysmis.totalabs"]], "1")
-  expect_equal(names(out2), c("N.valid", "N.total", "1.valid", "2.valid", "sysmis.valid", "1.total", "2.total", "sysmis.total", "1.totalabs", "2.totalabs", "sysmis.totalabs"))
+  expect_equal(names(out2), c("N.valid", "N.total", "1.valid", "2.valid", "3.valid", "sysmis.valid",
+                              "1.total", "2.total", "3.total", "sysmis.total",
+                              "1.totalabs", "2.totalabs", "3.totalabs", "sysmis.totalabs"))
 })
 
 test_that("descriptives metric scale", {
