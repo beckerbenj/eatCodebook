@@ -161,36 +161,67 @@ datalist <- list(sus = data_sus,
 ```
 
 
-
 --------------------------------------------------------------------------------
 
 # 2. Descriptive Statistics
 
+Now you have the raw data, but you want the descriptive statistics for the codebook, not the whole data sets. 
+
+
 ## About Descriptive Statistics
 
-Info on what they are.
+One of the key elements of a codebook are descriptive statistics shortly describing each variable in the data set. What kind of descriptive statistics is reported for each variable depends on the type of the variable. The function `createInputForDescriptives()` creates a template to provide the information that is needed to calculate the descriptive statistics for an `GADSdat` object. The function has some arguments you can use to get a better result and less manual editing in the next step.
+
 
 ### Input for Descriptives Table
 
-with example dat (s. full workflow vignette)
+Here you can see an example how the object should look like and what the different columns mean. 
+
+```{r createInputForDescriptives}
+inputForDescriptives <- createInputForDescriptives(GADSdat = dat)
+head(inputForDescriptives)
+```
+
+Some information may need to be modified because the function does not label it correctly. For this, it is necessary to understand the functionality and check the variable entries.
+
 
 > [!TIP]
-> columns in *Input for Descriptives*:
+> Here is a brief overview of the different columns in this object:
 >
-> -   first col
-> -   second col
+> - **varName**: The name of the variable of the GADS-object
+> - **varLabel**: The label of the variable of the GADS-object
+> - **format**: The format of the variable of the GADS-object, e.g. how to display the variable in the codebook
+> - **imp**: Indicator if imputed variables are involved
+> - **type**: Indicator of whether it is a single variable, a scale or a scale's item
+> - **scale**: Indicator of how the variable is to be represented
+> - **group**: Possibility to group variables, e.g. to group scales and their items. 
 
-some more explanations.
+In the **varName**, **varLabel** and **format** columns are information about the variables of the data set. You don't have to edit anything.
+
+**imp** can be set to *WAHR* or *FALSCH*. If there are several variables to be displayed on one page, this column must be set to *WAHR* for these variables and they must be assigned to the same group at **group**. That is the case for imputed variables.
+
+**type** can be set to *variable*, *scale* or *item*. If it is a scale consisting of several individual variables, the scale variable is set to *scale* and the individual items to *item*. All other variables should always get *variable* as an entry.
+
+The **scale** column specifies how the variable is to be displayed. If it is empty, no descriptives are displayed. *numeric* is a variable without labeled categories. For *ordinal*, it is a categorical variable that has labeled values. *nominal*  (**add examples??**)
+
 
 ### Variables without Descriptives
 
+
 ### Numeric Variables without Labeled Values
+
 
 ### Categorial Variables
 
+
 ### Scale Variables with Individual Items
 
+
 ### Imputation Variables
+
+The BT often uses imputations for the student data set (sus). You can recognize them by the add-on `imputiert` in their label. 
+
+
 
 ## Descriptives Statistics To-do
 
@@ -205,6 +236,87 @@ all items have to be grouped correctly, otherwise the scales won't be displayed 
 ### Calculate Descriptives
 
 ### Save Ojbects in Two Lists
+
+
+
+-----
+
+## 2. Descriptive Statistics
+
+For each imported data set, you create a new object with `createInputForDescriptives` containing important descriptive information about the each variables like their name, label, format information for the pdf in the end, scale level or which variables are grouped together. You name them according to you data sets like `descriptives_sus` or `descriptives_lfb`.
+
+```{r creating input for descriptives, eval=FALSE}
+descriptives_sus <- createInputForDescriptives(GADSdat = daten_sus, nCatsForOrdinal = 4)
+```
+
+Then you save each `descriptives` object in its own Excel file. For that you create a new folder in your repo called `excel_files` and use following code. All the file paths for files within your repo should already be correct in the script, you just need to adjust the file names when you copy and paste the code for the other data sets.
+
+```{r saving descriptives, eval=FALSE}
+writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus.xlsx")
+```
+
+Now you have to check, whether everything is the way you need it to be. If not, you have to either make changes in the Excel file manually and save your changes under `descriptives_dat_bearbeitet.xlsx`, so you don't need to recreate the original Excel later if needed; or you can check and edit the file in RStudio (see below). For a detailed explanation on how the `input for descriptives` is supposed to look like, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#descriptive-statistics).
+
+After you made the changes, you read in your edited file and store it in a new object. The `getinputForDescriptives` function checks whether the data has the right format, as well. If it doesn't, it will tell you. For some data sets you need to check for `scale consistency`, that is whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptive file. Then you need to create a `kennwerte` object with `calculateDescriptives`, again for each data set. The syntax might look like this:
+
+```{r check scale and kennwerte, eval=FALSE}
+# read in edited Excel file
+descriptives_sus_bearbeitet <- getInputForDescriptives(".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
+# optional: check for scale consistency
+check_scale_sus <- checkScaleConsistency(daten_sus, descriptives_sus_bearbeitet, 1:nrow(descriptives_sus_bearbeitet))
+# create Kennwerte object
+kennwerte_sus <- calculateDescriptives(GADSdat = daten_sus, inputForDescriptives = descriptives_sus_bearbeitet, showCallOnly = FALSE)
+```
+
+After you created the `inputForDescriptives` and `kennwerte` for each data set, you again store them in two separate lists, analog to `datenliste`. Then you save these two lists as an .RDS file and read them in again with `readRDS`. You don't create a new folder, but put them in the `excel_files` folder as well.
+
+```{r save inputForDescriptices and kennwerte, eval=FALSE}
+# create two lists
+kennwerte <- list(sus = kennwerte_sus,
+                  lfb = kennwerte_lfb)
+input_descriptives <- list(sus = descriptives_sus_bearbeitet,
+                           lfb = descriptives_lfb_bearbeitet)
+# save files
+saveRDS(kennwerte, ".\\excel_files\\kennwerte.RDS")
+saveRDS(input_descriptives, ".\\excel_files\\input_descriptives.RDS")
+# load files
+kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
+input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
+```
+
+### Editing `InputForDescriptives` in R
+
+Depending on how much you need to adjust you can make changes in the `SH_main.R` file or switch to `SH_kennwerte.R`. The latter has some example code for typical changes, like adjusting the input for `descriptives$scale` or `descriptives$type`.
+
+Sometimes `createInputForDescriptives` creates a different scale level for variables that they actually have. The column `scale` is later important for how the variable is shown in the finished Skalenhandbuch. For example when variables get the scale `nominal`, when they should have `ordinal`.
+
+You can adjust that by extracting all relevant variables, for instance by name, using `grep`, to identify the position of all variables that start with a certain name in `descriptives_sus`. Sometimes you need to recreate the descriptives objects/files and the position might change, but usually not the variables that are affected. In this case you wouldn't have to adjust your code and can just rerun it. With the position of the affected variables, you can make changes for all affected variables at the same time.
+
+```{r editing descriptives1, eval=FALSE}
+# extracting the position of variables Lname_a - Lname_d
+pos <- grep("Lname", descriptives_sus$varName)
+# adjusting the input for the column `scale`
+descriptives_sus$scale[pos] <- "ordinal"
+```
+
+Some variables represent a scale, others the items belonging to that scale, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#scale-variables-with-individual-items) for more information about that. In order for that to be displayed correctly later, you might need to adjust the `type` column. The scale needs the label `scale`, the items the label `item`. The code below shows you how to identify the scale item - which is usually labeled correctly - and how to identify and edit the label for the items.
+
+```{r editing descriptives2, eval=FALSE}
+# identifying the scale variable
+group <- descriptives_eins[descriptives_eins$type == "scale",]$group
+# adjusting the item varaibles
+for(var in group){
+  descriptives_eins[descriptives_eins$group == var & descriptives_eins$type == "variable",]$type <- "item" 
+}
+```
+
+When you're done with making changes, you can save them in a new Excel file like before.
+
+```{r saving descriptives2, eval=FALSE}
+writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
+```
+
+
 
 ------------------------------------------------------------------------
 
@@ -510,80 +622,6 @@ Use the template for that.
 
 
 
-## 2. Descriptive Statistics
-
-For each imported data set, you create a new object with `createInputForDescriptives` containing important descriptive information about the each variables like their name, label, format information for the pdf in the end, scale level or which variables are grouped together. You name them according to you data sets like `descriptives_sus` or `descriptives_lfb`.
-
-```{r creating input for descriptives, eval=FALSE}
-descriptives_sus <- createInputForDescriptives(GADSdat = daten_sus, nCatsForOrdinal = 4)
-```
-
-Then you save each `descriptives` object in its own Excel file. For that you create a new folder in your repo called `excel_files` and use following code. All the file paths for files within your repo should already be correct in the script, you just need to adjust the file names when you copy and paste the code for the other data sets.
-
-```{r saving descriptives, eval=FALSE}
-writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus.xlsx")
-```
-
-Now you have to check, whether everything is the way you need it to be. If not, you have to either make changes in the Excel file manually and save your changes under `descriptives_dat_bearbeitet.xlsx`, so you don't need to recreate the original Excel later if needed; or you can check and edit the file in RStudio (see below). For a detailed explanation on how the `input for descriptives` is supposed to look like, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#descriptive-statistics).
-
-After you made the changes, you read in your edited file and store it in a new object. The `getinputForDescriptives` function checks whether the data has the right format, as well. If it doesn't, it will tell you. For some data sets you need to check for `scale consistency`, that is whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptive file. Then you need to create a `kennwerte` object with `calculateDescriptives`, again for each data set. The syntax might look like this:
-
-```{r check scale and kennwerte, eval=FALSE}
-# read in edited Excel file
-descriptives_sus_bearbeitet <- getInputForDescriptives(".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
-# optional: check for scale consistency
-check_scale_sus <- checkScaleConsistency(daten_sus, descriptives_sus_bearbeitet, 1:nrow(descriptives_sus_bearbeitet))
-# create Kennwerte object
-kennwerte_sus <- calculateDescriptives(GADSdat = daten_sus, inputForDescriptives = descriptives_sus_bearbeitet, showCallOnly = FALSE)
-```
-
-After you created the `inputForDescriptives` and `kennwerte` for each data set, you again store them in two separate lists, analog to `datenliste`. Then you save these two lists as an .RDS file and read them in again with `readRDS`. You don't create a new folder, but put them in the `excel_files` folder as well.
-
-```{r save inputForDescriptices and kennwerte, eval=FALSE}
-# create two lists
-kennwerte <- list(sus = kennwerte_sus,
-                  lfb = kennwerte_lfb)
-input_descriptives <- list(sus = descriptives_sus_bearbeitet,
-                           lfb = descriptives_lfb_bearbeitet)
-# save files
-saveRDS(kennwerte, ".\\excel_files\\kennwerte.RDS")
-saveRDS(input_descriptives, ".\\excel_files\\input_descriptives.RDS")
-# load files
-kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
-input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
-```
-
-### Editing `InputForDescriptives` in R
-
-Depending on how much you need to adjust you can make changes in the `SH_main.R` file or switch to `SH_kennwerte.R`. The latter has some example code for typical changes, like adjusting the input for `descriptives$scale` or `descriptives$type`.
-
-Sometimes `createInputForDescriptives` creates a different scale level for variables that they actually have. The column `scale` is later important for how the variable is shown in the finished Skalenhandbuch. For example when variables get the scale `nominal`, when they should have `ordinal`.
-
-You can adjust that by extracting all relevant variables, for instance by name, using `grep`, to identify the position of all variables that start with a certain name in `descriptives_sus`. Sometimes you need to recreate the descriptives objects/files and the position might change, but usually not the variables that are affected. In this case you wouldn't have to adjust your code and can just rerun it. With the position of the affected variables, you can make changes for all affected variables at the same time.
-
-```{r editing descriptives1, eval=FALSE}
-# extracting the position of variables Lname_a - Lname_d
-pos <- grep("Lname", descriptives_sus$varName)
-# adjusting the input for the column `scale`
-descriptives_sus$scale[pos] <- "ordinal"
-```
-
-Some variables represent a scale, others the items belonging to that scale, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#scale-variables-with-individual-items) for more information about that. In order for that to be displayed correctly later, you might need to adjust the `type` column. The scale needs the label `scale`, the items the label `item`. The code below shows you how to identify the scale item - which is usually labeled correctly - and how to identify and edit the label for the items.
-
-```{r editing descriptives2, eval=FALSE}
-# identifying the scale variable
-group <- descriptives_eins[descriptives_eins$type == "scale",]$group
-# adjusting the item varaibles
-for(var in group){
-  descriptives_eins[descriptives_eins$group == var & descriptives_eins$type == "variable",]$type <- "item" 
-}
-```
-
-When you're done with making changes, you can save them in a new Excel file like before.
-
-```{r saving descriptives2, eval=FALSE}
-writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
-```
 
 ## 3. Missings
 
