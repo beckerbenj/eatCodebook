@@ -41,7 +41,7 @@ In order to answer research questions, research institutes collect a lot of data
 A codebook contains **all of the collected variables** of a study or data collection, including their instructions, relevant statistics, references, and more. With that you can see, whether data sets might help you answer the question you do research on, before asking for the data. 
 
 
-## other resources?
+## other resources
 
 ...
 
@@ -114,33 +114,53 @@ The first step is the data import.
 
 ## About the Data
 
-Info on what kind of data we use and where to find it?
+The BT studies usually have several SPSS data files (`.sav`) that you can import with `import_spss()`, but you can also import `.RDS` files with `readRDS()`. If you work with Github, the data sets are probably too large to upload to Github, so they would need to be stored locally.
 
-> [!CAUTION]
-> In all the data sets, there shouldn't/can't be any Variables with the same names or subsections. 
+> [!NOTE]
+> At the moment you need to have at least **two data sets**, otherwise the function `codebook()` won't work.  
+> The same variable name cannot be used more than once across the data sets. 
 
+The data sets can be stored in `GADSdat` objects, containing two data frames: one for the variables and the actual data, the other contains the meta data or labels for the variables. 
 
 ### Order of the Data Sets
 
+You have to save all the data sets in one list that also determines the order in which the variables are displayed in the codebook. It's best to choose the order you want it to have later right away, so you don't have to rerun the script later. 
+
 > [!NOTE]
-> the usual order of the data is:
+> The BT data sets are usually ordered like this: 
 >
-> -   first data
-> -   second data
+> - **data_sus**: student questionnaire
+> - **data_lfb_allg**: general teacher questionnaire
+> - **data_lfb_spez**: learngroup specific teacher questionnaire
+> - **data_slfb**: school administration questionnaire
+> - **data_match**: data to match different data sets
+> - **data_linking**: data to link different data sets
+
 
 ## Data Import To-do
 
 ### Import the Data
 
-```{r import data}
-# import data
+Either use `import_spss()` for .sav (SPSS) files or `readRDS()` to import each data set separately, you just need a string with your local file path. Name them in a meaningful manner. Here you have an example syntax, where you would need to add/adjust the proper file name.  
+
+```{r data import, eval=FALSE}
+data_sus      <- eatGADS::import_spss("Q:\\filepath\\Daten_sus.sav")
+data_lfb_allg <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb_allg.sav")
+data_lfb_spez <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb_spez.sav")
+data_slfb     <- eatGADS::import_spss("Q:\\filepath\\Daten_slfb.sav")
 ```
 
 ### Save Data in a List
 
-```{r datalist}
-# datalist <- c()
+After importing the data, you need to save it in one list. The order determines the order in which they are displayed in the codebook. The names should be consistent throughout. 
+
+```{r datenliste, eval=FALSE}
+datalist <- list(sus = data_sus,
+                 lfb_allg = data_lfb_allg, lfb_spez = data_lfb_spez,
+                 slfb = data_slfb)
 ```
+
+
 
 --------------------------------------------------------------------------------
 
@@ -489,25 +509,6 @@ Use the template for that.
 
 
 
-# Starting with the Skalenhandbuch
-
-
-
-## 1. Importing Data
-
-You start by importing the data, usually several SPSS data files. You can use the `import_spss` or `readRDS` function, depending on the type of data. You just need the file path as a string. For `.sav` (SPSS) files, you need to use `import_spss` from the `eatGADS` package. In the example below, you need to exchange `file` for your file path, they usually lie on `Q:`.
-
-```{r data import, eval=FALSE}
-daten_sus <- eatGADS::import_spss("Q:\\filepath\\Daten_sus.sav")
-daten_lfb <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb.sav")
-```
-
-Give the data sets meaningful names, like `daten_sus`, `daten_lfb` and so on. After importing the data, you save them in a list called `datenliste` and name them accordingly, but you just need the suffix; `sus`, `lfb`, etc., so it might look like this:
-
-```{r datenliste, eval=FALSE}
-datenliste <- list(sus = daten_sus,
-                   lfb = daten_lfb)
-```
 
 ## 2. Descriptive Statistics
 
