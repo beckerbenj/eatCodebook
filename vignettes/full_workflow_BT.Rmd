@@ -20,33 +20,84 @@ knitr::opts_chunk$set(
 
 ## Goal of the Vignette
 
-This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+This vignettes describes the full workflow of creating a codebook (or Skalenhandbuch) via the `eatCodebook` package. For illustrative purposes we use a small example data set which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
 
-## What is a Codebook
+```{r eatcodebook setup}
+library(eatCodebook)
+file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
+dat <- eatGADS::import_spss(file)
+```
 
-This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+The main function for creating a Skalenhandbuch or codebook is called `eatcodebook()`. It takes the input from several lists and data frames that you create throughout this vignette and converts them into one long object containing LaTeX code. You have to be mindful of special characters (like α and other Greek letters) in string input from the data frames as they might throw errors down the line. Also, formatting in Excel is lost in the LaTeX script, so you may need to add LaTeX code in the Excel files. The most common occurrences are mentioned in this vignette.
+
+While working in the codebook, you will probably find some mismatches or errors in the data. You then have to recreate every data frame or Excel table you created so far, including the changes you made to those objects. This vignette contains examples how to write a script in R that you can just rerun in those cases, without having to redo a lot of work. 
+
+
+## What is a Codebook?
+
+In order to answer research questions, research institutes collect a lot of data. Usually the data isn't used to answer all possible questions, but just the ones of interest to the study they were collected for. When people want to to do their own research, they can ask the institutes for the data.  
+A codebook contains all of the collected variables of a study or data collection, including their instructions, relevant statistics, references, and more. With that you can see, whether data sets might help you answer the question you do research on, before asking for the data. 
+
 
 ## other resources?
 
-This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+...
 
-------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
 
 # Setup
 
-## create a new Repository (workspace)
+Before we start, we need to setup a proper work space. Creating a codebook takes a while and involves several files, so when you don't protocol your progress well, it's easy to lose the overview. When editing the files in R, the script can get very long, so I recommend to use several .R documents.
 
-This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+## create a new Repository (work space)
+
+First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`.
+
+![](.\pictures\repo_template.png)
+
+You now have all the .R templates that you need, but you might have to create the issues yourself. The To-dos should be apparent from this vignette or you can copy the issues from the template repo by hand. You find the following files:
 
 ## File Structure
 
-This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+| File | Description |
+|------------------------------------|------------------------------------|
+| `0SH_main` | The main file you work in. You can work with just this file and ignore the others, if you want. I recommend using this file for smaller changes and the separate files for more complex changes. With this file, you can create Excel files which you then have to edit manually or in R. |
+| `1SH_kennwerte` | Create and edit the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here. |
+| `2SH_varinfo` | Create and edit the `varinfo` file. This file contains the core content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
+| `3SH_gliederung` | The information read from `varinfo` is usually incomplete, so you have to add missing section names. |
+| `4SH_literatur` | Create and edit the `reference` file. You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs. |
+| `5SH_latex_intro` | A template to create a .tex file with latex syntax out of a a Word .docx document. You need this later when creating the intro. |
+| `6SH_Erstellung_kurz` | A short script which can create a new codebook version after you created all the necessary Excel files.|
+
+Pull the repo and start with the file `0SH_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust.
 
 ## Packages
 
-This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+You need to make sure you have the latest package versions installed. The packages you need are usually at the top of the files in `setup`. To save time you can install them before you start your work.
 
-------------------------------------------------------------------------
+#### main packages
+
+```{r packages, eval=FALSE}
+# main
+remotes::install_github("beckerbenj/eatCodebook")
+library(eatCodebook)
+remotes::install_github("beckerbenj/eatGADS")
+library(eatGADS)
+# varinfo
+remotes::install_github("weirichs/eatTools")
+library(eatTools)
+# references
+install.packages("tidyxl")
+library(tidyxl)
+# latex_intro
+install.packages("readtext")
+library(readtext)
+```
+
+
+--------------------------------------------------------------------------------
 
 # 1. Import Data
 
@@ -56,6 +107,7 @@ Info on what kind of data we use and where to find it?
 
 > [!CAUTION]
 > In all the data sets, there shouldn't/can't be any Variables with the same names or subsections. 
+
 
 ### Order of the Data Sets
 
@@ -79,7 +131,7 @@ Info on what kind of data we use and where to find it?
 # datalist <- c()
 ```
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 # 2. Descriptive Statistics
 
@@ -426,66 +478,9 @@ Use the template for that.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
-
-The main function for creating a Skalenhandbuch is called `eatcodebook`. It takes the input from several lists and data frames that you create throughout this vignette and converts them into one long object containing LaTeX code. Because of this, you have to be mindful of special characters (like Greek characters) in string input from the data frames as they might throw errors down the line. Also, formatting in Excel is lost in the LaTeX script, so you may need to add LaTeX formatting in the Excel files. The most common occurrences are mentioned in the script.
-
-For illustrative purposes we use a small example data set which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
-
-```{r eatcodebook setup}
-library(eatCodebook)
-file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
-dat <- eatGADS::import_spss(file)
-```
-
-### Setup
-
-When editing all the created files in R, the script can get very long, so I recommend to use several .R documents to maintain an overview.
-
-First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`.
-
-![](.\pictures\repo_template.png)
-
-You now have all the .R templates that you need, but you have to create the issues yourself. You find the following files:
-
-| File | Description |
-|------------------------------------|------------------------------------|
-| `SH_main` | The main file you work in. You can work with just this file and ignore the others, if you want. You first have to create all the Excel files with this script, then you can edit them manually or with R Code (either in this file or in the separate ones). I recommend using this file for smaller changes and the separate files for more complex changes. |
-| `SH_kennwerte` | For editing the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here. |
-| `SH_varinfo` | You have to edit the varinfo-file a lot. `eatCodebook` creates the file structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
-| `SH_gliederung` | The information read from `varinfo` is usually incomplete, so you have to add missing titles. |
-| `SH_literatur` | You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs. |
-| `SH_Erstellung_kurz` | When you edited most/all of the files and just want to create the .tex file to render the pdf, you can use this (short) script where you needn't worry about changing or recreating files by accident. |
-
-Pull the repo and start with the file `SH_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust.
-
 # Starting with the Skalenhandbuch
 
-You open the file `SH_main.R` and install and load the all packages you see in `setup`, otherwise some functions might not work.
 
-```{r loading packages, eval=FALSE}
-library(eatCodebook)
-library(eatGADS)
-```
 
 ## 1. Importing Data
 
@@ -687,32 +682,4 @@ The order of the variables in `varinfo` depends on the order from the SPSS files
 
 I recommend starting with the files that have the same order as the original varinfo, so you only have to change the variable order once. For this vignette I'll just describe the procedure for one data set.
 
-### varinfo: adding references and instructions with R
 
-### varinfo:adding structure and subsections with R
-
-### varinfo: adding recoded info with R
-
-### varinfo: adding background model info with R
-
-### varinfo: adding remarks with R
-
-## 7. Structure/Gliederung
-
-### Editing structure with R
-
-## 8. References
-
-### Editing Literaturverzeichnis/references with R
-
-## 9. Background Model (HGM)
-
-## 10. Cover
-
-## 11. Meta Data
-
-## 12. Chapters
-
-## 13. Other Texts
-
-## 14. create and save Skalenhandbuch
