@@ -32,11 +32,13 @@ The main function for creating a Skalenhandbuch or codebook is called `eatcodebo
 
 While working in the codebook, you will probably find some mismatches or errors in the data. You then have to recreate every data frame or Excel table you created so far, including the changes you made to those objects. This vignette contains examples how to write a script in R that you can just rerun in those cases, without having to redo a lot of work. 
 
+The package `eatCodebook` was created with the codebook for the [IQB Bildungstrends](https://www.iqb.hu-berlin.de/bt/) in mind. Some use cases are specific to these Bildungstrends (BT) studies, but you can create a codebook for your own study with this vignette, as well. 
+
 
 ## What is a Codebook?
 
 In order to answer research questions, research institutes collect a lot of data. Usually the data isn't used to answer all possible questions, but just the ones of interest to the study they were collected for. When people want to to do their own research, they can ask the institutes for the data.  
-A codebook contains all of the collected variables of a study or data collection, including their instructions, relevant statistics, references, and more. With that you can see, whether data sets might help you answer the question you do research on, before asking for the data. 
+A codebook contains **all of the collected variables** of a study or data collection, including their instructions, relevant statistics, references, and more. With that you can see, whether data sets might help you answer the question you do research on, before asking for the data. 
 
 
 ## other resources?
@@ -48,12 +50,11 @@ A codebook contains all of the collected variables of a study or data collection
 
 # Setup
 
-Before we start, we need to setup a proper work space. Creating a codebook takes a while and involves several files, so when you don't protocol your progress well, it's easy to lose the overview. When editing the files in R, the script can get very long, so I recommend to use several .R documents.
+Before we start, we need to setup a proper work space. Creating a codebook takes a while and involves several files, so when you don't protocol your progress well, it's easy to lose focus. When editing the files in R, the script can get very long, so I recommend to use several .R documents to maintain an overview.
 
+## create a new Repository
 
-## create a new Repository (work space)
-
-First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`.
+First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. when you don't have access to this repository, ask the package developer for help. 
 
 ![](.\pictures\repo_template.png)
 
@@ -61,23 +62,31 @@ You now have all the .R templates that you need, but you might have to create th
 
 ## File Structure
 
-| File | Description |
+There are several files and folders. The .R files contain example scripts and to-dos, that you need to adjust and add to. 
+
+| R File | Description |
 |------------------------------------|------------------------------------|
-| `0SH_main` | The main file you work in. You can work with just this file and ignore the others, if you want. I recommend using this file for smaller changes and the separate files for more complex changes. With this file, you can create Excel files which you then have to edit manually or in R. |
-| `1SH_kennwerte` | Create and edit the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here. |
-| `2SH_varinfo` | Create and edit the `varinfo` file. This file contains the core content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
-| `3SH_gliederung` | The information read from `varinfo` is usually incomplete, so you have to add missing section names. |
-| `4SH_literatur` | Create and edit the `reference` file. You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs. |
-| `5SH_latex_intro` | A template to create a .tex file with latex syntax out of a a Word .docx document. You need this later when creating the intro. |
-| `6SH_Erstellung_kurz` | A short script which can create a new codebook version after you created all the necessary Excel files.|
+| `0SH_main.R` | The main file you work in. You can work with just this file and ignore the others, if you want. I recommend using this file for smaller changes and the separate files for more complex changes. With this file, you can create Excel files which you then have to edit manually or in R. |
+| `1SH_kennwerte.R` | Create and edit the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here. |
+| `2SH_varinfo.R` | Create and edit the `varinfo` file. This file contains the core content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
+| `3SH_gliederung.R` | The information read from `varinfo` is usually incomplete, so you have to add missing section names. |
+| `4SH_literatur.R` | Create and edit the `reference` file. You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs. |
+| `5SH_latex_intro.R` | A template to create a .tex file with latex syntax out of a a Word .docx document. You need this later when creating the intro. |
+| `6SH_Erstellung_kurz.R` | A short script which can create a new codebook version after you created all the necessary Excel files.|
+
+You need to make sure, that there are three folders and create them if not. 
+
+| Folder | Description |
+|------------------------------------|------------------------------------|
+| `excel_files` | Here you save all of the created Excel files to save the progress. |
+| `Latex` | Here you save the .tex files and pdfs of the finished latex script for the codebook. You can add the folder `archive` to keep different versions to compare. |
+| `Texte` | Here you can save the intro text or cover, etc. |
 
 Pull the repo and start with the file `0SH_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust.
 
 ## Packages
 
 You need to make sure you have the latest package versions installed. The packages you need are usually at the top of the files in `setup`. To save time you can install them before you start your work.
-
-#### main packages
 
 ```{r packages, eval=FALSE}
 # main
@@ -100,6 +109,8 @@ library(readtext)
 --------------------------------------------------------------------------------
 
 # 1. Import Data
+
+The first step is the data import. 
 
 ## About the Data
 
