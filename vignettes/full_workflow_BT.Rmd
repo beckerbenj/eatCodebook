@@ -1,0 +1,718 @@
+---
+title: "Full Workflow Bildungstrend"
+author: "Edna Grewers"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Full Workflow Bildungstrend}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Intro
+
+## Goal of the Vignette
+
+This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+## What is a Codebook
+
+This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+## other resources?
+
+This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+------------------------------------------------------------------------
+
+# Setup
+
+## create a new Repository (workspace)
+
+This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+## File Structure
+
+This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+## Packages
+
+This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+------------------------------------------------------------------------
+
+# 1. Import Data
+
+## About the Data
+
+Info on what kind of data we use and where to find it?
+
+> [!CAUTION]
+> In all the data sets, there shouldn't/can't be any Variables with the same names or subsections. 
+
+### Order of the Data Sets
+
+> [!NOTE]
+> the usual order of the data is:
+>
+> -   first data
+> -   second data
+
+## Data Import To-do
+
+### Import the Data
+
+```{r import data}
+# import data
+```
+
+### Save Data in a List
+
+```{r datalist}
+# datalist <- c()
+```
+
+------------------------------------------------------------------------
+
+# 2. Descriptive Statistics
+
+## About Descriptive Statistics
+
+Info on what they are.
+
+### Input for Descriptives Table
+
+with example dat (s. full workflow vignette)
+
+> [!TIP]
+> columns in *Input for Descriptives*:
+>
+> -   first col
+> -   second col
+
+some more explanations.
+
+### Variables without Descriptives
+
+### Numeric Variables without Labeled Values
+
+### Categorial Variables
+
+### Scale Variables with Individual Items
+
+### Imputation Variables
+
+## Descriptives Statistics To-do
+
+### Create *Input for Descriptives*
+
+### Check and Edit *inputForDescriptives*
+
+all items have to be grouped correctly, otherwise the scales won't be displayed right.
+
+### Check Scale Consistency
+
+### Calculate Descriptives
+
+### Save Ojbects in Two Lists
+
+------------------------------------------------------------------------
+
+# 3. Value and Missing Labels
+
+## About Missings
+
+> [!NOTE]
+> Info: no need to edit, etc.
+
+### Values and Missing Labels
+
+## Missings To-do
+
+create and save one object.
+
+------------------------------------------------------------------------
+
+# 4. Scales
+
+## About Scales
+
+> [!NOTE]
+> Info: no need to edit, etc.
+
+## Scales To-do
+
+### Create Scales
+
+### Check for Errors
+
+### Additional Notes/Hotfixes
+
+Say something about fake scales or why they might not be displayed correctly.
+
+------------------------------------------------------------------------
+
+# 5. Abbreviation List
+
+## About the Abbreviation List
+
+> [!NOTE]
+> Info: copy from last BTs.
+
+## Abbreviation List To-do
+
+### Create New List
+
+### Import Old List
+
+### Update the List
+
+### Notes on Special Letters
+
+like alpha, sub/superscript, etc. in latex syntax
+
+------------------------------------------------------------------------
+
+# 6. Variable Information (varinfo)
+
+## About Varinfo
+
+### Varinfo Table
+
+what it looks like and what the cols mean.
+
+> [!TIP]
+> Overview of columns in *varinfo*:
+>
+> -   first col
+> -   second col
+
+Some more info/explanation on some of the cols.  
+
+#### Var.Name
+
+> [!CAUTION]
+> In all the data sets, there shouldn't/can't be any Variables with the same names or subsections. 
+
+#### in.DS.und.SH
+
+#### Unterteilung.im.Skalenhandbuch and Gliederung
+
+#### Titel
+
+#### Background Model (HGM)
+
+## Varinfo To-do
+
+> [!NOTE]
+> This is the main work!
+
+On Q there are several Excel files with information that you need to add to this table/Excel. 
+
+### Create Varinfo
+
+### Infer Layout
+
+### Create varinfo_edited
+
+### Add References and Instructions
+
+### Add Structure and Subsections
+
+from the `finale Reihenfolge` Excel. It should contain all the Variables, their Labels (without special characters) and maybe their Titles (with special characters). Also it should contain the Gliederung or structure number (1.1, 1.2, etc.) and the subsection/subchapters. 
+
+### Add Recoded Info
+
+### Add Background Model Info
+
+### Add Remarks
+
+
+------------------------------------------------------------------------
+
+# 7. Structure
+
+## About the Structure
+
+## Strucutre To-do
+
+### Create Structure Table
+
+### Add missing section names
+
+
+------------------------------------------------------------------------
+
+# 8. References
+
+## About References
+
+One Excel per data set with long format and short format linked to the item/variable.
+
+> [!NOTE]
+> References need to be in APA7 format. 
+
+## References To-do
+
+### Create `litInfo`
+
+### Adjust Short References
+
+No add-ons, no duplicates
+
+### Import Formatting of Long References
+
+### Adjust Long References
+
+### Match Long and Short References
+
+### Add Intro References
+
+### Check for Duplicates
+
+
+------------------------------------------------------------------------
+
+# 9. Background Model
+
+## About HGM?
+
+Info about how it should looks like in the appendix?
+
+## HGM To-do
+
+that one line.
+
+------------------------------------------------------------------------
+
+# 10. Cover
+
+## About the Cover
+
+## Cover To-do
+
+### convert to pdf
+
+### Add Line
+
+
+------------------------------------------------------------------------
+
+# 11. Meta Data
+
+## About Meta Data
+
+> [!Note]
+> something meta data
+>
+> -   authors
+> -   Title
+
+## Meta Data To-do
+
+### Create Table
+
+### Update Table
+
+
+
+------------------------------------------------------------------------
+
+# 12. Chapters
+
+## About Chapters
+
+Use Chapter names from last BTs.
+
+## Chapters To-do
+
+### Create Chapters
+
+### Edit Chapters
+
+------------------------------------------------------------------------
+
+# 13. Other Texts: Intro
+
+## About Intro
+
+you prob. get a word file that needs to be converted into latex syntax. 
+
+The Intro contains References as well, bla bla bla
+
+## Intro To-do
+
+*see maybe Vignette (tbd) about how to convert word.docx files into latex.tex files with R.*
+
+### Convert Text into Latex Syntax
+
+Use the template for that. 
+
+### Save as .tex File
+
+
+
+
+------------------------------------------------------------------------
+
+# 14. Create the Codebook
+
+## About the Codebook
+
+### Minimal Version
+
+### Add-ons
+
+#### References
+
+#### Cover
+
+#### Intro
+
+### Versions
+
+> [!Note]
+> while working on the Codebook, you will create different versions. it's best not to delete them, but save them in an `archive` folder to compare different version to one another if needed. 
+
+## Codebook To-do in R
+
+### Create the Codebook and Meta Data
+
+### Save in Folder `Latex`
+
+## Codebook To-do in TeXworks
+
+### open .tex file
+
+### render to pdf (twice)
+
+### Dealing with Errors
+
+#### Update Latex Packages
+
+#### Special Characters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+This vignette is an addition to the [Full Workflow Vignette](./vignettes/full_workflow.Rmd). You can edit the created Excel files manually, or with R/RStudio. If you want to edit them via RStudio, here are some examples on how to do that.
+
+The main function for creating a Skalenhandbuch is called `eatcodebook`. It takes the input from several lists and data frames that you create throughout this vignette and converts them into one long object containing LaTeX code. Because of this, you have to be mindful of special characters (like Greek characters) in string input from the data frames as they might throw errors down the line. Also, formatting in Excel is lost in the LaTeX script, so you may need to add LaTeX formatting in the Excel files. The most common occurrences are mentioned in the script.
+
+For illustrative purposes we use a small example data set which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
+
+```{r eatcodebook setup}
+library(eatCodebook)
+file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
+dat <- eatGADS::import_spss(file)
+```
+
+### Setup
+
+When editing all the created files in R, the script can get very long, so I recommend to use several .R documents to maintain an overview.
+
+First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`.
+
+![](.\pictures\repo_template.png)
+
+You now have all the .R templates that you need, but you have to create the issues yourself. You find the following files:
+
+| File | Description |
+|------------------------------------|------------------------------------|
+| `SH_main` | The main file you work in. You can work with just this file and ignore the others, if you want. You first have to create all the Excel files with this script, then you can edit them manually or with R Code (either in this file or in the separate ones). I recommend using this file for smaller changes and the separate files for more complex changes. |
+| `SH_kennwerte` | For editing the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here. |
+| `SH_varinfo` | You have to edit the varinfo-file a lot. `eatCodebook` creates the file structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
+| `SH_gliederung` | The information read from `varinfo` is usually incomplete, so you have to add missing titles. |
+| `SH_literatur` | You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs. |
+| `SH_Erstellung_kurz` | When you edited most/all of the files and just want to create the .tex file to render the pdf, you can use this (short) script where you needn't worry about changing or recreating files by accident. |
+
+Pull the repo and start with the file `SH_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust.
+
+# Starting with the Skalenhandbuch
+
+You open the file `SH_main.R` and install and load the all packages you see in `setup`, otherwise some functions might not work.
+
+```{r loading packages, eval=FALSE}
+library(eatCodebook)
+library(eatGADS)
+```
+
+## 1. Importing Data
+
+You start by importing the data, usually several SPSS data files. You can use the `import_spss` or `readRDS` function, depending on the type of data. You just need the file path as a string. For `.sav` (SPSS) files, you need to use `import_spss` from the `eatGADS` package. In the example below, you need to exchange `file` for your file path, they usually lie on `Q:`.
+
+```{r data import, eval=FALSE}
+daten_sus <- eatGADS::import_spss("Q:\\filepath\\Daten_sus.sav")
+daten_lfb <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb.sav")
+```
+
+Give the data sets meaningful names, like `daten_sus`, `daten_lfb` and so on. After importing the data, you save them in a list called `datenliste` and name them accordingly, but you just need the suffix; `sus`, `lfb`, etc., so it might look like this:
+
+```{r datenliste, eval=FALSE}
+datenliste <- list(sus = daten_sus,
+                   lfb = daten_lfb)
+```
+
+## 2. Descriptive Statistics
+
+For each imported data set, you create a new object with `createInputForDescriptives` containing important descriptive information about the each variables like their name, label, format information for the pdf in the end, scale level or which variables are grouped together. You name them according to you data sets like `descriptives_sus` or `descriptives_lfb`.
+
+```{r creating input for descriptives, eval=FALSE}
+descriptives_sus <- createInputForDescriptives(GADSdat = daten_sus, nCatsForOrdinal = 4)
+```
+
+Then you save each `descriptives` object in its own Excel file. For that you create a new folder in your repo called `excel_files` and use following code. All the file paths for files within your repo should already be correct in the script, you just need to adjust the file names when you copy and paste the code for the other data sets.
+
+```{r saving descriptives, eval=FALSE}
+writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus.xlsx")
+```
+
+Now you have to check, whether everything is the way you need it to be. If not, you have to either make changes in the Excel file manually and save your changes under `descriptives_dat_bearbeitet.xlsx`, so you don't need to recreate the original Excel later if needed; or you can check and edit the file in RStudio (see below). For a detailed explanation on how the `input for descriptives` is supposed to look like, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#descriptive-statistics).
+
+After you made the changes, you read in your edited file and store it in a new object. The `getinputForDescriptives` function checks whether the data has the right format, as well. If it doesn't, it will tell you. For some data sets you need to check for `scale consistency`, that is whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptive file. Then you need to create a `kennwerte` object with `calculateDescriptives`, again for each data set. The syntax might look like this:
+
+```{r check scale and kennwerte, eval=FALSE}
+# read in edited Excel file
+descriptives_sus_bearbeitet <- getInputForDescriptives(".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
+# optional: check for scale consistency
+check_scale_sus <- checkScaleConsistency(daten_sus, descriptives_sus_bearbeitet, 1:nrow(descriptives_sus_bearbeitet))
+# create Kennwerte object
+kennwerte_sus <- calculateDescriptives(GADSdat = daten_sus, inputForDescriptives = descriptives_sus_bearbeitet, showCallOnly = FALSE)
+```
+
+After you created the `inputForDescriptives` and `kennwerte` for each data set, you again store them in two separate lists, analog to `datenliste`. Then you save these two lists as an .RDS file and read them in again with `readRDS`. You don't create a new folder, but put them in the `excel_files` folder as well.
+
+```{r save inputForDescriptices and kennwerte, eval=FALSE}
+# create two lists
+kennwerte <- list(sus = kennwerte_sus,
+                  lfb = kennwerte_lfb)
+input_descriptives <- list(sus = descriptives_sus_bearbeitet,
+                           lfb = descriptives_lfb_bearbeitet)
+# save files
+saveRDS(kennwerte, ".\\excel_files\\kennwerte.RDS")
+saveRDS(input_descriptives, ".\\excel_files\\input_descriptives.RDS")
+# load files
+kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
+input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
+```
+
+### Editing `InputForDescriptives` in R
+
+Depending on how much you need to adjust you can make changes in the `SH_main.R` file or switch to `SH_kennwerte.R`. The latter has some example code for typical changes, like adjusting the input for `descriptives$scale` or `descriptives$type`.
+
+Sometimes `createInputForDescriptives` creates a different scale level for variables that they actually have. The column `scale` is later important for how the variable is shown in the finished Skalenhandbuch. For example when variables get the scale `nominal`, when they should have `ordinal`.
+
+You can adjust that by extracting all relevant variables, for instance by name, using `grep`, to identify the position of all variables that start with a certain name in `descriptives_sus`. Sometimes you need to recreate the descriptives objects/files and the position might change, but usually not the variables that are affected. In this case you wouldn't have to adjust your code and can just rerun it. With the position of the affected variables, you can make changes for all affected variables at the same time.
+
+```{r editing descriptives1, eval=FALSE}
+# extracting the position of variables Lname_a - Lname_d
+pos <- grep("Lname", descriptives_sus$varName)
+# adjusting the input for the column `scale`
+descriptives_sus$scale[pos] <- "ordinal"
+```
+
+Some variables represent a scale, others the items belonging to that scale, see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#scale-variables-with-individual-items) for more information about that. In order for that to be displayed correctly later, you might need to adjust the `type` column. The scale needs the label `scale`, the items the label `item`. The code below shows you how to identify the scale item - which is usually labeled correctly - and how to identify and edit the label for the items.
+
+```{r editing descriptives2, eval=FALSE}
+# identifying the scale variable
+group <- descriptives_eins[descriptives_eins$type == "scale",]$group
+# adjusting the item varaibles
+for(var in group){
+  descriptives_eins[descriptives_eins$group == var & descriptives_eins$type == "variable",]$type <- "item" 
+}
+```
+
+When you're done with making changes, you can save them in a new Excel file like before.
+
+```{r saving descriptives2, eval=FALSE}
+writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_bearbeitet.xlsx")
+```
+
+## 3. Missings
+
+You need to create one `missings.xlsx` Excel file for all the data sets combined. You need the two lists containing the data sets themselves (`datenliste`) and the created input for descriptives (`input_descriptives`). You just create the object, save it as an Excel file and read it in with `getMissings`. Usually you don't need to edit the missings file.
+
+```{r missings, eval=FALSE}
+# creating the object
+missings <- createMissings(datenliste, input_descriptives)
+# save as an Excel file
+write_xlsx(df_list = missings, row.names = FALSE, filePath = ".\\excel_files\\missings.xlsx")
+# read in Excel file and check for right format
+missings <- getMissings(".\\excel_files\\missings.xlsx")
+```
+
+## 4. Scales
+
+You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scaled items. You just need the list `input_descriptives` for that. Usually you don't need to edit the skalen file.
+
+```{r skalen, eval=FALSE}
+# creating the object
+skalen <- createScaleInfo(input_descriptives)
+# save as an Excel file
+write_xlsx(df_list = skalen, row.names = FALSE, filePath = ".\\excel_files\\skalen.xlsx")
+# read in Excel file and check for right format
+skalen <- getScaleInfo(".\\excel_files\\skalen.xlsx")
+```
+
+When `getScaleInfo` doesn't throw an error, you should look at the object `skalen` anyway to make sure it contains all scaled items, i.e. all scale variables and their item variables. If the scales aren't displayed correctly, there's usually an error in `input_descriptives`, for instance when the scaled items aren't labeled correctly.
+
+```{r checking skalen, eval=FALSE}
+View(skalen)
+```
+
+## 5. Abbreviation List/Abkürzungsverzeichnis
+
+You create either a template object for the abbreviation list or read in the one from last year's BT and call it `abbr_list`, and save it in a new Excel file. The file has two sets of abbreviations: `Akronyme` and `statistische Formelzeichen`, that each get their own Excel sheet/list object.
+
+```{r abbr_list, eval=FALSE}
+# new object, without input
+abbr_list <- createAbbrList()
+# read in abbr_list from last BT 
+abbr_list <- getExcel("Q:\\filepath\\abkuerzung.xlsx")
+# save in Excel
+write_xlsx(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkuerzung.xlsx")
+```
+
+You can add or delete entries in R like with any other data.frame that is saved in a list. LaTeX can't display Greek characters when you just use the letter by itself. You might need to adjust the spelling. `$\alpha$` is LaTeX code and should be printed like the image shows.
+
+```{r edit abbr_list 1, eval=FALSE}
+# add/edit entries in abbr_list
+abbr_list$`Statistische Formelzeichen`$Symbol[1] <- "$\alpha$"
+abbr_list$`Statistische Formelzeichen`$Bedeutung[1] <- "cronbachs Alpha"
+```
+
+![](.\pictures\abbr_list_alpha.png)
+
+When the Excel file from past BTs has commentary/extra columns in it, you can't use the function `makeAbbrList`. To make sure you only the have two columns per sheet/data frame, you can save just the first two columns per sheet in your `abbr_list` object. After that you need to save the changes to Excel.
+
+```{r edit abbr_list 2, eval=FALSE}
+# edit abbr_list
+abbr_list$Akronyme <- abbr_list21$Akronyme[,1:2]
+abbr_list$`Statistische Formelzeichen` <- abbr_list21$`Statistische Formelzeichen`[,1:2]
+# save in Excel
+write_xlsx(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkuerzung.xlsx")
+```
+
+When you have all the abbreviations, you can create the LaTeX code that you need directly from the Excel file.
+
+```{r abbr_list2, eval=FALSE}
+# creates LaTeX syntax
+abbr_list <- makeAbbrList(".\\excel_files\\abkuerzung.xlsx")
+```
+
+## 6. Varinfo
+
+Creating and editing the `varinfo.xlsx` file/object is the main work of creating the Skalenhandbuch. This objects contains all information about the variables, their order and structure, as well as their references, instructions, remarks or information about the background model, as you can see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#variable-information). There is only one object/Excel file overall, but each data set has its own sheet, so you can edit them separately.
+
+### varinfo setup
+
+The setup is quite simple, you can do that in `SH_main.R`. You first create a varinfo object from the SPSS data list you read in at the beginning (`datenliste`) and from the input for descriptives list you created out of that (`input_descriptives`). It contains all variables for each data set and columns that you need, but you still need to add a lot of information from other files.
+
+Then you add layout information for each variable. And save to Excel `varinfo.xlsx` as a backup or template, and `varinfo_bearbeitet.xlsx` as the file you actually work with. The you read in the created Excel and check the format with `getVarInfo`.
+
+```{r varinfo setup, eval=FALSE}
+# creating varinfo object
+varinfo <- createVarInfo(datenliste, input_descriptives)
+# Layout
+varinfo <- inferLayout(varinfo, datenliste, input_descriptives)
+
+# save to Excel
+write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo.xlsx")
+write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo_bearbeitet.xlsx")
+# checking format
+varinfo <- getVarInfo(".\\excel_files\\varinfo.xlsx")
+```
+
+With this, the setup is complete and I recommend to switch to `SH_varinfo.R`, so your main script doesn't get too long and you lose overview. You need to add the following information. The order in which you add them is up to you.
+
+| Column in Varinfo | Where to get the Information from | Order |
+|------------------------|------------------------|------------------------|
+| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set | usually like SPSS files |
+| `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called `Reihenfolge_Variable_final.xlsx` or similar, contains one sheet per data set | different from SPSS files |
+| `rekodiert` | Info in the variable name: all with `_r` at the end | no order |
+| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | in an extra Excel file, you probably have to ask about it | no order |
+| optional: `Anmerkung.Var` | in an file on Q: | check order |
+
+The order of the variables in `varinfo` depends on the order from the SPSS files. However, the order of the variables files the BT-Team provides for you might be different. The files for `Quellen` and `Gliederung` usually contain all variables, whereas for the backgroundmodel/HGM or `rekodiert` you have to change the input for individual variables, so the order is not relevant.
+
+I recommend starting with the files that have the same order as the original varinfo, so you only have to change the variable order once. For this vignette I'll just describe the procedure for one data set.
+
+### varinfo: adding references and instructions with R
+
+### varinfo:adding structure and subsections with R
+
+### varinfo: adding recoded info with R
+
+### varinfo: adding background model info with R
+
+### varinfo: adding remarks with R
+
+## 7. Structure/Gliederung
+
+### Editing structure with R
+
+## 8. References
+
+### Editing Literaturverzeichnis/references with R
+
+## 9. Background Model (HGM)
+
+## 10. Cover
+
+## 11. Meta Data
+
+## 12. Chapters
+
+## 13. Other Texts
+
+## 14. create and save Skalenhandbuch

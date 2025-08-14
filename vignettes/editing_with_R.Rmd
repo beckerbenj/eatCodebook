@@ -263,7 +263,7 @@ I recommend starting with the files that have the same order as the original var
 ### varinfo: adding references and instructions with R
 
 
-### varinfo:adding structure and division with R
+### varinfo:adding structure and subsections with R
 
 ### varinfo: adding recoded info with R
 
