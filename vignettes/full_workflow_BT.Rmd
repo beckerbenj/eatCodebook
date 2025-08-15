@@ -464,21 +464,42 @@ input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
 kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
 ```
 
+You should add the last two lines (load files) in you `0_main.R` script behind the data import. 
+
 
 ------------------------------------------------------------------------
 
 # 3. Value and Missing Labels
 
+Another imported part of a codebook is the documentation of the value labels of valid and missing values. A respective overview is created via `createMissings()`.
+
 ## About Missings
 
-> [!NOTE]
-> Info: no need to edit, etc.
+You need to save the created data frame in Excel and read it in again with `getMissings()` to clean up and check the input. Otherwise you usually don't need to edit anything here. 
 
-### Values and Missing Labels
+### example table
+
+Here you can see how the missings data frame should look like. 
+
+```{r missings example}
+missings <- createMissings(dat, inputForDescriptives = inputForDescriptives_edited)
+head(missings)
+```
+
 
 ## Missings To-do
 
-create and save one object.
+For this you need to open `0_main.R` again. You create a new data frame with `createMissings()`; you need the data sets (`datalist`) and the input for descriptives (`input_descriptives`) for that. Then you save it in an Excel file `missings.xlsx` and import it again with `getMisings()` to check the format. 
+
+```{r create missings, eval=FALSE}
+# create missings
+missings <- createMissings(datalist, input_descriptives)
+# save as an Excel file
+writeExcel(df_list = missings, row.names = FALSE, filePath = ".\\excel_files\\missings.xlsx")
+# import Excel file and check for right format
+missings <- getMissings(".\\excel_files\\missings.xlsx")
+```
+
 
 ------------------------------------------------------------------------
 
@@ -767,19 +788,6 @@ Use the template for that.
 ------------------------------------------------------------------------
 
 
-
-## 3. Missings
-
-You need to create one `missings.xlsx` Excel file for all the data sets combined. You need the two lists containing the data sets themselves (`datenliste`) and the created input for descriptives (`input_descriptives`). You just create the object, save it as an Excel file and read it in with `getMissings`. Usually you don't need to edit the missings file.
-
-```{r missings, eval=FALSE}
-# creating the object
-missings <- createMissings(datenliste, input_descriptives)
-# save as an Excel file
-write_xlsx(df_list = missings, row.names = FALSE, filePath = ".\\excel_files\\missings.xlsx")
-# read in Excel file and check for right format
-missings <- getMissings(".\\excel_files\\missings.xlsx")
-```
 
 ## 4. Scales
 
