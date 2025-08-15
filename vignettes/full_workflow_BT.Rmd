@@ -56,7 +56,8 @@ Before we start, we need to setup a proper work space. Creating a codebook takes
 
 First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. when you don't have access to this repository, ask the package developer for help. 
 
-![](.\pictures\repo_template.png)
+
+![](.\pictures\repo_template.png){width=70%}
 
 You now have all the .R templates that you need, but you might have to create the issues yourself. The To-dos should be apparent from this vignette or you can copy the issues from the template repo by hand. You find the following files:
 
@@ -127,7 +128,7 @@ The data sets can be stored in `GADSdat` objects, containing two data frames: on
 You have to save all the data sets in one list that also determines the order in which the variables are displayed in the codebook. It's best to choose the order you want it to have later right away, so you don't have to rerun the script later. 
 
 > [!NOTE]
-> The BT data sets are usually ordered like this: 
+> In the past the BT data sets were ordered like this: 
 >
 > - **data_sus**: student questionnaire
 > - **data_lfb_allg**: general teacher questionnaire
@@ -135,6 +136,8 @@ You have to save all the data sets in one list that also determines the order in
 > - **data_slfb**: school administration questionnaire
 > - **data_match**: data to match different data sets
 > - **data_linking**: data to link different data sets
+>
+> But it's best to ask about the order to make sure.
 
 
 ## Data Import To-do
@@ -172,7 +175,6 @@ Now you have the raw data, but you want the descriptive statistics for the codeb
 
 One of the key elements of a codebook are descriptive statistics shortly describing each variable in the data set. What kind of descriptive statistics is reported for each variable depends on the type of the variable. The function `createInputForDescriptives()` creates a template to provide the information that is needed to calculate the descriptive statistics for an `GADSdat` object. The function has some arguments you can use to get a better result and less manual editing in the next step.
 
-
 ### Input for Descriptives Table
 
 Here you can see an example how the object should look like and what the different columns mean. 
@@ -182,8 +184,17 @@ inputForDescriptives <- createInputForDescriptives(GADSdat = dat)
 head(inputForDescriptives)
 ```
 
-Some information may need to be modified because the function does not label it correctly. For this, it is necessary to understand the functionality and check the variable entries.
+You can look at the template data frame either in R or save it in a new Excel file.
 
+```{r export varinfo, eval=FALSE}
+# look at it in R
+View(inputForDescriptives)
+
+# export in Excel
+writeExcel(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
+```
+
+Some information may need to be modified because the function does not label it correctly. For this, it is necessary to understand the functionality and check the variable entries. We will come back to how to actually edit the table in R. 
 
 > [!TIP]
 > Here is a brief overview of the different columns in this object:
@@ -193,7 +204,7 @@ Some information may need to be modified because the function does not label it 
 > - **format**: The format of the variable of the GADS-object, e.g. how to display the variable in the codebook
 > - **imp**: Indicator if imputed variables are involved
 > - **type**: Indicator of whether it is a single variable, a scale or a scale's item
-> - **scale**: Indicator of how the variable is to be represented
+> - **scale**: Indicator of how the variable is to be represented, e.g. what kind of statistics are shown
 > - **group**: Possibility to group variables, e.g. to group scales and their items. 
 
 In the **varName**, **varLabel** and **format** columns are information about the variables of the data set. You don't have to edit anything.
@@ -202,25 +213,101 @@ In the **varName**, **varLabel** and **format** columns are information about th
 
 **type** can be set to *variable*, *scale* or *item*. If it is a scale consisting of several individual variables, the scale variable is set to *scale* and the individual items to *item*. All other variables should always get *variable* as an entry.
 
-The **scale** column specifies how the variable is to be displayed. If it is empty, no descriptives are displayed. *numeric* is a variable without labeled categories. For *ordinal*, it is a categorical variable that has labeled values. *nominal*  (**add examples??**)
+The **scale** column specifies how the variable is to be displayed. If it is empty, no descriptives are displayed. *nominal* variables display the frequency distribution of the labeled categories. *ordinal* variables display the frequency distribution of the labeled categories *and* the statistical parameters (like *M* or *SD*). *numeric* variables only display the statistical parameters, without labeld categories. 
 
+Now follow the possibilities of how variables can be represented in the codebook and how the table must be edited for this.
 
 ### Variables without Descriptives
 
-
-### Numeric Variables without Labeled Values
-
+This can be the case, for example, with ID variables or character variables. The page would be displayed like this:  
+<br>
+<img src="./pictures/codebook_IDs.PNG" alt="codebook_IDs" />  
+<br>  
+The entry must look like this:  
+<br>
+<img src="./pictures/input_IDs.PNG" alt="input_IDs" />  
+<br>  
 
 ### Categorial Variables
 
+Variables with **nominal** scales should display only the frequency distribution of the labeled categories. The page would be displayed like this:   
+<br>
+<img src="./pictures/codebook_nominal.PNG" alt="codebook_nominal" />
+<br>  
+
+The example data set doesn't have any nominal variables at the moment. If your data set has nominal variables, you can create that page with the following input:  
+
+<br>
+<img src="./pictures/input_nominal.PNG" alt="input_nominal" />  
+<br>  
+
+### Categorial Variables and Statistical Parameters
+
+Variables with **ordinal** scales should display the frequency distribution of the labeled categories as well as the statistical parameters *N* (number of participants), *M* (mean) and *SD* (standard deviation). The page would be displayed like this:  
+
+<br>
+<img src="./pictures/codebook_ordinal.PNG" alt="codebook_ordinal" />
+<br>  
+
+To create it, the Excel should be edited as follows:  
+<br>
+<img src="./pictures/input_ordinal.PNG" alt="input_ordinal" />  
+<br>  
+
+### Numeric Variables without Labeled Values
+
+Variables with **numeric** scales should display only statistical parameters: *N* (number of participants), *M* (mean), *SD* (standard deviation), *Min.* (lowest value) and *Max.* (highest value). This can be used, for example, for variables that represent age or variables with values in the decimal range. Nevertheless, these variables can contain labels for values. If they are defined as missing, these values are not taken into account in the calculation but are still reported. The page would be displayed like this:  
+
+<br>
+<img src="./pictures/codebook_numeric.PNG" alt="codebook_numeric" />  
+<br>  
+
+To create an entry for a numeric variable without labeled values, the Excel must look like this:  
+<br>
+<img src="./pictures/input_numeric.PNG" alt="input_numeric" />  
+<br>  
 
 ### Scale Variables with Individual Items
 
+It is possible to get the following entries in the codebook for a **scale** and the items it is made of:  
+
+<br>
+<img src="./pictures/codebook_scale1.PNG" alt="codebook_scale1" /><img src="./pictures/codebook_scale2.PNG" alt="codebook_scale2" /><img src="./pictures/codebook_scale3.PNG" alt="codebook_scale3" />
+<br>  
+
+To get these pages the individual items must be labeled as **ordinal** and **item**, and the scale as **numeric** and **scale**. They must all have the same name at **group** so that they are displayed together.  
+<br>  
+<img src="./pictures/input_scale.PNG" alt="input_scale_new" />  
+<br>  
+
+This only works, when they are grouped and labeled correctly. Later the function `createScaleInfo()` creates a data frame with all scales and their items that were grouped like this. 
+
+### Fake Scales
+
+Sometimes several items make up a scale, but the data set doesn't have a matching scale-variable. The codebook would display it like a normal scale (see *Scale Variables with Individual Items*) with the same descriptive statistics. 
+
+To display fake scales like a real one, you need to group them like a real scale, but in the **type** column you need to write **fake_item**, so it looks like this:  
+
+<br>
+<img src="./pictures/input_fakeScale.PNG" alt="input_fakeScale" />  
+<br>  
+
+The function `createScaleInfo()` should add these fake scales to the data frame as well. But without the scale variable the information which variables belong to that scale might be lost. The individual variables might need to be added manually. More on that later.  
 
 ### Imputation Variables
 
-The BT often uses imputations for the student data set (sus). You can recognize them by the add-on `imputiert` in their label. 
+The BT sometimes uses imputations, for instance, in the student data set (sus). It's a way to deal with missing data on variables by replacing missing data with substituted values, usually several times. You can recognize the variables by the add-on `(imputiert)` in their label or `_pooled` in their group. These imputations represent one (averaged) variable, so they should be displayed as one. Depending on what was specified in **scale**, it results in the following pages in the codebook. `pv_pooled` is has *numeric* input, `pvkat_pooled` has *ordinal* input.  
 
+<br>
+<img src="./pictures/codebook_imp1.PNG" alt="codebook_imp1" /><img src="./pictures/codebook_imp2.PNG" alt="codebook_imp2" />  
+<br>  
+
+To display it like this the **imp** column becomes relevant. It must be set to *WAHR* for these variables. In addition, the variables also need a common name in **group** and, depending on whether they are to be represented categorically or numerically, the corresponding designation in **scale**, the scale should probably match the original variable.  
+<br>
+<img src="./pictures/input_imp.PNG" alt="input_imp" />  
+<br>  
+
+The function `createScaleInfo()` should adds imputed variables like a scale to the data frame. Without the scale variable the information which variables belongs together might be lost. In this case, it might not be relevant, though, as these variables are not a scale. 
 
 
 ## Descriptives Statistics To-do

@@ -93,7 +93,7 @@ It is possible to get the following entries in the codebook for a scale and the 
 <br>  
 To get these pages the individual items must be labeled as *ordinal* and the scale as *numeric*. They must all have the same name at **group** so that they are displayed together.
 <br>  
-<img src="./pictures/input_scale.PNG" alt="input_scale_new" />  
+<img src="./pictures/input_scale.PNG" alt="input_scale" />  
 
 #### Imputation Variables
 
