@@ -477,7 +477,7 @@ Another imported part of a codebook is the documentation of the value labels of 
 
 You need to save the created data frame in Excel and read it in again with `getMissings()` to clean up and check the input. Otherwise you usually don't need to edit anything here. 
 
-### example table
+###Eexample Table
 
 Here you can see how the missings data frame should look like. 
 
@@ -485,7 +485,6 @@ Here you can see how the missings data frame should look like.
 missings <- createMissings(dat, inputForDescriptives = inputForDescriptives_edited)
 head(missings)
 ```
-
 
 ## Missings To-do
 
@@ -505,20 +504,46 @@ missings <- getMissings(".\\excel_files\\missings.xlsx")
 
 # 4. Scales
 
+In order to display scales correctly, you need an Excel files with an overview over all the scales and their items. 
+
 ## About Scales
 
-> [!NOTE]
-> Info: no need to edit, etc.
+Scale variables contain information about their scale, e.g. the items that make up the scale. Fake scales contain of variables, but don't have a separate scale variable; you can still display them as scales, though (see Descriptive Statistics: Fake Scales).  
+
+### Example Table
+
+This is what the scale info should look like: 
+
+```{r create scaleInfo}
+scaleInfo <- createScaleInfo(inputForDescriptives_edited)
+head(scaleInfo)
+```
+
 
 ## Scales To-do
 
+You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scales and which items belong to it. You just need the list `input_descriptives` for that. Usually you don't need to edit this file. 
+
 ### Create Scales
 
-### Check for Errors
+The function `createScaleInfo()` reads the information about scales out of the descriptives list, and creates a new data frame that you need to save as an Excel file. 
 
-### Additional Notes/Hotfixes
+```{r scales, eval=FALSE}
+# creating the object
+scales <- createScaleInfo(input_descriptives)
+# save as an Excel file
+writeExcel(df_list = scales, row.names = FALSE, filePath = ".\\excel_files\\scales.xlsx")
+```
 
-Say something about fake scales or why they might not be displayed correctly.
+You need to look at the file to make sure all scales are displayed correctly, for instance with `View(scales)`. It looks for grouped variables, so not every scale might be in here and not every variable in the file might be a scale. All errors and mismatches occurring here can or should usually be fixed in the `inputForDescriptive` files. 
+
+you should also import the file again with `getScaleInfo()` which also checks for errors and cleans up the format.
+
+```{r get scales, eval=FASLSE}
+# read in Excel file and check for right format
+scales <- getScaleInfo(".\\excel_files\\skalen.xlsx")
+```
+
 
 ------------------------------------------------------------------------
 
@@ -789,24 +814,6 @@ Use the template for that.
 
 
 
-## 4. Scales
-
-You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scaled items. You just need the list `input_descriptives` for that. Usually you don't need to edit the skalen file.
-
-```{r skalen, eval=FALSE}
-# creating the object
-skalen <- createScaleInfo(input_descriptives)
-# save as an Excel file
-write_xlsx(df_list = skalen, row.names = FALSE, filePath = ".\\excel_files\\skalen.xlsx")
-# read in Excel file and check for right format
-skalen <- getScaleInfo(".\\excel_files\\skalen.xlsx")
-```
-
-When `getScaleInfo` doesn't throw an error, you should look at the object `skalen` anyway to make sure it contains all scaled items, i.e. all scale variables and their item variables. If the scales aren't displayed correctly, there's usually an error in `input_descriptives`, for instance when the scaled items aren't labeled correctly.
-
-```{r checking skalen, eval=FALSE}
-View(skalen)
-```
 
 ## 5. Abbreviation List/Abkürzungsverzeichnis
 
