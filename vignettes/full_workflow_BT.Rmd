@@ -30,10 +30,7 @@ dat <- eatGADS::import_spss(file)
 
 The main function for creating a Skalenhandbuch or codebook is called `eatcodebook()`. It takes the input from several lists and data frames that you create throughout this vignette and converts them into one long object containing LaTeX code. You have to be mindful of special characters (like α and other Greek letters) in string input from the data frames as they might throw errors down the line. Also, formatting in Excel is lost in the LaTeX script, so you may need to add LaTeX code in the Excel files. The most common occurrences are mentioned in this vignette.
 
-While working in the codebook, you will probably find some mismatches or errors in the data. You then have to recreate every data frame or Excel table you created so far, including the changes you made to those objects. This vignette contains examples how to write a script in R that you can just rerun in those cases, without having to redo a lot of work. 
-
-The package `eatCodebook` was created with the codebook for the [IQB Bildungstrends](https://www.iqb.hu-berlin.de/bt/) in mind. Some use cases are specific to these Bildungstrends (BT) studies, but you can create a codebook for your own study with this vignette, as well. 
-
+While working on the codebook, you will probably find some mismatches or errors in the data. You then have to recreate every data frame or Excel table you created so far, including the changes you made to those objects. This vignette contains examples how to write a script in R that you can just rerun in those cases, without having to redo a lot of work. 
 
 ## What is a Codebook?
 
@@ -41,9 +38,13 @@ In order to answer research questions, research institutes collect a lot of data
 A codebook contains **all of the collected variables** of a study or data collection, including their instructions, relevant statistics, references, and more. With that you can see, whether data sets might help you answer the question you do research on, before asking for the data. 
 
 
-## other resources
+## About this Vignette
 
-...
+There are several chapters explaining how to create a codebook. You need at least two sets of data and additional information to add like the references or instructions of the variables, the order they're supposed to be displayed in the codebook and more. Each chapter contains an `About` section explaining the what and why of what you are doing and a `To-do` section explaining how to do these things in `R` step by step.
+
+The package `eatCodebook` was created with the codebook for the [IQB Bildungstrends](https://www.iqb.hu-berlin.de/bt/) in mind. Some use cases are specific to these Bildungstrends (BT) studies, but you can create a codebook for your own study with this vignette, as well. 
+
+The example code in this vignette will focus on the example data set available in the package `eatCodebook`. You can find example code that's more specific for the BT codebook in the template repository on GitHub. 
 
 
 --------------------------------------------------------------------------------
@@ -54,7 +55,7 @@ Before we start, we need to setup a proper work space. Creating a codebook takes
 
 ## create a new Repository
 
-First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. when you don't have access to this repository, ask the package developer for help. 
+First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. when you don't have access to this repository, ask the package developer for help or create your own repository. 
 
 
 ![](.\pictures\repo_template.png){width=70%}
@@ -67,13 +68,13 @@ There are several files and folders. The .R files contain example scripts and to
 
 | R File | Description |
 |------------------------------------|------------------------------------|
-| `0SH_main.R` | The main file you work in. You can work with just this file and ignore the others, if you want. I recommend using this file for smaller changes and the separate files for more complex changes. With this file, you can create Excel files which you then have to edit manually or in R. |
-| `1SH_kennwerte.R` | Create and edit the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here. |
-| `2SH_varinfo.R` | Create and edit the `varinfo` file. This file contains the core content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
-| `3SH_gliederung.R` | The information read from `varinfo` is usually incomplete, so you have to add missing section names. |
-| `4SH_literatur.R` | Create and edit the `reference` file. You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs. |
-| `5SH_latex_intro.R` | A template to create a .tex file with latex syntax out of a a Word .docx document. You need this later when creating the intro. |
-| `6SH_Erstellung_kurz.R` | A short script which can create a new codebook version after you created all the necessary Excel files.|
+| `0_main.R` | The main file you work in. You can work with just this file and ignore the others, if you want. I recommend using this file for smaller changes and the separate files for more complex changes. With this file, you can create Excel files which you then have to edit manually or in R. |
+| `1_kennwerte.R` | Create and edit the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here. |
+| `2_varinfo.R` | Create and edit the `varinfo` file. This file contains the core content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
+| `3_gliederung.R` | The information read from `varinfo` is usually incomplete, so you have to add missing section names. |
+| `4_literatur.R` | Create and edit the `reference` file. You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs. |
+| `5_latex_intro.R` | A template to create a .tex file with latex syntax out of a a Word .docx document. You need this later when creating the intro. |
+| `6_Erstellung_kurz.R` | A short script which can create a new codebook version after you created all the necessary Excel files.|
 
 You need to make sure, that there are three folders and create them if not. 
 
@@ -83,7 +84,7 @@ You need to make sure, that there are three folders and create them if not.
 | `Latex` | Here you save the .tex files and pdfs of the finished latex script for the codebook. You can add the folder `archive` to keep different versions to compare. |
 | `Texte` | Here you can save the intro text or cover, etc. |
 
-Pull the repo and start with the file `0SH_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust.
+Pull the repo and start with the file `0_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust.
 
 ## Packages
 
@@ -106,6 +107,7 @@ install.packages("readtext")
 library(readtext)
 ```
 
+After you set up your work space, we will work through the templates or the To-dos step by step in this vignette. 
 
 --------------------------------------------------------------------------------
 
@@ -142,9 +144,11 @@ You have to save all the data sets in one list that also determines the order in
 
 ## Data Import To-do
 
+Open the file `0_main.R`. First you need to install and load the packages `eatCodebook` and `eatGADS`, if you haven't already done that.
+
 ### Import the Data
 
-Either use `import_spss()` for .sav (SPSS) files or `readRDS()` to import each data set separately, you just need a string with your local file path. Name them in a meaningful manner. Here you have an example syntax, where you would need to add/adjust the proper file name.  
+Either use `import_spss()` for .sav (SPSS) files or `readRDS()` to import each data set separately, you just need a string with your local file path. Name them in a meaningful manner. Here you have an example syntax, where you would need to add the proper **file name**.  
 
 ```{r data import, eval=FALSE}
 data_sus      <- eatGADS::import_spss("Q:\\filepath\\Daten_sus.sav")
@@ -155,7 +159,7 @@ data_slfb     <- eatGADS::import_spss("Q:\\filepath\\Daten_slfb.sav")
 
 ### Save Data in a List
 
-After importing the data, you need to save it in one list. The order determines the order in which they are displayed in the codebook. The names should be consistent throughout. 
+After importing the data, you need to save it in one list `datalist`. The order determines the order in which they are displayed in the codebook. The names should be consistent throughout. 
 
 ```{r datenliste, eval=FALSE}
 datalist <- list(sus = data_sus,
@@ -169,7 +173,6 @@ datalist <- list(sus = data_sus,
 # 2. Descriptive Statistics
 
 Now you have the raw data, but you want the descriptive statistics for the codebook, not the whole data sets. 
-
 
 ## About Descriptive Statistics
 
@@ -186,7 +189,7 @@ head(inputForDescriptives)
 
 You can look at the template data frame either in R or save it in a new Excel file.
 
-```{r export varinfo, eval=FALSE}
+```{r export descriptives, eval=FALSE}
 # look at it in R
 View(inputForDescriptives)
 
@@ -307,20 +310,53 @@ To display it like this the **imp** column becomes relevant. It must be set to *
 <img src="./pictures/input_imp.PNG" alt="input_imp" />  
 <br>  
 
-The function `createScaleInfo()` should adds imputed variables like a scale to the data frame. Without the scale variable the information which variables belongs together might be lost. In this case, it might not be relevant, though, as these variables are not a scale. 
+The function `createScaleInfo()` adds imputed variables like a scale to the data frame. Without the scale variable the information which variables belongs together might be lost. In this case, it might not be relevant, though, as these variables are not a scale. 
 
 
 ## Descriptives Statistics To-do
 
+Now you open `1_kennwerte.R`. The editing of the descriptives can be a lot of code, especially if you have several data sets, so it's best to do this in a separate file. The packages `eatCodebook` and `eatGADS` need to be loaded. Then you copy the `Import Data` Code in this file, so you can work on it without needing to open `0_main.R` the next time you work on it. 
+
+For each imported data set, you create a new object with `createInputForDescriptives()` containing input for the descriptive statistics about each variable like their *name*, *label*, *format*, *scale level* or which variables are *grouped* together. You edit them according to the [About section](#input-for-descriptives-table), check the input and then you calculate the actual descriptive statistics with `calculateDescriptives()`. 
+
+
 ### Create *Input for Descriptives*
 
+You use the function `createInputForDescriptives()` to create a data frame for each data set separately and name them according to your data sets like `descriptives_sus` or `descriptives_lfb_allg`, etc. The function needs the `GADSdat` data set (e.g. `data_sus`) and returns a data frame. 
+
+```{r create input for descriptives, eval=FALSE}
+# example data
+inputForDescriptives <- createInputForDescriptives(GADSdat = dat, nCatsForOrdinal = 4)
+
+# BT example
+descriptives_sus <- createInputForDescriptives(GADSdat = data_sus, nCatsForOrdinal = 4)
+```
+
+You should save each data frame separately so save your progress. When you work with the template you don't need to adjust the file path - the Excel should be saved in the folder `excel_files`. You just need to make sure, that you are in the working directory. otherwise you would have to add the proper file path. 
+
+```{r saving descriptives, eval=FALSE}
+# example data
+writeExcel(inputForDescriptives, ".\\excel_files\\inputForDescriptives.xlsx")
+
+# BT template example
+writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus.xlsx")
+```
+
+Now you should have as many Excel files as you imported data sets. 
+
 ### Check and Edit *inputForDescriptives*
+
+
+
+
 
 all items have to be grouped correctly, otherwise the scales won't be displayed right.
 
 ### Check Scale Consistency
 
+
 ### Calculate Descriptives
+
 
 ### Save Ojbects in Two Lists
 
@@ -330,7 +366,7 @@ all items have to be grouped correctly, otherwise the scales won't be displayed 
 
 ## 2. Descriptive Statistics
 
-For each imported data set, you create a new object with `createInputForDescriptives` containing important descriptive information about the each variables like their name, label, format information for the pdf in the end, scale level or which variables are grouped together. You name them according to you data sets like `descriptives_sus` or `descriptives_lfb`.
+
 
 ```{r creating input for descriptives, eval=FALSE}
 descriptives_sus <- createInputForDescriptives(GADSdat = daten_sus, nCatsForOrdinal = 4)
