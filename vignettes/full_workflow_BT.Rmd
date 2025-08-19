@@ -522,7 +522,7 @@ head(scaleInfo)
 
 ## Scales To-do
 
-You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scales and which items belong to it. You just need the list `input_descriptives` for that. Usually you don't need to edit this file. 
+Open `0_main.R` and scroll down the `scales`. You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scales and which items belong to it. You just need the list `input_descriptives` for that. Usually you don't need to edit this file. 
 
 ### Create Scales
 
@@ -577,7 +577,7 @@ In Excel: First sheet `Akronyme`, second sheet `statistische Formelzeichen`
 
 ## Abbreviation List To-do
 
-You create either an empty object for the abbreviation list with `createAbbrList()` or read in the one from last year's BT and call it `abbr_list`, and save it in a new Excel file.
+Open `0_main.R` and scroll down the `abbreviation list`. You create either an empty object for the abbreviation list with `createAbbrList()` or read in the one from last year's BT and call it `abbr_list`, and save it in a new Excel file.
 
 ### Create New Empty List
 
@@ -612,7 +612,6 @@ abbr_list$Akronyme <- rbind(abbr_list$Akronyme, newLines)
 # remove lines
 abbr_list$Akronyme <- abbr_list$Akronyme[-2,]
 ```
-
 
 ### Notes on Special Letters
 
@@ -658,24 +657,61 @@ abbr_list <- makeAbbrList(".\\excel_files\\abkuerzung.xlsx")
 
 # 6. Variable Information (varinfo)
 
+Creating and editing the `varinfo.xlsx` file/object is the **main work** of creating the codebook. This objects contains all information about the variables, their order and structure, as well as their references, instructions, remarks or information about the background model. There is only one object/Excel file overall, but each data set has its own sheet or data frame, so you can edit them separately.
+
 ## About Varinfo
 
-### Varinfo Table
+After preparing the `inputForDescriptives` you use the two lists `datalist` (containing the data sets) and `input_descriptives` to create a template list of data frames, with one data frame per data set. Each data frame consists of a column for the variables in the order of the `inputForDescriptives_edited` file and several columns with additional information about each variable. 
+
+In order for the variables to be displayed correctly in the codebook, you need to add information on layout, structure, subsection names, references, instructions, etc. for each variable. The order of the variables in `varinfo` determines the order of the variables in the codebook. 
+
+### Example Table
+
+Here is in example what that can look like. We will look at the function of each column below. 
+
+```{r varinfo example}
+varinfo <- createVarInfo(dat, inputForDescriptives = inputForDescriptives)
+head(varinfo)
+```
+
+
 
 what it looks like and what the cols mean.
 
 > [!TIP]
-> Overview of columns in *varinfo*:
+> Here is a brief overview of the different columns in *varinfo*:
 >
-> -   first col
-> -   second col
+> - **Var.Name**: The name of the variable
+> - **in.DS.und.SH**: Indicator whether the variable is in the codebook and data set
+> - **Unterteilung.im.Skalenhandbuch**: Overview of subsection names
+> - **Layout**: Assignment of the layout options
+> - **LabelSH**: The label of the variable (has to match the data set)
+> - **Anmerkung.Var**: Assignment of annotations in the codebook
+> - **Gliederung**: Overview of section numbering
+> - **Reihenfolge**: Order of variables in the codebook
+> - **Titel**: Title of the codebook page of the variable
+> - **rekodiert**: Display whether a variable was previously recoded
+> - **QuelleSH**: Specification of the source of the variable in a questionnaire
+> - **Instruktionen**: Specification of the instructions of the variable in a questionnaire
+> - **Hintergrundmodell**: Indication of whether the variable is in the background model
+> - **HGM.Reihenfolge**: the order for the background model (in the appendix)
+> - **HGM.Variable.erstellt.aus**: Indication for the background model from which variables the variable was created
+> - **intern.extern**: Indication of whether the variable is for internal or external use
+> - **Seitenumbruch.im.Inhaltsverzeichnis**: Indication whether there is a pagination in the table of contents for the title
 
-Some more info/explanation on some of the cols.  
+
+
 
 #### Var.Name
 
+Each variable name has to be unique across data sets.
+
+You can't have duplicated subsection names, either. For instance, in the chapters `Unterricht in Mathematik` and `Unterricht in Deutsch` you can't have the subsection `Selbstkonzept` in both, they would need to be called something like `Selbstkonzept Mathematik` and `Selbstkonzept Deutsch`. 
+
 > [!CAUTION]
-> In all the data sets, there shouldn't/can't be any Variables with the same names or subsections. 
+> Across data sets, variables can't have the same name!  
+> Across chapters, subsections can't have the same name!
+
 
 #### in.DS.und.SH
 
@@ -709,6 +745,46 @@ from the `finale Reihenfolge` Excel. It should contain all the Variables, their 
 ### Add Background Model Info
 
 ### Add Remarks
+
+
+
+
+## 6. Varinfo
+
+### varinfo setup
+
+The setup is quite simple, you can do that in `SH_main.R`. You first create a varinfo object from the SPSS data list you read in at the beginning (`datenliste`) and from the input for descriptives list you created out of that (`input_descriptives`). It contains all variables for each data set and columns that you need, but you still need to add a lot of information from other files.
+
+Then you add layout information for each variable. And save to Excel `varinfo.xlsx` as a backup or template, and `varinfo_bearbeitet.xlsx` as the file you actually work with. The you read in the created Excel and check the format with `getVarInfo`.
+
+```{r varinfo setup, eval=FALSE}
+# creating varinfo object
+varinfo <- createVarInfo(datenliste, input_descriptives)
+# Layout
+varinfo <- inferLayout(varinfo, datenliste, input_descriptives)
+
+# save to Excel
+write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo.xlsx")
+write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo_bearbeitet.xlsx")
+# checking format
+varinfo <- getVarInfo(".\\excel_files\\varinfo.xlsx")
+```
+
+With this, the setup is complete and I recommend to switch to `SH_varinfo.R`, so your main script doesn't get too long and you lose overview. You need to add the following information. The order in which you add them is up to you.
+
+| Column in Varinfo | Where to get the Information from | Order |
+|------------------------|------------------------|------------------------|
+| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set | usually like SPSS files |
+| `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called `Reihenfolge_Variable_final.xlsx` or similar, contains one sheet per data set | different from SPSS files |
+| `rekodiert` | Info in the variable name: all with `_r` at the end | no order |
+| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | in an extra Excel file, you probably have to ask about it | no order |
+| optional: `Anmerkung.Var` | in an file on Q: | check order |
+
+The order of the variables in `varinfo` depends on the order from the SPSS files. However, the order of the variables files the BT-Team provides for you might be different. The files for `Quellen` and `Gliederung` usually contain all variables, whereas for the backgroundmodel/HGM or `rekodiert` you have to change the input for individual variables, so the order is not relevant.
+
+I recommend starting with the files that have the same order as the original varinfo, so you only have to change the variable order once. For this vignette I'll just describe the procedure for one data set.
+
+
 
 
 ------------------------------------------------------------------------
@@ -875,67 +951,5 @@ Use the template for that.
 
 #### Special Characters
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-------------------------------------------------------------------------
-
-
-## 6. Varinfo
-
-Creating and editing the `varinfo.xlsx` file/object is the main work of creating the Skalenhandbuch. This objects contains all information about the variables, their order and structure, as well as their references, instructions, remarks or information about the background model, as you can see [here](https://beckerbenj.github.io/eatCodebook/articles/full_workflow.html#variable-information). There is only one object/Excel file overall, but each data set has its own sheet, so you can edit them separately.
-
-### varinfo setup
-
-The setup is quite simple, you can do that in `SH_main.R`. You first create a varinfo object from the SPSS data list you read in at the beginning (`datenliste`) and from the input for descriptives list you created out of that (`input_descriptives`). It contains all variables for each data set and columns that you need, but you still need to add a lot of information from other files.
-
-Then you add layout information for each variable. And save to Excel `varinfo.xlsx` as a backup or template, and `varinfo_bearbeitet.xlsx` as the file you actually work with. The you read in the created Excel and check the format with `getVarInfo`.
-
-```{r varinfo setup, eval=FALSE}
-# creating varinfo object
-varinfo <- createVarInfo(datenliste, input_descriptives)
-# Layout
-varinfo <- inferLayout(varinfo, datenliste, input_descriptives)
-
-# save to Excel
-write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo.xlsx")
-write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo_bearbeitet.xlsx")
-# checking format
-varinfo <- getVarInfo(".\\excel_files\\varinfo.xlsx")
-```
-
-With this, the setup is complete and I recommend to switch to `SH_varinfo.R`, so your main script doesn't get too long and you lose overview. You need to add the following information. The order in which you add them is up to you.
-
-| Column in Varinfo | Where to get the Information from | Order |
-|------------------------|------------------------|------------------------|
-| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set | usually like SPSS files |
-| `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called `Reihenfolge_Variable_final.xlsx` or similar, contains one sheet per data set | different from SPSS files |
-| `rekodiert` | Info in the variable name: all with `_r` at the end | no order |
-| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | in an extra Excel file, you probably have to ask about it | no order |
-| optional: `Anmerkung.Var` | in an file on Q: | check order |
-
-The order of the variables in `varinfo` depends on the order from the SPSS files. However, the order of the variables files the BT-Team provides for you might be different. The files for `Quellen` and `Gliederung` usually contain all variables, whereas for the backgroundmodel/HGM or `rekodiert` you have to change the input for individual variables, so the order is not relevant.
-
-I recommend starting with the files that have the same order as the original varinfo, so you only have to change the variable order once. For this vignette I'll just describe the procedure for one data set.
 
 
