@@ -477,12 +477,12 @@ Another imported part of a codebook is the documentation of the value labels of 
 
 You need to save the created data frame in Excel and read it in again with `getMissings()` to clean up and check the input. Otherwise you usually don't need to edit anything here. 
 
-###Eexample Table
+### Example Table
 
 Here you can see how the missings data frame should look like. 
 
 ```{r missings example}
-missings <- createMissings(dat, inputForDescriptives = inputForDescriptives_edited)
+missings <- createMissings(dat, inputForDescriptives = inputForDescriptives)
 head(missings)
 ```
 
@@ -515,7 +515,7 @@ Scale variables contain information about their scale, e.g. the items that make 
 This is what the scale info should look like: 
 
 ```{r create scaleInfo}
-scaleInfo <- createScaleInfo(inputForDescriptives_edited)
+scaleInfo <- createScaleInfo(inputForDescriptives)
 head(scaleInfo)
 ```
 
@@ -539,7 +539,7 @@ You need to look at the file to make sure all scales are displayed correctly, fo
 
 you should also import the file again with `getScaleInfo()` which also checks for errors and cleans up the format.
 
-```{r get scales, eval=FASLSE}
+```{r get scales, eval=FALSE}
 # read in Excel file and check for right format
 scales <- getScaleInfo(".\\excel_files\\skalen.xlsx")
 ```
@@ -549,66 +549,109 @@ scales <- getScaleInfo(".\\excel_files\\skalen.xlsx")
 
 # 5. Abbreviation List
 
+The codebook's intro and additional texts might have abbreviations that need explaining. You can add an abbreviation list in the appendix for that. You need a list of two data frames (or Excel file) with the abbreviations and the explanations. You don't need this object for the minimal version of the codebook, so you can skip this part or come back to it later. 
+
 ## About the Abbreviation List
 
-> [!NOTE]
-> Info: copy from last BTs.
+You can usually copy the Excel `abbr_list.xlsx` or `abkürzungen.xlsx` from last BTs and adjust them if needed or you create you own file with `createAbbrList()`. 
+
+### Example Tables
+
+When you use `createAbbrList()` it creates a list of two data frames **Akronyme** (acronyms) and **statistische Formelzeichen** (statistical formula) with two columns each. The first should contain all abbreviations used in any text in the codebook and their meaning. The second should contain all statistical formula symbols and their meaning. It should look something like this:
+
+```{r example abbr_list, eval=FALSE}
+View(abbr_list)
+```
+
+![](.\pictures\abbr_list_R.png)
+
+In Excel: First sheet `Akronyme`, second sheet `statistische Formelzeichen`
+
+![](.\pictures\abbr_list_akronym.png)
+
+![](.\pictures\abbr_list_statFormula.png)
+
+> [!CAUTION]
+> Be mindful of using LaTeX syntax when you want to display special characters or italic letters!  
+
 
 ## Abbreviation List To-do
 
-### Create New List
+You create either an empty object for the abbreviation list with `createAbbrList()` or read in the one from last year's BT and call it `abbr_list`, and save it in a new Excel file.
+
+### Create New Empty List
+
+You create two empty data frames in a list, already labeled correctly. You can edit it in R or save it to Excel as `abkürzung.xlsx` and edit it manually. 
+
+```{r create abbr_list, eval=FALSE}
+abbr_list <- createAbbrList()
+# save in Excel
+writeExcel(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkürzung.xlsx")
+```
 
 ### Import Old List
 
+You can also import an old `abkürzung.xlsx` from the last BT, for instance, save it to your work space and update it if necessary. You would need to update your `file path` for that. 
+
+```{r import abbr_list, eval=FALSE}
+abbr_list <- getExcel("Q:\\filepath\\abkuerzung.xlsx")
+# save in Excel
+writeExcel(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkürzung.xlsx")
+```
+
 ### Update the List
+
+You can add or delete entries in R like with any other data frame that is saved in a list.
+
+```{r edit abbr_list, eval=FALSE}
+# add a new line
+abbr_list$`Statistische Formelzeichen`[nrow(abbr_list$`Statistische Formelzeichen`) + 1,] = c("α", "Cronbachs Alpha")
+# add multiple lines
+newLines <- data.frame(Abkuerzung = c("AG", "ALLG"), Bedeutung = c("Arbeitsgemeinschaft", "Allgemeine Schule"))
+abbr_list$Akronyme <- rbind(abbr_list$Akronyme, newLines)
+# remove lines
+abbr_list$Akronyme <- abbr_list$Akronyme[-2,]
+```
+
 
 ### Notes on Special Letters
 
-like alpha, sub/superscript, etc. in latex syntax
+LaTeX can't display Greek characters when you just use the letter by itself. You might need to adjust the spelling. `$\alpha$` is LaTeX code and should be printed like the image shows.
 
-
-
-
-## 5. Abbreviation List/Abkürzungsverzeichnis
-
-You create either a template object for the abbreviation list or read in the one from last year's BT and call it `abbr_list`, and save it in a new Excel file. The file has two sets of abbreviations: `Akronyme` and `statistische Formelzeichen`, that each get their own Excel sheet/list object.
-
-```{r abbr_list, eval=FALSE}
-# new object, without input
-abbr_list <- createAbbrList()
-# read in abbr_list from last BT 
-abbr_list <- getExcel("Q:\\filepath\\abkuerzung.xlsx")
-# save in Excel
-write_xlsx(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkuerzung.xlsx")
-```
-
-You can add or delete entries in R like with any other data.frame that is saved in a list. LaTeX can't display Greek characters when you just use the letter by itself. You might need to adjust the spelling. `$\alpha$` is LaTeX code and should be printed like the image shows.
-
-```{r edit abbr_list 1, eval=FALSE}
-# add/edit entries in abbr_list
+```{r edit abbr_list alpha, eval=FALSE}
+# edit one entry
 abbr_list$`Statistische Formelzeichen`$Symbol[1] <- "$\alpha$"
-abbr_list$`Statistische Formelzeichen`$Bedeutung[1] <- "cronbachs Alpha"
 ```
 
 ![](.\pictures\abbr_list_alpha.png)
 
-When the Excel file from past BTs has commentary/extra columns in it, you can't use the function `makeAbbrList`. To make sure you only the have two columns per sheet/data frame, you can save just the first two columns per sheet in your `abbr_list` object. After that you need to save the changes to Excel.
+Italic letters or subscript/superscript also need special LaTeX code. The code `$_{pw}$` makes the *pw* in subscript. Use `$^{2}$` for supercript the 2 or `\textit{M}` to print italic text or letters.
 
-```{r edit abbr_list 2, eval=FALSE}
+```{r edit abbr_list subscipt, eval=FALSE}
+# new line with correct syntax
+abbr_list$`Statistische Formelzeichen`[nrow(abbr_list$`Statistische Formelzeichen`) + 1,] = c("r$_{pw}$", "Part-whole-korrigierte Korrelation")
+```
+
+Either add new lines already with the LaTeX syntax or edit existing entries. 
+
+### Use `makeAbbrList()`
+
+When the Excel file from past BTs has commentary/extra columns in it, you can't use the function `makeAbbrList()`. To make sure you only the have two columns per sheet/data frame, you can save just the first two columns per sheet in your `abbr_list` object. After that you need to save the changes to Excel.
+
+```{r makeAbbrList setup, eval=FALSE}
 # edit abbr_list
 abbr_list$Akronyme <- abbr_list21$Akronyme[,1:2]
 abbr_list$`Statistische Formelzeichen` <- abbr_list21$`Statistische Formelzeichen`[,1:2]
 # save in Excel
-write_xlsx(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkuerzung.xlsx")
+writeExcel(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkürzung.xlsx")
 ```
 
 When you have all the abbreviations, you can create the LaTeX code that you need directly from the Excel file.
 
-```{r abbr_list2, eval=FALSE}
+```{r makeAbbrList, eval=FALSE}
 # creates LaTeX syntax
 abbr_list <- makeAbbrList(".\\excel_files\\abkuerzung.xlsx")
 ```
-
 
 
 ------------------------------------------------------------------------
