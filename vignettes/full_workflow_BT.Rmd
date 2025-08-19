@@ -787,17 +787,18 @@ There should be another Excel file containing information on the background mode
 
 For the variable to appear in the appendix, the column `Hintergrundmodell` must be set to *ja*. Otherwise, there must be a *nein*. Then you add the variables they were created from (if any), for instance listed in `basevar`. They should show up in the order they are displayed in the codebook. 
 
-
 ## Varinfo To-do
 
-> [!NOTE]
-> This is the main work!
+Now comes the harder part of actually creating and editing the `varinfo`. You can either create and save a `varinfo.xlsx` file in `0_main.R` or you open `2_varinfo.R` and create `varinfo.xlsx` here. There's a lot to add,  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file `2_varinfo.R` to do the editing. Then you can just rerun it without having to think too much. You should check it after each recreation, though, whether the script still worked correctly. 
 
-On Q there are several Excel files with information that you need to add to this table/Excel. 
+When working on the BT codebook for IQB, you can find most Excel file containing the additional information to add on the network server *FDZ und Bildungstrend*. 
+
 
 ### Create Varinfo
 
+
 ### Infer Layout
+
 
 ### Create varinfo_edited
 
