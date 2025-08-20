@@ -791,8 +791,24 @@ Now comes the harder part of actually creating and editing the `varinfo`. You ca
 
 When working on the BT codebook for IQB, you can find most Excel files containing the additional information to add on the network server *FDZ und Bildungstrend*. 
 
+When you open `2_varinfo.R` you will have to import the data and the descriptives in order to create `varinfo`. After the setup you need to add the following information. The order in which you add them is up to you.
 
-### Create Varinfo
+| Column in Varinfo | Where to get the Information from | Order |
+|------------------------|------------------------|------------------------|
+| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set | usually like data sets |
+| `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called `Reihenfolge_Variable_final.xlsx` or similar, contains one sheet per data set | different from data sets |
+| `rekodiert` | Info in the variable name: all with `_r` at the end | no order |
+| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | in an extra Excel file, you probably have to ask about it | no order |
+| optional: `Anmerkung.Var` | in an file on Q: | check order |
+
+The order of the variables in `varinfo` depends on the order from the data sets. However, the final order of the variables might be different. The files for `Quellen` (refernces) and `Gliederung` (structure) usually contain all variables, whereas for the backgroundmodel/HGM or `rekodiert` you have to change the input for individual variables, so the order is not relevant.
+
+I recommend starting with the files that have the same order as the original `varinfo`, so you only have to change the variable order once. For this vignette I'll just describe the procedure for one data set, but you need to do it for each data set or varinfo data frame/Excel sheet. 
+
+
+### Varinfo Setup
+
+#### Create Varinfo
 
 Open `2_varinfo.R`. You first create a varinfo object with `createVarInfo()` from the SPSS data list you read in at the beginning (`datenliste`) and from the input for descriptives list you created out of that (`input_descriptives`): 
 
@@ -802,7 +818,7 @@ varinfo <- createVarInfo(datalist, input_descriptives)
 
 It contains all variables for each data set and columns that you need, but you still need to add a lot of information from other files. You can either save it directly as an Excel file or do the layout first. 
 
-### Infer Layout
+#### Infer Layout
 
 Then you add layout information for each variable with `inferLayout()`. You need the newly created `varinfo` object and the `datalist` and `input_descriptives`. 
 
@@ -810,7 +826,7 @@ Then you add layout information for each variable with `inferLayout()`. You need
 varinfo <- inferLayout(varinfo, datalist, input_descriptives)
 ```
 
-### save to Excel
+#### save to Excel
 
 save to Excel `varinfo.xlsx` as a template, and `varinfo_edited.xlsx` as the file you actually work with. Then you import `varinfo_edited.xlsx` and check the format with `getVarInfo`.
 
@@ -824,39 +840,55 @@ varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
 
 ### Add References and Instructions
 
+To Add the references and instructions you need access to the an Excel file with all the variables listed plus their source/reference in APA short form (like `Hertel et al. (2014)`) and their instructions (in the questionnaire). The Excel should have two sheets, one with 4 at least columns (Variable, Label, Instruktion and Quelle), and a second one with the APA long from references that we need later. You need to do the following steps: 
+
+> - use `getExcel()` to import the references/instructions, select proper sheet (usually Sheet 1)
+> - check the columns with `View()`: `Variable`, `Quelle` and `Instruktionen`
+> - the order in the Quellen-Excel is the same as the original data set, ergo also the unedited varinfo.
+> - transfer the entries, check your progress/proper matching and save in between.
+
+#### import references and instructions from Excel
+
+Import the Excel file with `getExcel()`, you need to add the proper file path before. Then select the right sheet, usually `sheet 1`, and look at the data frame. 
+
+```{r import references, eval=FALSE}
+quellen_sus <- getExcel("filepath\\Instruktionen_Quellen.xlsx")
+quellen_sus <- quellen_sus$`Sheet 1`
+View(quellen_sus)
+```
+
+The data frame should look something like this. Not every variable will have a reference or instructions, but NAs, so you needn't worry about the order. 
+
+![](pictures\varinfo_quellen.png)
+
+
+
+
+
+
+
 ### Add Structure and Subsections
+
+
 
 from the `finale Reihenfolge` Excel. It should contain all the Variables, their Labels (without special characters) and maybe their Titles (with special characters). Also it should contain the Gliederung or structure number (1.1, 1.2, etc.) and the subsection/subchapters. 
 
 ### Add Recoded Info
 
+
+
 ### Add Background Model Info
+
+
 
 ### Add Remarks
 
 
 
 
-## 6. Varinfo
-
-### varinfo setup
 
 
 
-
-With this, the setup is complete and I recommend to switch to `SH_varinfo.R`, so your main script doesn't get too long and you lose overview. You need to add the following information. The order in which you add them is up to you.
-
-| Column in Varinfo | Where to get the Information from | Order |
-|------------------------|------------------------|------------------------|
-| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set | usually like SPSS files |
-| `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called `Reihenfolge_Variable_final.xlsx` or similar, contains one sheet per data set | different from SPSS files |
-| `rekodiert` | Info in the variable name: all with `_r` at the end | no order |
-| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | in an extra Excel file, you probably have to ask about it | no order |
-| optional: `Anmerkung.Var` | in an file on Q: | check order |
-
-The order of the variables in `varinfo` depends on the order from the SPSS files. However, the order of the variables files the BT-Team provides for you might be different. The files for `Quellen` and `Gliederung` usually contain all variables, whereas for the backgroundmodel/HGM or `rekodiert` you have to change the input for individual variables, so the order is not relevant.
-
-I recommend starting with the files that have the same order as the original varinfo, so you only have to change the variable order once. For this vignette I'll just describe the procedure for one data set.
 
 
 
