@@ -674,8 +674,6 @@ varinfo <- createVarInfo(dat, inputForDescriptives = inputForDescriptives)
 head(varinfo)
 ```
 
-
-
 what it looks like and what the cols mean.
 
 > [!TIP]
@@ -789,18 +787,40 @@ For the variable to appear in the appendix, the column `Hintergrundmodell` must 
 
 ## Varinfo To-do
 
-Now comes the harder part of actually creating and editing the `varinfo`. You can either create and save a `varinfo.xlsx` file in `0_main.R` or you open `2_varinfo.R` and create `varinfo.xlsx` here. There's a lot to add,  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file `2_varinfo.R` to do the editing. Then you can just rerun it without having to think too much. You should check it after each recreation, though, whether the script still worked correctly. 
+Now comes the harder part of actually creating and editing the `varinfo`. You can either create and save a `varinfo.xlsx` file in `0_main.R` or you open `2_varinfo.R` and create `varinfo.xlsx` here. There's a lot to add,  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file `2_varinfo.R` to do the editing. Then you can just rerun it without having to think too much. You should check after each recreation, whether the script still worked correctly, though.
 
-When working on the BT codebook for IQB, you can find most Excel file containing the additional information to add on the network server *FDZ und Bildungstrend*. 
+When working on the BT codebook for IQB, you can find most Excel files containing the additional information to add on the network server *FDZ und Bildungstrend*. 
 
 
 ### Create Varinfo
 
+Open `2_varinfo.R`. You first create a varinfo object with `createVarInfo()` from the SPSS data list you read in at the beginning (`datenliste`) and from the input for descriptives list you created out of that (`input_descriptives`): 
+
+```{r create varinfo, eval=FALSE}
+varinfo <- createVarInfo(datalist, input_descriptives)
+```
+
+It contains all variables for each data set and columns that you need, but you still need to add a lot of information from other files. You can either save it directly as an Excel file or do the layout first. 
 
 ### Infer Layout
 
+Then you add layout information for each variable with `inferLayout()`. You need the newly created `varinfo` object and the `datalist` and `input_descriptives`. 
 
-### Create varinfo_edited
+```{r infer layout varinfo, eval=FALSE}
+varinfo <- inferLayout(varinfo, datalist, input_descriptives)
+```
+
+### save to Excel
+
+save to Excel `varinfo.xlsx` as a template, and `varinfo_edited.xlsx` as the file you actually work with. Then you import `varinfo_edited.xlsx` and check the format with `getVarInfo`.
+
+```{r save varinfo, eval=FALSE}
+# save to Excel
+writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo.xlsx")
+writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo_edited.xlsx")
+# import and check format
+varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
+```
 
 ### Add References and Instructions
 
@@ -821,22 +841,8 @@ from the `finale Reihenfolge` Excel. It should contain all the Variables, their 
 
 ### varinfo setup
 
-The setup is quite simple, you can do that in `SH_main.R`. You first create a varinfo object from the SPSS data list you read in at the beginning (`datenliste`) and from the input for descriptives list you created out of that (`input_descriptives`). It contains all variables for each data set and columns that you need, but you still need to add a lot of information from other files.
 
-Then you add layout information for each variable. And save to Excel `varinfo.xlsx` as a backup or template, and `varinfo_bearbeitet.xlsx` as the file you actually work with. The you read in the created Excel and check the format with `getVarInfo`.
 
-```{r varinfo setup, eval=FALSE}
-# creating varinfo object
-varinfo <- createVarInfo(datenliste, input_descriptives)
-# Layout
-varinfo <- inferLayout(varinfo, datenliste, input_descriptives)
-
-# save to Excel
-write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo.xlsx")
-write_xlsx(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo_bearbeitet.xlsx")
-# checking format
-varinfo <- getVarInfo(".\\excel_files\\varinfo.xlsx")
-```
 
 With this, the setup is complete and I recommend to switch to `SH_varinfo.R`, so your main script doesn't get too long and you lose overview. You need to add the following information. The order in which you add them is up to you.
 
