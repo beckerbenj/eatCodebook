@@ -117,10 +117,10 @@ The first step is the data import.
 
 ## About the Data
 
-The BT studies usually have several SPSS data files (`.sav`) that you can import with `import_spss()`, but you can also import `.RDS` files with `readRDS()`. If you work with Github, the data sets are probably too large to upload to Github, so they would need to be stored locally.
+The BT studies usually have several SPSS data files (`.sav`) that you can import with `import_spss()`, but you can also import `.RDS` files with `readRDS()`. If you work with Github, the data sets are probably too large to upload to Github, so they would need to be stored locally. The BT codebook works with multiple data sets that are stored in a list. But the process should also work if you have only one data set. 
 
 > [!NOTE]
-> At the moment you need to have at least **two data sets**, otherwise the function `codebook()` won't work.  
+> 
 > The same variable name cannot be used more than once across the data sets. 
 
 The data sets can be stored in `GADSdat` objects, containing two data frames: one for the variables and the actual data, the other contains the meta data or labels for the variables. 
@@ -667,14 +667,14 @@ In order for the variables to be displayed correctly in the codebook, you need t
 
 ### Example Table
 
-Here is in example what that can look like. We will look at the function of each column below. 
+Here is in example what that can look like.
 
 ```{r varinfo example}
 varinfo <- createVarInfo(dat, inputForDescriptives = inputForDescriptives)
 head(varinfo)
 ```
 
-what it looks like and what the cols mean.
+Now we will look at the function of each column below. 
 
 > [!TIP]
 > Here is a brief overview of the different columns in *varinfo*:
@@ -769,7 +769,9 @@ Each variable can have a reference and/or instruction. You can find them in the 
  
 #### Background Model (HGM)
 
-With `eatCodebook` you can also create a page in the appendix for a background model (BGM) or *Hintergrundmodell* (HGM) in German. It should look like this: `Hintergrundvariable` contains the variable, `Erstellt aus` the variable(s) the (new) variable was created from (if any), and `Inhalt der Hintergrundvariable` contains the variable's label, e.g. the content of the background variable. 
+With `eatCodebook` you can also create a page in the appendix for a background model (BGM) or *Hintergrundmodell* (HGM) in German. [ergänzen, was ein HGM ist bzw. warum man das macht].
+
+It should look like this: `Hintergrundvariable` contains the variable, `Erstellt aus` the variable(s) the (new) variable was created from (if any), and `Inhalt der Hintergrundvariable` contains the variable's label, e.g. the content of the background variable. 
 
 <img src="./pictures/BGM.PNG" alt="BGM" />   
 
@@ -781,21 +783,21 @@ There are three columns in `varinfo` that you need to edit for variables to show
 > - **HGM.Reihenfolge**: the order for the background model (in the appendix)
 > - **HGM.Variable.erstellt.aus**: Indication for the background model from which variables the variable was created
 
-There should be another Excel file containing information on the background model. It should contain the variables that should show up in the appendix (`Variablenname`), their labels (`Variablenlabel`) and from which variables they were created from (`basevar`). 
+There should be another Excel file containing information on the background model, also on `Q:`. It should contain the variables that should show up in the appendix (`Variablenname`), their labels (`Variablenlabel`) and from which variables they were created from (`basevar`). 
 
 For the variable to appear in the appendix, the column `Hintergrundmodell` must be set to *ja*. Otherwise, there must be a *nein*. Then you add the variables they were created from (if any), for instance listed in `basevar`. They should show up in the order they are displayed in the codebook. 
 
 ## Varinfo To-do
 
-Now comes the harder part of actually creating and editing the `varinfo`. You can either create and save a `varinfo.xlsx` file in `0_main.R` or you open `2_varinfo.R` and create `varinfo.xlsx` here. There's a lot to add,  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file `2_varinfo.R` to do the editing. Then you can just rerun it without having to think too much. You should check after each recreation, whether the script still worked correctly, though.
+Now comes the harder part of actually creating and editing the `varinfo`. You can either create and save a `varinfo.xlsx` file in `0_main.R` or you open `2_varinfo.R` and create `varinfo.xlsx` here. There's a lot to add,  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file `2_varinfo.R` to do the editing. Then you can just rerun it without having to do too much. You should check after each recreation, whether the script still worked correctly, though.
 
-When working on the BT codebook for IQB, you can find most Excel files containing the additional information to add on the network server *FDZ und Bildungstrend*. 
+When working on the BT codebook for IQB, you can find most Excel files containing the additional information to add on the network server *Q: FDZ und Bildungstrend*. 
 
-When you open `2_varinfo.R` you will have to import the data and the descriptives in order to create `varinfo`. After the setup you need to add the following information. The order in which you add them is up to you.
+When you open `2_varinfo.R` you will have to import the data and the descriptives in order to create `varinfo`. After the setup you need to add the following information. The order in which you add them is up to you, but it makes sense to keep to the order in this vignette. 
 
 | Column in Varinfo | Where to get the Information from | Order |
 |------------------------|------------------------|------------------------|
-| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set | usually like data sets |
+| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set | tbd |
 | `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called `Reihenfolge_Variable_final.xlsx` or similar, contains one sheet per data set | different from data sets |
 | `rekodiert` | Info in the variable name: all with `_r` at the end | no order |
 | `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | in an extra Excel file, you probably have to ask about it | no order |
@@ -816,11 +818,24 @@ Open `2_varinfo.R`. You first create a varinfo object with `createVarInfo()` fro
 varinfo <- createVarInfo(datalist, input_descriptives)
 ```
 
-It contains all variables for each data set and columns that you need, but you still need to add a lot of information from other files. You can either save it directly as an Excel file or do the layout first. 
+
+If you have multiple data sets stored in `datalist`, the object `varinfo` will also be a list with several data frames. Each data frame contains all variables from a data set and columns that you need, but you still need to add a lot of information from other files. It's important that the data sets and descriptives were named the same (`sus`, `lfb_allg`, etc.), because `createVarInfo()` takes those names to name the different data frames. You can look at `varinfo` as a list or at each data frame separately:
+
+```{r varinfo example list, eval=FALSE}
+# View varinfo list object
+View(varinfo)
+# View data frames in varinfo
+View(varinfo$sus)
+View(varinfo$lfb_allg)
+View(varinfo$lfb_spez)
+View(varinfo$slfb)
+```
+
+You can either save it directly as an Excel file or do the layout first. 
 
 #### Infer Layout
 
-Then you add layout information for each variable with `inferLayout()`. You need the newly created `varinfo` object and the `datalist` and `input_descriptives`. 
+You add layout information for each variable with `inferLayout()`. You need the newly created `varinfo` object and the `datalist` and `input_descriptives`. 
 
 ```{r infer layout varinfo, eval=FALSE}
 varinfo <- inferLayout(varinfo, datalist, input_descriptives)
@@ -828,7 +843,7 @@ varinfo <- inferLayout(varinfo, datalist, input_descriptives)
 
 #### save to Excel
 
-save to Excel `varinfo.xlsx` as a template, and `varinfo_edited.xlsx` as the file you actually work with. Then you import `varinfo_edited.xlsx` and check the format with `getVarInfo`.
+Now save to Excel `varinfo.xlsx` as a template, and `varinfo_edited.xlsx` as the file you actually work with. Then you import `varinfo_edited.xlsx` and check the format with `getVarInfo`.
 
 ```{r save varinfo, eval=FALSE}
 # save to Excel
@@ -840,16 +855,16 @@ varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
 
 ### Add References and Instructions
 
-To Add the references and instructions you need access to the an Excel file with all the variables listed plus their source/reference in APA short form (like `Hertel et al. (2014)`) and their instructions (in the questionnaire). The Excel should have two sheets, one with 4 at least columns (Variable, Label, Instruktion and Quelle), and a second one with the APA long from references that we need later. You need to do the following steps: 
+To Add the references and instructions you need access to the an Excel file with all the variables listed plus their source/reference in APA short form (like `Hertel et al. (2014)`) and their instructions (in the questionnaire). The Excel should have two sheets, one with at least 4 columns (Variable, Label, Instruktion and Quelle), and a second one with the APA long from references that we need later. You need to do the following steps: 
 
-> - use `getExcel()` to import the references/instructions, select proper sheet (usually Sheet 1)
+> - import the references/instructions, select proper sheet (usually Sheet 1)
 > - check the columns with `View()`: `Variable`, `Quelle` and `Instruktionen`
-> - the order in the Quellen-Excel is the same as the original data set, ergo also the unedited varinfo.
+> - match the references and instructions to the order of varinfo
 > - transfer the entries, check your progress/proper matching and save in between.
 
 #### import references and instructions from Excel
 
-Import the Excel file with `getExcel()`, you need to add the proper file path before. Then select the right sheet, usually `sheet 1`, and look at the data frame. 
+Import the Excel file with `getExcel()`, you need to add the proper file path. Then select the right sheet, usually `sheet 1`, and look at the data frame. 
 
 ```{r import references, eval=FALSE}
 quellen_sus <- getExcel("filepath\\Instruktionen_Quellen.xlsx")
@@ -857,13 +872,62 @@ quellen_sus <- quellen_sus$`Sheet 1`
 View(quellen_sus)
 ```
 
-The data frame should look something like this. Not every variable will have a reference or instructions, but NAs, so you needn't worry about the order. 
+The data frame should look something like this. 
 
 ![](pictures\varinfo_quellen.png)
+#### Check Matching Variables
 
+Not every variable will have a reference or instructions, but NAs, so if you take the column `Quelle` on its own, it should have the same row length as the `varinfo`. Either way, you need to check whether the variables are the same in both data frames. `match()` needs to character vectors. The function compares whether the names in each vector are the same and the order they're in. The output should be a numerical vector with numbers from 1 to the number of rows in `quellen_sus$Variable`. If the numbers are switched or you get `NA`s, the variable names don't match and you need to find out why that is. 
 
+```{r varinfo reference match var, eval=FALSE}
+match(quellen_sus$Variable, varinfo$sus$Var.Name)
+```
 
+The order of the variables should match, but doesn't necessarily. It might be that there are variables in `quellen_sus` that are not in `varinfo$sus`. You would have to remove them from the data frame. If that doesn't solve the problem, something else might be wrong, in which case you should ask your supervisor or whoever is responsible for the data sets. 
 
+#### Remove and Add Rows
+
+You identify the name of the variable that is in `quellen_sus` but not in `varinfo$sus` with `View()`, get the position with `grep()` and remove the line(s).
+
+```{r varinfo ref remove rows, eval=FALSE}
+# identify position of variable "IDBL"
+pos <- grep("IDBL", `quellen_sus$Variable`)
+# remove line
+quellen_sus <- quellen_sus[-pos,]
+```
+
+#### Match Order and Write references/instructions in Varinfo
+
+After making sure you have the right variables in your `quellen` object, you should match the order again (to make sure). In `pos` you should now have the variable's order (as a numeric vector) of the variable names from `varinfo$sus` as they appear in `quellen_sus`.  
+
+```{r varinfo reference match var 2, eval=FALSE}
+pos <- match(quellen_sus$Variable, varinfo$sus$Var.Name)
+```
+
+With `varinfo$sus$QuelleSH[pos]` you now have the variable names (and the rest of the columns) in the same order as `quellen_sus`, so you can just add the character vectors with the references and instructions (`quellen_sus$Quelle` and `quellen_sus$Instruktion`) in the corresponding column in `varinfo$sus`. 
+
+```{r varinfo ref in varinfo, eval=FALSE}
+varinfo$sus$QuelleSH[pos] <- quellen_sus$Quelle
+varinfo$sus$Instruktionen[pos] <- quellen_sus$Instruktion
+```
+
+#### Check New Input
+
+It's best to compare the two data frames once more to make sure the references and instructions are matched with the correct variable. You can check all or a random set of variables (1:10) and look at the columns ins question. 
+
+```{r varinfo ref check, eval=FALSE}
+quellen_sus[1:10,c(1, 3, 4)]
+varinfo$sus[1:10, c(1, 11:12)]
+```
+
+#### Save Progress
+
+When everything matched correcty, save your progress and import the Excel with `getVarInfo()`.
+
+```{r varinfo ref save, eval=FALSE}
+writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+```
 
 
 
@@ -871,7 +935,22 @@ The data frame should look something like this. Not every variable will have a r
 
 
 
+
+
 from the `finale Reihenfolge` Excel. It should contain all the Variables, their Labels (without special characters) and maybe their Titles (with special characters). Also it should contain the Gliederung or structure number (1.1, 1.2, etc.) and the subsection/subchapters. 
+
+
+
+#### Save Progress
+
+When everything matched correcty, save your progress and import the Excel with `getVarInfo()`.
+
+```{r varinfo ref save, eval=FALSE}
+writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+```
+
+
 
 ### Add Recoded Info
 
