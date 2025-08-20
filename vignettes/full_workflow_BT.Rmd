@@ -930,15 +930,25 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
 
 
-
 ### Add Structure and Subsections
-
-
 
 
 
 from the `finale Reihenfolge` Excel. It should contain all the Variables, their Labels (without special characters) and maybe their Titles (with special characters). Also it should contain the Gliederung or structure number (1.1, 1.2, etc.) and the subsection/subchapters. 
 
+#### Import `finale Reihenfolge`
+
+#### remove NAs in Varname
+
+#### Change Varinfo Order
+
+#### Add Missing subsections
+
+#### seperate structure and subsection names
+
+#### Add structure and subsection names in varinfo
+
+#### adjust titles if necessary
 
 
 #### Save Progress
