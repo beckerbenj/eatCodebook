@@ -818,7 +818,6 @@ Open `2_varinfo.R`. You first create a varinfo object with `createVarInfo()` fro
 varinfo <- createVarInfo(datalist, input_descriptives)
 ```
 
-
 If you have multiple data sets stored in `datalist`, the object `varinfo` will also be a list with several data frames. Each data frame contains all variables from a data set and columns that you need, but you still need to add a lot of information from other files. It's important that the data sets and descriptives were named the same (`sus`, `lfb_allg`, etc.), because `createVarInfo()` takes those names to name the different data frames. You can look at `varinfo` as a list or at each data frame separately:
 
 ```{r varinfo example list, eval=FALSE}
@@ -830,6 +829,10 @@ View(varinfo$lfb_allg)
 View(varinfo$lfb_spez)
 View(varinfo$slfb)
 ```
+
+This is what the list of data frames `varinfo` can look like: 
+
+![](pictures\varinfo_object.png)
 
 You can either save it directly as an Excel file or do the layout first. 
 
@@ -874,7 +877,8 @@ View(quellen_sus)
 
 The data frame should look something like this. 
 
-![](pictures\varinfo_quellen.png)
+![](pictures\varinfo_quellen.png){width=100%}
+
 #### Check Matching Variables
 
 Not every variable will have a reference or instructions, but NAs, so if you take the column `Quelle` on its own, it should have the same row length as the `varinfo`. Either way, you need to check whether the variables are the same in both data frames. `match()` needs to character vectors. The function compares whether the names in each vector are the same and the order they're in. The output should be a numerical vector with numbers from 1 to the number of rows in `quellen_sus$Variable`. If the numbers are switched or you get `NA`s, the variable names don't match and you need to find out why that is. 
@@ -932,8 +936,6 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Structure and Subsections
 
-
-
 from the `finale Reihenfolge` Excel. It should contain all the Variables, their Labels (without special characters) and maybe their Titles (with special characters). Also it should contain the Gliederung or structure number (1.1, 1.2, etc.) and the subsection/subchapters. 
 
 #### Import `finale Reihenfolge`
@@ -955,30 +957,19 @@ from the `finale Reihenfolge` Excel. It should contain all the Variables, their 
 
 When everything matched correcty, save your progress and import the Excel with `getVarInfo()`.
 
-```{r varinfo ref save, eval=FALSE}
+```{r varinfo structure save, eval=FALSE}
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
 
 
-
 ### Add Recoded Info
-
 
 
 ### Add Background Model Info
 
 
-
 ### Add Remarks
-
-
-
-
-
-
-
-
 
 
 
