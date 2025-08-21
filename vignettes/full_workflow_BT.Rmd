@@ -865,6 +865,8 @@ To Add the references and instructions you need access to the an Excel file with
 > - match the references and instructions to the order of varinfo
 > - transfer the entries, check your progress/proper matching and save in between.
 
+Linking or matching data sets are usually created due to technical reasons and usually don't have references or instructions, so you don't need to add anything to them. 
+
 #### import references and instructions from Excel
 
 Import the Excel file with `getExcel()`, you need to add the proper file path. Then select the right sheet, usually `sheet 1`, and look at the data frame. 
@@ -964,26 +966,113 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Structure and Subsections
 
-from the `finale Reihenfolge` Excel. It should contain all the Variables, their Labels (without special characters) and maybe their Titles (with special characters). Also it should contain the Gliederung or structure number (1.1, 1.2, etc.) and the subsection/subchapters. 
+For the BT, you can usually find the info on the *Gliederung* (subsection numbers, also referred to as *structure*) and *Unterteilung im Skalenhandbuch* (subsection names) in a Excel called something like `finale Reihenfolge` on Q:. It contains the variable names, their labels and subsection info (number and name), as well as adjusted titles (if needed), each of the data sets have their own sheet, except linking or matching data who still need subsection info (see *Linking and Matching Data*). This Excel file also contains the final order in which the variables should be displayed in the codebook, so you need to adjust the order in `varinfo` to match the one in `finale Reihenfolge` (final order). You need to do the following steps: 
+
+> - import the `finale Reihenfolge` file, select proper sheet for your data set
+> - delete unnecessary rows (sections)
+> - add missing subsection
+> - change order of `varinfo` to match the final order
+> - separate subsection names and numbers
+> - transfer subsection info in `varinfo`
+> - update titles if necessary
+
+> ![NOTE]
+> 
+> Each subsection name has to be unique. 
 
 #### Import `finale Reihenfolge`
 
-#### remove NAs in Varname
+First you need to import the Excel file and select the proper sheet for your data set (`lfb_allg` for example). The column `Abschnitt` contains the subsection numbers and names, that need to be separated later.
+
+```{r varinfo subsection import, eval=FALSE}
+subsections <- getExcel("Q:\\BT2021\\BT\\90_Skalenhandbuch\\Reihenfolge_Variablen_final.xlsx")
+subsections_lfb_allg <- subsections$LFB_allg
+View(subsections_lfb_allg)
+```
+
+It might look like this: 
+
+![](pictures\varinfo_subsections.png){width=100%}
+
+`Abschnitt` starts with the section name *1 Testdesign* then with the first subsection name *1.1 identifikationsvariable* and then `NA`, then the next subsections *1.2 Testgruppenmerkmale* and *1.3 Rotation*, then the next section *2 Persönliche Angaben* and so forth. We need to clean up the table so we can match the correct subsection info to each variable in `varinfo`. 
+
+#### Remove NAs in `varName`
+
+We need the section names that start with a single digit like *1* later (see 7. structure). The `finale Reihenfolge` Excel added rows between sections, so you have some `NA` entries in the column `varName`, as well. To match the input for the subsections to `varinfo` we need to delete those rows for now. 
+
+```{r varinfo subsection delete sections, eval=FALSE}
+subsections_lfb_allg <- subsections_lfb_allg[!is.na(subsections_lfb_allg$varName),]
+```
+
+#### Seperate Subsection Names and Numbers
+
+We need the number of the subsection and their names separate, so we can 1) check for duplicates and 2) transfer them in the respective `varinfo` columns. The package `eatTools` has a practical function for that: `halveString()`, which separates any string at a specified separator into two strings. After each number there's a blank space, so that's our separator. First we save our `Abschnitt` column in a new vector, then we separate numbers from names and save them in `sep`. It returns a data frame with two columns, that we can name *subsec number* and *subsec name*. 
+
+```{r varinfo subsection separate, eval=FALSE}
+sep <- subsections_lfb_allg$Abschnitt
+sep <- eatTools::halveString(sep, " ", colnames = c("subsec number", "subsec name"))
+```
+
+Then we can add these two new columns to the existing data frame with `cbind()` and check whether it worked with `View()`. 
+
+```{r varinfo subsection add new cols, eval=FALSE}
+subsections_lfb_allg <- cbind(subsections_lfb_allg, sep)
+View(subsections_lfb_allg)
+```
+
+It should look something like this now:
+
+![](pictures\varinfo_subsections_sep.png){width=100%}
+
+#### Check for Duplicates
+
+For some BTs the same data collected for different subjects, so they have the same subsection names. Due to technical reasons each subsection name *has to be unique* in the codebook. So it's important to check for duplicates and report back, if you find any. Be mindful of `NA`s, as they are also seen as duplicated input. 
+
+Now that we have the subsection names by themselves, we can check for duplicates in the column `subsec name`. `anyDuplicated()` checks if there are any duplicates, at all. If the output is `0`, there are no duplicates and you can go the next step. If the output is any other number, it indicates the position of the first duplicated entry in the column. `duplicated()` returns a logical vector of all entries, `TRUE` indicates duplicated entries.  
+
+```{r varinfo subsection duplicates, eval=FALSE}
+anyDuplicated(subsections_lfb_allg$`subsec name`[!is.na(subsections_lfb_allg$`subsec name`)])
+duplicated(subsections_lfb_allg$`subsec name`[!is.na(subsections_lfb_allg$`subsec name`)])
+```
+
+#### Add Missing Subsections
+
+Now we need to fill the `NA`s with the proper subsection info, which is always the one above. The `NA`s in row 3 needs to say *1.1* and *Identifikationsvariable*, in row 8 it should say *2.1* and *Soziodemografie*, etc. 
+
+This loop checks every entry in the new columns `subsec number` and `subsec name` for `NA`s, if it finds one it fills it with the input from the entry before. After the loop you should check the columns with `View()`: for `NA`s, if the numbers are in order and match their names.
+
+```{r varinfo subsection add subsections, eval=FALSE}
+for(i in 1:nrow(subsections_lfb_allg)){
+  if (is.na(subsections_lfb_allg$`subsec number`[i])){
+    subsections_lfb_allg[, 5:6][i,] <- subsections_lfb_allg[, 5:6][i-1,]
+  }
+}
+View(subsections_lfb_allg)
+```
+
+
+
+
+
 
 #### Change Varinfo Order
 
-#### Add Missing subsections
 
-#### seperate structure and subsection names
+
+
+
 
 #### Add structure and subsection names in varinfo
+
+#### Linking and Matching Data
 
 #### adjust titles if necessary
 
 
+
 #### Save Progress
 
-When everything matched correcty, save your progress and import the Excel with `getVarInfo()`.
+When everything matched correctly, save your progress and import the Excel with `getVarInfo()`.
 
 ```{r varinfo structure save, eval=FALSE}
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
