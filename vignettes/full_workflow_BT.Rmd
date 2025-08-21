@@ -1113,7 +1113,7 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Recoded Info
 
-Each variable page shows the info whether or not a variable has been recoded (`ja`) or not (`nein`). You recognize the recoded variables by the ending `_r` in their name. This loop looks through all data frames in `varinfo` in the column `Var.Name`. If it finds the ending `_r`, it write `ja` in the column `rekodiert` for the respective variable. That is all. 
+Each variable page shows the info whether or not a variable has been recoded (`ja`) or not (`nein`). You recognize the recoded variables by the ending `_r` in their name. This loop looks through all data frames in `varinfo` in the column `Var.Name`. If it finds the ending `_r`, it write `ja` in the column `rekodiert` for the respective variable. That is all. This changes all data frames in `varinfo`. 
 
 ```{r varinfo recoded, eval=FALSE}
 for(i in 1:length(varinfo)){
@@ -1139,8 +1139,104 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Background Model Info
 
-#### Add New BGM Variables
+The background model info is something to do for all data frames at once, as well. This info will later show up in the appendix of the codebook, not on the individual pages of the variables. you should do this after changing `varinfo` to match the final order, especially for the column `Reihenfolge.HGM`. The order of the variables in the bgm appendix should match the one in the codebook. You need to do the following steps: 
 
+> - import the Excel from Q:
+> - add new variables to `varinfo` if needed
+> - add background model info to `varinfo`
+
+#### Import Excel
+
+For the BT studies, you will need access to an Excel file containing all the relevant information about the background model somewhere on Q:. Don't forget to adjust the file path. There's one sheet with a lot of columns, but you only need 2 or 3 of them: `Variablenname`, `basevar` and maybe `Variablenlabel`. `basevar` contains the info out of which variables a variable was constructed (if any). 
+
+First you import the file and save it into a data frame. 
+
+```{r varinfo bgm import, eval=FALSE}
+bgm <- getExcel("Q:\\BT2021\\BT\\51_Auswertung\\05_HGM\\05_VF_Imp2021\\variablen.xlsx")
+```
+
+Then you select these three columns and delete the rest in your data frame in R and look at it. 
+
+```{r varinfo bgm adjust table, eval=FALSE}
+bgm <- bgm[, c(5, 6, 16)]
+View(bgm)
+```
+
+Before you can work with this data frame, you need to replace the `NA`s in the column `basevar` with `-`. 
+
+```{r varinfo bgm remove NA, eval=FALSE}
+bgm$basevar[is.na(bgm$basevar)] <- "-"
+```
+
+#### Add New BGM Variables to `varinfo`
+
+Before you add any bgm info to `varinfo`, you might have to add a few variables to data frames that were specially created for the bgm. These are not displayed in the codebook, but need to be listed in `varinfo`, otherwise they won't show up in the appendix. 
+
+For the BT21 there were variables created with the names `X.klasse` for the student data, that were not in the data set. If you find any variables in the bgm Excel that you can't find in any of the data frames, ask your supervisor. You probably have to add them manually. 
+
+You start by identifying the variables, in the example all variables that end with `.klasse` are extracted. 
+
+```{r varinfo bgm add var 1, eval=FALSE}
+# extracting .klasse variables, labels, and basevar
+pos <- grep(".klasse", hgm$Variablenname)
+hgm_klasse <- hgm[pos,]
+View(hgm_klasse)
+```
+
+Then you have to find out in which data frame the originals are. You can use the `basebar` column for that. In this case there are only individual variables listed, so that makes it easier to find. You add a new column to the `hgm_klasse` data frame (called `dat`). Then you search the variable names of all data frames if they match an entry in `basevar` (the original variable) and add the name of that data frame to the column `dat`. 
+
+```{r varinfo bgm add var 2, eval=FALSE}
+hgm_klasse <- cbind(hgm_klasse, dat = NA)
+
+for(var in hgm_klasse$basevar){
+  for(i in 1:length(varinfo)){
+    if(var %in% varinfo[[i]]$Var.Name){
+      hgm_klasse[hgm_klasse$basevar == var,]$dat <- names(varinfo)[i]
+    }
+  }
+}
+```
+
+In this case the original variables were all in the student data. So now you need to add new rows to the `varinfo$sus` data frame. You need to add new empty rows to `varinfo`. `pos` can give you the number of rows you need to add. 
+
+```{r varinfo bgm add var 3, eval=FALSE}
+varinfo$sus[nrow(varinfo$sus)+length(pos),] <- NA
+```
+
+Then you fill in the empty lines with default setting like so:
+
+```{r varinfo bgm add var 4, eval=FALSE}
+varinfo$sus[is.na(varinfo$sus$Var.Name),]$Var.Name <- hgm_klasse$Variablenname
+
+varinfo$sus[varinfo$sus$Var.Name %in% hgm_klasse$Variablenname,c(2:17)] <- "-"
+varinfo$sus[varinfo$sus$Var.Name %in% hgm_klasse$Variablenname,c(5, 9)] <- hgm_klasse$Variablenlabel
+varinfo$sus[varinfo$sus$Var.Name %in% hgm_klasse$Variablenname,c(2, 10, 13, 17)] <- "nein"
+varinfo$sus[varinfo$sus$Var.Name %in% hgm_klasse$Variablenname,]$Reihenfolge <- 0
+varinfo$sus[varinfo$sus$Var.Name %in% hgm_klasse$Variablenname,]$Layout <- NA
+varinfo$sus[varinfo$sus$Var.Name %in% hgm_klasse$Variablenname,]$Gliederung <- "12"
+
+View(varinfo$sus)
+```
+
+
+#### Adding BGM Info
+
+With this loop you can identify the variables in the `bgm` table and adjust the columns in the respective data frame in `varinfo`. It works for all data frames at once. It sets the `Hintergrundmoell` to `ja`, adds the order number in `HGM.Reihenfolge` and the base variables in `basevar`. You can check if the numbers are ascending from first to last data frame with `View()`. 
+
+```{r varinfo bgm add info, eval=FALSE}
+order <- 1
+for(i in 1:length(varinfo)){
+  for(var in varinfo[[i]]$Var.Name){
+    if(var %in% hgm$Variablenname){
+      varinfo[[i]][varinfo[[i]]$Var.Name == var,]$Hintergrundmodell <- "ja"
+      varinfo[[i]][varinfo[[i]]$Var.Name == var,]$HGM.Reihenfolge <- order
+      varinfo[[i]][varinfo[[i]]$Var.Name == var,]$HGM.Variable.erstellt.aus <- hgm[hgm$Variablenname == var,]$basevar
+      order <- order + 1
+    }
+  }
+}
+View(varinfo)
+```
 
 #### Save Progress
 
@@ -1154,6 +1250,7 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Remarks
 
+If you have a list or Excel file with remarks and additions for certain variables, you can add them similarly to the other information above. 
 
 #### Save Progress
 
@@ -1163,7 +1260,6 @@ When everything turned out correct, save your progress and import the Excel with
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
-
 
 
 ------------------------------------------------------------------------
