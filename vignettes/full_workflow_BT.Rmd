@@ -970,9 +970,11 @@ For the BT, you can usually find the info on the *Gliederung* (subsection number
 
 > - import the `finale Reihenfolge` file, select proper sheet for your data set
 > - delete unnecessary rows (sections)
+> - compare variables (varinfo vs. final order)
+> - separate subsection names and numbers
+> - check for duplicate subsection names
 > - add missing subsection
 > - change order of `varinfo` to match the final order
-> - separate subsection names and numbers
 > - transfer subsection info in `varinfo`
 > - update titles if necessary
 
@@ -994,7 +996,16 @@ It might look like this:
 
 ![](pictures\varinfo_subsections.png){width=100%}
 
-`Abschnitt` starts with the section name *1 Testdesign* then with the first subsection name *1.1 identifikationsvariable* and then `NA`, then the next subsections *1.2 Testgruppenmerkmale* and *1.3 Rotation*, then the next section *2 Persönliche Angaben* and so forth. We need to clean up the table so we can match the correct subsection info to each variable in `varinfo`. 
+`Abschnitt` starts with the section name *1 Testdesign* then with the first subsection name *1.1 identifikationsvariable* and then `NA`, then the next subsections *1.2 Testgruppenmerkmale* and *1.3 Rotation*, then the next section *2 Persönliche Angaben* and so forth. We need to clean up the table so we can match the correct subsection info to each variable in `varinfo`. But first, we need to check if the variables in the final order file match the ones in `varinfo`.
+
+#### Check Variables
+
+It's the same as before except this time, both variables should be exactly the same, so the output should be `character(0)` both times. When you find any mismatches report back to your supervisor.
+
+```{r varinfo subsection setdiff, eval=FALSE}
+setdiff(varinfo$lfb_allg$Var.Name, subsections_lfb_allg$varName)
+setdiff(subsections_lfb_allg$varName, varinfo$lfb_allg$Var.Name)
+```
 
 #### Remove NAs in `varName`
 
@@ -1050,25 +1061,45 @@ for(i in 1:nrow(subsections_lfb_allg)){
 View(subsections_lfb_allg)
 ```
 
-
-
-
-
-
 #### Change Varinfo Order
 
+Now we need adjust the order of `varinfo` to match the final order. This only works, if the variables of both data frames are exactly the same like we checked before (see *Check Variables*). 
 
+We use the `match()` function again, but this time, we save the changed order into the `varinfo` list. The first objects needs to be the variables in the order we want from `finale Reihenfolge`, the second the object we want to change. You can check again with `View()`. 
 
+```{r varinfo subsection match var, eval=FALSE}
+order_new <- match(subsections_lfb_allg$varName, varinfo$lfb_allg$Var.Name)
+varinfo$lfb_allg <- varinfo$lfb_allg[order_new,]
+```
 
+#### Add structure and subsection names in `varinfo`
 
+Now that we cleaned up the table we got from `finale Reihenfolge`, we have a data frame with the variable names and their matching subsection numbers and names, as well as the respective data frame from `varinfo` with a matched order, we can finally transfer the subsection info into `varinfo`. 
 
-#### Add structure and subsection names in varinfo
+```{r varinfo subsection transfer, eval=FALSE}
+varinfo$lfb_allg$Unterteilung.im.Skalenhandbuch <- subsections_lfb_allg$`subsec name`
+varinfo$lfb_allg$Gliederung <- subsections_lfb_allg$`subsec number`
+View(varinfo$lfb_allg)
+```
+
+To compare `varinfo$lfb_allg` and `subsections_lfb_allg` you can use any kind of check functions used so far, but it should be the same. 
 
 #### Linking and Matching Data
 
-#### adjust titles if necessary
+Linking or matching data sets are created for technical reasons and don't contain a lot of variables. The BT rarely adds subsection info to the Excel file, but due to technical reasons, they still need them. Because they don't have different subsections you can just edit the columns `Gliederung` to `1.1` and `Unterteilung.im.Skalenhandbuch` to `Linkingvariable` or `Matchingvariable` respectively, unless you are told to do otherwise. 
 
+```{r varinfo subsection linking data, eval=FALSE}
+varinfo$match$Unterteilung.im.Skalenhandbuch <- "Matchingvariablen"
+varinfo$match$Gliederung <- "1.1"
+```
 
+#### Adjust Titles
+
+The variable's labels cannot be changed, because they have to match the data sets. They usually don't contain umlauts or other special characters. The titles have the same input as the labels per default. `Titel` (titles) are shown in the table of content, for instance, it's nice to have proper (German) spelling here, so you can adjust it by reading in the additional `Titel` column in the Excel file, if you have that. This column contains spelling with umlauts, ß or other special characters. After you changed the order of `varinfo` to match the final order, you can just transfer the column in `varinfo$data$Titel` like you did with the subsection info. 
+
+```{r varinfo subsection titles, eval=FALSE}
+varinfo$lfb_allg$Titel <- subsections_lfb_allg$`Titel.(Ebene.3)`
+```
 
 #### Save Progress
 
