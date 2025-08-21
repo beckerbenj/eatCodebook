@@ -1113,11 +1113,56 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Recoded Info
 
+Each variable page shows the info whether or not a variable has been recoded (`ja`) or not (`nein`). You recognize the recoded variables by the ending `_r` in their name. This loop looks through all data frames in `varinfo` in the column `Var.Name`. If it finds the ending `_r`, it write `ja` in the column `rekodiert` for the respective variable. That is all. 
+
+```{r varinfo recoded, eval=FALSE}
+for(i in 1:length(varinfo)){
+  varinfo[[i]]$rekodiert[grep("*_r", varinfo[[i]]$Var.Name)] <- "ja"
+}
+```
+
+You can check if it worked with the following line (for each data frame separately):
+
+```{r varinfo recoded check, eval=FALSE}
+varinfo$lfb_allg[,c(1,10)]
+```
+
+#### Save Progress
+
+When everything turned out correct, save your progress and import the Excel with `getVarInfo()`.
+
+```{r varinfo recoded save, eval=FALSE}
+writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+```
+
 
 ### Add Background Model Info
 
+#### Add New BGM Variables
+
+
+#### Save Progress
+
+When everything turned out correct, save your progress and import the Excel with `getVarInfo()`.
+
+```{r varinfo bgm save, eval=FALSE}
+writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+```
+
 
 ### Add Remarks
+
+
+#### Save Progress
+
+When everything turned out correct, save your progress and import the Excel with `getVarInfo()`.
+
+```{r varinfo remarks save, eval=FALSE}
+writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
+```
 
 
 
