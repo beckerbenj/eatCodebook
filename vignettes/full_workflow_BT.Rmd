@@ -1292,7 +1292,7 @@ gliederung <- createStructure(varinfo)
 
 The data frames should look like this: subsection names and numbers from `varinfo` are added, but the section names with the full numbers (1, 2, etc.) are empty. You need to add them for each data frame. 
 
-![](.\pictures\gliederung_sus.png){width=100%}
+![](.\pictures\gliederung_sus.png){width=50%}
 
 ## Strucutre To-do
 
@@ -1397,13 +1397,22 @@ No add-ons, no duplicates
 
 # 9. Background Model
 
-## About HGM?
+## About BGM
 
-Info about how it should looks like in the appendix?
+You can add a list of all variables relevant for the background model in the appendix. For that you need to add the respective information in `varinfo` in the columns `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` (see 6. varinfo). With that you can create an object that creates the relevant info to create an table to the appendix that looks like this.
+
+<br>
+<img src="./pictures/hgm.PNG" alt="hgm" /><img src="./pictures/hgm2.PNG" alt="hgm2" />
+<br>  
 
 ## HGM To-do
 
-that one line.
+You go back to `0_main.R`, make sure that `varinfo` is loaded into your environment. Then you can just create the background model info with this one line, no need to edit or save anything:
+
+```{r create bgm, eval=FALSE}
+hgm <- makeBGM(varinfo)
+```
+
 
 ------------------------------------------------------------------------
 
@@ -1424,18 +1433,52 @@ that one line.
 
 ## About Meta Data
 
+The meta data is the information for the pdf file that you create at the end of this vignette. It contains info about the *title*, the *authors*, the *keywords* and the *subject* of the pdf. When you work with adobe, you can find the meta data under `Menü` and `Dokumenteneigenschaften`:
+
+![](./pictures/meta_data.PNG){width=60%}
+![](./pictures/meta_data2.PNG){width=100%}
+
+
 > [!Note]
-> something meta data
+> The meta data should contains the following information:
 >
-> -   authors
-> -   Title
+> - **Title**: the title of the codebook
+> - **Authors**: the authors of the codebook and everyone involved in creating the data for it in the order of the authors listed on the cover page.
+> - **Keywords**: apropriate keywords
+> - **Subject**: apropriate subject
 
 ## Meta Data To-do
 
+You work in `0_main.R`. You create a new data frame template with `createMetadata()` and add the four lines. You can probably copy last BT's meta data and adjust the year and authors. It's best to ask you supervisor or BT team what they want to be written here. 
+
 ### Create Table
 
-### Update Table
+```{r create meta data, eval=FALSE}
+meta <- createMetadata()
+```
 
+### Fill in Table
+
+```{r add meta data, eval=FALSE}
+meta[1, "Title"] <- "IQB-Bildungstrend~2021. Skalenhandbuch zur Dokumentation der Erhebungsinstrumente in den naturwissenschaftlichen F?chern und Mathematik"
+meta[1, "Author"] <- "Jule H. Burblies \\sep Edna Grewers \\sep Benjamin Becker \\sep Florian Enke \\sep Nicklas J. Hafiz \\sep Rebecca Schneider \\sep Karoline A. Sachse \\sep Sebastian Weirich \\sep Stefan Schipolowski"
+meta[1, "Keywords"] <- "Bildungstrend 2021\\sep IQB, Skalenhandbuch\\sep Erhebungsinstrumente Sekundarstufe I"
+meta[1, "Subject"] <- "Skalenhandbuch zum Bildungstrend 2021"
+```
+
+### Save to Excel
+
+```{r save meta data, eval=FALSE}
+writeExcel(meta, ".\\excel_files\\meta.xlsx", row.names = FALSE)
+```
+
+### Create Latex Syntax
+
+After you created and saved the meta data to an Excel file, you read from the Excel file with `makeMetadata()` to create the proper Latex syntax for the codebook. 
+
+```{r meta data latex, eval=FALSE}
+meta_final <- makeMetadata(".\\excel_files\\meta.xlsx")
+```
 
 
 ------------------------------------------------------------------------
