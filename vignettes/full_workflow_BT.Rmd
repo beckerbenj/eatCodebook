@@ -1420,12 +1420,17 @@ hgm <- makeBGM(varinfo)
 
 ## About the Cover
 
+You can create a cover in R, but last BTs just created a word document for the cover page that you need to save as a pdf file. After you created the pdf file it's easy to include it in the codebook.
+
+It's usually two pages: an actual cover page with the institute's logos, the title and author names and a second one with licence and bibliography information.
+
 ## Cover To-do
 
-### convert to pdf
+You work in `0_main.R`. After saving the cover as a pdf, you can save it in you GitHub work space in the folder `Texte`. Then you save this string with the proper path file in the object `pdf_cover` that we need later. 
 
-### Add Line
-
+```{r cover, eval=FALSE}
+pdf_cover <- '\\includepdf[pages=-]{.\\Texte\\cover_page.pdf}'
+```
 
 ------------------------------------------------------------------------
 
@@ -1485,15 +1490,52 @@ meta_final <- makeMetadata(".\\excel_files\\meta.xlsx")
 
 # 12. Chapters
 
+Now we still need to name the chapters properly. 
+
 ## About Chapters
 
-Use Chapter names from last BTs.
+Each data set gets its own chapter. Each chapter has several sections (1, 2, etc.) and several subsections (1.1, 1.2, etc.), each subsection can have multiple variables. Last BTs named the data sets like this: 
+
+> [!Note]
+>
+> - **sus**: Schüler:innen
+> - **lfb_allg**: Lehrkräfte allgemein
+> - **lfb_spez**: Lehrkräfte lerngruppenspezifisch
+> - **slfb**: Schulleitungen
+> - **match**: Matching
+> - **linking**: Linkingfehler-Objekte
+
 
 ## Chapters To-do
 
+You work in `0_main.R`. 
+
 ### Create Chapters
 
+`createChapters()` creates a data frame with the data from `varinfo` with two columns: `dataName` contains the names of the data frames of `varinfo` (like sus, lfb_allg, etc.) which are not very intelligible. `chapterName` is empty for now. 
+
+```{r create chapters}
+chapters <- createChapters(varinfo)
+```
+
 ### Edit Chapters
+
+You just need to add the names (see *About Chapters*) in the second column. Make sure the order matches the order of `dataName`. 
+
+```{r add chapters, eval=FALSE}
+chapters$chapterName <- c("Schüler:innen", "Lehrkräfte allgemein", "Lehrkräfte lerngruppenspezifisch", 
+                          "Schulleitungen", "Matching", "Linkingfehler-Objekte")
+```
+
+### Save in Excel
+
+Then you need to save the data frame to Excel and import it again with `getChapters()` to check the format. 
+
+```{r}
+writeExcel(chapters, ".\\excel_files\\chapters.xlsx", row.names = FALSE)
+chapters <- getChapters(".\\excel_files\\chapters.xlsx")
+```
+
 
 ------------------------------------------------------------------------
 
