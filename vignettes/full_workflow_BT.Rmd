@@ -1367,22 +1367,104 @@ gliederung <- getStructure(".\\excel_files\\gliederung.xlsx")
 
 # 8. References
 
+You need to create a separate Excel file with the short and long form references if you want them to appear in the appendix. 
+
 ## About References
 
-One Excel per data set with long format and short format linked to the item/variable.
+Each variable page shows the short form reference that you can then look up in the appendix. For that we need to create an Excel file with all short form references from `varinfo` and match them with their long form counterpart. You create one data frame for all data sets and the intro. 
+
+The references should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format. You need to add special Latex syntax for italic strings and URLs if you want them to show up correctly in the codebook. 
 
 > [!NOTE]
-> References need to be in APA7 format. 
+> References need to be in APA format! 
 
 ## References To-do
 
+You open `4_literatur.R`. You need the reference info from `varinfo`, the long form references for each data set we used to match the short form references to the individual variables. Then we add or match all references into one data frame and save it to Excel. 
+
+### Setup
+
+Make sure the packages and `varinfo` are loaded. 
+
+```{r lit setup, eval=FALSE}
+# packages
+library(eatCodebook)
+library(eatGADS)
+library(eatTools)
+library(tidyxl)
+# get varinfo
+varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
+```
+
 ### Create `litInfo`
 
-### Adjust Short References
+Then we create a template data frame with the short form references in all `varinfo` data frames:
 
-No add-ons, no duplicates
+```{r create lit}
+literatur <- createLitInfo(varinfo)
+literatur
+```
 
-### Import Formatting of Long References
+As you can see the data frame as three columns: `Kurzangabe` for the short form references (if you added references already this column should have several entries), `Langangabe` with the long forms and `in_Literaturverzeichnis` which indicates whether the reference should show up in the appendix (`ja`) or not (`nein`). 
+
+If you want to save this template you have to edit the column `in_Literaturverzeichnis` to either contain the input `ja` or `nein`. Otherwise the function `getLitInfo()` will throw an error. 
+
+```{r save lit template, eval=FALSE}
+literatur$in_Literaturverzeichnis <- "nein"
+# save to Excel
+writeExcel(df_list = literatur, row.names = FALSE, filePath = ".\\excel_files\\literatur.xlsx")
+# import Excel
+literatur <- getLitInfo(".\\excel_files\\literatur.xlsx")
+```
+
+### Clean up Short References
+
+The short forms might have additional info like *in Anlehnung an Hertel et al. (2014)* (based on Hertel et al. (2014)). They need to be according to APA, e.g. *Hertel et al. (2014)*. You need to make sure the punctuation is right and that there are no additions. 
+
+If you used `getLitInfo()` you might have to adjust the spelling of special characters like `&` that were escaped with `\` by the function.
+
+```{r lit remove additions, eval=FALSE}
+# remove latex syntax (if needed)
+literatur$Kurzangabe <- gsub("\\\\&", "&", literatur$Kurzangabe)
+# removes additions before the strings
+literatur$Kurzangabe <- gsub("^.*?in Anlehnung an ","",literatur$Kurzangabe)
+literatur$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",literatur$Kurzangabe)
+```
+
+When you look at the entries now, there should only be APA conform short form references. You need to check whether all references 1) have the proper format and 2) there's only one reference per entry. When a variable has multiple references they will show up in this table as one entry, e.g. *Wagner et al. (2009); Henschel & Roick (2017)*. You need to separate them into two entries. You can identify them by the semicolon `;`. 
+
+```{r lit separate entries, eval=FALSE}
+View(literatur)
+
+literatur$Kurzangabe <- "Wagner et al. (2009); Henschel & Roick (2017)"
+# identify multiple references
+pos <- grep(";", literatur$Kurzangabe)
+# separate entries
+sep <- eatTools::halveString(literatur$Kurzangabe[pos], "; ")
+# update original entry
+literatur$Kurzangabe[pos] <- sep[1]
+# add new row
+literatur[nrow(literatur)+nrow(sep),] <- c(sep[2], NA, "nein")
+```
+
+When variables from different data sets reference the same publication, there will be duplicated entries that you need to remove. 
+
+```{r lit remove duplicates, eval=FALSE}
+literatur <- unique(literatur)
+```
+
+### Import Long References
+
+Now you import the second sheet of the reference (Quellen) Excel files that matched the references to the variables. The second sheet contains all short form references used per data set and their long forms. They should already have the right APA format (with italic parts). If we use `getExcel()` like before this information will be lost. So we use `getExcelAPA()` which imports the Excel data and adds the proper Latex syntax for italic input and URLs. 
+
+
+```{r lit import}
+
+```
+
+
+
+
 
 ### Adjust Long References
 
@@ -1391,6 +1473,8 @@ No add-ons, no duplicates
 ### Add Intro References
 
 ### Check for Duplicates
+
+### Save to Excel
 
 
 ------------------------------------------------------------------------
