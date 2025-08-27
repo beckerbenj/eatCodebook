@@ -1250,7 +1250,7 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Remarks
 
-If you have a list or Excel file with remarks and additions for certain variables, you can add them similarly to the other information above. 
+If you have a list or Excel file with remarks and additions for certain variables, you can add them similarly to the other information above. If they are added in the `finale Reihenfolge` Excel in the column `Kommentar`, you can add them with the structure info. If they are in a separate Excel you can match them item to item like the BGM info. 
 
 #### Save Progress
 
@@ -1261,18 +1261,106 @@ writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
 
-
 ------------------------------------------------------------------------
 
 # 7. Structure
 
+After you finished adding to the `varinfo` Excel, you can open the next file called **3_gliederung.R**. Now we create another Excel file that orders and names the sections and subsections for the codebook. 
+
 ## About the Structure
+
+The function `createStructure()` will read the subsection info from `varinfo` and create a new list with a data frame per data set that you should save in an Excel file. You still need to add the section names that we ignored earlier. Again the BT might only give you section names for data sets with content variables, so you might add them yourself for linking or matching data like before. 
+
+If you want the example data set `dat` to work, you would need to add some structure info (`Unterteilung.im.Skalenhandbuch` and `Gliederung`) into your example `varinfo`, otherwise it won't be able to create a structure. If you don't have access to the IQB files you can use the following code to look at it on your own work space or you can look at the example pictures.
+
+```{r gliederung example setup}
+varinfo$Titel[is.na(varinfo$Titel)] <- "-"
+varinfo$Unterteilung.im.Skalenhandbuch <- "example name" 
+varinfo$Gliederung <- "1.1"
+gliederung <- createStructure(varinfo)
+```
+
+#### Example Table
+
+When we create a new `gliederung` with the info from `varinfo` we get the following list of data frames:
+
+```{r gliederung example, eval=FALSE}
+gliederung <- createStructure(varinfo)
+```
+
+![](.\pictures\gliederung_list.png){width=100%}
+
+The data frames should look like this: subsection names and numbers from `varinfo` are added, but the section names with the full numbers (1, 2, etc.) are empty. You need to add them for each data frame. 
+
+![](.\pictures\gliederung_sus.png){width=100%}
 
 ## Strucutre To-do
 
+Open the next file called **3_gliederung.R**. You just need to create the list, add the few names and save it to Excel.
+
+### Setup
+
+You need to do load the packages and the two Excel files `varinfo_edited.xlsx` and the `finale Reihenfolge` with the structure info we used before. The setup should already be in the template file, you might need to adjust the path file of the structure info Excel, though.
+
+```{r gliederung setup, eval=FALSE}
+# packages
+library(eatCodebook)
+library(eatGADS)
+library(eatTools)
+# get varinfo
+varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
+# get structure info
+subsections <- getExcel("Q:\\BT2021\\BT\\90_Skalenhandbuch\\Reihenfolge_Variablen_final.xlsx")
+View(subsections)
+```
+
 ### Create Structure Table
 
+You create the new list with `createStructure()` and look at it with `View()`:
+
+```{r create gliederung, eval=FALSE}
+gliederung <- createStructure(varinfo)
+View(gliederung)
+```
+
 ### Add missing section names
+
+Now you identify the sections for each data frame separately and add the names to the new data frames. 
+
+The section rows don't have variables, so the `varName` cell is empty for all section rows. You identify sections this way and save them in the object `section_names`. They have both the section number and name.
+
+```{r gliederung find names, eval=FALSE}
+section_names <- subsections$TR_SFB_EFB$Abschnitt[is.na(subsections$TR_SFB_EFB$varName)]
+```
+
+They have both section number and name, so you need to separate that info like before:
+
+```{r gliederung sep info, eval=FALSE}
+sep <- eatTools::halveString(section_names, " ", colnames = c("number", "name"))
+```
+
+But now you only need the `name` info. You add that to the empty spaces in `gliederung`: 
+
+```{r gliederung add names, eval=FALSE}
+gliederung$sus$Titel[is.na(gliederung$sus$Titel)] <- sep[, "name"]
+```
+
+Linking and Matching data probably won't have any names in the `finale Reihenfolge` Excel, so you add the names `Matchingvariable` or `Linkingvariable` like before:
+
+```{r gliederung matching, eval=FALSE}
+gliederung$match$Titel <- "Matchingvariablen"
+gliederung$linking$Titel <- "Linkingvariablen"
+```
+
+
+### Save in Excel
+
+Then you save the `gliederung` list in Excel (one sheet per data frame) and check for correct format with `getStructure()`:
+
+```{r gliederung save, eval=FALSE}
+writeExcel(df_list = gliederung, row.names = FALSE, filePath = ".\\excel_files\\gliederung.xlsx")
+gliederung <- getStructure(".\\excel_files\\gliederung.xlsx")
+```
 
 
 ------------------------------------------------------------------------
