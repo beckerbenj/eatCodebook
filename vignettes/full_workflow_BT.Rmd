@@ -1459,7 +1459,6 @@ Now you import the second sheet of the reference (Quellen) Excel files that matc
 
 The *intro* to the codebook usually has separate references that you need to add as well.
 
-
 ```{r lit import, eval=FALSE}
 longRef_lfb_allg <- getAPAInfo("Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx")
 View(longRef_lfb_allg)
@@ -1535,7 +1534,7 @@ View(literatur)
 
 ### Save to Excel
 
-You can check once more whether everything is displayed the way you want it to. Then save it to Excel and import again with `getLitInfo()` to check for format. `makeLit()` creates the proper Latex syntax for the function `codebook()` directly from the Excel file.
+You can check once more whether everything is displayed the way you want it to. Then save it to Excel and import again with `getLitInfo()` to check for format. `makeLit()` converts the Excel table into the proper Latex syntax for the function `codebook()`.
 
 ```{r lit save and makeLit, eval=FALSE}
 writeExcel(literatur, row.names = FALSE, filePath = ".\\excel_files\\literatur.xlsx")
@@ -1692,25 +1691,39 @@ chapters <- getChapters(".\\excel_files\\chapters.xlsx")
 
 ------------------------------------------------------------------------
 
-# 13. Other Texts: Intro
+# 13. Other Texts
+
+There are two more optional files you can add the the `codebook()` function: *intro* and *lastpage*. *intro* contains the intro text plus all the formatting embedded in Latex code. *lastpage* contains information about the bibiography something something. 
 
 ## About Intro
 
-you prob. get a word file that needs to be converted into latex syntax. 
-
-The Intro contains References as well, bla bla bla
+You will probably get a Word file with the intro text and tables that you need to convert to a .tex file with all the correct Latex code for different parts of the intro like italic text parts, lists or graphics, and footnotes, etc. You can find a example script in `5_latex_intro.R`. You can also do it manually in TexWorks, whatever works best for you. Either way it's a lot of work. If you write a script in R, you can rerun it, without having to reread or recheck the whole document, if there are any changes to the Word document. 
 
 ## Intro To-do
 
-*see maybe Vignette (tbd) about how to convert word.docx files into latex.tex files with R.*
-
 ### Convert Text into Latex Syntax
 
-Use the template for that. 
+If you open `5_latex_intro.R` you can find some examples with which you can write your own script to convert the Word document into the proper Latex code to save it as a .tex file. That will take some time, so you can start with adapting the proper template even before having the final or any version of the intro.
 
-### Save as .tex File
+### Import intro
 
+You work in `0_main.R`. It's important to save the proper latex script version as a .tex file, so you can just import add the code lines with `readLines()`. If you saved your .tex file in the folder *Texte* in your work space, you can use the line as is.
 
+```{r import intro, eval=FALSE}
+intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
+```
+
+## About Lastpage
+
+tbd.
+
+## Lastpage To-do
+
+The workflow is the same for the intro pages. You work in `0_main.R`. You read in the .tex file and save it in `lastpage`.
+
+```{r import lastpage, eval=FALSE}
+lastpage <- readLines(".\\Texte\\Latex_lastpage.tex")
+```
 
 
 ------------------------------------------------------------------------
