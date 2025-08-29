@@ -1683,7 +1683,7 @@ chapters$chapterName <- c("Schüler:innen", "Lehrkräfte allgemein", "Lehrkräft
 
 Then you need to save the data frame to Excel and import it again with `getChapters()` to check the format. 
 
-```{r}
+```{r save chapters, eval=FALSE}
 writeExcel(chapters, ".\\excel_files\\chapters.xlsx", row.names = FALSE)
 chapters <- getChapters(".\\excel_files\\chapters.xlsx")
 ```
@@ -1863,6 +1863,7 @@ First you open the .tex file. You will have a very long script, but you shouldn'
 ### render to pdf (twice)
 
 ![](.\pictures\tex_pdf.png){width=70%}
+
 You have to click the green triangle to render to pdf. Remember to select the right option, so it says *pdfLaTeX*. It should render (which can take a while) and create the a pdf with the same name as the .tex file. It will also create some other new files that you can ignore. This first version will not have a *table of content*, but one of the created files has that info. When you render to pdf again (click the green triangle) the program creates a version with a table of content. 
 
 ### Dealing with Errors
