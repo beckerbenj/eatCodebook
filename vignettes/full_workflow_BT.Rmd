@@ -1457,6 +1457,9 @@ literatur <- unique(literatur)
 
 Now you import the second sheet of the reference (Quellen) Excel files that matched the references to the variables. The second sheet contains all short form references used per data set and their long forms. They should already have the right APA format (with italic parts). If we use `getExcel()` like before this information will be lost. So we use `getAPAInfo()` which imports the Excel data and adds the proper Latex syntax for italic input (`\textit{...}`) and URLs (`\urlstyle{same}\url{...}`). 
 
+The *intro* to the codebook usually has separate references that you need to add as well.
+
+
 ```{r lit import, eval=FALSE}
 longRef_lfb_allg <- getAPAInfo("Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx")
 View(longRef_lfb_allg)
@@ -1479,50 +1482,69 @@ lit_long$Kurzangabe <- gsub("^.*?in Anlehnung an ","",lit_long$Kurzangabe)
 lit_long$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",lit_long$Kurzangabe)
 # remove duplicates
 lit_long <- unique(lit_long)
-
-
-
-longRef_lfb_allg$Kurzangabe <- gsub("^.*?in Anlehnung an ","",longRef_lfb_allg$Kurzangabe)
-longRef_lfb_allg$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",longRef_lfb_allg$Kurzangabe)
-# remove duplicates
-longRef_lfb_allg[1,]
-longRef_lfb_allg[nrow(longRef_lfb_allg)+1,] <- longRef_lfb_allg[1,]
-longRef_lfb_allg[22,2] <- "Bach und so weiter"
-
-longRef_lfb_allg <- unique(longRef_lfb_allg)
-
-View(longRef_lfb_allg)
 ```
 
 Sometimes the format or spelling is slightly different in between Excel files, so sometimes not all duplicate entries are not deleted. Usually it's minor or obvious differences. For instance, when the italic string starts with the first italic letter vs. the blank space before that. You can identify duplicated short form references with `anyDuplicated()`, if the output is `0` there are no duplicates and you ignore the rest, otherwise you will get a table with all duplicated entries. 
 
 ```{r lit long duplicates, eval=FALSE}
 # find duplicates
-anyDuplicated(longRef_lfb_allg$Kurzangabe)
+anyDuplicated(lit_long$Kurzangabe)
 # identify duplicates
-pos <- duplicated(longRef_lfb_allg$Kurzangabe)
-dup <- longRef_lfb_allg$Kurzangabe[pos]
+pos <- duplicated(lit_long$Kurzangabe)
+dup <- lit_long$Kurzangabe[pos]
 # look at (first) duplicated entry
-longRef_lfb_allg[longRef_lfb_allg$Kurzangabe == dup,]
+lit_long[lit_long$Kurzangabe == dup,]
 ```
 
-After identifying the duplicates you can look at them manually to find out where the difference in the long form references come from. If it's minor differences, you can just delete them. Sometimes the URL is missing, so you should delete the reference(s) with the least amount of info. 
+After identifying the duplicates you can look at them manually to find out where the difference in the long form references come from. If it's minor differences, you can just delete the extra ones. Sometimes the URL is missing, so you should delete the reference(s) with the least amount of info.
 
 ```{r lit long remove duplicates, eval=FALSE}
-
-
+# delete all duplicates
+lit_long <- lit_long[!pos,]
+# delete specific rows example
+View(lit_long)
+lit_long <- lit_long[-21,]
 ```
 
+Then you test once more, if there are any duplicates left, the output should be `0`. 
 
-
+```{r lit long duplicates 2, eval=FALSE}
+anyDuplicated(View(lit_long)$Kurzangabe)
+```
 ### Match Long and Short References
 
-### Add Intro References
+Now you have two data frames: **literatur** contains all short form references actually used in `varinfo` and **lit_long** containing the long form references. Now you need to transfer the long form references to **literatur**.
 
-### Check for Duplicates
+```{r lit transfer long, eval=FALSE}
+pos <- match(literatur$Kurzangabe, lit_long$Kurzangabe)
+literatur$Langangabe <- lit_long$Langangabe[pos]
+View(literatur)
+```
+
+### Clean Up Table
+
+After you transferred all the references correctly, you still need to add which references should be displayed in the codebook and change the order to be alphabetical. Every entry with a long form reference should be displayed and set to `ja`. 
+
+```{r lit clean up, eval=FALSE}
+# in Literaturverzeichnis
+literatur$in_Literaturverzeichnis[!is.na(literatur$Langangabe)] <- "ja"
+# alphabetical order
+literatur <- literatur[order(literatur$Kurzangabe),]
+View(literatur)
+```
 
 ### Save to Excel
 
+You can check once more whether everything is displayed the way you want it to. Then save it to Excel and import again with `getLitInfo()` to check for format. `makeLit()` creates the proper Latex syntax for the function `codebook()` directly from the Excel file.
+
+```{r lit save and makeLit, eval=FALSE}
+writeExcel(literatur, row.names = FALSE, filePath = ".\\excel_files\\literatur.xlsx")
+literatur <- getLitInfo(".\\excel_files\\literatur.xlsx")
+
+literatur_final <- makeLit(literatur)
+```
+
+You should add the last line `literatur_final <- makeLit(literatur)` to your script in `0_main.R`. 
 
 ------------------------------------------------------------------------
 
