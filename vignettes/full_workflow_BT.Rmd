@@ -1405,7 +1405,7 @@ literatur <- createLitInfo(varinfo)
 literatur
 ```
 
-As you can see the data frame as three columns: `Kurzangabe` for the short form references (if you added references already this column should have several entries), `Langangabe` with the long forms and `in_Literaturverzeichnis` which indicates whether the reference should show up in the appendix (`ja`) or not (`nein`). 
+As you can see the data frame as three columns: `Kurzangabe` for the short form references (if you added references already this column should have several entries), `Langangabe` with the long forms and `in_Literaturverzeichnis` which indicates whether the reference should show up in the appendix (`ja`) or not (`nein`).  
 
 If you want to save this template you have to edit the column `in_Literaturverzeichnis` to either contain the input `ja` or `nein`. Otherwise the function `getLitInfo()` will throw an error. 
 
@@ -1435,7 +1435,7 @@ When you look at the entries now, there should only be APA conform short form re
 
 ```{r lit separate entries, eval=FALSE}
 View(literatur)
-
+# example reference
 literatur$Kurzangabe <- "Wagner et al. (2009); Henschel & Roick (2017)"
 # identify multiple references
 pos <- grep(";", literatur$Kurzangabe)
@@ -1455,18 +1455,65 @@ literatur <- unique(literatur)
 
 ### Import Long References
 
-Now you import the second sheet of the reference (Quellen) Excel files that matched the references to the variables. The second sheet contains all short form references used per data set and their long forms. They should already have the right APA format (with italic parts). If we use `getExcel()` like before this information will be lost. So we use `getExcelAPA()` which imports the Excel data and adds the proper Latex syntax for italic input and URLs. 
+Now you import the second sheet of the reference (Quellen) Excel files that matched the references to the variables. The second sheet contains all short form references used per data set and their long forms. They should already have the right APA format (with italic parts). If we use `getExcel()` like before this information will be lost. So we use `getAPAInfo()` which imports the Excel data and adds the proper Latex syntax for italic input (`\textit{...}`) and URLs (`\urlstyle{same}\url{...}`). 
+
+```{r lit import, eval=FALSE}
+longRef_lfb_allg <- getAPAInfo("Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx")
+View(longRef_lfb_allg)
+```
+
+You need to import the long form references for all data sets that have references and save them in one data frame.
+
+```{r lit long ref, eval=FALSE}
+lit_long <- rbind.data.frame(longRef_sus, longRef_lfb_allg, 
+                             longRef_lfb_spez, longRef_slfb)
+```
+
+### Adjust Long References
+
+Then you also need to adjust this merged data frame. First we remove and additions to the short form references and remove duplicates:
+
+```{r lit long remove additions and duplicates, eval=FALSE}
+# removes additions before the strings
+lit_long$Kurzangabe <- gsub("^.*?in Anlehnung an ","",lit_long$Kurzangabe)
+lit_long$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",lit_long$Kurzangabe)
+# remove duplicates
+lit_long <- unique(lit_long)
 
 
-```{r lit import}
+
+longRef_lfb_allg$Kurzangabe <- gsub("^.*?in Anlehnung an ","",longRef_lfb_allg$Kurzangabe)
+longRef_lfb_allg$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",longRef_lfb_allg$Kurzangabe)
+# remove duplicates
+longRef_lfb_allg[1,]
+longRef_lfb_allg[nrow(longRef_lfb_allg)+1,] <- longRef_lfb_allg[1,]
+longRef_lfb_allg[22,2] <- "Bach und so weiter"
+
+longRef_lfb_allg <- unique(longRef_lfb_allg)
+
+View(longRef_lfb_allg)
+```
+
+Sometimes the format or spelling is slightly different in between Excel files, so sometimes not all duplicate entries are not deleted. Usually it's minor or obvious differences. For instance, when the italic string starts with the first italic letter vs. the blank space before that. You can identify duplicated short form references with `anyDuplicated()`, if the output is `0` there are no duplicates and you ignore the rest, otherwise you will get a table with all duplicated entries. 
+
+```{r lit long duplicates, eval=FALSE}
+# find duplicates
+anyDuplicated(longRef_lfb_allg$Kurzangabe)
+# identify duplicates
+pos <- duplicated(longRef_lfb_allg$Kurzangabe)
+dup <- longRef_lfb_allg$Kurzangabe[pos]
+# look at (first) duplicated entry
+longRef_lfb_allg[longRef_lfb_allg$Kurzangabe == dup,]
+```
+
+After identifying the duplicates you can look at them manually to find out where the difference in the long form references come from. If it's minor differences, you can just delete them. Sometimes the URL is missing, so you should delete the reference(s) with the least amount of info. 
+
+```{r lit long remove duplicates, eval=FALSE}
+
 
 ```
 
 
-
-
-
-### Adjust Long References
 
 ### Match Long and Short References
 
