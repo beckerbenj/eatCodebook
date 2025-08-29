@@ -1730,40 +1730,153 @@ lastpage <- readLines(".\\Texte\\Latex_lastpage.tex")
 
 # 14. Create the Codebook
 
+After you created and edited all the Excel files you can use `codebook()` to create a Latex script that you can save as a .tex file. With that file you can render a pdf version of the codebook. 
+
 ## About the Codebook
+
+You will probably have to create multiple codebook versions depending you progress and to check if variables and chapters or other additions are displayed the way you want it to. There are arguments the function `codebook()` needs to create a minimal version of a codebook. And additions that are not necessary, but that you need for the BT codebook, like a bibiography, a cover or an intro. 
 
 ### Minimal Version
 
-### Add-ons
+For the minimal version you need the data `datalist`, the descriptives in `kennwerte`, the missings information `missings`, the variable information (the core) `varinfo`, and information about scales `scaleInfo`, the structure `gliederung` and the chapters `chapters`. So the command would look like this:
 
-#### References
+```{r minimal codebook, eval=FALSE}
+codebook <- codebook(varInfo = varinfo, missings = missings, struc = gliederung,
+                     scaleInfo = skalen, register = NULL, dat = lapply(datalist, eatGADS::extractData),
+                     Kennwertedatensatz = kennwerte, chapters = chapters)
+```
+
+The information from `gliederung` and `chapters` will create a **table of content** for the codebook. Everything else are optional additions. 
+
+### Additions
 
 #### Cover
 
+The cover pages will show up in the beginning as the first two pages. 
+
 #### Intro
+
+The intro will be displayed after the cover and the table of content. It will also be added to the table of content. 
+
+#### Appendix
+
+The rest will show up in the appendix. 
+
+You can add a **bibliography** with all references that you saved to the Excel `literatur.xlsx`.
+
+You can add the explanations from all statistical formulas and **abbreviations** that you saved to `abbr_list.xlsx`. 
+
+You can add the list of variables that were used for the **background model** by extracting the info from `varinfo` by using `makeBGM(varinfo)`
+
+You can add a **lastpage** that contains information about the publication series. 
 
 ### Versions
 
-> [!Note]
+> [!Note]  
+>  
 > while working on the Codebook, you will create different versions. it's best not to delete them, but save them in an `archive` folder to compare different version to one another if needed. 
 
 ## Codebook To-do in R
 
-### Create the Codebook and Meta Data
+You open the file `6_Erstellung_kurz.R`. Here you will find a template just for the creation of the codebook. You just import or load all the data and files that you need to create the codebook, use the function `codebook()` to create a Latex script that you then save as a .tex file. You can also create the codebook in the `0_main.R` file, but there's a lot of extra code that might be confusing. 
+
+You will also need to create an extra file for the meta data of the codebook. 
+
+### Load All Necessary Files
+
+Here's an overview over all the files you created with this vignette that you need to create the codebook. Make sure that the packages `eatCodebook` and `eatGADS` are loaded. 
+
+```{r codebook import, eval=FALSE}
+# load data
+data_sus      <- eatGADS::import_spss("Q:\\filepath\\Daten_sus.sav")
+data_lfb_allg <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb_allg.sav")
+data_lfb_spez <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb_spez.sav")
+data_slfb     <- eatGADS::import_spss("Q:\\filepath\\Daten_slfb.sav")
+datalist <- list(sus = data_sus,
+                 lfb_allg = data_lfb_allg, lfb_spez = data_lfb_spez,
+                 slfb = data_slfb)
+# descriptives
+kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
+input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
+# missings
+missings <- getMissings(".\\excel_files\\missings.xlsx")
+# scales
+skalen <- getScaleInfo(".\\excel_files\\skalen.xlsx")
+# abbreviation list (optional)
+abbr_list <- makeAbbrList(".\\excel_files\\abkuerzung.xlsx")
+# varinfo
+varinfo <- getVarInfo(".\\excel_files\\varinfo_bearbeitet.xlsx")
+# structure
+gliederung <- getStructure(".\\excel_files\\gliederung.xlsx")
+# references (optional)
+literatur_final <- makeLit(literatur)
+# background model (optional)
+hgm <- makeBGM(varinfo)
+# cover (optional)
+pdf_cover <- '\\includepdf[pages=-]{.\\Texte\\cover_page.pdf}'
+# meta data
+meta_final <- makeMetadata(".\\excel_files\\meta.xlsx")
+# chapters
+chapters <- getChapters(".\\excel_files\\chapters.xlsx")
+# intro
+intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
+# lastpage
+lastpage <- readLines(".\\Texte\\Latex_lastpage.tex")
+```
+
+### Create the Codebook
+
+Then you can use the function `codebook()` to create the Latex Script. This may take a while. 
+
+```{r create codebook, eval=FALSE}
+codebook <- codebook(varInfo = varinfo, missings = missings, struc = gliederung,
+                     scaleInfo = skalen, register = NULL, dat = lapply(datenliste, eatGADS::extractData),
+                     Kennwertedatensatz = kennwerte,
+                     chapters = chapters, deckblatt = pdf_cover, intro = intro_pages,
+                     literatur = literatur_final, abkuerzverz = abbr_list, hintmod = hgm, lastpage = lastpage)
+```
 
 ### Save in Folder `Latex`
 
+Save the object as a `.tex` file. You also have to save the meta data you imported from the Excel file as a `.xmpdata` file. 
+
+```{r save codebook, eval=FALSE}
+# save codebook as .tex
+write.table(codebook_new, file = ".\\Latex\\IQB_BT2021_Skalenhandbuch_Stand2025_04_03.tex" , fileEncoding="UTF-8" ,
+            col.names=FALSE , row.names=FALSE , quote = FALSE )
+
+# save meta data as .xmpdata
+write.table(meta_final , file = ".\\Latex\\IQB_BT2021_Skalenhandbuch_Stand2025_04_03.xmpdata", fileEncoding="UTF-8" ,
+            col.names=FALSE , row.names=FALSE , quote = FALSE )
+```
+
 ## Codebook To-do in TeXworks
+
+After you created codebook and saved it as a .tex file, you still need to render it as a pdf in *TeXWorks*. 
 
 ### open .tex file
 
+First you open the .tex file. You will have a very long script, but you shouldn't need to edit it. The first part of the script contains the Latex packages that you need for the script and then all the input from the Excel files that the function `codebook()` converted to the proper Latex code. The beginning might look like this:
+
+![](.\pictures\tex1.png){width=100%}
+
 ### render to pdf (twice)
+
+![](.\pictures\tex_pdf.png){width=70%}
+You have to click the green triangle to render to pdf. Remember to select the right option, so it says *pdfLaTeX*. It should render (which can take a while) and create the a pdf with the same name as the .tex file. It will also create some other new files that you can ignore. This first version will not have a *table of content*, but one of the created files has that info. When you render to pdf again (click the green triangle) the program creates a version with a table of content. 
 
 ### Dealing with Errors
 
+If the rendering doesn't work you will get an error message in the console of *TeXWorks* and the line that caused the error. You might need to update the Latex packages. Most times the error is due to syntax errors because special characters weren't escaped properly in the Excel files. Usually the errors can be fixed in R or by adjusting the Excel files to contain proper Latex syntax. 
+
 #### Update Latex Packages
 
-#### Special Characters
+To update the packages in *TeXWorks* you need to open your MikTeX console. 
 
+![](.\pictures\miktex_console.png){width=50%}
 
+It should open to a page where you can click on the button *nach Updates suchen*.
 
+![](.\pictures\miktex_updates.png){width=50%}
+
+If all packages are up do date, nothing happens. Otherwise it should look for updates and carry them out.  
