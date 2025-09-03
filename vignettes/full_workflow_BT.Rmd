@@ -172,7 +172,7 @@ datalist <- list(sus = data_sus,
 
 # 2. Descriptive Statistics
 
-Now you have the raw data, but you want the descriptive statistics for the codebook, not the whole data sets. 
+Now you have the raw data, but you want the descriptive statistics for the codebook, not just the data sets. 
 
 ## About Descriptive Statistics
 
@@ -200,7 +200,8 @@ writeExcel(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
 Some information may need to be modified because the function does not label it correctly. For this, it is necessary to understand the functionality and check the variable entries. We will come back to how to actually edit the table in R. 
 
 > [!TIP]
-> Here is a brief overview of the different columns in this object:
+> 
+> Here is a brief overview of the different columns in the `inputForDescriptives` object:
 >
 > - **varName**: The name of the variable of the GADS-object
 > - **varLabel**: The label of the variable of the GADS-object
@@ -214,11 +215,11 @@ In the **varName**, **varLabel** and **format** columns are information about th
 
 **imp** can be set to *WAHR* or *FALSCH*. If there are several variables to be displayed on one page, this column must be set to *WAHR* for these variables and they must be assigned to the same group at **group**. That is the case for imputed variables.
 
-**type** can be set to *variable*, *scale* or *item*. If it is a scale consisting of several individual variables, the scale variable is set to *scale* and the individual items to *item*. All other variables should always get *variable* as an entry.
+**type** can be set to *variable*, *scale*, *item* or *fake_item*. If you have a scale with several individual items, the scale variable is set to *scale* and the individual items to *item*. If you have several items belonging to one scale, but no scale variable, set the type to *fake_item*. All other variables should always get *variable* as an entry.
 
-The **scale** column specifies how the variable is to be displayed. If it is empty, no descriptives are displayed. *nominal* variables display the frequency distribution of the labeled categories. *ordinal* variables display the frequency distribution of the labeled categories *and* the statistical parameters (like *M* or *SD*). *numeric* variables only display the statistical parameters, without labeld categories. 
+The **scale** column specifies how the variable is to be displayed. If it is empty, no descriptives are displayed. *nominal* variables display the frequency distribution of the labeled categories. *ordinal* variables display the frequency distribution of the labeled categories *and* the statistical parameters (like *M* or *SD*). *numeric* variables only display the statistical parameters, without labeled categories. 
 
-Now follow the possibilities of how variables can be represented in the codebook and how the table must be edited for this.
+Now you can look at different possibilities how to represent variables in the codebook and how the table must be edited for this.
 
 ### Variables without Descriptives
 
@@ -226,7 +227,7 @@ This can be the case, for example, with ID variables or character variables. The
 <br>
 <img src="./pictures/codebook_IDs.PNG" alt="codebook_IDs" />  
 <br>  
-The entry must look like this:  
+The entry in Excel or the data frame must look like this:  
 <br>
 <img src="./pictures/input_IDs.PNG" alt="input_IDs" />  
 <br>  
@@ -252,20 +253,20 @@ Variables with **ordinal** scales should display the frequency distribution of t
 <img src="./pictures/codebook_ordinal.PNG" alt="codebook_ordinal" />
 <br>  
 
-To create it, the Excel should be edited as follows:  
+The entry in Excel or the data frame must look like this:  
 <br>
 <img src="./pictures/input_ordinal.PNG" alt="input_ordinal" />  
 <br>  
 
 ### Numeric Variables without Labeled Values
 
-Variables with **numeric** scales should display only statistical parameters: *N* (number of participants), *M* (mean), *SD* (standard deviation), *Min.* (lowest value) and *Max.* (highest value). This can be used, for example, for variables that represent age or variables with values in the decimal range. Nevertheless, these variables can contain labels for values. If they are defined as missing, these values are not taken into account in the calculation but are still reported. The page would be displayed like this:  
+Variables with **numeric** scales should display only statistical parameters: *N* (number of participants), *M* (mean), *SD* (standard deviation), *Min.* (lowest value) and *Max.* (highest value). This can be used for variables that represent age or variables with values in the decimal range. Nevertheless, these variables can contain labels for values. If they are defined as missing, these values are not taken into account in the calculation but are still reported. The page would be displayed like this:  
 
 <br>
 <img src="./pictures/codebook_numeric.PNG" alt="codebook_numeric" />  
 <br>  
 
-To create an entry for a numeric variable without labeled values, the Excel must look like this:  
+The entry in Excel or the data frame must look like this:   
 <br>
 <img src="./pictures/input_numeric.PNG" alt="input_numeric" />  
 <br>  
@@ -287,7 +288,7 @@ This only works, when they are grouped and labeled correctly. Later the function
 
 ### Fake Scales
 
-Sometimes several items make up a scale, but the data set doesn't have a matching scale-variable. The codebook would display it like a normal scale (see *Scale Variables with Individual Items*) with the same descriptive statistics. 
+Sometimes several items make up a scale, but the data set doesn't have a matching scale variable. The codebook would display it like a normal scale (see *Scale Variables with Individual Items*) with the same descriptive statistics. 
 
 To display fake scales like a real one, you need to group them like a real scale, but in the **type** column you need to write **fake_item**, so it looks like this:  
 
@@ -295,17 +296,17 @@ To display fake scales like a real one, you need to group them like a real scale
 <img src="./pictures/input_fakeScale.PNG" alt="input_fakeScale" />  
 <br>  
 
-The function `createScaleInfo()` should add these fake scales to the data frame as well. But without the scale variable the information which variables belong to that scale might be lost. The individual variables might need to be added manually. More on that later.  
+The function `createScaleInfo()` should add these fake scales to the data frame as well. But without the scale variable the information which variables belong to that scale might be lost. The individual variables might need to be added manually. See [Scales](#add-fake-scales) for more information. 
 
 ### Imputation Variables
 
-The BT sometimes uses imputations, for instance, in the student data set (sus). It's a way to deal with missing data on variables by replacing missing data with substituted values, usually several times. You can recognize the variables by the add-on `(imputiert)` in their label or `_pooled` in their group. These imputations represent one (averaged) variable, so they should be displayed as one. Depending on what was specified in **scale**, it results in the following pages in the codebook. `pv_pooled` is has *numeric* input, `pvkat_pooled` has *ordinal* input.  
+The BT sometimes uses imputations, for instance, in the student data set (sus). It's a way to deal with missing data on variables by replacing missing values with substituted values, usually several times. You can recognize the variables by the addition `(imputiert)` in their label or `_pooled` in their group. These imputations represent one (averaged) variable, so they should be displayed as one. Depending on what was specified in **scale**, it results in the following pages in the codebook. `pv_pooled` has *numeric* input, `pvkat_pooled` has *ordinal* input.  
 
 <br>
 <img src="./pictures/codebook_imp1.PNG" alt="codebook_imp1" /><img src="./pictures/codebook_imp2.PNG" alt="codebook_imp2" />  
 <br>  
 
-To display it like this the **imp** column becomes relevant. It must be set to *WAHR* for these variables. In addition, the variables also need a common name in **group** and, depending on whether they are to be represented categorically or numerically, the corresponding designation in **scale**, the scale should probably match the original variable.  
+To display it like this the **imp** column becomes relevant. It must be set to **WAHR** for these variables. In addition, the variables also need a common name in **group** and, depending on whether they are to be represented categorically or numerically, the corresponding designation in **scale**, the scale should probably match the original variable.  
 <br>
 <img src="./pictures/input_imp.PNG" alt="input_imp" />  
 <br>  
@@ -315,31 +316,28 @@ The function `createScaleInfo()` adds imputed variables like a scale to the data
 
 ## Descriptives Statistics To-do
 
-Now you open `1_kennwerte.R`. The editing of the descriptives can be a lot of code, especially if you have several data sets, so it's best to do this in a separate file. The packages `eatCodebook` and `eatGADS` need to be loaded. Then you copy the `Import Data` Code in this file, so you can work on it without needing to open `0_main.R` the next time you work on it. 
+.The editing of the descriptives can be a lot of code, especially if you have several data sets, so it's best to do this in a separate file. Make sure the packages `eatCodebook` and `eatGADS` are loaded. 
+
+After you imported the data sets, you open `1_kennwerte.R`. Then you copy the `Import Data` Code in this file, so you can work on it without needing to open `0_main.R` the next time you work on it. 
 
 For each imported data set, you create a new object with `createInputForDescriptives()` containing input for the descriptive statistics about each variable like their *name*, *label*, *format*, *scale level* or which variables are *grouped* together. You edit them according to the [About section](#input-for-descriptives-table), check the input and then you calculate the actual descriptive statistics with `calculateDescriptives()`. 
-
 
 ### Create **Input for Descriptives**
 
 You use the function `createInputForDescriptives()` to create a data frame for each data set separately and name them according to your data sets like `descriptives_sus` or `descriptives_lfb_allg`, etc. The function needs the `GADSdat` data set (e.g. `data_sus`) and returns a data frame. 
 
 ```{r create input for descriptives, eval=FALSE}
-# example data
+# example dat from eatCodebook
 inputForDescriptives <- createInputForDescriptives(GADSdat = dat, nCatsForOrdinal = 4)
 
-# BT example
+# BT example code
 descriptives_sus <- createInputForDescriptives(GADSdat = data_sus, nCatsForOrdinal = 4)
 descriptives_lfb_allg <- createInputForDescriptives(GADSdat = data_lfb_allg, nCatsForOrdinal = 4)
 ```
 
-You should save each data frame separately so save your progress. When you work with the template you don't need to adjust the file path - the Excel should be saved in the folder `excel_files`. You just need to make sure, that you are in the right working directory. Otherwise you would have to add the proper file path. Remember adjusting the file names when you copy and paste the code for the other data sets.
+You should save each data frame separately to Excel. When you work with the template you don't need to adjust the file path - the Excel should be saved in the folder `excel_files`. You just need to make sure, that you are in the right working directory. Otherwise you would have to add the proper file path. Remember adjusting the file names when you copy and paste the code for the other data sets.
 
 ```{r saving descriptives, eval=FALSE}
-# example data
-writeExcel(inputForDescriptives, ".\\excel_files\\inputForDescriptives.xlsx")
-
-# BT template examples
 writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus.xlsx")
 writeExcel(descriptives_lfb_allg, ".\\excel_files\\descriptives_lfb_allg.xlsx")
 ```
@@ -348,20 +346,19 @@ Now you should have as many Excel files as you imported data sets.
 
 ### Check and Edit `inputForDescriptives`
 
-After saving them as Excel files you need to import them again with `getInputForDescriptives()` to check whether the Excel has the right format. 
+After saving them as Excel files you need to import them again with `getInputForDescriptives()`. All `getX()` functions check for the proper format and clean up the data frame, if possible. 
 
 ```{r import descriptives, eval=FALSE}
-inputForDescriptives <- getInputForDescriptives(".\\excel_files\\inputForDescriptives.xlsx")
-
-# BT template example
 descriptives_sus <- getInputForDescriptives(".\\excel_files\\descriptives_sus.xlsx")
 ```
 
 Then you can look at the descriptives either by opening Excel manually or by opening them in RStudio with `View()`. 
 
 ```{r look at descriptives, eval=FALSE}
+# eatCodebook example
 View(inputForDescriptives)
-# BT template example
+
+# BT example code
 View(descriptives_sus)
 ```
 
@@ -373,9 +370,11 @@ Now you have to check, whether everything is the way you need it to be. If not, 
 
 #### Edit `inputForDescriptives` in R
 
-Sometimes `createInputForDescriptives` creates different scale levels or type labels than we need. You can adjust each line individually with `descriptives$scale` or `descriptives$type` and the row number `[n]`. Or you change multpile lines at the same time. 
+Here are some examples on how to edit the data frames using R. You might not have to edit anything or add some more lines of code, depending on the data that you're given. *The examples to edit the data frames use the example `dat` from `eatCodebook`*. 
 
-The column **scale** is later important for how the variable is shown in the finished codebook. For example when variables get the scale `nominal`, when they should have `ordinal`. That is especially important for scale items. You can adjust that by extracting all relevant variables, for instance by name, using `grep`, to identify the position of all variables that start with a certain name in `descriptives_sus`. Sometimes you need to recreate the descriptives objects/files and the position might change, but the variable name usually stays the same. In this case you wouldn't have to adjust your code and can just rerun it. With the position of the  variables, you can change multiple variables at the same time. You can also change other columns this way. 
+Sometimes `createInputForDescriptives` creates different scale levels or type labels than we need. You can adjust each line individually with `descriptives$scale` or `descriptives$type` and the row number `[n]`. Or you change multiple lines at the same time. Just like you would any other data frame in R. 
+
+The column **scale** is later important for how the variable is displayed in the finished codebook. Sometimes the function sets the scale of variables to `nominal`, but they should have `ordinal`, as they a scale item. You can adjust that by extracting all relevant variables, for instance by name, using `grep()`, to identify the position of all variables that start with a certain name in `descriptives_sus`. Sometimes you need to recreate the descriptives objects/files and the position might change, but the variable name should stay the same. In this case you wouldn't have to adjust your code and can just rerun it. With the position of the  variables, you can change multiple variables at the same time. You can also change other columns this way. 
 
 ```{r editing descriptives scale, eval=FALSE}
 # extracting the position of variables skala1_item1 - skala1_item3
@@ -384,12 +383,16 @@ pos <- grep("skala1_", inputForDescriptives$varName)
 inputForDescriptives$scale[pos] <- "ordinal"
 ```
 
+You can also adjust they're **group** this way. 
+
 ```{r editing descriptives group, eval=FALSE}
 # adjusting the input for the column `group`
 inputForDescriptives$group[pos] <- "skala1"
 ```
 
-Scales and their items should be labeled correctly in the column **type**. The scale needs the label `scale`, the items the label `item`; variables from a fake scale have no scale and need the label `fake_item`. If not you can identify scale variables with the first line of code. The scale's `varName` is usually also the `group` label. In the second step you can identify all variables with matching `group` labels that have the wrong `type` label. 
+Scales and their items should be labeled correctly in the column **type**. The scale needs the label `scale`, the items the label `item`; variables from a fake scale have no sparate scale variable and all need the label `fake_item`. 
+
+You can identify scale variables with the first line of code and save it in the object `group`. The scale's `varName` is usually also the `group` label. The loop identifies all variables with matching `group` labels that have the wrong `type` label. 
 
 ```{r editing descriptives type, eval=FALSE}
 # identifying all scale variables
@@ -402,58 +405,49 @@ for(var in group){
 
 ### Save you changes
 
-When you made sure, the variables are correctly labeled and grouped, you save the new data frame in Excel. You can either overwrite the existing Excel file, but I recommend saving it in a new `_edited.xlsx` file for better comparison. You use the same lines as before, just change the file name. Then import the new Excel again to make sure the format is still right and load it into a new object with the ending `_edited`. 
+When you made sure, the variables are correctly labeled and grouped, you save the new data frame in Excel. You can either overwrite the existing Excel file, but I recommend saving it in a new `_edited.xlsx` file for better comparison. You use the same lines as before, just adjust the file name. Then import the new Excel again to make sure the format is still right and load it into a new object with the ending `_edited`. 
 
 ```{r saving edited descriptives, eval=FALSE}
 # save changes
-writeExcel(inputForDescriptives, ".\\excel_files\\inputForDescriptives_edited.xlsx")
+writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_edited.xlsx")
 # import changes
-inputForDescriptives_edited <- getInputForDescriptives(".\\excel_files\\inputForDescriptives_edited.xlsx")
+descriptives_sus_edited <- getInputForDescriptives(".\\excel_files\\descriptives_sus_edited.xlsx")
 ```
-
 
 ### Check Scale Consistency
 
-Not all data sets have scales, but for the ones that do, you should use `checkScaleConsistency()`. The function checks whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptive file. Be mindful of warnings or errors, they might indicate something that will cause problems later. 
+You need to use `checkScaleConsistency()` for all `descriptives_x_edited` objects that have scales separately. The function checks whether the grouping of variables that belong to the same scale matches in both the data set itself and the created descriptives file. Be mindful of warnings or errors, they might indicate something that will cause problems later. 
 
 ```{r check scale, eval=FALSE}
-check_scale <- checkScaleConsistency(dat, inputForDescriptives_edited, 1:nrow(inputForDescriptives_edited))
-
-# BT template example
-check_scale_sus <- checkScaleConsistency(data_sus, descriptives_sus_edited, 1:nrow(descriptives_sus_edited))
+check_scale <- checkScaleConsistency(data_sus, descriptives_sus_edited.xlsx, 1:nrow(descriptives_sus_edited.xlsx))
 ```
-
 
 ### Calculate Descriptives
 
-After preparing and checking the *input for descriptives* you now actually *calculate the descriptives* (`kennwerte`) with `calculateDescriptives()` for each data set separately. Depending on how large the data set is, this can take a while. 
+After preparing and checking the *input for descriptives* you now actually **calculate the descriptives** (`kennwerte`) with `calculateDescriptives()` for each data set separately. Depending on how large the data set is, this can take a while. 
 
 ```{r calculate descriptives, eval=FALSE}
-kennwerte_example <- calculateDescriptives(GADSdat = dat, inputForDescriptives = inputForDescriptives_edited, showCallOnly = FALSE)
-
-# BT template examples
 kennwerte_sus <- calculateDescriptives(GADSdat = data_sus, inputForDescriptives = descriptives_sus_edited, showCallOnly = FALSE)
 kennwerte_lfb_allg <- calculateDescriptives(GADSdat = data_lfb_allg, inputForDescriptives = descriptives_lfb_allg_edited, showCallOnly = FALSE)
 ```
 
-
 ### Save Objects in Two Lists
 
-After creating the `inputForDescriptives` and the calculating the descriptives (kennwerte), you save all of them in **two lists**, one for the *input*, one for the *kennwerte*. The order should match the order of `datalist`, the list of the raw data sets; the names should also match the `datalist` names. 
+After creating the `inputForDescriptives` and the calculating the descriptives (`kennwerte`), you save all of them in **two lists**, one for the **input**, one for the **kennwerte**. The order should match the order of `datalist`, the list of the raw data sets, the names should also match the `datalist` names. 
 
 ```{r inputForDescriptices and kennwerte lists, eval=FALSE}
 # inputForDescriptives list
 input_descriptives <- list(sus = descriptives_sus_edited,
                            lfb_allg = descriptives_lfb_allg_edited,
                            lfb_spez = descriptives_lfb_spez_edited,
-                           slfb = descriptives_slfb_edited)
+                           slfb = descriptives_slfb_edited,
+                           match = descriptives_match_edited,
+                           linking = descriptives_linking_edited)
 # kennwerte list
-kennwerte <- list(sus = kennwerte_sus,
-                  lfb_allg = kennwerte_lfb_allg, lfb_spez = kennwerte_lfb_spez,
-                  slfb = kennwerte_slfb)
+kennwerte <- list(sus = kennwerte_sus, lfb_allg = kennwerte_lfb_allg, lfb_spez = kennwerte_lfb_spez, slfb = kennwerte_slfb, match = kennwerte_match, linking = kennwerte_linking)
 ```
 
-Then save them in two `.RDS` files with `saveRDS()`. You can import them again with `readRDS()`. 
+Then save them in two `.RDS` files with `saveRDS()` in the folder *excel_files*. You can import them again with `readRDS()`. 
 
 ```{r save inputForDescriptices and kennwerte, eval=FALSE}
 # save files
@@ -464,18 +458,17 @@ input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
 kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
 ```
 
-You should add the last two lines (load files) in you `0_main.R` script behind the data import. 
-
+You should add the last two lines (load files) in you `0_main.R` script behind the data import (see template). 
 
 ------------------------------------------------------------------------
 
 # 3. Value and Missing Labels
 
-Another imported part of a codebook is the documentation of the value labels of valid and missing values. A respective overview is created via `createMissings()`.
+Another important part of the codebook is the documentation of the value labels of valid and missing values that is created with the function `createMissings()`.
 
 ## About Missings
 
-You need to save the created data frame in Excel and read it in again with `getMissings()` to clean up and check the input. Otherwise you usually don't need to edit anything here. 
+You create an Excel file that contains information on missing tags and labels used in the data sets. 
 
 ### Example Table
 
@@ -488,12 +481,14 @@ head(missings)
 
 ## Missings To-do
 
-For this you need to open `0_main.R` again. You create a new data frame with `createMissings()`; you need the data sets (`datalist`) and the input for descriptives (`input_descriptives`) for that. Then you save it in an Excel file `missings.xlsx` and import it again with `getMisings()` to check the format. 
+Open `0_main.R` again. The data sets `datalist` need to be loaded in the work space, as well as the two lists `input_descriptives` and `kennwerte`. 
+
+You create a new data frame with `createMissings()` and save it to Excel as `missings.xlsx`. You import it again with `getMisings()` to check the format. Usually there's no need to edit anything. 
 
 ```{r create missings, eval=FALSE}
 # create missings
 missings <- createMissings(datalist, input_descriptives)
-# save as an Excel file
+# save to Excel
 writeExcel(df_list = missings, row.names = FALSE, filePath = ".\\excel_files\\missings.xlsx")
 # import Excel file and check for right format
 missings <- getMissings(".\\excel_files\\missings.xlsx")
@@ -504,11 +499,11 @@ missings <- getMissings(".\\excel_files\\missings.xlsx")
 
 # 4. Scales
 
-In order to display scales correctly, you need an Excel files with an overview over all the scales and their items. 
+In order to display scales correctly, you need an Excel file with an overview over all the scales and their items. 
 
 ## About Scales
 
-Scale variables contain information about their scale, e.g. the items that make up the scale. Fake scales contain of variables, but don't have a separate scale variable; you can still display them as scales, though (see Descriptive Statistics: Fake Scales).  
+Scale variables contain information about their scale, e.g. the items that make up the scale. Fake scales are made up of variables, but don't have a separate scale variable; you can still display them as scales, see [Fake Scales](#fake-scales) for more information. 
 
 ### Example Table
 
@@ -519,45 +514,77 @@ scaleInfo <- createScaleInfo(inputForDescriptives)
 head(scaleInfo)
 ```
 
+In **VarName** you have the name of the scale variable or the group name (they should be the same). **Items_des_Skala** have all items belonging to the scale or that have the same group name as a scale variable. 
+
+The function `createScaleInfo()` "finds" the scales by looking for matching variable (varName) and group names. Fake scales usually don't have a variable where these two entries match, so they are often not displayed in the data frame per default. You'd have to add them in a script or manually. 
 
 ## Scales To-do
 
-Open `0_main.R` and scroll down the `scales`. You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scales and which items belong to it. You just need the list `input_descriptives` for that. Usually you don't need to edit this file. 
+Open `0_main.R` and scroll to or add `scales`. You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scales and which items belong to it. You just need the list `input_descriptives` for that. Usually you don't need to edit this file, unless you work with fake scales.
 
 ### Create Scales
 
-The function `createScaleInfo()` reads the information about scales out of the descriptives list, and creates a new data frame that you need to save as an Excel file. 
+The function `createScaleInfo()` reads the information about scales out of the descriptives list, and creates a new data frame.
 
 ```{r scales, eval=FALSE}
-# creating the object
-scales <- createScaleInfo(input_descriptives)
-# save as an Excel file
-writeExcel(df_list = scales, row.names = FALSE, filePath = ".\\excel_files\\scales.xlsx")
+skalen <- createScaleInfo(input_descriptives)
 ```
 
-You need to look at the file to make sure all scales are displayed correctly, for instance with `View(scales)`. It looks for grouped variables, so not every scale might be in here and not every variable in the file might be a scale. All errors and mismatches occurring here can or should usually be fixed in the `inputForDescriptive` files. 
+### Check Scales
 
-you should also import the file again with `getScaleInfo()` which also checks for errors and cleans up the format.
+You need to look at the file to make sure all scales are displayed correctly. 
 
-```{r get scales, eval=FALSE}
-# read in Excel file and check for right format
-scales <- getScaleInfo(".\\excel_files\\skalen.xlsx")
+```{r scales check, eval=FALSE}
+View(skalen)
 ```
 
+Not every variable in the file might be a scale (see [Imputations](#imputation-variables). All errors and mismatches occurring here can or should usually be fixed in the `inputForDescriptive` files. 
+
+### Save Scales
+
+Then save the data frame to Excel and import again with `getScaleInfo()` to check for errors and format. 
+
+```{r save scales, eval=FALSE}
+# save to Excel
+writeExcel(df_list = skalen, row.names = FALSE, filePath = ".\\excel_files\\skalen.xlsx")
+# import to check
+skalen <- getScaleInfo(".\\excel_files\\skalen.xlsx")
+```
+
+### Add Fake Scales
+
+In order to add missings fake scales to the data frame, you need to identify the fake scales, add the group name in `varName` and the fake items in `Items_des_Skala`. You might also have to add the source (`Quelle`) when you work with mulpitle data sets, e.g. *sus* or *lfb_allg*. The last BTs never used fake scales, in this case, you can ignore this. 
+
+You can identify fake scales in the descriptives files by their label `fake_item` in the column *type*. You need you sort them by group and add them to the `skalen` data frame.
+
+```{r scales fake items1, eval=FALSE}
+fakeItems <- inputForDescriptives[inputForDescriptives$type == "fake_item",]
+fakeItems[,c(1,7)] # look at the names and group
+```
+
+```{r scales fake items2, eval=FALSE}
+newScales <- data.frame(varName = c("group1", "group2"), Quelle = "sus", Anzahl_valider_Werte = "-", Items_der_Skala = c("fake_itemA1,fake_itemA2,fake_itemA3", "fake_itemB1,fake_itemB2,fake_itemB3"))
+# add to data frame
+skalen <- rbind(skalen, newScales)
+```
 
 ------------------------------------------------------------------------
 
 # 5. Abbreviation List
 
-The codebook's intro and additional texts might have abbreviations that need explaining. You can add an abbreviation list in the appendix for that. You need a list of two data frames (or Excel file) with the abbreviations and the explanations. You don't need this object for the minimal version of the codebook, so you can skip this part or come back to it later. 
+You can add information about acronyms and statistical formula to the codebook's appendix. 
 
 ## About the Abbreviation List
 
+The codebook's intro and additional texts might have abbreviations that need explaining.  You need a list of two data frames (or Excel file with two sheets) with the abbreviations and their explanations: the first data frame is for **Akronyme** (acronyms), the second for  **statistische Formelzeichen** (statistical formula). 
+
 You can usually copy the Excel `abbr_list.xlsx` or `abkürzungen.xlsx` from last BTs and adjust them if needed or you create you own file with `createAbbrList()`. 
+
+You don't need this object for the minimal version of the codebook, so you can skip this part or come back to it later.
 
 ### Example Tables
 
-When you use `createAbbrList()` it creates a list of two data frames **Akronyme** (acronyms) and **statistische Formelzeichen** (statistical formula) with two columns each. The first should contain all abbreviations used in any text in the codebook and their meaning. The second should contain all statistical formula symbols and their meaning. It should look something like this:
+`createAbbrList()` creates a list of two data frames **Akronyme** (acronyms) and **statistische Formelzeichen** (statistical formula) with two columns each. The first should contain all abbreviations used in any text in the codebook and their meaning. The second should contain all statistical formula symbols and their meaning. It should look something like this:
 
 ```{r example abbr_list, eval=FALSE}
 View(abbr_list)
@@ -572,16 +599,17 @@ In Excel: First sheet `Akronyme`, second sheet `statistische Formelzeichen`
 ![](.\pictures\abbr_list_statFormula.png)
 
 > [!CAUTION]
-> Be mindful of using LaTeX syntax when you want to display special characters or italic letters!  
+> 
+> Be mindful to use LaTeX syntax when you want to display special characters or italic letters, especially in the formula sheet!
 
 
 ## Abbreviation List To-do
 
-Open `0_main.R` and scroll down the `abbreviation list`. You create either an empty object for the abbreviation list with `createAbbrList()` or read in the one from last year's BT and call it `abbr_list`, and save it in a new Excel file.
+Open `0_main.R` and scroll to or add `abbreviation list`. You create either an empty object for the abbreviation list with `createAbbrList()` or read in the one from last year's BT,  call it `abbr_list`, and save it in a new Excel file.
 
 ### Create New Empty List
 
-You create two empty data frames in a list, already labeled correctly. You can edit it in R or save it to Excel as `abkürzung.xlsx` and edit it manually. 
+You create two empty data frames in a list, already labeled correctly. You can edit it in R or save it to Excel as `abkürzung.xlsx` in the folder *excel_files* and edit it manually. 
 
 ```{r create abbr_list, eval=FALSE}
 abbr_list <- createAbbrList()
@@ -591,7 +619,7 @@ writeExcel(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\a
 
 ### Import Old List
 
-You can also import an old `abkürzung.xlsx` from the last BT, for instance, save it to your work space and update it if necessary. You would need to update your `file path` for that. 
+You can also import an old `abkürzung.xlsx` from the last BT. Save it to your work space and update it if necessary. You would need to update your `file path` for that. 
 
 ```{r import abbr_list, eval=FALSE}
 abbr_list <- getExcel("Q:\\filepath\\abkuerzung.xlsx")
@@ -601,7 +629,7 @@ writeExcel(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\a
 
 ### Update the List
 
-You can add or delete entries in R like with any other data frame that is saved in a list.
+You can add or delete entries in R like with any other data frame that is saved in a list. After making changes, you need to save them to Excel with `writeExcel()`. 
 
 ```{r edit abbr_list, eval=FALSE}
 # add a new line
@@ -635,7 +663,7 @@ Either add new lines already with the LaTeX syntax or edit existing entries.
 
 ### Use `makeAbbrList()`
 
-When the Excel file from past BTs has commentary/extra columns in it, you can't use the function `makeAbbrList()`. To make sure you only the have two columns per sheet/data frame, you can save just the first two columns per sheet in your `abbr_list` object. After that you need to save the changes to Excel.
+When the Excel file from past BTs has commentary/extra columns in it, you can't use the function `makeAbbrList()`. Make sure you only have two columns per sheet/data frame and delete any others, if necessary.
 
 ```{r makeAbbrList setup, eval=FALSE}
 # edit abbr_list
@@ -649,7 +677,7 @@ When you have all the abbreviations, you can create the LaTeX code that you need
 
 ```{r makeAbbrList, eval=FALSE}
 # creates LaTeX syntax
-abbr_list <- makeAbbrList(".\\excel_files\\abkuerzung.xlsx")
+abbr_list <- makeAbbrList(".\\excel_files\\abkürzung.xlsx")
 ```
 
 
@@ -1803,7 +1831,7 @@ missings <- getMissings(".\\excel_files\\missings.xlsx")
 # scales
 skalen <- getScaleInfo(".\\excel_files\\skalen.xlsx")
 # abbreviation list (optional)
-abbr_list <- makeAbbrList(".\\excel_files\\abkuerzung.xlsx")
+abbr_list <- makeAbbrList(".\\excel_files\\abkürzung.xlsx")
 # varinfo
 varinfo <- getVarInfo(".\\excel_files\\varinfo_bearbeitet.xlsx")
 # structure
