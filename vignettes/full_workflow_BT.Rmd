@@ -28,9 +28,9 @@ file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
 dat <- eatGADS::import_spss(file)
 ```
 
-The main function for creating a Skalenhandbuch or codebook is called `eatcodebook()`. It takes the input from several lists and data frames that you create throughout this vignette and converts them into one long object containing LaTeX code. You have to be mindful of special characters (like α and other Greek letters) in string input from the data frames as they might throw errors down the line. Also, formatting in Excel is lost in the LaTeX script, so you may need to add LaTeX code in the Excel files. The most common occurrences are mentioned in this vignette.
+The main function for creating a Skalenhandbuch or codebook is called `eatcodebook()`. It takes the input from several lists and data frames that you create throughout this vignette and converts them into one long object containing LaTeX code. You have to be mindful of special characters (like α and other Greek letters) in string input from the data frames as they might throw errors down the line. Also, formatting in Excel is lost in the LaTeX script, so you may need to add LaTeX code to the Excel files. The most common occurrences are mentioned in this vignette.
 
-While working on the codebook, you will probably find some mismatches or errors in the data. You then have to recreate every data frame or Excel table you created so far, including the changes you made to those objects. This vignette contains examples how to write a script in R that you can just rerun in those cases, without having to redo a lot of work. 
+While working on the codebook, you will probably find some mismatches or errors in the data. You then have to recreate every data frame or Excel table you created so far, including the changes you made to those objects. This vignette includes examples on how to write a script in R that you can just rerun in those cases, without having to redo a lot of work. 
 
 ## What is a Codebook?
 
@@ -40,25 +40,24 @@ A codebook contains **all of the collected variables** of a study or data collec
 
 ## About this Vignette
 
-There are several chapters explaining how to create a codebook. You need at least two sets of data and additional information to add like the references or instructions of the variables, the order they're supposed to be displayed in the codebook and more. Each chapter contains an `About` section explaining the what and why of what you are doing and a `To-do` section explaining how to do these things in `R` step by step.
+There are several chapters explaining how to create a codebook. Next to the data you need additional information like the references or instructions of the variables, the order they're supposed to be displayed in and more. Each chapter contains an `About` section explaining the what and why of what you are doing and a `To-do` section explaining how to do these things in `R` step by step.
 
-The package `eatCodebook` was created with the codebook for the [IQB Bildungstrends](https://www.iqb.hu-berlin.de/bt/) in mind. Some use cases are specific to these Bildungstrends (BT) studies, but you can create a codebook for your own study with this vignette, as well. 
+The package `eatCodebook` was created with the codebook for the [IQB Bildungstrends](https://www.iqb.hu-berlin.de/bt/) in mind. Some use cases are specific to these Bildungstrends (BT) studies, but you can create a codebook for your own study with this `eatCodebook`, as well. 
 
-The example code in this vignette will focus on the example data set available in the package `eatCodebook`. You can find example code that's more specific for the BT codebook in the template repository on GitHub. 
-
+The example code in this vignette will focus on the creating of a BT codebook, using the templates from a IQB methods team repository on GitHub. 
 
 --------------------------------------------------------------------------------
 
 # Setup
 
-Before we start, we need to setup a proper work space. Creating a codebook takes a while and involves several files, so when you don't protocol your progress well, it's easy to lose focus. When editing the files in R, the script can get very long, so I recommend to use several .R documents to maintain an overview.
+Before we start, we need to setup a proper work space. Creating a codebook takes a while and involves several files, so when you don't protocol your progress well, it's easy to lose focus. When editing the files in R, the script can get very long, so I recommend to use several .R documents to maintain overview.
 
-## create a new Repository
+## Create a New Repository
 
 First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. when you don't have access to this repository, ask the package developer for help or create your own repository. 
 
 
-![](.\pictures\repo_template.png){width=70%}
+![](.\pictures\repo_template.png){width=50%}
 
 You now have all the .R templates that you need, but you might have to create the issues yourself. The To-dos should be apparent from this vignette or you can copy the issues from the template repo by hand. You find the following files:
 
@@ -70,19 +69,19 @@ There are several files and folders. The .R files contain example scripts and to
 |------------------------------------|------------------------------------|
 | `0_main.R` | The main file you work in. You can work with just this file and ignore the others, if you want. I recommend using this file for smaller changes and the separate files for more complex changes. With this file, you can create Excel files which you then have to edit manually or in R. |
 | `1_kennwerte.R` | Create and edit the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here. |
-| `2_varinfo.R` | Create and edit the `varinfo` file. This file contains the core content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
+| `2_varinfo.R` | Create and edit the `varinfo` file. This file contains the **core** content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
 | `3_gliederung.R` | The information read from `varinfo` is usually incomplete, so you have to add missing section names. |
-| `4_literatur.R` | Create and edit the `reference` file. You have to match the short references to the long ones. You also have to add proper latex syntax for italic text or URLs. |
-| `5_latex_intro.R` | A template to create a .tex file with latex syntax out of a a Word .docx document. You need this later when creating the intro. |
+| `4_literatur.R` | Create and edit the `reference` file. You have to match the short references to the long ones. You also have to add proper LaTeX syntax for italic text or URLs. |
+| `5_latex_intro.R` | A template to create a .tex file with LaTeX syntax out of a a Word .docx document. You need this later when creating the intro. |
 | `6_Erstellung_kurz.R` | A short script which can create a new codebook version after you created all the necessary Excel files.|
 
-You need to make sure, that there are three folders and create them if not. 
+You need to make sure that there are three folders and create them if not. 
 
 | Folder | Description |
 |------------------------------------|------------------------------------|
 | `excel_files` | Here you save all of the created Excel files to save the progress. |
-| `Latex` | Here you save the .tex files and pdfs of the finished latex script for the codebook. You can add the folder `archive` to keep different versions to compare. |
-| `Texte` | Here you can save the intro text or cover, etc. |
+| `Latex` | Here you save the .tex files and pdfs of the finished LaTeX script for the codebook. You can add the folder `archive` to keep different versions to compare. |
+| `Texte` | Here you can save the intro text, cover and other texts. |
 
 Pull the repo and start with the file `0_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust.
 
@@ -107,7 +106,7 @@ install.packages("readtext")
 library(readtext)
 ```
 
-After you set up your work space, we will work through the templates or the To-dos step by step in this vignette. 
+After you set up your work space, you can now start creating the codebook step by step. 
 
 --------------------------------------------------------------------------------
 
@@ -121,15 +120,16 @@ The BT studies usually have several SPSS data files (`.sav`) that you can import
 
 > [!NOTE]
 > 
-> The same variable name cannot be used more than once across the data sets. 
+> The same variable name cannot be used more than once across the data sets!
 
 The data sets can be stored in `GADSdat` objects, containing two data frames: one for the variables and the actual data, the other contains the meta data or labels for the variables. 
 
 ### Order of the Data Sets
 
-You have to save all the data sets in one list that also determines the order in which the variables are displayed in the codebook. It's best to choose the order you want it to have later right away, so you don't have to rerun the script later. 
+You have to save all the data sets in one list that also determines the order in which the variables are displayed in the codebook. It's best to choose the order you want right away, so you don't have to rerun the script later. 
 
-> [!NOTE]
+> [!NOTE]  
+> 
 > In the past the BT data sets were ordered like this: 
 >
 > - **data_sus**: student questionnaire
@@ -139,12 +139,12 @@ You have to save all the data sets in one list that also determines the order in
 > - **data_match**: data to match different data sets
 > - **data_linking**: data to link different data sets
 >
-> But it's best to ask about the order to make sure.
+> It's best to ask the BT team about the final order. 
 
 
 ## Data Import To-do
 
-Open the file `0_main.R`. First you need to install and load the packages `eatCodebook` and `eatGADS`, if you haven't already done that.
+Open the file `0_main.R`. You need to make sure the packages `eatCodebook` and `eatGADS` are loaded. 
 
 ### Import the Data
 
@@ -1534,7 +1534,7 @@ View(literatur)
 
 ### Save to Excel
 
-You can check once more whether everything is displayed the way you want it to. Then save it to Excel and import again with `getLitInfo()` to check for format. `makeLit()` converts the Excel table into the proper Latex syntax for the function `codebook()`.
+You can check once more whether everything is displayed the way you want it to. Then save it to Excel and import again with `getLitInfo()` to check for format. `makeLit()` converts the Excel table into the proper LaTeX syntax for the function `codebook()`.
 
 ```{r lit save and makeLit, eval=FALSE}
 writeExcel(literatur, row.names = FALSE, filePath = ".\\excel_files\\literatur.xlsx")
@@ -1629,9 +1629,9 @@ meta[1, "Subject"] <- "Skalenhandbuch zum Bildungstrend 2021"
 writeExcel(meta, ".\\excel_files\\meta.xlsx", row.names = FALSE)
 ```
 
-### Create Latex Syntax
+### Create LaTeX Syntax
 
-After you created and saved the meta data to an Excel file, you read from the Excel file with `makeMetadata()` to create the proper Latex syntax for the codebook. 
+After you created and saved the meta data to an Excel file, you read from the Excel file with `makeMetadata()` to create the proper LaTeX syntax for the codebook. 
 
 ```{r meta data latex, eval=FALSE}
 meta_final <- makeMetadata(".\\excel_files\\meta.xlsx")
@@ -1693,21 +1693,21 @@ chapters <- getChapters(".\\excel_files\\chapters.xlsx")
 
 # 13. Other Texts
 
-There are two more optional files you can add the the `codebook()` function: *intro* and *lastpage*. *intro* contains the intro text plus all the formatting embedded in Latex code. *lastpage* contains information about the bibiography something something. 
+There are two more optional files you can add the the `codebook()` function: *intro* and *lastpage*. *intro* contains the intro text plus all the formatting embedded in LaTeX code. *lastpage* contains information about the bibiography something something. 
 
 ## About Intro
 
-You will probably get a Word file with the intro text and tables that you need to convert to a .tex file with all the correct Latex code for different parts of the intro like italic text parts, lists or graphics, and footnotes, etc. You can find a example script in `5_latex_intro.R`. You can also do it manually in TexWorks, whatever works best for you. Either way it's a lot of work. If you write a script in R, you can rerun it, without having to reread or recheck the whole document, if there are any changes to the Word document. 
+You will probably get a Word file with the intro text and tables that you need to convert to a .tex file with all the correct LaTeX code for different parts of the intro like italic text parts, lists or graphics, and footnotes, etc. You can find a example script in `5_latex_intro.R`. You can also do it manually in TexWorks, whatever works best for you. Either way it's a lot of work. If you write a script in R, you can rerun it, without having to reread or recheck the whole document, if there are any changes to the Word document. 
 
 ## Intro To-do
 
-### Convert Text into Latex Syntax
+### Convert Text into LaTeX Syntax
 
-If you open `5_latex_intro.R` you can find some examples with which you can write your own script to convert the Word document into the proper Latex code to save it as a .tex file. That will take some time, so you can start with adapting the proper template even before having the final or any version of the intro.
+If you open `5_latex_intro.R` you can find some examples with which you can write your own script to convert the Word document into the proper LaTeX code to save it as a .tex file. That will take some time, so you can start with adapting the proper template even before having the final or any version of the intro.
 
 ### Import intro
 
-You work in `0_main.R`. It's important to save the proper latex script version as a .tex file, so you can just import add the code lines with `readLines()`. If you saved your .tex file in the folder *Texte* in your work space, you can use the line as is.
+You work in `0_main.R`. It's important to save the proper LaTeX script version as a .tex file, so you can just import add the code lines with `readLines()`. If you saved your .tex file in the folder *Texte* in your work space, you can use the line as is.
 
 ```{r import intro, eval=FALSE}
 intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
@@ -1730,7 +1730,7 @@ lastpage <- readLines(".\\Texte\\Latex_lastpage.tex")
 
 # 14. Create the Codebook
 
-After you created and edited all the Excel files you can use `codebook()` to create a Latex script that you can save as a .tex file. With that file you can render a pdf version of the codebook. 
+After you created and edited all the Excel files you can use `codebook()` to create a LaTeX script that you can save as a .tex file. With that file you can render a pdf version of the codebook. 
 
 ## About the Codebook
 
@@ -1778,7 +1778,7 @@ You can add a **lastpage** that contains information about the publication serie
 
 ## Codebook To-do in R
 
-You open the file `6_Erstellung_kurz.R`. Here you will find a template just for the creation of the codebook. You just import or load all the data and files that you need to create the codebook, use the function `codebook()` to create a Latex script that you then save as a .tex file. You can also create the codebook in the `0_main.R` file, but there's a lot of extra code that might be confusing. 
+You open the file `6_Erstellung_kurz.R`. Here you will find a template just for the creation of the codebook. You just import or load all the data and files that you need to create the codebook, use the function `codebook()` to create a LaTeX script that you then save as a .tex file. You can also create the codebook in the `0_main.R` file, but there's a lot of extra code that might be confusing. 
 
 You will also need to create an extra file for the meta data of the codebook. 
 
@@ -1826,7 +1826,7 @@ lastpage <- readLines(".\\Texte\\Latex_lastpage.tex")
 
 ### Create the Codebook
 
-Then you can use the function `codebook()` to create the Latex Script. This may take a while. 
+Then you can use the function `codebook()` to create the LaTeX Script. This may take a while. 
 
 ```{r create codebook, eval=FALSE}
 codebook <- codebook(varInfo = varinfo, missings = missings, struc = gliederung,
@@ -1856,7 +1856,7 @@ After you created codebook and saved it as a .tex file, you still need to render
 
 ### open .tex file
 
-First you open the .tex file. You will have a very long script, but you shouldn't need to edit it. The first part of the script contains the Latex packages that you need for the script and then all the input from the Excel files that the function `codebook()` converted to the proper Latex code. The beginning might look like this:
+First you open the .tex file. You will have a very long script, but you shouldn't need to edit it. The first part of the script contains the LaTeX packages that you need for the script and then all the input from the Excel files that the function `codebook()` converted to the proper LaTeX code. The beginning might look like this:
 
 ![](.\pictures\tex1.png){width=100%}
 
@@ -1868,9 +1868,9 @@ You have to click the green triangle to render to pdf. Remember to select the ri
 
 ### Dealing with Errors
 
-If the rendering doesn't work you will get an error message in the console of *TeXWorks* and the line that caused the error. You might need to update the Latex packages. Most times the error is due to syntax errors because special characters weren't escaped properly in the Excel files. Usually the errors can be fixed in R or by adjusting the Excel files to contain proper Latex syntax. 
+If the rendering doesn't work you will get an error message in the console of *TeXWorks* and the line that caused the error. You might need to update the LaTeX packages. Most times the error is due to syntax errors because special characters weren't escaped properly in the Excel files. Usually the errors can be fixed in R or by adjusting the Excel files to contain proper LaTeX syntax. 
 
-#### Update Latex Packages
+#### Update LaTeX Packages
 
 To update the packages in *TeXWorks* you need to open your MikTeX console. 
 
