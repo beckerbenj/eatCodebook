@@ -83,7 +83,7 @@ You need to make sure that there are three folders and create them if not.
 | `Latex` | Here you save the .tex files and pdfs of the finished LaTeX script for the codebook. You can add the folder `archive` to keep different versions to compare. |
 | `Texte` | Here you can save the intro text, cover and other texts. |
 
-Pull the repo and start with the file `0_main.R`. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust.
+Pull the repo and start with the file **0_main.R**. You usually don't need to copy any code from this vignette, because the template already contains example code lines that you can copy or adjust.
 
 ## Packages
 
@@ -144,7 +144,7 @@ You have to save all the data sets in one list that also determines the order in
 
 ## Data Import To-do
 
-Open the file `0_main.R`. You need to make sure the packages `eatCodebook` and `eatGADS` are loaded. 
+Open the file **0_main.R**. You need to make sure the packages `eatCodebook` and `eatGADS` are loaded. 
 
 ### Import the Data
 
@@ -318,7 +318,7 @@ The function `createScaleInfo()` adds imputed variables like a scale to the data
 
 .The editing of the descriptives can be a lot of code, especially if you have several data sets, so it's best to do this in a separate file. Make sure the packages `eatCodebook` and `eatGADS` are loaded. 
 
-After you imported the data sets, you open `1_kennwerte.R`. Then you copy the `Import Data` Code in this file, so you can work on it without needing to open `0_main.R` the next time you work on it. 
+After you imported the data sets, you open **1_kennwerte.R**. Then you copy the `Import Data` Code in this file, so you can work on it without needing to open **0_main.R** the next time you work on it. 
 
 For each imported data set, you create a new object with `createInputForDescriptives()` containing input for the descriptive statistics about each variable like their *name*, *label*, *format*, *scale level* or which variables are *grouped* together. You edit them according to the [About section](#input-for-descriptives-table), check the input and then you calculate the actual descriptive statistics with `calculateDescriptives()`. 
 
@@ -458,7 +458,7 @@ input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
 kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
 ```
 
-You should add the last two lines (load files) in you `0_main.R` script behind the data import (see template). 
+You should add the last two lines (load files) in you **0_main.R** script behind the data import (see template). 
 
 ------------------------------------------------------------------------
 
@@ -481,7 +481,7 @@ head(missings)
 
 ## Missings To-do
 
-Open `0_main.R` again. The data sets `datalist` need to be loaded in the work space, as well as the two lists `input_descriptives` and `kennwerte`. 
+Open **0_main.R** again. The data sets `datalist` need to be loaded in the work space, as well as the two lists `input_descriptives` and `kennwerte`. 
 
 You create a new data frame with `createMissings()` and save it to Excel as `missings.xlsx`. You import it again with `getMisings()` to check the format. Usually there's no need to edit anything. 
 
@@ -520,7 +520,7 @@ The function `createScaleInfo()` "finds" the scales by looking for matching vari
 
 ## Scales To-do
 
-Open `0_main.R` and scroll to or add `scales`. You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scales and which items belong to it. You just need the list `input_descriptives` for that. Usually you don't need to edit this file, unless you work with fake scales.
+Open **0_main.R** and scroll to or add `scales`. You need to create one `skalen.xlsx` Excel file for all the data sets combined. It contains the info which variables are scales and which items belong to it. You just need the list `input_descriptives` for that. Usually you don't need to edit this file, unless you work with fake scales.
 
 ### Create Scales
 
@@ -605,7 +605,7 @@ In Excel: First sheet `Akronyme`, second sheet `statistische Formelzeichen`
 
 ## Abbreviation List To-do
 
-Open `0_main.R` and scroll to or add `abbreviation list`. You create either an empty object for the abbreviation list with `createAbbrList()` or read in the one from last year's BT,  call it `abbr_list`, and save it in a new Excel file.
+Open **0_main.R** and scroll to or add `abbreviation list`. You create either an empty object for the abbreviation list with `createAbbrList()` or read in the one from last year's BT,  call it `abbr_list`, and save it in a new Excel file.
 
 ### Create New Empty List
 
@@ -759,7 +759,7 @@ When everything is labeled correctly in the `inputForDescriptives` files, the ri
 
 The **Unterteilung.im.Skalenhandbuch** (subsection names in the codebook) column gives the name for the subsections. 
 
-In the **Gliederung** (subsection numbers) column, the subsection numbers must be inserted. Subsections such as "1.1", "1.2",... "2.1". The names of the corresponding sections is done in a later function (s. [7. Structure](#7.-structure)). Make sure the subsections names and numbers match. 
+In the **Gliederung** (subsection numbers) column, the subsection numbers must be inserted. Subsections such as "1.1", "1.2",... "2.1". The names of the corresponding sections is done in a later function (s. [7. Structure](#structure)). Make sure the subsections names and numbers match. 
 
 You need to add the `Gliederung` as well as the `Unterteilung.im.Skalenhandbuch` from another (Excel) file, for the BT codebook it's usually called something like `finale Reihenfolge.xlsx`. See [To-do](#add-structure-and-subsections) on how to do that. 
 
@@ -825,32 +825,45 @@ There should be another Excel file containing information on the background mode
 
 For the variable to appear in the appendix, the column `Hintergrundmodell` must be set to *ja*. Otherwise, there must be a *nein*. Then you add the variables they were created from (if any) listed in `basevar`. The variables in the appendix should show up in the order they are displayed in the codebook. 
 
+
 ## Varinfo To-do
 
-Now comes the harder part of actually creating and editing the `varinfo`. You can either create and save a `varinfo.xlsx` file in `0_main.R` or you open `2_varinfo.R` and create `varinfo.xlsx` here. There's a lot to add,  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file `2_varinfo.R` to do the editing. Then you can just rerun it without having to do too much. You should check after each recreation, whether the script still worked correctly, though.
+Now comes the most time consuming part of actually creating and editing the `varinfo`. 
 
-When working on the BT codebook for IQB, you can find most Excel files containing the additional information to add on the network server *Q: FDZ und Bildungstrend*. 
+You have to create a list of data frames (one for each data set) and save it to Excel. There's a lot to add,  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file **2_varinfo.R** to do the editing. Then you can just rerun it without having to do too much. You should check after each recreation, whether the script still worked correctly, though.
 
-When you open `2_varinfo.R` you will have to import the data and the descriptives in order to create `varinfo`. After the setup you need to add the following information. The order in which you add them is up to you, but it makes sense to keep to the order in this vignette. 
+When working on the BT codebook for IQB, you can find most Excel files containing the additional information to add on the network server *Q:*. 
 
-| Column in Varinfo | Where to get the Information from | Order |
-|------------------------|------------------------|------------------------|
-| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set | tbd |
-| `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called `Reihenfolge_Variable_final.xlsx` or similar, contains one sheet per data set | different from data sets |
-| `rekodiert` | Info in the variable name: all with `_r` at the end | no order |
-| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | in an extra Excel file, you probably have to ask about it | no order |
-| optional: `Anmerkung.Var` | in an file on Q: | check order |
+When you open **2_varinfo.R** you will have to import the data and the descriptives in order to create `varinfo`. After the setup you need to add the following information. The order in which you add them is up to you, but it makes sense to keep to the order in this vignette. 
 
-The order of the variables in `varinfo` depends on the order from the data sets. However, the final order of the variables might be different. The files for `Quellen` (refernces) and `Gliederung` (structure) usually contain all variables, whereas for the backgroundmodel/HGM or `rekodiert` you have to change the input for individual variables, so the order is not relevant.
+| Column in Varinfo | Where to get the Information from |
+|------------------------|------------------------|
+| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set |
+| `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called something like `Reihenfolge_Variable_final.xlsx`, contains one sheet per data set |
+| `rekodiert` | Info in the variable name: all with `_r` at the end |
+| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | in an extra Excel file, you might have to ask about it or also on Q: |
+| optional: `Anmerkung.Var` | in an file on Q: |
 
-I recommend starting with the files that have the same order as the original `varinfo`, so you only have to change the variable order once. For this vignette I'll just describe the procedure for one data set, but you need to do it for each data set or varinfo data frame/Excel sheet. 
+The order of the variables when you first create `varinfo` depends on the order from the data sets. However, the final order of the variables might be different. It's best to match the input to each variable by name to make sure the matching is correct. 
+
+In the end, you need to make sure that the order of `varinfo` matches the one in the `finale Reihenfolge` (final order) Excel. 
+
+I recommend starting with the files that have the same order as the original `varinfo`, so you only have to change the variable order once. For this vignette I'll just describe the procedure for one data set, but you need to do it for each data set or `varinfo` data frame or Excel sheet. 
+
+After you created and edited the `varinfo.xlsx`, you need to add this line to your **0_main.R** file
+
+```{r varinfo to main, eval=FALSE}
+varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
+```
 
 
 ### Varinfo Setup
 
+Open **2_varinfo.R**. Make sure that all packages (`eatCodebook`, `eatGADS`, `eatTools`), `datalist` (the data sets), as well as `input_descriptves` and `kennwerte` are loaded. You can copy the code from `0_main.R` to the setup section of this new file. 
+
 #### Create Varinfo
 
-Open `2_varinfo.R`. You first create a varinfo object with `createVarInfo()` from the SPSS data list you read in at the beginning (`datenliste`) and from the input for descriptives list you created out of that (`input_descriptives`): 
+You first create a `varinfo` object with `createVarInfo()` from the SPSS data list you read in at the beginning (`datalist`) and from the input for descriptives list you created out of that (`input_descriptives`): 
 
 ```{r create varinfo, eval=FALSE}
 varinfo <- createVarInfo(datalist, input_descriptives)
@@ -876,15 +889,15 @@ You can either save it directly as an Excel file or do the layout first.
 
 #### Infer Layout
 
-You add layout information for each variable with `inferLayout()`. You need the newly created `varinfo` object and the `datalist` and `input_descriptives`. 
+You add layout information for each variable with `inferLayout()`. You need the newly created `varinfo` object, the `datalist` and `input_descriptives`. 
 
 ```{r infer layout varinfo, eval=FALSE}
 varinfo <- inferLayout(varinfo, datalist, input_descriptives)
 ```
 
-#### save to Excel
+#### Save to Excel
 
-Now save to Excel `varinfo.xlsx` as a template, and `varinfo_edited.xlsx` as the file you actually work with. Then you import `varinfo_edited.xlsx` and check the format with `getVarInfo`.
+Now save to Excel `varinfo.xlsx` as a template, and `varinfo_edited.xlsx` as the file you actually work with in the folder *excel_files*. Then you import and check the format of `varinfo_edited.xlsx` by using `getVarInfo()`.
 
 ```{r save varinfo, eval=FALSE}
 # save to Excel
@@ -896,16 +909,16 @@ varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
 
 ### Add References and Instructions
 
-To Add the references and instructions you need access to the an Excel file with all the variables listed plus their source/reference in APA short form (like `Hertel et al. (2014)`) and their instructions (in the questionnaire). The Excel should have two sheets, one with at least 4 columns (Variable, Label, Instruktion and Quelle), and a second one with the APA long from references that we need later. You need to do the following steps: 
+To Add the references and instructions you need access to the the Excel files with all the variables listed plus their matching APA in-text citations (like `Hertel et al. (2014)`) and their instructions (in the questionnaire). The Excel should have two sheets, one with at least 4 columns (Variable, Label, Instruktion and Quelle), and a second one with the APA references and their in-text citations that we need later. You need to do the following steps: 
 
-> - import the references/instructions, select proper sheet (usually Sheet 1)
+> - import the in-text citations and instructions, select proper sheet (usually Sheet 1)
 > - check the columns with `View()`: `Variable`, `Quelle` and `Instruktionen`
-> - match the references and instructions to the order of varinfo
+> - match the in-text citations and instructions to the order of `varinfo`
 > - transfer the entries, check your progress/proper matching and save in between.
 
-Linking or matching data sets are usually created due to technical reasons and usually don't have references or instructions, so you don't need to add anything to them. 
+Linking or matching data sets are usually created due to technical reasons and usually don't have references or instructions, so you don't need to add anything to them.
 
-#### import references and instructions from Excel
+#### Import In-Text Citations and Instructions from Excel
 
 Import the Excel file with `getExcel()`, you need to add the proper file path. Then select the right sheet, usually `sheet 1`, and look at the data frame. 
 
@@ -932,17 +945,17 @@ setdiff(quellen_sus$Variable, varinfo$sus$Var.Name)
 
 Before you clean up any data, it's best to ask your supervisor or the BT team on how to deal with these mismatches. In the following you will see a few possible reasons and how you can deal with them. 
 
-The first line of `setdiff()` *`setdiff(varinfo$sus$Var.Name, quellen_sus$Variable)`* returns variables in `varinfo$sus` that are *not* in `quellen_sus`. These variables often were created due to technical or methodological reasons and usually have no references or instructions. You can ignore them at this point. 
+The **first line** of `setdiff()` *`setdiff(varinfo$sus$Var.Name, quellen_sus$Variable)`* returns variables in `varinfo$sus` that are *not* in `quellen_sus`. These variables often were created due to technical or **methodological reasons** and usually have no references or instructions. You can ignore them at this point. 
 
-The second line of `setdiff()` *`setdiff(quellen_sus$Variable, varinfo$sus$Var.Name)`* returns variables in `quellen_sus` that are *not* in `varinfo$sus`. That is the case when 1) variables changed spelling for some reason or 2) the variables are not supposed to be in this data frame, for instance, because they're already in another one (this might be the case for identifier variables). 
+The **second line** of `setdiff()` *`setdiff(quellen_sus$Variable, varinfo$sus$Var.Name)`* returns variables in `quellen_sus` that are *not* in `varinfo$sus`. That is the case when 1) variables changed **spelling** for some reason or 2) the variables are not supposed to be in this data frame, for instance, because they're already in another one (this might be the case for **identifier variables**). 
 
-For 1) you adapt the spelling to match the spelling in `varinfo`. If this is the case, the first line usually also returns a variable with similar spelling. In the BT21 there is a variable called `Fach` in the `lfb_spez` data set, which was called `LFACH` in the `quellen` Excel. You can just rename it by identifying where it is and adjusting the spelling. This is a case where it might be easier to update the Excel file, but you could also do this in your script:
+For 1) you adapt the **spelling** to match the spelling in `varinfo`. If this is the case, the first line usually also returns a variable with similar spelling. In the BT21 there is a variable called `Fach` in the `lfb_spez` data set, which was called `LFACH` in the `quellen` Excel. You can just rename it by identifying where it is and adjusting the spelling. This is a case where it might be easier to update the references Excel file, but you could also do this in your script:
 
 ```{r varinfo ref spelling, eval=FALSE}
 quellen_lfb_spez$Variable[quellen_lfb_spez$Variable == "LFACH"] <- "Fach"
 ```
 
-For 2) you might have to remove the rows of the data frame, so you can transfer them later more easily. For that you can save the respective variables from `setdiff()` in a character vector and run the loop below that identifies their entry in `quellen_sus` and removes them. For the BT21 three variables had to be removed, if there's only one that needs to be removed, you can skip the the loop.
+For 2) you might have to **remove the rows** of the references data frame, so you can transfer them later more easily. For that you can save the respective variables from `setdiff()` in a character vector and run the loop below that identifies their entry in `quellen_sus` and removes them. For the BT21 three variables had to be removed, if there's only one that needs to be removed, you can skip the the loop. Again it might be easier to adjust the Excel file on Q:, but only after you asked about that. 
 
 ```{r varinfo ref remove rows, eval=FALSE}
 # identify position of variable "IDBL"
@@ -964,18 +977,18 @@ setdiff(quellen_sus$Variable, varinfo$sus$Var.Name)
 
 #### Check Matching Variables
 
-Not every variable will have a reference or instructions, some of them have the input `NA`, so in theory you could copy paste the columns to `varinfo`. However, the order of the variables between `varinfo` and the reference/instruction sheet might be different. To check the order you need the function `match()` which compares two character vectors - for instance `quellen_sus$Variable` and `varinfo$sus$Var.Name` which both contain the variable's names. 
+Not every variable will have a reference or instruction, some of them have the input `NA`, so in theory you could copy paste the columns to `varinfo`. However, the order of the variables between `varinfo` and the reference/instruction sheet might be different. To check the order you need the function `match()` which compares two character vectors - for instance `quellen_sus$Variable` and `varinfo$sus$Var.Name` which both contain the variable's names. 
 
 ```{r varinfo reference match var, eval=FALSE}
 pos <- match(quellen_sus$Variable, varinfo$sus$Var.Name)
 pos
 ```
 
-It returns a numerical vector that contains the strings (here the names) of the second vector (`varinfo$sus$Var.Name`) in the order in which they appear in the first vector (`quellen_sus$Variable`). Strings in the second vector (varinfo) that don't appear in the first (`quellen_sus`) just won't show up, so any extra variables in `varinfo` will be ignored by this function. If there's a string in the first vector (quellen_sus) that isn't in the second (`varinfo`), the output will be `NA` - that shouldn't be the case, if you cleaned up the data properly.
+It returns a numerical vector that contains the strings (here the names) of the second vector (`varinfo$sus$Var.Name`) in the order in which they appear in the first vector (`quellen_sus$Variable`). Strings in the second vector (`varinfo`) that don't appear in the first (`quellen_sus`) just won't show up, so any extra variables in `varinfo` will be ignored by this function. If there's a string in the first vector (`quellen_sus`) that isn't in the second (`varinfo`), the output will be `NA` - that shouldn't be the case, if you cleaned up the data properly.
 
-#### Transfer References and Instructions
+#### Transfer In-Text Citations and Instructions
 
-After making sure you have the right variables in your `quellen` object, you transfer the references and instructions from into `varinfo`. In `pos` you should now have the variable's order (as a numeric vector) of the variable names from `varinfo$sus` as they appear in `quellen_sus`. So when you write these two lines to your console, the references and instructions should be matched to the proper variable in `varinfo`. 
+After making sure you have the right variables in your `quellen` object, you transfer the in-text citations and instructions from into `varinfo`. In `pos` you should now have the variable's order (as a numeric vector) of the variable names from `varinfo$sus` as they appear in `quellen_sus`. So when you write these two lines to your console, the in-text citations and instructions should be matched to the proper variable in `varinfo`. 
 
 ```{r varinfo ref in varinfo, eval=FALSE}
 varinfo$sus$QuelleSH[pos] <- quellen_sus$Quelle
@@ -984,7 +997,7 @@ varinfo$sus$Instruktionen[pos] <- quellen_sus$Instruktion
 
 #### Check New Input
 
-It's best to compare the two data frames once more to make sure the references and instructions are matched with the respective variable. You can check all variables with `View()` or a random set of variables and look at the respective columns.  
+It's best to compare the two data frames once more to make sure the in-text citations and instructions are matched correctly. You can check all variables with `View()` or a random set of variables and look at the respective columns.  
 
 ```{r varinfo ref check, eval=FALSE}
 # compares variables 1 to 10:
@@ -994,7 +1007,7 @@ varinfo$sus[1:10, c(1, 11:12)]
 
 #### Save Progress
 
-When everything matched correctly, save your progress and import the Excel with `getVarInfo()`.
+When everything matched correctly, save your progress and import the Excel with `getVarInfo()` to check for format errors.
 
 ```{r varinfo ref save, eval=FALSE}
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
@@ -1004,14 +1017,16 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Structure and Subsections
 
-For the BT, you can usually find the info on the *Gliederung* (subsection numbers, also referred to as *structure*) and *Unterteilung im Skalenhandbuch* (subsection names) in a Excel called something like `finale Reihenfolge` on Q:. It contains the variable names, their labels and subsection info (number and name), as well as adjusted titles (if needed), each of the data sets have their own sheet, except linking or matching data who still need subsection info (see *Linking and Matching Data*). This Excel file also contains the final order in which the variables should be displayed in the codebook, so you need to adjust the order in `varinfo` to match the one in `finale Reihenfolge` (final order). You need to do the following steps: 
+For the BT, you can usually find the info on the *Gliederung* (subsection numbers) and *Unterteilung im Skalenhandbuch* (subsection names) in an Excel called something like `finale Reihenfolge` on Q:. It contains the variable names, their labels and subsection info (number and name), as well as adjusted titles (if needed). Each of the data sets have their own sheet, except linking or matching data who still need subsection info for technical reasons (see [here](#linking-and-matching-data)). 
+
+This Excel file also contains the **final order** in which the variables should be displayed in the codebook, so you need to adjust the order in `varinfo` to match the one in `finale Reihenfolge` (final order). You need to do the following steps: 
 
 > - import the `finale Reihenfolge` file, select proper sheet for your data set
 > - delete unnecessary rows (sections)
-> - compare variables (varinfo vs. final order)
+> - compare variables (`varinfo` vs. final order)
 > - separate subsection names and numbers
 > - check for duplicate subsection names
-> - add missing subsection
+> - add missing subsections
 > - change order of `varinfo` to match the final order
 > - transfer subsection info in `varinfo`
 > - update titles if necessary
@@ -1034,28 +1049,28 @@ It might look like this:
 
 ![](pictures\varinfo_subsections.png){width=100%}
 
-`Abschnitt` starts with the section name *1 Testdesign* then with the first subsection name *1.1 identifikationsvariable* and then `NA`, then the next subsections *1.2 Testgruppenmerkmale* and *1.3 Rotation*, then the next section *2 Persönliche Angaben* and so forth. We need to clean up the table so we can match the correct subsection info to each variable in `varinfo`. But first, we need to check if the variables in the final order file match the ones in `varinfo`.
+`Abschnitt` starts with the section name *1 Testdesign* then with the first subsection name *1.1 identifikationsvariable* and then `NA`, then the next subsections *1.2 Testgruppenmerkmale* and *1.3 Rotation*, then the next section *2 Persönliche Angaben* and so forth. We need to clean up the table so we can match the correct subsection info to each variable in `varinfo`. 
+
+#### Remove NAs in `varName`
+
+We need the section names that start with a single digit like *1* later (see [7. Structure](#structure)). The `finale Reihenfolge` Excel added rows between sections, so you have some `NA` entries in the column `varName`, as well. To match the input for the subsections to `varinfo` we need to delete those rows for now. 
+
+```{r varinfo subsection delete sections, eval=FALSE}
+subsections_lfb_allg <- subsections_lfb_allg[!is.na(subsections_lfb_allg$varName),]
+```
 
 #### Check Variables
 
-It's the same as before except this time, both variables should be exactly the same, so the output should be `character(0)` both times. When you find any mismatches report back to your supervisor.
+Now we need to check if the variables in the final order file match the ones in `varinfo`. It's the same check like earlier, except this time both variables should be exactly the same, so the output should be `character(0)` both times. When you find any mismatches report back to your supervisor.
 
 ```{r varinfo subsection setdiff, eval=FALSE}
 setdiff(varinfo$lfb_allg$Var.Name, subsections_lfb_allg$varName)
 setdiff(subsections_lfb_allg$varName, varinfo$lfb_allg$Var.Name)
 ```
 
-#### Remove NAs in `varName`
-
-We need the section names that start with a single digit like *1* later (see 7. structure). The `finale Reihenfolge` Excel added rows between sections, so you have some `NA` entries in the column `varName`, as well. To match the input for the subsections to `varinfo` we need to delete those rows for now. 
-
-```{r varinfo subsection delete sections, eval=FALSE}
-subsections_lfb_allg <- subsections_lfb_allg[!is.na(subsections_lfb_allg$varName),]
-```
-
 #### Seperate Subsection Names and Numbers
 
-We need the number of the subsection and their names separate, so we can 1) check for duplicates and 2) transfer them in the respective `varinfo` columns. The package `eatTools` has a practical function for that: `halveString()`, which separates any string at a specified separator into two strings. After each number there's a blank space, so that's our separator. First we save our `Abschnitt` column in a new vector, then we separate numbers from names and save them in `sep`. It returns a data frame with two columns, that we can name *subsec number* and *subsec name*. 
+We need the number of the subsection and their names separately, so we can 1) check for duplicates and 2) transfer them in the respective `varinfo` columns. The package `eatTools` has a practical function for that: `halveString()`, which separates any string at a specified separator into two strings. After each number there's a blank space, so that's our separator. First we save our `Abschnitt` column in a new vector, then we separate numbers from names and save them in `sep`. It returns a data frame with two columns, that we can name *subsec number* and *subsec name*. 
 
 ```{r varinfo subsection separate, eval=FALSE}
 sep <- subsections_lfb_allg$Abschnitt
@@ -1075,7 +1090,7 @@ It should look something like this now:
 
 #### Check for Duplicates
 
-For some BTs the same data collected for different subjects, so they have the same subsection names. Due to technical reasons each subsection name *has to be unique* in the codebook. So it's important to check for duplicates and report back, if you find any. Be mindful of `NA`s, as they are also seen as duplicated input. 
+For some BTs the same data is collected for different subjects, so they have the same subsection names (like *Selbstkonzept* (self-concept)). Due to technical reasons each **subsection name has to be unique** in the codebook. So it's important to check for duplicates and report back, if you find any. Be mindful of `NA`s, as they are also seen as duplicated input. 
 
 Now that we have the subsection names by themselves, we can check for duplicates in the column `subsec name`. `anyDuplicated()` checks if there are any duplicates, at all. If the output is `0`, there are no duplicates and you can go the next step. If the output is any other number, it indicates the position of the first duplicated entry in the column. `duplicated()` returns a logical vector of all entries, `TRUE` indicates duplicated entries.  
 
@@ -1088,7 +1103,7 @@ duplicated(subsections_lfb_allg$`subsec name`[!is.na(subsections_lfb_allg$`subse
 
 Now we need to fill the `NA`s with the proper subsection info, which is always the one above. The `NA`s in row 3 needs to say *1.1* and *Identifikationsvariable*, in row 8 it should say *2.1* and *Soziodemografie*, etc. 
 
-This loop checks every entry in the new columns `subsec number` and `subsec name` for `NA`s, if it finds one it fills it with the input from the entry before. After the loop you should check the columns with `View()`: for `NA`s, if the numbers are in order and match their names.
+This loop checks every entry in the new columns `subsec number` and `subsec name` for `NA`s, if it finds one it fills it with the input from the entry before it. After the loop you should check the columns with `View()`: there shouldn't be any `NA`s; the numbers should match their names like in `finale Reihenfolge`. 
 
 ```{r varinfo subsection add subsections, eval=FALSE}
 for(i in 1:nrow(subsections_lfb_allg)){
@@ -1101,16 +1116,16 @@ View(subsections_lfb_allg)
 
 #### Change Varinfo Order
 
-Now we need adjust the order of `varinfo` to match the final order. This only works, if the variables of both data frames are exactly the same like we checked before (see *Check Variables*). 
+Now we need adjust the order of `varinfo` to match the final order. This only works, if the variables of both data frames are exactly the same like we checked before (see [Check Variables](#check-variables)). 
 
-We use the `match()` function again, but this time, we save the changed order into the `varinfo` list. The first objects needs to be the variables in the order we want from `finale Reihenfolge`, the second the object we want to change. You can check again with `View()`. 
+We use the `match()` function again, but this time, we save the changed order into the `varinfo` list. The first object needs to be the variables in the order we want from `finale Reihenfolge`, the second the object we want to change. You can check again with `View()`. 
 
 ```{r varinfo subsection match var, eval=FALSE}
 order_new <- match(subsections_lfb_allg$varName, varinfo$lfb_allg$Var.Name)
 varinfo$lfb_allg <- varinfo$lfb_allg[order_new,]
 ```
 
-#### Add structure and subsection names in `varinfo`
+#### Add Subsection Names and Numbers in `varinfo`
 
 Now that we cleaned up the table we got from `finale Reihenfolge`, we have a data frame with the variable names and their matching subsection numbers and names, as well as the respective data frame from `varinfo` with a matched order, we can finally transfer the subsection info into `varinfo`. 
 
@@ -1133,7 +1148,9 @@ varinfo$match$Gliederung <- "1.1"
 
 #### Adjust Titles
 
-The variable's labels cannot be changed, because they have to match the data sets. They usually don't contain umlauts or other special characters. The titles have the same input as the labels per default. `Titel` (titles) are shown in the table of content, for instance, it's nice to have proper (German) spelling here, so you can adjust it by reading in the additional `Titel` column in the Excel file, if you have that. This column contains spelling with umlauts, ß or other special characters. After you changed the order of `varinfo` to match the final order, you can just transfer the column in `varinfo$data$Titel` like you did with the subsection info. 
+The variable's labels cannot be changed, because they have to match the data sets. They usually don't contain umlauts or other special characters. The titles have the same input as the labels per default. 
+
+`Titel` (titles) are shown in the table of content, it's nice to have proper (German) spelling here, so you can adjust it by reading in the additional `Titel` column in the Excel file, if you have that. This column contains spelling with umlauts, ß or other special characters. After you changed the order of `varinfo` to match the final order, you can just transfer the column in `varinfo$data$Titel` like you did with the subsection info. 
 
 ```{r varinfo subsection titles, eval=FALSE}
 varinfo$lfb_allg$Titel <- subsections_lfb_allg$`Titel.(Ebene.3)`
@@ -1151,7 +1168,7 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Recoded Info
 
-Each variable page shows the info whether or not a variable has been recoded (`ja`) or not (`nein`). You recognize the recoded variables by the ending `_r` in their name. This loop looks through all data frames in `varinfo` in the column `Var.Name`. If it finds the ending `_r`, it write `ja` in the column `rekodiert` for the respective variable. That is all. This changes all data frames in `varinfo`. 
+Each variable page shows the info whether or not a variable has been recoded (`ja`) or not (`nein`). You recognize the recoded variables by the ending `_r` in their name. This loop looks through all data frames in `varinfo` in the column `Var.Name`. If it finds the ending `_r`, it writes `ja` in the column `rekodiert` for the respective variable. That is all. This changes all data frames in `varinfo`. 
 
 ```{r varinfo recoded, eval=FALSE}
 for(i in 1:length(varinfo)){
@@ -1177,7 +1194,7 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Background Model Info
 
-The background model info is something to do for all data frames at once, as well. This info will later show up in the appendix of the codebook, not on the individual pages of the variables. you should do this after changing `varinfo` to match the final order, especially for the column `Reihenfolge.HGM`. The order of the variables in the bgm appendix should match the one in the codebook. You need to do the following steps: 
+The background model (bgm) info is something to do for all data frames at once, as well. This info will later show up in the appendix of the codebook, not on the individual pages of the variables. you should do this after changing `varinfo` to match the final order, especially for the column `Reihenfolge.HGM`. The order of the variables in the bgm appendix should match the one in the codebook. You need to do the following steps: 
 
 > - import the Excel from Q:
 > - add new variables to `varinfo` if needed
@@ -1185,7 +1202,7 @@ The background model info is something to do for all data frames at once, as wel
 
 #### Import Excel
 
-For the BT studies, you will need access to an Excel file containing all the relevant information about the background model somewhere on Q:. Don't forget to adjust the file path. There's one sheet with a lot of columns, but you only need 2 or 3 of them: `Variablenname`, `basevar` and maybe `Variablenlabel`. `basevar` contains the info out of which variables a variable was constructed (if any). 
+For the BT studies, you will need access to an Excel file containing all the relevant information about the background model somewhere on Q:. Don't forget to adjust the file path. There's one sheet with a lot of columns, but you only need 2 or 3 of them: `Variablenname`, `basevar` and maybe `Variablenlabel`. `basevar` contains the info out of which variables a variable was constructed, but for most variables this columns is empty. 
 
 First you import the file and save it into a data frame. 
 
@@ -1210,9 +1227,9 @@ bgm$basevar[is.na(bgm$basevar)] <- "-"
 
 Before you add any bgm info to `varinfo`, you might have to add a few variables to data frames that were specially created for the bgm. These are not displayed in the codebook, but need to be listed in `varinfo`, otherwise they won't show up in the appendix. 
 
-For the BT21 there were variables created with the names `X.klasse` for the student data, that were not in the data set. If you find any variables in the bgm Excel that you can't find in any of the data frames, ask your supervisor. You probably have to add them manually. 
+For the BT21 there were variables created with the names `X.klasse` for the student data, that were not in the data set. You can identify these variables by using `setdiff()`. If you find any variables in the bgm Excel that you can't find in any of the data frames, you probably have to add them yourself. 
 
-You start by identifying the variables, in the example all variables that end with `.klasse` are extracted. 
+You start by identifying the variables in the new `hgm` table, in the example all variables that end with `.klasse` are extracted. 
 
 ```{r varinfo bgm add var 1, eval=FALSE}
 # extracting .klasse variables, labels, and basevar
@@ -1221,7 +1238,7 @@ hgm_klasse <- hgm[pos,]
 View(hgm_klasse)
 ```
 
-Then you have to find out in which data frame the originals are. You can use the `basebar` column for that. In this case there are only individual variables listed, so that makes it easier to find. You add a new column to the `hgm_klasse` data frame (called `dat`). Then you search the variable names of all data frames if they match an entry in `basevar` (the original variable) and add the name of that data frame to the column `dat`. 
+Then you have to find out which data frame contains the originals. You can use the `basebar` column for that. In this case there are only individual variables listed, so that makes it easier to find. You add a new column to the `hgm_klasse` data frame (called `dat`). Then you search the variable names of all data frames if they match an entry in `basevar` (the original variable) and add the name of that data frame to the column `dat`. 
 
 ```{r varinfo bgm add var 2, eval=FALSE}
 hgm_klasse <- cbind(hgm_klasse, dat = NA)
@@ -1235,7 +1252,7 @@ for(var in hgm_klasse$basevar){
 }
 ```
 
-In this case the original variables were all in the student data. So now you need to add new rows to the `varinfo$sus` data frame. You need to add new empty rows to `varinfo`. `pos` can give you the number of rows you need to add. 
+In this case the original variables were all in the student data (`sus`). So now you need to add new rows to the `varinfo$sus` data frame. You need to add new empty rows to `varinfo`. `pos` can give you the number of rows you need to add. 
 
 ```{r varinfo bgm add var 3, eval=FALSE}
 varinfo$sus[nrow(varinfo$sus)+length(pos),] <- NA
@@ -1256,6 +1273,7 @@ varinfo$sus[varinfo$sus$Var.Name %in% hgm_klasse$Variablenname,]$Gliederung <- "
 View(varinfo$sus)
 ```
 
+Make sure all variables were added and that the entries are correct. They are not supposed to show up in the main codebook, so `in.DS.und.SH` needs to say `nein` and they don't need any `Layout` information. 
 
 #### Adding BGM Info
 
@@ -1288,7 +1306,7 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Remarks
 
-If you have a list or Excel file with remarks and additions for certain variables, you can add them similarly to the other information above. If they are added in the `finale Reihenfolge` Excel in the column `Kommentar`, you can add them with the structure info. If they are in a separate Excel you can match them item to item like the BGM info. 
+If you have a list or Excel file with remarks and additions for certain variables, you can add them similarly to the other information above. If they are added in the `finale Reihenfolge` Excel in the column `Kommentar`, you can add them with the subsection info. If they are in a separate Excel you can match them item to item like the BGM info. 
 
 #### Save Progress
 
@@ -1299,24 +1317,16 @@ writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
 
+
 ------------------------------------------------------------------------
 
 # 7. Structure
 
-After you finished adding to the `varinfo` Excel, you can open the next file called **3_gliederung.R**. Now we create another Excel file that orders and names the sections and subsections for the codebook. 
+Now we create another Excel file that orders and names the sections and subsections for the codebook. 
 
 ## About the Structure
 
-The function `createStructure()` will read the subsection info from `varinfo` and create a new list with a data frame per data set that you should save in an Excel file. You still need to add the section names that we ignored earlier. Again the BT might only give you section names for data sets with content variables, so you might add them yourself for linking or matching data like before. 
-
-If you want the example data set `dat` to work, you would need to add some structure info (`Unterteilung.im.Skalenhandbuch` and `Gliederung`) into your example `varinfo`, otherwise it won't be able to create a structure. If you don't have access to the IQB files you can use the following code to look at it on your own work space or you can look at the example pictures.
-
-```{r gliederung example setup}
-varinfo$Titel[is.na(varinfo$Titel)] <- "-"
-varinfo$Unterteilung.im.Skalenhandbuch <- "example name" 
-varinfo$Gliederung <- "1.1"
-gliederung <- createStructure(varinfo)
-```
+The function `createStructure()` will read the subsection info from `varinfo` and create a new list list of data frames (one for each data set) that needs to be saved to Excel, as well. You still need to **add the section names** that we ignored earlier. Again the BT might only give you section names for data sets with content variables, so you might add them yourself for linking or matching data like before. 
 
 #### Example Table
 
@@ -1328,11 +1338,12 @@ gliederung <- createStructure(varinfo)
 
 ![](.\pictures\gliederung_list.png){width=100%}
 
-The data frames should look like this: subsection names and numbers from `varinfo` are added, but the section names with the full numbers (1, 2, etc.) are empty. You need to add them for each data frame. 
+
+The data frames should look like this: subsection names and numbers from `varinfo` are added, but the section names with the full numbers (1, 2, etc.) are empty. You need to add them for each data frame separately. 
 
 ![](.\pictures\gliederung_sus.png){width=50%}
 
-## Strucutre To-do
+## Structure To-do
 
 Open the next file called **3_gliederung.R**. You just need to create the list, add the few names and save it to Excel.
 
@@ -1361,29 +1372,29 @@ gliederung <- createStructure(varinfo)
 View(gliederung)
 ```
 
-### Add missing section names
+### Add Missing Section Names
 
 Now you identify the sections for each data frame separately and add the names to the new data frames. 
 
-The section rows don't have variables, so the `varName` cell is empty for all section rows. You identify sections this way and save them in the object `section_names`. They have both the section number and name.
+The section rows don't have variables, so you can **identify sections** by their `NA` entries in `varName` and save them in the object `section_names`.
 
 ```{r gliederung find names, eval=FALSE}
 section_names <- subsections$TR_SFB_EFB$Abschnitt[is.na(subsections$TR_SFB_EFB$varName)]
 ```
 
-They have both section number and name, so you need to separate that info like before:
+They have both section number and name, so you need to **separate** that info like before:
 
 ```{r gliederung sep info, eval=FALSE}
 sep <- eatTools::halveString(section_names, " ", colnames = c("number", "name"))
 ```
 
-But now you only need the `name` info. You add that to the empty spaces in `gliederung`: 
+But now you only need the `name` info. You **add** that to the empty spaces in `gliederung`: 
 
 ```{r gliederung add names, eval=FALSE}
 gliederung$sus$Titel[is.na(gliederung$sus$Titel)] <- sep[, "name"]
 ```
 
-Linking and Matching data probably won't have any names in the `finale Reihenfolge` Excel, so you add the names `Matchingvariable` or `Linkingvariable` like before:
+**Linking and matching data** probably won't have any names in the `finale Reihenfolge` Excel, so you add the names `Matchingvariable` or `Linkingvariable` like before:
 
 ```{r gliederung matching, eval=FALSE}
 gliederung$match$Titel <- "Matchingvariablen"
@@ -1400,25 +1411,35 @@ writeExcel(df_list = gliederung, row.names = FALSE, filePath = ".\\excel_files\\
 gliederung <- getStructure(".\\excel_files\\gliederung.xlsx")
 ```
 
+Then add the last line `gliederung <- getStructure(".\\excel_files\\gliederung.xlsx")` to your **0_main.R** file. 
 
 ------------------------------------------------------------------------
 
 # 8. References
 
-You need to create a separate Excel file with the short and long form references if you want them to appear in the appendix. 
+You need to create a separate Excel file with the references and in-text citations if you want them to appear in the appendix. 
 
 ## About References
 
-Each variable page shows the short form reference that you can then look up in the appendix. For that we need to create an Excel file with all short form references from `varinfo` and match them with their long form counterpart. You create one data frame for all data sets and the intro. 
+Each variable page displays the in-text citations that you can look up in the appendix. For that we need one data frame containing all in-text citations and references used in the codebook (for the variables and other texts).  
+
+The function `createLitInfo()` creates one data frame containing all in-text citations form `varinfo`. You need to match the actual references from the Excel files we used earlier. You also need to add the intro references that you can get from an extra Excel file. 
 
 The references should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format. You need to add special Latex syntax for italic strings and URLs if you want them to show up correctly in the codebook. 
 
 > [!NOTE]
+> 
 > References need to be in APA format! 
 
 ## References To-do
 
-You open `4_literatur.R`. You need the reference info from `varinfo`, the long form references for each data set we used to match the short form references to the individual variables. Then we add or match all references into one data frame and save it to Excel. 
+You open **4_literatur.R**. You need the in-text citation info from `varinfo` (*QuelleSH*) and the references info from each of the Excel files used before, as well as the intro reference Excel. You need to do the following steps: 
+
+> - create `litInfo` template from `varinfo`
+> - clean up duplicates and spelling
+> - import references from Excel files
+> - clean up duplicates and spelling
+> - add references to their in-text citations
 
 ### Setup
 
@@ -1436,16 +1457,16 @@ varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
 
 ### Create `litInfo`
 
-Then we create a template data frame with the short form references in all `varinfo` data frames:
+Then we create a template data frame with all the in-text citations in `varinfo`:
 
-```{r create lit}
+```{r create lit, eval=FALSE}
 literatur <- createLitInfo(varinfo)
 literatur
 ```
 
-As you can see the data frame as three columns: `Kurzangabe` for the short form references (if you added references already this column should have several entries), `Langangabe` with the long forms and `in_Literaturverzeichnis` which indicates whether the reference should show up in the appendix (`ja`) or not (`nein`).  
+The data frame as three columns: **Kurzangabe** for the in-text citations (if you edited `varinfo` this column should have several entries), **Langangabe** with the references and **in_Literaturverzeichnis** which indicates whether the reference should show up in the appendix (`ja`) or not (`nein`).  
 
-If you want to save this template you have to edit the column `in_Literaturverzeichnis` to either contain the input `ja` or `nein`. Otherwise the function `getLitInfo()` will throw an error. 
+If you want to save this template at this point you have to edit the column `in_Literaturverzeichnis` to either contain the input `ja` or `nein`. Otherwise the function `getLitInfo()` will throw an error. 
 
 ```{r save lit template, eval=FALSE}
 literatur$in_Literaturverzeichnis <- "nein"
@@ -1455,11 +1476,11 @@ writeExcel(df_list = literatur, row.names = FALSE, filePath = ".\\excel_files\\l
 literatur <- getLitInfo(".\\excel_files\\literatur.xlsx")
 ```
 
-### Clean up Short References
+### Clean up In-Text Citations
 
-The short forms might have additional info like *in Anlehnung an Hertel et al. (2014)* (based on Hertel et al. (2014)). They need to be according to APA, e.g. *Hertel et al. (2014)*. You need to make sure the punctuation is right and that there are no additions. 
+The in-text citations might have additional info like *in Anlehnung an* (based on). But they need to be according to APA, e.g. just *Hertel et al. (2014)*. You need to make sure the punctuation is right and that there are no additions. 
 
-If you used `getLitInfo()` you might have to adjust the spelling of special characters like `&` that were escaped with `\` by the function.
+If you used `getLitInfo()` you might have to adjust the spelling of special characters like `&` that were escaped with `\` by the function. The `\` or `\\` is added, because otherwise TeXWorks interprets characters like `&` as a command.
 
 ```{r lit remove additions, eval=FALSE}
 # remove latex syntax (if needed)
@@ -1469,7 +1490,7 @@ literatur$Kurzangabe <- gsub("^.*?in Anlehnung an ","",literatur$Kurzangabe)
 literatur$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",literatur$Kurzangabe)
 ```
 
-When you look at the entries now, there should only be APA conform short form references. You need to check whether all references 1) have the proper format and 2) there's only one reference per entry. When a variable has multiple references they will show up in this table as one entry, e.g. *Wagner et al. (2009); Henschel & Roick (2017)*. You need to separate them into two entries. You can identify them by the semicolon `;`. 
+When you look at the entries now, there should only be APA conform in-text citations. You need to check whether all in-text citations 1) have the **proper format** and 2) there's only **one in-text citation per entry**. When a variable has multiple references they will show up in this table as one entry, e.g. *Wagner et al. (2009); Henschel & Roick (2017)*. You need to separate them into two entries. You can identify them by the semicolon `;`. We use the `halveString()` function to separate these entries. 
 
 ```{r lit separate entries, eval=FALSE}
 View(literatur)
@@ -1485,82 +1506,83 @@ literatur$Kurzangabe[pos] <- sep[1]
 literatur[nrow(literatur)+nrow(sep),] <- c(sep[2], NA, "nein")
 ```
 
-When variables from different data sets reference the same publication, there will be duplicated entries that you need to remove. 
+When variables from different data sets reference the same publication, there will be **duplicated** entries that you need to remove. 
 
 ```{r lit remove duplicates, eval=FALSE}
 literatur <- unique(literatur)
 ```
 
-### Import Long References
+### Import References
 
-Now you import the second sheet of the reference (Quellen) Excel files that matched the references to the variables. The second sheet contains all short form references used per data set and their long forms. They should already have the right APA format (with italic parts). If we use `getExcel()` like before this information will be lost. So we use `getAPAInfo()` which imports the Excel data and adds the proper Latex syntax for italic input (`\textit{...}`) and URLs (`\urlstyle{same}\url{...}`). 
+Now you import the second sheet of the reference (Quellen) Excel files that matched the references to the variables. The second sheet contains all in-text citations used per data set and their references. They should already have the right APA format (with italic parts). If we use `getExcel()` like before this information will be lost. So we use `getAPAInfo()` which imports the Excel data and adds the proper LaTeX syntax for italic input (`\textit{...}`) and URLs (`\urlstyle{same}\url{...}`). The *intro* to the codebook usually has separate references that you need to add as well.
 
-The *intro* to the codebook usually has separate references that you need to add as well.
+`getAPAInfo()` should find the sheet with the proper format (two columns called `Kurzangabe`, `Langangabe`) by itself. 
 
 ```{r lit import, eval=FALSE}
-longRef_lfb_allg <- getAPAInfo("Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx")
-View(longRef_lfb_allg)
+ref_lfb_allg <- getAPAInfo("Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx")
+View(ref_lfb_allg)
 ```
 
-You need to import the long form references for all data sets that have references and save them in one data frame.
+You need to import the references for all data sets and save them in one data frame.
 
 ```{r lit long ref, eval=FALSE}
-lit_long <- rbind.data.frame(longRef_sus, longRef_lfb_allg, 
-                             longRef_lfb_spez, longRef_slfb)
+lit_ref <- rbind.data.frame(ref_sus, ref_lfb_allg, 
+                             ref_lfb_spez, ref_slfb)
 ```
 
-### Adjust Long References
+### Adjust References
 
-Then you also need to adjust this merged data frame. First we remove and additions to the short form references and remove duplicates:
+Then you also need to adjust this merged data frame. First we **remove additions** from the in-text citations and **remove duplicates**:
 
 ```{r lit long remove additions and duplicates, eval=FALSE}
 # removes additions before the strings
-lit_long$Kurzangabe <- gsub("^.*?in Anlehnung an ","",lit_long$Kurzangabe)
-lit_long$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",lit_long$Kurzangabe)
+lit_ref$Kurzangabe <- gsub("^.*?in Anlehnung an ","",lit_ref$Kurzangabe)
+lit_ref$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",lit_ref$Kurzangabe)
 # remove duplicates
-lit_long <- unique(lit_long)
+lit_ref <- unique(lit_ref)
 ```
 
-Sometimes the format or spelling is slightly different in between Excel files, so sometimes not all duplicate entries are not deleted. Usually it's minor or obvious differences. For instance, when the italic string starts with the first italic letter vs. the blank space before that. You can identify duplicated short form references with `anyDuplicated()`, if the output is `0` there are no duplicates and you ignore the rest, otherwise you will get a table with all duplicated entries. 
+Sometimes the format or spelling is slightly different in between Excel files, so sometimes not all duplicate entries are deleted. Usually it's minor or obvious differences. For instance, when the italic string starts with the first italic letter vs. the blank space before that. You can **identify duplicated in-text citations** with `anyDuplicated()`, if the output is `0` there are no duplicates and you ignore the rest, otherwise you will get a table with all duplicated entries.
 
 ```{r lit long duplicates, eval=FALSE}
 # find duplicates
-anyDuplicated(lit_long$Kurzangabe)
+anyDuplicated(lit_ref$Kurzangabe)
 # identify duplicates
-pos <- duplicated(lit_long$Kurzangabe)
-dup <- lit_long$Kurzangabe[pos]
+pos <- duplicated(lit_ref$Kurzangabe)
+dup <- lit_ref$Kurzangabe[pos]
 # look at (first) duplicated entry
-lit_long[lit_long$Kurzangabe == dup,]
+lit_ref[lit_ref$Kurzangabe == dup,]
 ```
 
-After identifying the duplicates you can look at them manually to find out where the difference in the long form references come from. If it's minor differences, you can just delete the extra ones. Sometimes the URL is missing, so you should delete the reference(s) with the least amount of info.
+After identifying the duplicates you can look at them manually to **find out** where the **difference** in the references come from. If it's minor differences, you can just delete the extra ones. Sometimes the URL is missing, so you should delete the reference(s) with the least amount of info.
 
 ```{r lit long remove duplicates, eval=FALSE}
 # delete all duplicates
-lit_long <- lit_long[!pos,]
+lit_ref <- lit_ref[!pos,]
 # delete specific rows example
-View(lit_long)
-lit_long <- lit_long[-21,]
+View(lit_ref)
+lit_ref <- lit_ref[-21,]
 ```
 
 Then you test once more, if there are any duplicates left, the output should be `0`. 
 
 ```{r lit long duplicates 2, eval=FALSE}
-anyDuplicated(View(lit_long)$Kurzangabe)
+anyDuplicated(View(lit_ref)$Kurzangabe)
 ```
-### Match Long and Short References
 
-Now you have two data frames: **literatur** contains all short form references actually used in `varinfo` and **lit_long** containing the long form references. Now you need to transfer the long form references to **literatur**.
+### Match In-Text Citations and References
+
+Now you have two data frames: **literatur** contains all in-text citations actually used in `varinfo` and **lit_long** containing the both in-text citations and their references. Now you need to transfer the references to **literatur**.
 
 ```{r lit transfer long, eval=FALSE}
-pos <- match(literatur$Kurzangabe, lit_long$Kurzangabe)
-literatur$Langangabe <- lit_long$Langangabe[pos]
+pos <- match(literatur$Kurzangabe, lit_ref$Kurzangabe)
+literatur$Langangabe <- lit_ref$Langangabe[pos]
 View(literatur)
 ```
 
 ### Clean Up Table
 
-After you transferred all the references correctly, you still need to add which references should be displayed in the codebook and change the order to be alphabetical. Every entry with a long form reference should be displayed and set to `ja`. 
+After you transferred all the references correctly, you still need to add which references should be displayed in the codebook and change the order to be **alphabetical**. Every entry with a proper reference should be displayed and set to `ja`. 
 
 ```{r lit clean up, eval=FALSE}
 # in Literaturverzeichnis
@@ -1581,7 +1603,7 @@ literatur <- getLitInfo(".\\excel_files\\literatur.xlsx")
 literatur_final <- makeLit(literatur)
 ```
 
-You should add the last line `literatur_final <- makeLit(literatur)` to your script in `0_main.R`. 
+You should add the last line `literatur_final <- makeLit(literatur)` to your script in **0_main.R**. 
 
 ------------------------------------------------------------------------
 
@@ -1589,15 +1611,15 @@ You should add the last line `literatur_final <- makeLit(literatur)` to your scr
 
 ## About BGM
 
-You can add a list of all variables relevant for the background model in the appendix. For that you need to add the respective information in `varinfo` in the columns `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` (see 6. varinfo). With that you can create an object that creates the relevant info to create an table to the appendix that looks like this.
+You can add a list of all variables relevant for the background model in the appendix. For that you need to add the respective information in `varinfo` in the columns `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` (see [6. Varinfo](#background-model-hgm)). With that you can create an object that adds the relevant info to the appendix that looks like this:
 
 <br>
 <img src="./pictures/hgm.PNG" alt="hgm" /><img src="./pictures/hgm2.PNG" alt="hgm2" />
 <br>  
 
-## HGM To-do
+## BGM To-do
 
-You go back to `0_main.R`, make sure that `varinfo` is loaded into your environment. Then you can just create the background model info with this one line, no need to edit or save anything:
+You go back to **0_main.R**, make sure that `varinfo` is loaded into your environment. Then you can just create the background model info with this one line, no need to edit or save anything:
 
 ```{r create bgm, eval=FALSE}
 hgm <- makeBGM(varinfo)
@@ -1610,16 +1632,32 @@ hgm <- makeBGM(varinfo)
 
 ## About the Cover
 
-You can create a cover in R, but last BTs just created a word document for the cover page that you need to save as a pdf file. After you created the pdf file it's easy to include it in the codebook.
+You can create a cover in R, but previous BTs just created a word document for the cover page that you need to save as a **pdf file**. After you created the pdf file it's easy to include it in the codebook.
 
 It's usually two pages: an actual cover page with the institute's logos, the title and author names and a second one with licence and bibliography information.
 
 ## Cover To-do
 
-You work in `0_main.R`. After saving the cover as a pdf, you can save it in you GitHub work space in the folder `Texte`. Then you save this string with the proper path file in the object `pdf_cover` that we need later. 
+### Import PDF
+
+You work in **0_main.R**. After saving the cover as a pdf, you can save it in you GitHub work space in the folder `Texte`. Then you save this string with the proper path file in the object `pdf_cover` that we need later. 
 
 ```{r cover, eval=FALSE}
 pdf_cover <- '\\includepdf[pages=-]{.\\Texte\\cover_page.pdf}'
+```
+
+### Create a Cover
+
+Alternatively you can create you own cover in R with the function `makeCover()`. 
+
+```{r create cover, eval=FALSE}
+cover <- makeCover(logoFile = NULL,
+                   maintitle = "Study of Achievement",
+                   subtitle = "Codebook of Study of Achievement",
+                   authors = "Some Person",
+                   addAuthors = "With the help of some other persons",
+                   schriftenreihe = "Book 9 of Studies of Achievement",
+                   bibinfo = "test")
 ```
 
 ------------------------------------------------------------------------
@@ -1628,14 +1666,15 @@ pdf_cover <- '\\includepdf[pages=-]{.\\Texte\\cover_page.pdf}'
 
 ## About Meta Data
 
-The meta data is the information for the pdf file that you create at the end of this vignette. It contains info about the *title*, the *authors*, the *keywords* and the *subject* of the pdf. When you work with adobe, you can find the meta data under `Menü` and `Dokumenteneigenschaften`:
+The meta data is the information for the pdf file that you create at the end of this vignette. It contains information about the *title*, the *authors*, the *keywords* and the *subject* of the pdf. When you work with adobe, you can find the meta data under `Menü` and `Dokumenteneigenschaften`:
 
 ![](./pictures/meta_data.PNG){width=60%}
 ![](./pictures/meta_data2.PNG){width=100%}
 
 
 > [!Note]
-> The meta data should contains the following information:
+> 
+> The meta data should contain the following information:
 >
 > - **Title**: the title of the codebook
 > - **Authors**: the authors of the codebook and everyone involved in creating the data for it in the order of the authors listed on the cover page.
@@ -1644,7 +1683,7 @@ The meta data is the information for the pdf file that you create at the end of 
 
 ## Meta Data To-do
 
-You work in `0_main.R`. You create a new data frame template with `createMetadata()` and add the four lines. You can probably copy last BT's meta data and adjust the year and authors. It's best to ask you supervisor or BT team what they want to be written here. 
+You work in **0_main.R**. You create a new data frame template with `createMetadata()` and add the following four lines. You can probably copy last BT's meta data and adjust the year and the authors. It's best to ask you supervisor or BT team what they want to be written here. 
 
 ### Create Table
 
@@ -1684,7 +1723,7 @@ Now we still need to name the chapters properly.
 
 ## About Chapters
 
-Each data set gets its own chapter. Each chapter has several sections (1, 2, etc.) and several subsections (1.1, 1.2, etc.), each subsection can have multiple variables. Last BTs named the data sets like this: 
+Each data set gets its own chapter. Each chapter has several sections (1, 2, etc.) and several subsections (1.1, 1.2, etc.), each subsection can have multiple variables. Previous BTs named the data sets like this: 
 
 > [!Note]
 >
@@ -1698,7 +1737,7 @@ Each data set gets its own chapter. Each chapter has several sections (1, 2, etc
 
 ## Chapters To-do
 
-You work in `0_main.R`. 
+You work in **0_main.R**. 
 
 ### Create Chapters
 
@@ -1710,7 +1749,7 @@ chapters <- createChapters(varinfo)
 
 ### Edit Chapters
 
-You just need to add the names (see *About Chapters*) in the second column. Make sure the order matches the order of `dataName`. 
+You just need to add the names (see [About Chapters](#about-chapters)) in the second column. Make sure the order matches the order of `dataName`. 
 
 ```{r add chapters, eval=FALSE}
 chapters$chapterName <- c("Schüler:innen", "Lehrkräfte allgemein", "Lehrkräfte lerngruppenspezifisch", 
@@ -1731,21 +1770,21 @@ chapters <- getChapters(".\\excel_files\\chapters.xlsx")
 
 # 13. Other Texts
 
-There are two more optional files you can add the the `codebook()` function: *intro* and *lastpage*. *intro* contains the intro text plus all the formatting embedded in LaTeX code. *lastpage* contains information about the bibiography something something. 
+There are two more optional files you can add the the `codebook()` function: *intro* and *lastpage*. **intro** contains the intro text plus all the formatting embedded in LaTeX code. **lastpage** contains information about the publication series. 
 
 ## About Intro
 
-You will probably get a Word file with the intro text and tables that you need to convert to a .tex file with all the correct LaTeX code for different parts of the intro like italic text parts, lists or graphics, and footnotes, etc. You can find a example script in `5_latex_intro.R`. You can also do it manually in TexWorks, whatever works best for you. Either way it's a lot of work. If you write a script in R, you can rerun it, without having to reread or recheck the whole document, if there are any changes to the Word document. 
+You will probably get a Word file with the intro text and tables that you need to convert to a .tex file with all the correct LaTeX code for different parts of the intro like italic text parts, lists or graphics, and footnotes, etc. You can find a example script in **5_latex_intro.R**. You can also do it manually in TexWorks, whatever works best for you. Either way it's a lot of work. If you write a script in R, you can rerun it, without having to reread or recheck the whole document, if there are any changes to the Word document. 
 
 ## Intro To-do
 
 ### Convert Text into LaTeX Syntax
 
-If you open `5_latex_intro.R` you can find some examples with which you can write your own script to convert the Word document into the proper LaTeX code to save it as a .tex file. That will take some time, so you can start with adapting the proper template even before having the final or any version of the intro.
+If you open **5_latex_intro.R** you can find some examples with which you can write your own script to convert the Word document into the proper LaTeX code to save it as a .tex file. That will take some time, so you can start with adapting the proper template even before having the final or any version of the intro.
 
 ### Import intro
 
-You work in `0_main.R`. It's important to save the proper LaTeX script version as a .tex file, so you can just import add the code lines with `readLines()`. If you saved your .tex file in the folder *Texte* in your work space, you can use the line as is.
+You work in **0_main.R**. It's important to save the proper LaTeX script version as a .tex file, so you can just import add the code lines with `readLines()`. If you saved your .tex file in the folder *Texte* in your work space, you can use the line as is.
 
 ```{r import intro, eval=FALSE}
 intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
@@ -1757,7 +1796,7 @@ tbd.
 
 ## Lastpage To-do
 
-The workflow is the same for the intro pages. You work in `0_main.R`. You read in the .tex file and save it in `lastpage`.
+The workflow is the same for the intro pages. You work in **0_main.R**. You read in the .tex file and save it in `lastpage`.
 
 ```{r import lastpage, eval=FALSE}
 lastpage <- readLines(".\\Texte\\Latex_lastpage.tex")
@@ -1772,7 +1811,7 @@ After you created and edited all the Excel files you can use `codebook()` to cre
 
 ## About the Codebook
 
-You will probably have to create multiple codebook versions depending you progress and to check if variables and chapters or other additions are displayed the way you want it to. There are arguments the function `codebook()` needs to create a minimal version of a codebook. And additions that are not necessary, but that you need for the BT codebook, like a bibiography, a cover or an intro. 
+You will probably have to create multiple codebook versions depending you progress and to check if variables and chapters or other additions are displayed the way you want it to. There are arguments the function `codebook()` needs to create a minimal version of a codebook. And additions that are not necessary, but that you need for the BT codebook, like a reference list, a cover or an intro. 
 
 ### Minimal Version
 
@@ -1784,7 +1823,7 @@ codebook <- codebook(varInfo = varinfo, missings = missings, struc = gliederung,
                      Kennwertedatensatz = kennwerte, chapters = chapters)
 ```
 
-The information from `gliederung` and `chapters` will create a **table of content** for the codebook. Everything else are optional additions. 
+The information from `gliederung` and `chapters` will create a **table of content** for the codebook.
 
 ### Additions
 
@@ -1800,7 +1839,7 @@ The intro will be displayed after the cover and the table of content. It will al
 
 The rest will show up in the appendix. 
 
-You can add a **bibliography** with all references that you saved to the Excel `literatur.xlsx`.
+You can add a **reference list** with all references that you saved to the Excel `literatur.xlsx`.
 
 You can add the explanations from all statistical formulas and **abbreviations** that you saved to `abbr_list.xlsx`. 
 
@@ -1816,9 +1855,9 @@ You can add a **lastpage** that contains information about the publication serie
 
 ## Codebook To-do in R
 
-You open the file `6_Erstellung_kurz.R`. Here you will find a template just for the creation of the codebook. You just import or load all the data and files that you need to create the codebook, use the function `codebook()` to create a LaTeX script that you then save as a .tex file. You can also create the codebook in the `0_main.R` file, but there's a lot of extra code that might be confusing. 
+You open the file **6_Erstellung_kurz.R**. Here you will find a template just for the creation of the codebook. You just import or load all the data and files that you need to create the codebook, use the function `codebook()` to create a LaTeX script that you then save as a **.tex file**. You can also create the codebook in the `0_main.R` file, but there's a lot of extra code that might be confusing. 
 
-You will also need to create an extra file for the meta data of the codebook. 
+You will also need to create an **extra file for the meta data** of the codebook. 
 
 ### Load All Necessary Files
 
@@ -1856,9 +1895,9 @@ pdf_cover <- '\\includepdf[pages=-]{.\\Texte\\cover_page.pdf}'
 meta_final <- makeMetadata(".\\excel_files\\meta.xlsx")
 # chapters
 chapters <- getChapters(".\\excel_files\\chapters.xlsx")
-# intro
+# intro (optional)
 intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
-# lastpage
+# lastpage (optional)
 lastpage <- readLines(".\\Texte\\Latex_lastpage.tex")
 ```
 
@@ -1892,17 +1931,17 @@ write.table(meta_final , file = ".\\Latex\\IQB_BT2021_Skalenhandbuch_Stand2025_0
 
 After you created codebook and saved it as a .tex file, you still need to render it as a pdf in *TeXWorks*. 
 
-### open .tex file
+### Ppen .tex File
 
 First you open the .tex file. You will have a very long script, but you shouldn't need to edit it. The first part of the script contains the LaTeX packages that you need for the script and then all the input from the Excel files that the function `codebook()` converted to the proper LaTeX code. The beginning might look like this:
 
 ![](.\pictures\tex1.png){width=100%}
 
-### render to pdf (twice)
+### Render To PDF (Twice)
+
+You have to click the green triangle to render to pdf. Remember to select the right option, so it says *pdfLaTeX*. It should render (which can take a while) and create the a pdf with the same name as the .tex file. It will also create some other new files that you can ignore. This first version will not have a *table of content*, but one of the created files contains information about it. When you render to pdf again (click the green triangle) the program creates a version with a table of content. 
 
 ![](.\pictures\tex_pdf.png){width=70%}
-
-You have to click the green triangle to render to pdf. Remember to select the right option, so it says *pdfLaTeX*. It should render (which can take a while) and create the a pdf with the same name as the .tex file. It will also create some other new files that you can ignore. This first version will not have a *table of content*, but one of the created files has that info. When you render to pdf again (click the green triangle) the program creates a version with a table of content. 
 
 ### Dealing with Errors
 
