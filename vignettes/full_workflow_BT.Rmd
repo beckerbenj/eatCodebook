@@ -685,13 +685,15 @@ abbr_list <- makeAbbrList(".\\excel_files\\abkürzung.xlsx")
 
 # 6. Variable Information (varinfo)
 
-Creating and editing the `varinfo.xlsx` file/object is the **main work** of creating the codebook. This objects contains all information about the variables, their order and structure, as well as their references, instructions, remarks or information about the background model. There is only one object/Excel file overall, but each data set has its own sheet or data frame, so you can edit them separately.
+Creating and editing the `varinfo` object is the **main work** of creating the codebook. This objects contains all information about the variables, their order and structure, as well as their references, instructions, remarks or information about the background model. There is only one object or Excel file, but each data set has its own sheet or data frame, so you can edit them separately.
 
 ## About Varinfo
 
 After preparing the `inputForDescriptives` you use the two lists `datalist` (containing the data sets) and `input_descriptives` to create a template list of data frames, with one data frame per data set. Each data frame consists of a column for the variables in the order of the `inputForDescriptives_edited` file and several columns with additional information about each variable. 
 
 In order for the variables to be displayed correctly in the codebook, you need to add information on layout, structure, subsection names, references, instructions, etc. for each variable. The order of the variables in `varinfo` determines the order of the variables in the codebook. 
+
+In the end, each data set will have it's own chapter, each chapter can have multiple sections with multiple subsections. `varinfo` only contains information about the subsections. Chapter and section information can be adjusted in a later step. 
 
 ### Example Table
 
@@ -702,9 +704,10 @@ varinfo <- createVarInfo(dat, inputForDescriptives = inputForDescriptives)
 head(varinfo)
 ```
 
-Now we will look at the function of each column below. 
+Now we will look at the function of each column. 
 
 > [!TIP]
+> 
 > Here is a brief overview of the different columns in *varinfo*:
 >
 > - **Var.Name**: The name of the variable
@@ -727,26 +730,25 @@ Now we will look at the function of each column below.
 
 #### Var.Name
 
-Each variable name has to be unique across data sets. You can't have a variable in data set 2 called `IDBL` if there's an `IDBL` in data set 1 already.
-
-You can't have duplicated subsection names, either. For instance, in the chapters `Unterricht in Mathematik` and `Unterricht in Deutsch` you can't have the subsection `Selbstkonzept` in both, they would need to be called something like `Selbstkonzept Mathematik` and `Selbstkonzept Deutsch`. 
+Each variable name has to be **unique** across data sets. You can't have a variable in data set 2 called `IDBL` if there's an `IDBL` in data set 1 already.
 
 > [!CAUTION]
+> 
 > Across data sets, variables can't have the same name!  
-> Across chapters, subsections can't have the same name!
 
-You don't need to edit the variable names. 
+You usually don't need to edit the variable names. 
 
 #### in.DS.und.SH
 
-`DS` means *data set*, `SH` *Skalenhandbuch* (meaning codebook). Possible entries are `DS`, `SH`, `ja` and `nein`. 
+`DS` means *data set*, `SH` *Skalenhandbuch* (codebook). Possible entries are `DS`, `SH`, `ja` and `nein`. 
 
 The **in.DS.und.SH** column indicates whether a variable only appears in the data set but does not get its own page (*ds*), whether it appears both in the codebook and in the data set (*ja*), whether it only appears in the codebook (*sh*) or neither (*nein*). 
 
 > [!NOTE]
+> 
 > When to assign what label:
 >
-> - **ds**: for example, for the items of the **scale variables**, as they do not receive their own pages
+> - **ds**: for example, for the items of the **scale variables**, as they do not receive their own page
 > - **sh**: for **pooled variables**, as they are shown in the codebook but do not exist in the actual data set
 > - **nein**: for variables that are added independently; This can be the case, if you want to include them in the BGM information, but the variables do not exist in the data set
 > - **ja**: all other variables or scale items
@@ -755,21 +757,27 @@ When everything is labeled correctly in the `inputForDescriptives` files, the ri
 
 #### Unterteilung.im.Skalenhandbuch and Gliederung
 
-The **Unterteilung.im.Skalenhandbuch** (subsections in the codebook) column gives the name for the subsections. 
+The **Unterteilung.im.Skalenhandbuch** (subsection names in the codebook) column gives the name for the subsections. 
 
-In the **Gliederung** (structure) column, the section numbers must be inserted. Subsections such as "1.1", "1.2",... "2.1". The names of the corresponding chapters is done in a later function (s. 7. structure). The names of the subsections and the corresponding numbers must always be identical for the variables.  
+In the **Gliederung** (subsection numbers) column, the subsection numbers must be inserted. Subsections such as "1.1", "1.2",... "2.1". The names of the corresponding sections is done in a later function (s. [7. Structure](#7.-structure)). Make sure the subsections names and numbers match. 
 
-You need to add the `Gliederung` as well as the `Unterteilung.im.Skalenhandbuch` from another (Excel) file, for the BT codebook it's usually called something like `finale Reihenfolge.xlsx`. See *To-do* on how to do that. 
+You need to add the `Gliederung` as well as the `Unterteilung.im.Skalenhandbuch` from another (Excel) file, for the BT codebook it's usually called something like `finale Reihenfolge.xlsx`. See [To-do](#add-structure-and-subsections) on how to do that. 
+
+You can't have duplicated subsection names. The sections *Unterricht in Mathematik* and *Unterricht in Deutsch* can't both have a subsection called *Selbstkonzept* - it should say something like *Selbstkonzept Mathematik* and *Selbstkonzept Deutsch*. 
+
+> [!CAUTION]
+> 
+> Across data sets, subsections or sections can't have the same name!  
 
 #### Layout
 
-The input for the **Layout** column is automatically created after using `inferLayout()`, see *To-do* on how to do that. 
+The input for the **Layout** column is automatically created after using `inferLayout()`. 
 
 #### LabelSH and Titel
 
 The **Titel** column specifies the title for the page and defaults to the variable label. `LabelSH` has to be identical to the label in the data set, usually without special characters or umlauts. The spelling of `Titel` can be adjusted and umlauts are OK. 
 
-If you have an Excel file, for instance, with all variables and their labels and titles, you can copy that into `varinfo` without having to check the spelling for each variable's title. 
+If you have access to an Excel file with all variables and their labels and titles, you can copy that into `varinfo` without having to check the spelling for each variable's title. The BT Team might add the titles to the Excel containing the final order (finale Reihenfolge). 
 
 #### Anmerkung.Var
 
@@ -777,7 +785,7 @@ In this column, comments can be inserted (special text highlighting or breaks mu
 
 #### Reihenfolge
 
-In the **Reihenfolge** (order) column, the order of the variables for the codebook can be specified. However, the order of the subsections already determines the order of the variables. If the column is left empty, the order in the table corresponds to the order in the codebook.
+In the **Reihenfolge** (order) column, the order of the variables for the codebook can be specified. However, the order of the subsections already determines the order of the variables. If the column is left empty, the order in `varinfo` corresponds to the order in the codebook.
 
 For the BT codebook, this column is usually left empty. 
 
@@ -789,17 +797,19 @@ You recognize these variables by the addition `_r` in their name.
 
 #### QuelleSH and Instruktionen
 
-In **QuelleSH** (sources), the short version of a reference can be specified. Based on this, there is a later function that creates the bibliography and in which one can specify the long version of the reference. All references should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format.
+In **QuelleSH** (references), the in-text citations can be added. Based on this, there is a later function that creates the reference list which contains all references and their matching in-text citation. All references or in-text citations should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format.
 
-In the **Instruktionen** (instructions) column, you can use a LaTeX code to indicate which instruction was used to collect the variable in a questionnaire.
+In the **Instruktionen** (instructions) column, you can use test with LaTeX code to indicate which instruction was used to collect the variable in a questionnaire.
 
-Each variable can have a reference and/or instruction. You can find them in the same Excel file for the BT codebook. See *To-do* on how to add this information.
+Each variable can have one or multiple references and/or instructions, some have neither. The BT team usually has Excel files for each data set on Q: that matches references to the variables. 
  
 #### Background Model (HGM)
 
-With `eatCodebook` you can also create a page in the appendix for a background model (BGM) or *Hintergrundmodell* (HGM) in German. [ergänzen, was ein HGM ist bzw. warum man das macht].
+With `eatCodebook` you can also create a page in the appendix for a background model (BGM) or *Hintergrundmodell* (HGM) in German. 
 
-It should look like this: `Hintergrundvariable` contains the variable, `Erstellt aus` the variable(s) the (new) variable was created from (if any), and `Inhalt der Hintergrundvariable` contains the variable's label, e.g. the content of the background variable. 
+You need a BGM when you work with imputations as a statistical tool. You don't need to understand the details of a BGM when you create the codebook. You just need to know that due to methodological reasons, there are additional variables created that are not in the actual data sets, that shouldn't be displayed in the main codebook, but only in the BGM appendix. For that, you need to add them to the respective `varinfo` data frame. you can see how and where to add them in the [To-do part](#add-background-model-info). 
+
+The appendix should look like this: `Hintergrundvariable` contains the variable, `Erstellt aus` the variable(s) the (new) variable was created from (if any), and `Inhalt der Hintergrundvariable` contains the variable's label, e.g. the content of the background variable. 
 
 <img src="./pictures/BGM.PNG" alt="BGM" />   
 
@@ -813,7 +823,7 @@ There are three columns in `varinfo` that you need to edit for variables to show
 
 There should be another Excel file containing information on the background model, also on `Q:`. It should contain the variables that should show up in the appendix (`Variablenname`), their labels (`Variablenlabel`) and from which variables they were created from (`basevar`). 
 
-For the variable to appear in the appendix, the column `Hintergrundmodell` must be set to *ja*. Otherwise, there must be a *nein*. Then you add the variables they were created from (if any), for instance listed in `basevar`. They should show up in the order they are displayed in the codebook. 
+For the variable to appear in the appendix, the column `Hintergrundmodell` must be set to *ja*. Otherwise, there must be a *nein*. Then you add the variables they were created from (if any) listed in `basevar`. The variables in the appendix should show up in the order they are displayed in the codebook. 
 
 ## Varinfo To-do
 
