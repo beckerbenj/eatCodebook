@@ -1425,7 +1425,7 @@ Each variable page displays the in-text citations that you can look up in the ap
 
 The function `createLitInfo()` creates one data frame containing all in-text citations form `varinfo`. You need to match the actual references from the Excel files we used earlier. You also need to add the intro references that you can get from an extra Excel file. 
 
-The references should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format. You need to add special Latex syntax for italic strings and URLs if you want them to show up correctly in the codebook. 
+The references should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format. You need to add special LaTeX syntax for italic strings and URLs if you want them to show up correctly in the codebook. 
 
 > [!NOTE]
 > 
@@ -1437,9 +1437,11 @@ You open **4_literatur.R**. You need the in-text citation info from `varinfo` (*
 
 > - create `litInfo` template from `varinfo`
 > - clean up duplicates and spelling
-> - import references from Excel files
+> - import (data set) references from Excel files
 > - clean up duplicates and spelling
-> - add references to their in-text citations
+> - add (data set) references to their in-text citations
+> - add intro references separately
+> - final clean up
 
 ### Setup
 
@@ -1514,7 +1516,9 @@ literatur <- unique(literatur)
 
 ### Import References
 
-Now you import the second sheet of the reference (Quellen) Excel files that matched the references to the variables. The second sheet contains all in-text citations used per data set and their references. They should already have the right APA format (with italic parts). If we use `getExcel()` like before this information will be lost. So we use `getAPAInfo()` which imports the Excel data and adds the proper LaTeX syntax for italic input (`\textit{...}`) and URLs (`\urlstyle{same}\url{...}`). The *intro* to the codebook usually has separate references that you need to add as well.
+Now you import the second sheet of the reference (Quellen) Excel files that matched the references to the variables. The second sheet contains all in-text citations used per data set and their references. They should already have the right APA format (with italic parts). If we use `getExcel()` like before this information will be lost. So we use `getAPAInfo()` which imports the Excel data and adds the proper LaTeX syntax for italic input (`\textit{...}`) and URLs (`\urlstyle{same}\url{...}`). 
+
+The *intro* to the codebook usually has separate references that you have to add *later*.
 
 `getAPAInfo()` should find the sheet with the proper format (two columns called `Kurzangabe`, `Langangabe`) by itself. 
 
@@ -1538,11 +1542,13 @@ Then you also need to adjust this merged data frame. First we **remove additions
 # removes additions before the strings
 lit_ref$Kurzangabe <- gsub("^.*?in Anlehnung an ","",lit_ref$Kurzangabe)
 lit_ref$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",lit_ref$Kurzangabe)
-# remove duplicates
+# remove (real) duplicates
 lit_ref <- unique(lit_ref)
 ```
 
-Sometimes the format or spelling is slightly different in between Excel files, so sometimes not all duplicate entries are deleted. Usually it's minor or obvious differences. For instance, when the italic string starts with the first italic letter vs. the blank space before that. You can **identify duplicated in-text citations** with `anyDuplicated()`, if the output is `0` there are no duplicates and you ignore the rest, otherwise you will get a table with all duplicated entries.
+
+
+Sometimes the format or spelling is slightly different in between Excel files, so sometimes not all duplicate entries are deleted. Usually it's minor or obvious differences. For instance, when the italic string starts with the first italic letter vs. the blank space before that. You can **identify duplicated in-text citations** with `anyDuplicated()`, if the output is `0` there are no duplicates and you ignore the rest, otherwise you will get a table with all duplicated entries. Then you can check the differences between the references (`Langangaben`). 
 
 ```{r lit long duplicates, eval=FALSE}
 # find duplicates
@@ -1550,11 +1556,11 @@ anyDuplicated(lit_ref$Kurzangabe)
 # identify duplicates
 pos <- duplicated(lit_ref$Kurzangabe)
 dup <- lit_ref$Kurzangabe[pos]
-# look at (first) duplicated entry
+# look at duplicated entries
 lit_ref[lit_ref$Kurzangabe == dup,]
 ```
 
-After identifying the duplicates you can look at them manually to **find out** where the **difference** in the references come from. If it's minor differences, you can just delete the extra ones. Sometimes the URL is missing, so you should delete the reference(s) with the least amount of info.
+After identifying the duplicates you can look at them manually to **find out** where the **difference** in the references come from. If it's minor differences, you can just delete the extra ones. Sometimes the URL is missing, you should keep the reference with the most amount of information.
 
 ```{r lit long remove duplicates, eval=FALSE}
 # delete all duplicates
@@ -1580,9 +1586,40 @@ literatur$Langangabe <- lit_ref$Langangabe[pos]
 View(literatur)
 ```
 
+### Add Intro References
+
+`literatur` only has the in-text citations listed that were used in `varinfo`. we can't match references when they are not listed. So now we add additional references like the ones used in the intro or other texts. 
+
+First we **import the intro references** using `getAPAInfo()` to get a data frame including LaTeX syntax for the italic text parts. 
+
+```{r ref intro import, eval=FALSE}
+ref_intro <- getAPAInfo("Q:\\filepath\\Intro_Quellen.xlsx")
+```
+
+The data frame has probably two columns (`Kurzangabe` and `Langangabe`), but we need the third column `in_Literaturverzeichnis` so we can combine the two data frames `ref_intro` and `literatur`. So we add the additional column and set the input to `ja`, because all references we add from this Excel should show up in the codebook.
+
+```{r ref intro inLit, eval=FALSE}
+ref_intro$in_Literaturverzeichnis <- "ja"
+```
+
+Now we can just combine the two data frames and check if everything worked with `View()`.
+
+```{r ref intro add, eval=FALSE}
+literatur <- rbind(literatur, ref_intro)
+View(literatur)
+```
+
+If there are any duplicates, you should remove them like before. You can also check for duplicates with `anyDuplicated()` to make sure. 
+
+```{r ref intro check, eval=FALSE}
+literatur <- unique(literatur)
+anyDuplicated(literatur) # should be 0
+```
+
+
 ### Clean Up Table
 
-After you transferred all the references correctly, you still need to add which references should be displayed in the codebook and change the order to be **alphabetical**. Every entry with a proper reference should be displayed and set to `ja`. 
+After you transferred all the references correctly, you still need to decide which references should be displayed in the codebook and change the order to be **alphabetical**. Every entry with a proper reference should be displayed and set to `ja`. 
 
 ```{r lit clean up, eval=FALSE}
 # in Literaturverzeichnis
