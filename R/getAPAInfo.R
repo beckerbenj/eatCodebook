@@ -18,7 +18,7 @@ getAPAInfo <- function(filePath){
   # checks
   checkmate::assert_character(filePath, len = 1)
 
-  # getting proper Excel sheet -------------------------------------------------
+  # identify proper Excel sheet -------------------------------------------------
   ref_table <- getExcel(filePath)
 
   if(is_APAInfo(ref_table)){
@@ -33,87 +33,68 @@ getAPAInfo <- function(filePath){
     }
   }
   check_APAInfo(ref_table)
-
-  # selecting objects with proper format: from col 2 and without "Langangabe"
+  # select objects with proper format: from col 2 and without "Langangabe"
   format <- ref_table_format[ref_table_format$col == 2 & !ref_table_format$character == "Langangabe",]
-  #View(format)
 
   # adding latex syntax for italic input ---------------------------------------
-
   # saving format-info in a list
   ref_formatInfo <- format$character_formatted
-  # checking right format
+  # check format
   checkmate::assert_list(ref_formatInfo)
   for(i in length(ref_formatInfo)){
     checkmate::assert_tibble(ref_formatInfo[[i]], max.rows = 3)
   }
-
-  # adding italic syntax
-  ref_italic <- character()
+  # add italic syntax
+  ref_latex <- character()
   for(i in 1:length(ref_formatInfo)){
     if(nrow(ref_formatInfo[[i]]) == 3){
       italic <- addLatex_Italic(ref_formatInfo[[i]]$character[2])
-      # save new chr in list `ref_italic`
-      ref_italic <- c(ref_italic, paste0(ref_formatInfo[[i]]$character[1], italic, ref_formatInfo[[i]]$character[3]))
+      # save new chr in list `ref_latex`
+      ref_latex <- c(ref_latex, paste0(ref_formatInfo[[i]]$character[1], italic, ref_formatInfo[[i]]$character[3]))
     } else{
-      ref_italic <- c(ref_italic, ref_formatInfo[[i]]$character)
+      ref_latex <- c(ref_latex, ref_formatInfo[[i]]$character)
     }
   }
 
   # adding latex syntax for URL input ------------------------------------------
-
-  # finding references with links/doi
-  with_url <- grep("http", ref_italic, value=TRUE)
-  url_pos <- grep("http", ref_italic)
-
-  # adding url syntax
+  # find references with links/doi
+  with_url <- grep("http", ref_latex, value=TRUE)
+  url_pos <- grep("http", ref_latex)
+  # add url syntax
   url_latex <- c()
   for(i in with_url){
-    split <- strsplit(i, "http")
-    link <- paste("http", split[2])
-
-    link_latex <- addLatex_URL(link)
-    url_latex <- c(url_latex, paste0(split[1], link_latex))
-    #link <- "https:\\thisisalink.de"
+    url <- eatTools::halveString(i, "http", colnames = c("ref", "link"))
+    url[2] <- paste0("http", url[2])
+    url_latex <- c(url_latex, paste0(url[1], addLatex_URL(url[2])))
   }
-  # creating a new object with the added latex syntax
-  ref_new[url_pos] <- url_latex
+  # add URL latex syntax to `ref_latex`
+  ref_latex[url_pos] <- url_latex
 
-
-  # updating the data frame from the excel -------------------------------------
-  ref_table$Langangabe <- ref_new
+  # updating the data frame from the Excel -------------------------------------
+  ref_table$Langangabe <- ref_latex
   return(ref_table)
 }
 
-# adds latex syntax around any (singular) string
 addLatex_Italic <- function(string){
   # checks
   checkmate::assert_character(string, len = 1)
-
+  # add latex syntax to (singular) string
   string_italic <- paste0("\\textit{", string, "}")
   return(string_italic)
 }
 
 # adds latex syntax around a link/string
 addLatex_URL <- function(link){
-  # finding references with links/doi
-  #with_url <- grep("http", lang_neu, value=TRUE)
-  #url_pos <- grep("http", lang_neu)
-  # adding url syntax
-  #url_neu <- c()
-  #for(i in with_url){
-  #  url <- halveString(i, "http")
-  #  url_neu <- c(url_neu, paste0(url[1], "\\urlstyle{same}\\url{http", url[2], "}"))
-  #}
-  # creating a new object with the added latex syntax
-  #lang_neu[url_pos] <- url_neu
-  return(link)
+  # checks
+  checkmate::assert_character(link, len = 1, pattern = "http")
+  # add URL syntax to a link
+  link_latex <- paste0("\\urstyle{same}\\url{", link, "}")
+  return(link_latex)
 }
-
 
 check_APAInfo <- function(ref_table) {
   #browser()
-  if(!is.data.frame(ref_table)) stop("File path must be an Excel file with at least one sheet or a data.frame.")
+  if(!is.data.frame(ref_table)) stop("File path must link to an Excel file with at least one table or a data.frame.")
   if(!identical(names(ref_table), c("Kurzangabe", "Langangabe"))) stop("Column names in at least one sheet must be 'Kurzangabe' and 'Langangabe'.")
  NULL
 }
