@@ -33,6 +33,7 @@ getAPAInfo <- function(filePath){
     }
   }
   check_APAInfo(ref_table)
+
   # select objects with proper format: from col 2 and without "Langangabe"
   format <- ref_table_format[ref_table_format$col == 2 & !ref_table_format$character == "Langangabe",]
 
@@ -62,11 +63,10 @@ getAPAInfo <- function(filePath){
   url_pos <- grep("http", ref_latex)
   # add url syntax
   url_latex <- c()
-  for(i in with_url){
-    url <- eatTools::halveString(i, "http", colnames = c("ref", "link"))
-    url[2] <- paste0("http", url[2])
-    url_latex <- c(url_latex, paste0(url[1], addLatex_URL(url[2])))
-  }
+  url <- eatTools::halveString(with_url, "http", colnames = c("ref", "link"))
+  url[,2] <- paste0("http", url[,2])
+  url_latex <- c(url_latex, paste0(url[,1], addLatex_URL(url[,2])))
+
   # add URL latex syntax to `ref_latex`
   ref_latex[url_pos] <- url_latex
 
@@ -75,9 +75,9 @@ getAPAInfo <- function(filePath){
   return(ref_table)
 }
 
-addLatex_Italic <- function(string){
+addLatex_italic <- function(string){
   # checks
-  checkmate::assert_character(string, len = 1)
+  checkmate::assert_character(string)
   # add latex syntax to (singular) string
   string_italic <- paste0("\\textit{", string, "}")
   return(string_italic)
@@ -86,7 +86,7 @@ addLatex_Italic <- function(string){
 # adds latex syntax around a link/string
 addLatex_URL <- function(link){
   # checks
-  checkmate::assert_character(link, len = 1, pattern = "http")
+  checkmate::assert_character(link, pattern = "http")
   # add URL syntax to a link
   link_latex <- paste0("\\urstyle{same}\\url{", link, "}")
   return(link_latex)
@@ -94,8 +94,9 @@ addLatex_URL <- function(link){
 
 check_APAInfo <- function(ref_table) {
   #browser()
-  if(!is.data.frame(ref_table)) stop("File path must link to an Excel file with at least one table or a data.frame.")
-  if(!identical(names(ref_table), c("Kurzangabe", "Langangabe"))) stop("Column names in at least one sheet must be 'Kurzangabe' and 'Langangabe'.")
+  if(test_list(ref_table)) stop("Excel file must contain a sheet with the two columns 'Kurzangabe' and 'Langangabe'.")
+  if(!is.data.frame(ref_table)) stop("'ref_table' must be a data frame.")
+  if(!identical(names(ref_table), c("Kurzangabe", "Langangabe"))) stop("Column names in 'ref_table' must be 'Kurzangabe' and 'Langangabe'.")
  NULL
 }
 
