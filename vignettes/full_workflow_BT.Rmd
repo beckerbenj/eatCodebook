@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 ## Goal of the Vignette
 
-This vignettes describes the full workflow of creating a codebook (or Skalenhandbuch) via the `eatCodebook` package. For illustrative purposes we use a small example data set which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
+This vignettes describes the full workflow of creating a codebook (or Skalenhandbuch) via the `eatCodebook` package. For illustrative purposes, we use a small example data set which comes alongside the package and contains different types of variables (e.g., numeric, categorical, pooled variables, scales). We import the data set using the `eatGADS` package, which is automatically installed when `eatCodebook` is installed.
 
 ```{r eatcodebook setup}
 library(eatCodebook)
@@ -28,21 +28,21 @@ file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
 dat <- eatGADS::import_spss(file)
 ```
 
-The main function for creating a Skalenhandbuch or codebook is called `eatcodebook()`. It takes the input from several lists and data frames that you create throughout this vignette and converts them into one long object containing LaTeX code. You have to be mindful of special characters (like α and other Greek letters) in string input from the data frames as they might throw errors down the line. Also, formatting in Excel is lost in the LaTeX script, so you may need to add LaTeX code to the Excel files. The most common occurrences are mentioned in this vignette.
+The main function for creating a Skalenhandbuch or codebook is called `codebook()`. It takes the input from several lists and data frames that you create throughout this vignette and converts them into one long object containing LaTeX code. You have to be mindful of special characters (like α and other Greek letters) in string input from the data frames as they might throw errors down the line. Also, formatting in Excel is lost in the LaTeX script, so you may need to add LaTeX code to the Excel files. The most common occurrences are mentioned in this vignette.
 
 While working on the codebook, you will probably find some mismatches or errors in the data. You then have to recreate every data frame or Excel table you created so far, including the changes you made to those objects. This vignette includes examples on how to write a script in R that you can just rerun in those cases, without having to redo a lot of work. 
 
 ## What is a Codebook?
 
 In order to answer research questions, research institutes collect a lot of data. Usually the data isn't used to answer all possible questions, but just the ones of interest to the study they were collected for. When people want to to do their own research, they can ask the institutes for the data.  
-A codebook contains **all of the collected variables** of a study or data collection, including their instructions, relevant statistics, references, and more. With that you can see, whether data sets might help you answer the question you do research on, before asking for the data. 
+A codebook contains documentation on **all of the collected variables** of a study, ideally including their exact wording, relevant descriptive statistics, references, and more. Codebooks enable researchers to work with data sets they are not yet familiar with. Furthermore, they should enable them to assess, whether data sets might help them answer their research questions, before asking for the data. 
 
 
 ## About this Vignette
 
 There are several chapters explaining how to create a codebook. Next to the data you need additional information like the references or instructions of the variables, the order they're supposed to be displayed in and more. Each chapter contains an `About` section explaining the what and why of what you are doing and a `To-do` section explaining how to do these things in `R` step by step.
 
-The package `eatCodebook` was created with the codebook for the [IQB Bildungstrends](https://www.iqb.hu-berlin.de/bt/) in mind. Some use cases are specific to these Bildungstrends (BT) studies, but you can create a codebook for your own study with this `eatCodebook`, as well. 
+The package `eatCodebook` was created with the codebooks for the [IQB Bildungstrend studies](https://www.iqb.hu-berlin.de/bt/) in mind. Some use cases are specific to these Bildungstrend (BT) studies, but you can create a codebook for your own study with `eatCodebook`, as well. 
 
 The example code in this vignette will focus on the creating of a BT codebook, using the templates from a IQB methods team repository on GitHub. 
 
@@ -50,7 +50,7 @@ The example code in this vignette will focus on the creating of a BT codebook, u
 
 # Setup
 
-Before we start, we need to setup a proper work space. Creating a codebook takes a while and involves several files, so when you don't protocol your progress well, it's easy to lose focus. When editing the files in R, the script can get very long, so I recommend to use several .R documents to maintain overview.
+Before we start, we need to setup a proper work space. Creating a codebook takes a while and involves several files, so without proper tracking of the process it is easy to lose focus. When editing the files in R, the script can get very long, so I recommend to use several .R documents to maintain overview.
 
 ## Create a New Repository
 
@@ -59,7 +59,7 @@ First set up a new private repository in the [`iqb-research` project](https://gi
 
 ![](.\pictures\repo_template.png){width=50%}
 
-You now have all the .R templates that you need, but you might have to create the issues yourself. The To-dos should be apparent from this vignette or you can copy the issues from the template repo by hand. You find the following files:
+You now have all the .R templates that you need, but you might have to create the issues yourself. The To-dos should be apparent from this vignette or you can copy the issues from the template repo by hand. You will find the following files:
 
 ## File Structure
 
@@ -71,7 +71,7 @@ There are several files and folders. The .R files contain example scripts and to
 | `1_kennwerte.R` | Create and edit the `inputForDescriptives` files. This might not be needed, when you don't have to adjust anything here. |
 | `2_varinfo.R` | Create and edit the `varinfo` file. This file contains the **core** content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
 | `3_gliederung.R` | The information read from `varinfo` is usually incomplete, so you have to add missing section names. |
-| `4_literatur.R` | Create and edit the `reference` file. You have to match the short references to the long ones. You also have to add proper LaTeX syntax for italic text or URLs. |
+| `4_literatur.R` | Create and edit the `reference` file. You have to match citations to their respective references. You also have to add proper LaTeX syntax for italic text or URLs. |
 | `5_latex_intro.R` | A template to create a .tex file with LaTeX syntax out of a a Word .docx document. You need this later when creating the intro. |
 | `6_Erstellung_kurz.R` | A short script which can create a new codebook version after you created all the necessary Excel files.|
 
