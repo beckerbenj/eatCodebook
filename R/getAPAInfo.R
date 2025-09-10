@@ -49,7 +49,7 @@ getAPAInfo <- function(filePath){
   ref_latex <- character()
   for(i in 1:length(ref_formatInfo)){
     if(nrow(ref_formatInfo[[i]]) == 3){
-      italic <- addLatex_Italic(ref_formatInfo[[i]]$character[2])
+      italic <- addLatex_italic(ref_formatInfo[[i]]$character[2])
       # save new chr in list `ref_latex`
       ref_latex <- c(ref_latex, paste0(ref_formatInfo[[i]]$character[1], italic, ref_formatInfo[[i]]$character[3]))
     } else{
@@ -94,7 +94,7 @@ addLatex_URL <- function(link){
 
 check_APAInfo <- function(ref_table) {
   #browser()
-  if(test_list(ref_table)) stop("Excel file must contain a sheet with the two columns 'Kurzangabe' and 'Langangabe'.")
+  if(checkmate::test_list(ref_table)) stop("Excel file must contain a sheet with the two columns 'Kurzangabe' and 'Langangabe'.")
   if(!is.data.frame(ref_table)) stop("'ref_table' must be a data frame.")
   if(!identical(names(ref_table), c("Kurzangabe", "Langangabe"))) stop("Column names in 'ref_table' must be 'Kurzangabe' and 'Langangabe'.")
  NULL
