@@ -22,21 +22,27 @@ test_that("Import Excel without reference sheet", {
 })
 
 test_that("Import Excel with two reference sheets", {
+  # file with at least 3 sheets, two reference sheets
   expect_error(references <- getAPAInfo("helper_getAPAInfo_error2.xlsx"))
-  expect_access(references <- getAPAInfo("helper_getAPAInfo_error3.xlsx"))
+  # file with just two reference sheets
+  references <- getAPAInfo("helper_getAPAInfo_error3.xlsx")
+  ## selects first sheet
+  ref <- c("Hertel, S., Hochweber, J., Mildner, D., Steinert, B. & Jude, N. (2014). \\textit{PISA 2009 Skalenhandbuch.} Waxmann. \\urstyle{same}\\url{https://doi.org/10.25656/01:9554}",
+           "Lütke, B., Paetsch, J. & Dubiel, S. (2017-2019). \\textit{Selbsteingeschätztes Wissen im Bereich Sprachbildung} (unveröffentlicht). Projekt: Sprachsensibles Unterrichten fördern – Sprachliche Bildung systemisch im Vorbereitungsdienst implementieren. Bericht der wissenschaftlichen Begleitforschung.")
+  expect_equal(references$Langangabe, ref)
 })
 
 ### test output for getAPAInfo
 
-references <- getAPAInfo("helper_getAPAInfo_2sheets.xlsx")
-
 test_that("test output for getAPAInfo", {
   references <- getAPAInfo("helper_getAPAInfo_2sheets.xlsx")
-
-  expect_true(test_data_frame(references, types = "character", ncols = 2))
+  # str of data frame
+  expect_true(checkmate::test_data_frame(references, types = "character", ncols = 2))
   expect_true(identical(names(references), c("Kurzangabe", "Langangabe")))
-
-  # maybe add tests for the strings/latex code?
+  # references
+  ref <- c("Hertel, S., Hochweber, J., Mildner, D., Steinert, B. & Jude, N. (2014). \\textit{PISA 2009 Skalenhandbuch.} Waxmann. \\urstyle{same}\\url{https://doi.org/10.25656/01:9554}",
+           "Lütke, B., Paetsch, J. & Dubiel, S. (2017-2019). \\textit{Selbsteingeschätztes Wissen im Bereich Sprachbildung} (unveröffentlicht). Projekt: Sprachsensibles Unterrichten fördern – Sprachliche Bildung systemisch im Vorbereitungsdienst implementieren. Bericht der wissenschaftlichen Begleitforschung.")
+  expect_equal(references$Langangabe, ref)
 })
 
 
