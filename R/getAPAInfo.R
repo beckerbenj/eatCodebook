@@ -11,6 +11,9 @@
 #'@return A \code{data.frame} with in-text citations and APA standard references. The references in the column `Langangabe` contain LaTeX syntax for italic sequences and URLs.
 #'
 #'@examples
+#'# import spss exemplary data
+#'file <- system.file("extdata", "example_literatur.xlsx", package = "eatCodebook")
+#'references <- getAPAInfo(file)
 #'
 #'@export
 
