@@ -1807,11 +1807,11 @@ chapters <- getChapters(".\\excel_files\\chapters.xlsx")
 
 # 13. Other Texts
 
-There are two more optional files you can add the the `codebook()` function: *intro* and *lastpage*. **intro** contains the intro text plus all the formatting embedded in LaTeX code. **lastpage** contains information about the publication series. 
+There are two more optional files you can add the the `codebook()` function: *intro* and *lastpage*. **intro** contains the intro text plus all the formatting embedded in LaTeX code. **lastpage** contains the series of publications.
 
 ## About Intro
 
-You will probably get a Word file with the intro text and tables that you need to convert to a .tex file with all the correct LaTeX code for different parts of the intro like italic text parts, lists or graphics, and footnotes, etc. You can find a example script in **5_latex_intro.R**. You can also do it manually in TexWorks, whatever works best for you. Either way it's a lot of work. If you write a script in R, you can rerun it, without having to reread or recheck the whole document, if there are any changes to the Word document. 
+You will probably get a Word file with the intro text and tables that you need to convert to a .tex file with all the correct LaTeX code for different parts of the intro like italic text parts, lists or graphics, and footnotes, etc. You can find a example script in **5_latex_intro.R**. You can also do it manually in TexWorks, whatever works best for you. Either way it's a lot of work.
 
 ## Intro To-do
 
@@ -1819,9 +1819,11 @@ You will probably get a Word file with the intro text and tables that you need t
 
 If you open **5_latex_intro.R** you can find some examples with which you can write your own script to convert the Word document into the proper LaTeX code to save it as a .tex file. That will take some time, so you can start with adapting the proper template even before having the final or any version of the intro.
 
+It's important to save the proper LaTeX script version as a .tex file, so you can just import add the code lines with `readLines()`.
+
 ### Import intro
 
-You work in **0_main.R**. It's important to save the proper LaTeX script version as a .tex file, so you can just import add the code lines with `readLines()`. If you saved your .tex file in the folder *Texte* in your work space, you can use the line as is.
+If you saved your .tex file in the folder *Texte* in your work space, you can add this line to **0_main.R** and **6_Erstellung_kurz.R**. 
 
 ```{r import intro, eval=FALSE}
 intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
@@ -1829,11 +1831,35 @@ intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
 
 ## About Lastpage
 
-tbd.
+The last pages of the codebook usually contains information about the series of publications called *Schriftenreihe des Institutes zur Qualitätsentwicklung im Bildungswesen* in the BT studies. It's a list of all codebooks from previous Bildungstrend studies: 
+
+![](.\pictures\lastpage_codebook.png)
+You need a .tex file with the following beginning: the LaTeX setup for the page, the title of the page in bold (`\textbf{}`), and then all publications of the series. 
+
+![](.\pictures\lastpage_latex.png)
+`lastpage` are the last pages in the codebook. There won't be any mention of it in the table of contents.
 
 ## Lastpage To-do
 
-The workflow is the same for the intro pages. You work in **0_main.R**. You read in the .tex file and save it in `lastpage`.
+### Copy Last Years Publication List
+
+You open the folder of last year's BT on Q: and go to a folder names *Texte* or *08_Einleitungstexte*. You copy the file `Latex_lastpage.tex` or `Latex_lastpage_snippet.tex` into your work space in the folder *Texte*. 
+
+### Add New Publication
+
+You open the file in TeXWorks and add the current publication you are working on. You take the publication information from the cover file's second page:
+
+![](.\pictures\lastpage_newSeries.png)
+
+... and add this new *Band* to the .tex file. Be mindful of escaping special characters like `&` or umlauts. It should look something like this: 
+
+![](.\pictures\lastpage_newSeries_latex.png)
+
+Then save the file and name it `Latex_lastpage.tex`. 
+
+### Import `lastpage`
+
+If you saved your .tex file in the folder *Texte* in your work space, you can add this line to **0_main.R** and **6_Erstellung_kurz.R**.
 
 ```{r import lastpage, eval=FALSE}
 lastpage <- readLines(".\\Texte\\Latex_lastpage.tex")
