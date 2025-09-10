@@ -1,14 +1,14 @@
 
-####
-#############################################################################
+#################################################################################
 #' Import APA references from an Excel sheet.
 #'
-#' Import APA references from one sheet from an Excel file, while translating italic formatting and URLs into proper LaTeX code.
+#' Import references with APA standard from one sheet from an Excel file, while converting italic formatting and URLs into proper LaTeX code. If the references don't comply with APA standards (e.g. book or journal titles in italic), this function might not work properly. For instance, if there's more than one continuous italic sequence per cell.
+#' Use case for creating a codebook: the reference list is saved in Excel, but the pdf is created wit TeXWorks, so all special formatting needs LaTeX syntax to be displayed correctly in the final codebook.
 #'
 #'
-#'@param filePath Path to Excel file. The reference sheet should have two columns:the first containing short APA references, the second long APA references. Be mindful of formatting your references correctly in the Excel sheet, if there's more than one continuous italic sequence the function might not work.
+#'@param filePath Path to the Excel file containing a sheet with the reference list. There should be exactly one reference list with two columns `Kurzangabe` (containing in-text citations) and `Langangabe` (containing the references).
 #'
-#'@return A \code{data.frame} with short and long APA references. The long references contain LaTeX code, so italic input and URLs are displayed correctly.
+#'@return A \code{data.frame} with in-text citations and APA standard references. The references in the column `Langangabe` contain LaTeX syntax for italic sequences and URLs.
 #'
 #'@examples
 #'
