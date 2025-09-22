@@ -215,6 +215,8 @@ In the **varName**, **varLabel** and **format** columns are information about th
 
 **imp** can be set to *WAHR* or *FALSCH*. If there are several variables to be displayed on one page, this column must be set to *WAHR* for these variables and they must be assigned to the same group at **group**. That is the case for imputed variables.
 
+<!-- Verstehe die Formulierung hier nicht ganz. Sollte ich das auf WAHR für alle imputierten Variablen stellen oder auch für alle Variablen, die gruppiert werden sollen? -->
+
 **type** can be set to *variable*, *scale*, *item* or *fake_item*. If you have a scale with several individual items, the scale variable is set to *scale* and the individual items to *item*. If you have several items belonging to one scale, but no scale variable, set the type to *fake_item*. All other variables should always get *variable* as an entry.
 
 The **scale** column specifies how the variable is to be displayed. If it is empty, no descriptives are displayed. *nominal* variables display the frequency distribution of the labeled categories. *ordinal* variables display the frequency distribution of the labeled categories *and* the statistical parameters (like *M* or *SD*). *numeric* variables only display the statistical parameters, without labeled categories. 
@@ -311,12 +313,12 @@ To display it like this the **imp** column becomes relevant. It must be set to *
 <img src="./pictures/input_imp.PNG" alt="input_imp" />  
 <br>  
 
-The function `createScaleInfo()` adds imputed variables like a scale to the data frame. Without the scale variable the information which variables belongs together might be lost. In this case, it might not be relevant, though, as these variables are not a scale. 
+The function `createScaleInfo()` adds imputed variables like a scale to the data frame. Without the scale variable the information which variables belong together might be lost. In this case, it might not be relevant, though, as these variables are not a scale.
 
 
 ## Descriptives Statistics To-do
 
-.The editing of the descriptives can be a lot of code, especially if you have several data sets, so it's best to do this in a separate file. Make sure the packages `eatCodebook` and `eatGADS` are loaded. 
+The editing of the descriptives can be a lot of code, especially if you have several data sets, so it's best to do this in a separate file. Make sure the packages `eatCodebook` and `eatGADS` are loaded. 
 
 After you imported the data sets, you open **1_kennwerte.R**. Then you copy the `Import Data` Code in this file, so you can work on it without needing to open **0_main.R** the next time you work on it. 
 
@@ -374,7 +376,7 @@ Here are some examples on how to edit the data frames using R. You might not hav
 
 Sometimes `createInputForDescriptives` creates different scale levels or type labels than we need. You can adjust each line individually with `descriptives$scale` or `descriptives$type` and the row number `[n]`. Or you change multiple lines at the same time. Just like you would any other data frame in R. 
 
-The column **scale** is later important for how the variable is displayed in the finished codebook. Sometimes the function sets the scale of variables to `nominal`, but they should have `ordinal`, as they a scale item. You can adjust that by extracting all relevant variables, for instance by name, using `grep()`, to identify the position of all variables that start with a certain name in `descriptives_sus`. Sometimes you need to recreate the descriptives objects/files and the position might change, but the variable name should stay the same. In this case you wouldn't have to adjust your code and can just rerun it. With the position of the  variables, you can change multiple variables at the same time. You can also change other columns this way. 
+The column **scale** is later important for how the variable is displayed in the finished codebook. Sometimes the function sets the scale of variables to `nominal`, but they should have `ordinal`, as they are a scale item. You can adjust that by extracting all relevant variables, for instance by name, using `grep()`, to identify the position of all variables that start with a certain name in `descriptives_sus`. Sometimes you need to recreate the descriptives objects/files and the position might change, but the variable name should stay the same. In this case you wouldn't have to adjust your code and can just rerun it. With the position of the  variables, you can change multiple variables at the same time. You can also change other columns this way. 
 
 ```{r editing descriptives scale, eval=FALSE}
 # extracting the position of variables skala1_item1 - skala1_item3
@@ -383,7 +385,7 @@ pos <- grep("skala1_", inputForDescriptives$varName)
 inputForDescriptives$scale[pos] <- "ordinal"
 ```
 
-You can also adjust they're **group** this way. 
+You can also adjust their **group** this way. 
 
 ```{r editing descriptives group, eval=FALSE}
 # adjusting the input for the column `group`
@@ -403,9 +405,9 @@ for(var in group){
 }
 ```
 
-### Save you changes
+### Save your changes
 
-When you made sure, the variables are correctly labeled and grouped, you save the new data frame in Excel. You can either overwrite the existing Excel file, but I recommend saving it in a new `_edited.xlsx` file for better comparison. You use the same lines as before, just adjust the file name. Then import the new Excel again to make sure the format is still right and load it into a new object with the ending `_edited`. 
+When you made sure the variables are correctly labeled and grouped, you save the new data frame in Excel. You can either overwrite the existing Excel file, but I recommend saving it in a new `_edited.xlsx` file for better comparison. You use the same lines as before, just adjust the file name. Then import the new Excel again to make sure the format is still right and load it into a new object with the ending `_edited`. 
 
 ```{r saving edited descriptives, eval=FALSE}
 # save changes
@@ -458,7 +460,7 @@ input_descriptives <- readRDS(".\\excel_files\\input_descriptives.RDS")
 kennwerte <- readRDS(".\\excel_files\\kennwerte.RDS")
 ```
 
-You should add the last two lines (load files) in you **0_main.R** script behind the data import (see template). 
+You should add the last two lines (load files) in your **0_main.R** script behind the data import (see template). 
 
 ------------------------------------------------------------------------
 
@@ -472,7 +474,7 @@ You create an Excel file that contains information on missing tags and labels us
 
 ### Example Table
 
-Here you can see how the missings data frame should look like. 
+Here you can see what the missings data frame should look like. 
 
 ```{r missings example}
 missings <- createMissings(dat, inputForDescriptives = inputForDescriptives)
@@ -484,6 +486,8 @@ head(missings)
 Open **0_main.R** again. The data sets `datalist` need to be loaded in the work space, as well as the two lists `input_descriptives` and `kennwerte`. 
 
 You create a new data frame with `createMissings()` and save it to Excel as `missings.xlsx`. You import it again with `getMisings()` to check the format. Usually there's no need to edit anything. 
+
+<!-- In welchen Fällen müsste man denn was editieren (anstatt direkt im Datensatz zu rekodieren)? -->
 
 ```{r create missings, eval=FALSE}
 # create missings
@@ -514,7 +518,7 @@ scaleInfo <- createScaleInfo(inputForDescriptives)
 head(scaleInfo)
 ```
 
-In **VarName** you have the name of the scale variable or the group name (they should be the same). **Items_des_Skala** have all items belonging to the scale or that have the same group name as a scale variable. 
+In **VarName** you have the name of the scale variable or the group name (they should be the same). **Items_der_Skala** contains all items belonging to the scale or which have the same group name as a scale variable. 
 
 The function `createScaleInfo()` "finds" the scales by looking for matching variable (varName) and group names. Fake scales usually don't have a variable where these two entries match, so they are often not displayed in the data frame per default. You'd have to add them in a script or manually. 
 
@@ -538,7 +542,7 @@ You need to look at the file to make sure all scales are displayed correctly.
 View(skalen)
 ```
 
-Not every variable in the file might be a scale (see [Imputations](#imputation-variables). All errors and mismatches occurring here can or should usually be fixed in the `inputForDescriptive` files. 
+Not every variable in the file might be a scale (see [Imputations](#imputation-variables). All errors and mismatches occurring here can or should usually be fixed in the `inputForDescriptives` files. 
 
 ### Save Scales
 
@@ -553,7 +557,7 @@ skalen <- getScaleInfo(".\\excel_files\\skalen.xlsx")
 
 ### Add Fake Scales
 
-In order to add missings fake scales to the data frame, you need to identify the fake scales, add the group name in `varName` and the fake items in `Items_des_Skala`. You might also have to add the source (`Quelle`) when you work with mulpitle data sets, e.g. *sus* or *lfb_allg*. The last BTs never used fake scales, in this case, you can ignore this. 
+In order to add missing fake scales to the data frame, you need to identify the fake scales, add the group name in `varName` and the fake items in `Items_des_Skala`. You might also have to add the source (`Quelle`) when you work with mulpitle data sets, e.g. *sus* or *lfb_allg*. The last BTs never used fake scales, in this case, you can ignore this. 
 
 You can identify fake scales in the descriptives files by their label `fake_item` in the column *type*. You need you sort them by group and add them to the `skalen` data frame.
 
@@ -675,6 +679,8 @@ writeExcel(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\a
 
 When you have all the abbreviations, you can create the LaTeX code that you need directly from the Excel file.
 
+<!-- Wird die Abkürzungsliste nicht mehr am Ende in den Anhang geschrieben und muss stattdessen der LaTeX Code manuell eingefügt werden? -->
+
 ```{r makeAbbrList, eval=FALSE}
 # creates LaTeX syntax
 abbr_list <- makeAbbrList(".\\excel_files\\abkürzung.xlsx")
@@ -685,7 +691,7 @@ abbr_list <- makeAbbrList(".\\excel_files\\abkürzung.xlsx")
 
 # 6. Variable Information (varinfo)
 
-Creating and editing the `varinfo` object is the **main work** of creating the codebook. This objects contains all information about the variables, their order and structure, as well as their references, instructions, remarks or information about the background model. There is only one object or Excel file, but each data set has its own sheet or data frame, so you can edit them separately.
+Creating and editing the `varinfo` object is the **main work** of creating the codebook. This object contains all information about the variables, their order and structure, as well as their references, instructions, remarks or information about the background model. There is only one object or Excel file, but each data set has its own sheet or data frame, so you can edit them separately.
 
 ## About Varinfo
 
@@ -793,7 +799,9 @@ For the BT codebook, this column is usually left empty.
 
 If a variable has been **recoded** in the course of previous editing, this can be marked with a `ja` in the `rekodiert` column and the variable gets a corresponding note in the codebook as inverted if it is an item of a scale. 
 
-You recognize these variables by the addition `_r` in their name. 
+You recognize these variables by the addition `_r` in their name.
+
+<!-- Ist hier mit "name" der Titel der Variable gemeint? -->
 
 #### QuelleSH and Instruktionen
 
@@ -807,9 +815,9 @@ Each variable can have one or multiple references and/or instructions, some have
 
 With `eatCodebook` you can also create a page in the appendix for a background model (BGM) or *Hintergrundmodell* (HGM) in German. 
 
-You need a BGM when you work with imputations as a statistical tool. You don't need to understand the details of a BGM when you create the codebook. You just need to know that due to methodological reasons, there are additional variables created that are not in the actual data sets, that shouldn't be displayed in the main codebook, but only in the BGM appendix. For that, you need to add them to the respective `varinfo` data frame. you can see how and where to add them in the [To-do part](#add-background-model-info). 
+You need a BGM when you work with imputations as a statistical tool. You don't need to understand the details of a BGM when you create the codebook. You just need to know that due to methodological reasons, there are additional variables created that are not in the actual data sets, that shouldn't be displayed in the main codebook, but only in the BGM appendix. For that, you need to add them to the respective `varinfo` data frame. You can see how and where to add them in the [To-do part](#add-background-model-info). 
 
-The appendix should look like this: `Hintergrundvariable` contains the variable, `Erstellt aus` the variable(s) the (new) variable was created from (if any), and `Inhalt der Hintergrundvariable` contains the variable's label, e.g. the content of the background variable. 
+The appendix should look like this: `Hintergrundvariable` contains the variable, `Erstellt aus` the variable(s) the (new) variable was created from (if any), and `Inhalt der Hintergrundvariable` contains the variables label, e.g. the content of the background variable. 
 
 <img src="./pictures/BGM.PNG" alt="BGM" />   
 
@@ -830,7 +838,7 @@ For the variable to appear in the appendix, the column `Hintergrundmodell` must 
 
 Now comes the most time consuming part of actually creating and editing the `varinfo`. 
 
-You have to create a list of data frames (one for each data set) and save it to Excel. There's a lot to add,  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file **2_varinfo.R** to do the editing. Then you can just rerun it without having to do too much. You should check after each recreation, whether the script still worked correctly, though.
+You have to create a list of data frames (one for each data set) and save it to Excel. There's a lot to add.  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file **2_varinfo.R** to do the editing. Then you can just rerun it without having to do too much. You should check after each recreation, whether the script still worked correctly, though.
 
 When working on the BT codebook for IQB, you can find most Excel files containing the additional information to add on the network server *Q:*. 
 
@@ -842,7 +850,7 @@ When you open **2_varinfo.R** you will have to import the data and the descripti
 | `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called something like `Reihenfolge_Variable_final.xlsx`, contains one sheet per data set |
 | `rekodiert` | Info in the variable name: all with `_r` at the end |
 | `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | in an extra Excel file, you might have to ask about it or also on Q: |
-| optional: `Anmerkung.Var` | in an file on Q: |
+| optional: `Anmerkung.Var` | in a file on Q: |
 
 The order of the variables when you first create `varinfo` depends on the order from the data sets. However, the final order of the variables might be different. It's best to match the input to each variable by name to make sure the matching is correct. 
 
@@ -909,7 +917,7 @@ varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
 
 ### Add References and Instructions
 
-To Add the references and instructions you need access to the the Excel files with all the variables listed plus their matching APA in-text citations (like `Hertel et al. (2014)`) and their instructions (in the questionnaire). The Excel should have two sheets, one with at least 4 columns (Variable, Label, Instruktion and Quelle), and a second one with the APA references and their in-text citations that we need later. You need to do the following steps: 
+To add the references and instructions you need access to the the Excel files with all the variables listed plus their matching APA in-text citations (like `Hertel et al. (2014)`) and their instructions (in the questionnaire). The Excel should have two sheets, one with at least 4 columns (Variable, Label, Instruktion and Quelle), and a second one with the APA references and their in-text citations that we need later. You need to do the following steps: 
 
 > - import the in-text citations and instructions, select proper sheet (usually Sheet 1)
 > - check the columns with `View()`: `Variable`, `Quelle` and `Instruktionen`
