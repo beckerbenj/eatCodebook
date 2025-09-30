@@ -817,7 +817,7 @@ With `eatCodebook` you can also create a page in the appendix for a background m
 
 You need a BGM when you work with imputations as a statistical tool. You don't need to understand the details of a BGM when you create the codebook. You just need to know that due to methodological reasons, there are additional variables created that are not in the actual data sets, that shouldn't be displayed in the main codebook, but only in the BGM appendix. For that, you need to add them to the respective `varinfo` data frame. You can see how and where to add them in the [To-do part](#add-background-model-info). 
 
-The appendix should look like this: `Hintergrundvariable` contains the variable, `Erstellt aus` the variable(s) the (new) variable was created from (if any), and `Inhalt der Hintergrundvariable` contains the variables label, e.g. the content of the background variable. 
+The appendix should look like this: `Hintergrundvariable` contains the variable, `Erstellt aus` the variable(s) the (new) variable was created from (if any), and `Inhalt der Hintergrundvariable` contains the variable's label, e.g. the content of the background variable. 
 
 <img src="./pictures/BGM.PNG" alt="BGM" />   
 
@@ -1030,7 +1030,8 @@ For the BT, you can usually find the info on the *Gliederung* (subsection number
 This Excel file also contains the **final order** in which the variables should be displayed in the codebook, so you need to adjust the order in `varinfo` to match the one in `finale Reihenfolge` (final order). You need to do the following steps: 
 
 > - import the `finale Reihenfolge` file, select proper sheet for your data set
-> - delete unnecessary rows (sections)
+> - delete unnecessary rows (sections) 
+#welche sind unnötig?
 > - compare variables (`varinfo` vs. final order)
 > - separate subsection names and numbers
 > - check for duplicate subsection names
@@ -1109,7 +1110,7 @@ duplicated(subsections_lfb_allg$`subsec name`[!is.na(subsections_lfb_allg$`subse
 
 #### Add Missing Subsections
 
-Now we need to fill the `NA`s with the proper subsection info, which is always the one above. The `NA`s in row 3 needs to say *1.1* and *Identifikationsvariable*, in row 8 it should say *2.1* and *Soziodemografie*, etc. 
+Now we need to fill the `NA`s with the proper subsection info, which is always the one above. The `NA`s in row 3 need to say *1.1* and *Identifikationsvariable*, in row 8 it should say *2.1* and *Soziodemografie*, etc. 
 
 This loop checks every entry in the new columns `subsec number` and `subsec name` for `NA`s, if it finds one it fills it with the input from the entry before it. After the loop you should check the columns with `View()`: there shouldn't be any `NA`s; the numbers should match their names like in `finale Reihenfolge`. 
 
@@ -1144,6 +1145,8 @@ View(varinfo$lfb_allg)
 ```
 
 To compare `varinfo$lfb_allg` and `subsections_lfb_allg` you can use any kind of check functions used so far, but it should be the same. 
+
+#gibt es eine Empfehlung wie viele Variablen pro Unterkapitel maximal enthalten sein sollten? Im fertigen PDF gibt es ab 100 Variablen das Problem, dass im Inhaltsverzeichnis die Nummerierung zu groß wird und sich mit den Kapitelnamen überschneidet.
 
 #### Linking and Matching Data
 
@@ -1202,7 +1205,7 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Background Model Info
 
-The background model (bgm) info is something to do for all data frames at once, as well. This info will later show up in the appendix of the codebook, not on the individual pages of the variables. you should do this after changing `varinfo` to match the final order, especially for the column `Reihenfolge.HGM`. The order of the variables in the bgm appendix should match the one in the codebook. You need to do the following steps: 
+The background model (bgm) info is something to do for all data frames at once, as well. This info will later show up in the appendix of the codebook, not on the individual pages of the variables. You should do this after changing `varinfo` to match the final order, especially for the column `Reihenfolge.HGM`. The order of the variables in the bgm appendix should match the one in the codebook. You need to do the following steps: 
 
 > - import the Excel from Q:
 > - add new variables to `varinfo` if needed
@@ -1435,9 +1438,13 @@ The function `createLitInfo()` creates one data frame containing all in-text cit
 
 The references should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format. You need to add special LaTeX syntax for italic strings and URLs if you want them to show up correctly in the codebook. 
 
+#ist es für eure Zwecke optional URLs und kursive Schrift korrekt darzustellen? Zusätzlich wäre es in der Praxis hilfreich Beispiele für beides mit korrekter LaTeX Syntax zu geben, um Nachfragen vorzubeugen
+
 > [!NOTE]
 > 
-> References need to be in APA format! 
+> References need to be in APA format!
+
+#ist redundant, da es den Hinweis schon im Fließtext gibt
 
 ## References To-do
 
@@ -1679,7 +1686,9 @@ hgm <- makeBGM(varinfo)
 
 You can create a cover in R, but previous BTs just created a word document for the cover page that you need to save as a **pdf file**. After you created the pdf file it's easy to include it in the codebook.
 
-It's usually two pages: an actual cover page with the institute's logos, the title and author names and a second one with licence and bibliography information.
+It's usually two pages: an actual cover page with the institute's logos, the title and author names and a second one with license and bibliography information.
+
+#mir wird nicht klar welche Info genau auf dem Cover sein sollte bzw. an welcher Vorlage ich mich orientieren sollte. Am besten wäre eine Vorlage mit Angaben dazu, was darauf editiert werden sollte.
 
 ## Cover To-do
 
@@ -1717,6 +1726,10 @@ The meta data is the information for the pdf file that you create at the end of 
 ![](./pictures/meta_data2.PNG){width=100%}
 
 
+## Meta Data To-do
+
+You work in **0_main.R**. You create a new data frame template with `createMetadata()` and add the following four lines. You can probably copy last BT's meta data and adjust the year and the authors. It's best to ask you supervisor or BT team what they want to be written here.
+
 > [!Note]
 > 
 > The meta data should contain the following information:
@@ -1726,9 +1739,7 @@ The meta data is the information for the pdf file that you create at the end of 
 > - **Keywords**: apropriate keywords
 > - **Subject**: apropriate subject
 
-## Meta Data To-do
-
-You work in **0_main.R**. You create a new data frame template with `createMetadata()` and add the following four lines. You can probably copy last BT's meta data and adjust the year and the authors. It's best to ask you supervisor or BT team what they want to be written here. 
+#vermute die Anmerkung "four lines" bezieht sich hier drauf und habe es deswegen runter gezogen
 
 ### Create Table
 
@@ -1815,7 +1826,7 @@ chapters <- getChapters(".\\excel_files\\chapters.xlsx")
 
 # 13. Other Texts
 
-There are two more optional files you can add the the `codebook()` function: *intro* and *lastpage*. **intro** contains the intro text plus all the formatting embedded in LaTeX code. **lastpage** contains the series of publications.
+There are two more optional files you can add to the `codebook()` function: *intro* and *lastpage*. **intro** contains the intro text plus all the formatting embedded in LaTeX code. **lastpage** contains the series of publications.
 
 ## About Intro
 
@@ -1851,7 +1862,7 @@ You need a .tex file with the following beginning: the LaTeX setup for the page,
 
 ### Copy Last Years Publication List
 
-You open the folder of last year's BT on Q: and go to a folder names *Texte* or *08_Einleitungstexte*. You copy the file `Latex_lastpage.tex` or `Latex_lastpage_snippet.tex` into your work space in the folder *Texte*. 
+You open the folder of last year's BT on Q: and go to a folder named *Texte* or *08_Einleitungstexte*. You copy the file `Latex_lastpage.tex` or `Latex_lastpage_snippet.tex` into your work space in the folder *Texte*. 
 
 ### Add New Publication
 
@@ -1882,7 +1893,7 @@ After you created and edited all the Excel files you can use `codebook()` to cre
 
 ## About the Codebook
 
-You will probably have to create multiple codebook versions depending you progress and to check if variables and chapters or other additions are displayed the way you want it to. There are arguments the function `codebook()` needs to create a minimal version of a codebook. And additions that are not necessary, but that you need for the BT codebook, like a reference list, a cover or an intro. 
+You will probably have to create multiple codebook versions depending on your progress and to check if variables and chapters or other additions are displayed the way you want it to. There are arguments the function `codebook()` needs to create a minimal version of a codebook. And additions that are not necessary, but that you need for the BT codebook, like a reference list, a cover or an intro. 
 
 ### Minimal Version
 
@@ -1894,7 +1905,7 @@ codebook <- codebook(varInfo = varinfo, missings = missings, struc = gliederung,
                      Kennwertedatensatz = kennwerte, chapters = chapters)
 ```
 
-The information from `gliederung` and `chapters` will create a **table of content** for the codebook.
+The information from `gliederung` and `chapters` will create a **table of contents** for the codebook.
 
 ### Additions
 
@@ -1922,7 +1933,9 @@ You can add a **lastpage** that contains information about the publication serie
 
 > [!Note]  
 >  
-> while working on the Codebook, you will create different versions. it's best not to delete them, but save them in an `archive` folder to compare different version to one another if needed. 
+> while working on the Codebook, you will create different versions. it's best not to delete them, but save them in an `archive` folder to compare different version to one another if needed.
+
+#Oder man nummeriert die Versionen
 
 ## Codebook To-do in R
 
@@ -2004,6 +2017,8 @@ After you created codebook and saved it as a .tex file, you still need to render
 
 ### Ppen .tex File
 
+#Hier wäre eine Empfehlung für ein TeX Programm nützlich.
+
 First you open the .tex file. You will have a very long script, but you shouldn't need to edit it. The first part of the script contains the LaTeX packages that you need for the script and then all the input from the Excel files that the function `codebook()` converted to the proper LaTeX code. The beginning might look like this:
 
 ![](.\pictures\tex1.png){width=100%}
@@ -2011,6 +2026,8 @@ First you open the .tex file. You will have a very long script, but you shouldn'
 ### Render To PDF (Twice)
 
 You have to click the green triangle to render to pdf. Remember to select the right option, so it says *pdfLaTeX*. It should render (which can take a while) and create the a pdf with the same name as the .tex file. It will also create some other new files that you can ignore. This first version will not have a *table of content*, but one of the created files contains information about it. When you render to pdf again (click the green triangle) the program creates a version with a table of content. 
+
+#Könnte ich nicht pdfLaTeX+MakeIndex+BibTeX verwenden um direkt das Inhaltsverzeichnis zu erhalten?
 
 ![](.\pictures\tex_pdf.png){width=70%}
 
