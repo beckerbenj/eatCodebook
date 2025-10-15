@@ -40,7 +40,7 @@ test_that("test output for getAPAInfo", {
   expect_true(checkmate::test_data_frame(references, types = "character", ncols = 2))
   expect_true(identical(names(references), c("Kurzangabe", "Langangabe")))
   # references
-  ref <- c("Hertel, S., Hochweber, J., Mildner, D., Steinert, B. & Jude, N. (2014). \\textit{PISA 2009 Skalenhandbuch.} Waxmann. \\urstyle{same}\\url{https://doi.org/10.25656/01:9554}",
+  ref <- c("Hertel, S., Hochweber, J., Mildner, D., Steinert, B. & Jude, N. (2014). \\textit{PISA 2009 Skalenhandbuch.} Waxmann. \\urlstyle{same}\\url{https://doi.org/10.25656/01:9554}",
            "Lütke, B., Paetsch, J. & Dubiel, S. (2017-2019). \\textit{Selbsteingeschätztes Wissen im Bereich Sprachbildung} (unveröffentlicht). Projekt: Sprachsensibles Unterrichten fördern – Sprachliche Bildung systemisch im Vorbereitungsdienst implementieren. Bericht der wissenschaftlichen Begleitforschung.")
   expect_equal(references$Langangabe, ref)
 })
@@ -61,11 +61,11 @@ test_that("test addLatex_italic", {
 test_that("test addLatex_URL", {
   link <- "http://thisisalink.de"
   link_latex <- addLatex_URL(link)
-  expect_equal(link_latex, "\\urstyle{same}\\url{http://thisisalink.de}")
+  expect_equal(link_latex, "\\urlstyle{same}\\url{http://thisisalink.de}")
 
   vector <- c("http://thisisalink.de", "https://thisisalink.de")
   vector_latex <- addLatex_URL(vector)
-  expect_equal(vector_latex, c("\\urstyle{same}\\url{http://thisisalink.de}", "\\urstyle{same}\\url{https://thisisalink.de}"))
+  expect_equal(vector_latex, c("\\urlstyle{same}\\url{http://thisisalink.de}", "\\urlstyle{same}\\url{https://thisisalink.de}"))
 })
 
 

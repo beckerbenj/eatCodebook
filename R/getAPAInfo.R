@@ -2,7 +2,7 @@
 #################################################################################
 #' Import APA references from an Excel sheet.
 #'
-#' Import references with APA standard from one sheet from an Excel file, while converting italic formatting and URLs into proper LaTeX code. If the references don't comply with APA standards (e.g. book or journal titles in italic), this function might not work properly. For instance, if there's more than one continuous italic sequence per cell.
+#' Import references with APA standard from one sheet from an Excel file, while converting italic formatting and URLs into proper LaTeX code. If the references do not comply with APA standards (e.g. book or journal titles in italic), this function might not work properly. For instance, if there is more than one continuous italic sequence per cell.
 #' Use case for creating a codebook: the reference list is saved in Excel, but the pdf is created wit TeXWorks, so all special formatting needs LaTeX syntax to be displayed correctly in the final codebook.
 #'
 #'
@@ -24,13 +24,16 @@ getAPAInfo <- function(filePath){
   # identify proper Excel sheet -------------------------------------------------
   ref_table <- getExcel(filePath)
 
-  if(is_APAInfo(ref_table)){
+  if(is_APAInfo(ref_table)){          # if imported Excel contains one sheet, `ref_table` is a data frame.
+    # import format information of italic input from the cells
     ref_table_format <- tidyxl::xlsx_cells(filePath, include_blank_cells = FALSE)
-  } else {
+  } else if (is.list(ref_table)){                           # if it has multiple sheets, identify the (first) sheet that has the two columns `Kurzangabe` and `Langangabe`
     for(i in 1:length(ref_table)){
       if(is_APAInfo(ref_table[[i]])){
+        # import format information of italic input from the cells
         ref_table_format <- tidyxl::xlsx_cells(filePath, include_blank_cells = FALSE,
                                                 sheets = i)
+        # save the proper reference sheet in `ref_table` (as a data frame)
         ref_table <- ref_table[[i]]
       }
     }
