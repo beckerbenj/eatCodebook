@@ -91,7 +91,7 @@ addLatex_URL <- function(link){
   # checks
   checkmate::assert_character(link, pattern = "http")
   # add URL syntax to a link
-  link_latex <- paste0("\\urstyle{same}\\url{", link, "}")
+  link_latex <- paste0("\\urlstyle{same}\\url{", link, "}")
   return(link_latex)
 }
 

@@ -27,7 +27,7 @@ test_that("Import Excel with two reference sheets", {
   # file with just two reference sheets
   references <- getAPAInfo("helper_getAPAInfo_error3.xlsx")
   ## selects first sheet
-  ref <- c("Hertel, S., Hochweber, J., Mildner, D., Steinert, B. & Jude, N. (2014). \\textit{PISA 2009 Skalenhandbuch.} Waxmann. \\urstyle{same}\\url{https://doi.org/10.25656/01:9554}",
+  ref <- c("Hertel, S., Hochweber, J., Mildner, D., Steinert, B. & Jude, N. (2014). \\textit{PISA 2009 Skalenhandbuch.} Waxmann. \\urlstyle{same}\\url{https://doi.org/10.25656/01:9554}",
            "Lütke, B., Paetsch, J. & Dubiel, S. (2017-2019). \\textit{Selbsteingeschätztes Wissen im Bereich Sprachbildung} (unveröffentlicht). Projekt: Sprachsensibles Unterrichten fördern – Sprachliche Bildung systemisch im Vorbereitungsdienst implementieren. Bericht der wissenschaftlichen Begleitforschung.")
   expect_equal(references$Langangabe, ref)
 })
