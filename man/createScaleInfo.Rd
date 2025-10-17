@@ -10,12 +10,35 @@ createScaleInfo(inputForDescriptives)
 \item{inputForDescriptives}{\code{inputForDescriptives} object as created by the \code{createInputForDescriptives} function}
 }
 \value{
-Returns the scale information.
+Returns a \code{data.frame} with the following information:
+\itemize{
+ \item \code{varName} The name of the variable as it occurs in the data
+ \item \code{Quelle} The name of the data set the variable belongs to.
+ This is only meaningful, if \code{inputForDescriptives} is a list
+ (meaning that the function runs for multiple data sets).
+ \item \code{Anzahl_valider_Werte} For a scale, how many values have to be not NA on items for a
+ non NA value on the scale?
+ \item \code{Items_der_Skala} Which items or imputations belong to the scale?
+ This column is used to display the item names in the codebook.
+ \item \code{Imputationen} Which imputations belong to the pooled variable?
+ This column is used to display the number of imputations in the codebook.
+}
 }
 \description{
-Create information on scale aggregation. Scales, 'fake scales', and imputed variables are listed.
+Create information on scale or imputation aggregation.
+Scales, 'fake scales', and imputed variables are listed.
+}
+\details{
+Currently, displaying the items of a imputed scale is not supported by the \code{codebook()} function.
+Even though the items of an imputed scale can be defined in the \code{scaleInfo},
+this information is simply ignored during the creation of the codebook.
 }
 \examples{
-#tbd
+# import spss exemplary data
+file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
+dat   <- eatGADS::import_spss(file)
+inputForDescriptives <- createInputForDescriptives(dat, impExpr = "plausible value")
+
+scaleInfo <- createScaleInfo(inputForDescriptives)
 
 }

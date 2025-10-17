@@ -477,20 +477,13 @@ layout.gepoolt.metrisch <- function(name , kennwerte.var = NULL, varue.info, var
   werte <- kennwerte.var
 
   # Items der gepoolten Variable
-  skala.items <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Items_der_Skala' ], ',', fixed = TRUE ) ) )
-
-  # Reduktion der Items, falls diese in der Varue ein 'nein' haben
-  skala.items <- skala.items[skala.items %in% varue.info$Var.Name[varue.info$in.DS.und.SH %in% c('ja' , 'sh', 'ds')]]
-
-  # Sortierung der Items --> Reihenfolge im Reiter 'Skaleninformationen' wird an die in der Varue angepasst
-  skala.items <- varue.info$Var.Name[varue.info$Var.Name %in% skala.items]
+  imputations <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Imputationen' ], ',', fixed = TRUE ) ) )
 
   # Kennwerte-names: bekommen automatisch den namen der Variable rangepastet
   names(werte) <- sub( paste0(name,'\\.(.*)$') , '\\1' , names(werte) )
 
   # Sonderzeichen fuer Latex
   nameSH <- gsub( '_' , '\\_' , name , fixed = TRUE)
-  skala.items.name <- gsub( '_' , '\\_' , skala.items , fixed = TRUE)
 
   if( Latex.length( nameSH , FALSE) > Latex.length('Variablenname' , TRUE) ){
     setsizefst <- paste0('\\settowidth{\\sizefst}{',nameSH,'}')
@@ -504,7 +497,7 @@ layout.gepoolt.metrisch <- function(name , kennwerte.var = NULL, varue.info, var
 
   #### Skript schreiben ####
 
-  skript.descriptive <- table.descriptive(name=name, varue.info=varue.info , varue.missings=varue.missings , var.typ='Numerisch' , Gesamtdatensatz=Gesamtdatensatz ,  werte=werte , skala.items=skala.items , show.kategorien=FALSE , gepoolt=TRUE)
+  skript.descriptive <- table.descriptive(name=name, varue.info=varue.info , varue.missings=varue.missings , var.typ='Numerisch' , Gesamtdatensatz=Gesamtdatensatz ,  werte=werte , skala.items=NULL , imputations=imputations, show.kategorien=FALSE , gepoolt=TRUE)
   skript.means <- table.means(name=name , werte=werte, setsizefst=setsizefst , anm.tab=anm.tab, cols=data.frame(c('N_{valid}','N.valid') , c('M','mean.valid') , c('SD','sd.valid') , c('Min.','min.valid') , c('Max.','max.valid'), stringsAsFactors=FALSE))
 
   skript <- c(skript.descriptive,
@@ -545,19 +538,13 @@ layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, varue.info, v
   werte <- kennwerte.var
 
   # Items der gepoolten Variable
-  skala.items <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Items_der_Skala' ], ',', fixed = TRUE ) ) )
-
-  # Reduktion der Items, falls diese in der Varue ein 'nein' haben
-  skala.items <- skala.items[skala.items %in% varue.info$Var.Name[varue.info$in.DS.und.SH %in% c('ja' , 'sh', 'ds')]]
-
-  # Sortierung der Items --> Reihenfolge im Reiter 'Skaleninformationen' wird an die in der Varue angepasst
-  skala.items <- varue.info$Var.Name[varue.info$Var.Name %in% skala.items]
+  imputations <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Items_der_Skala' ], ',', fixed = TRUE ) ) )
 
   # Kennwerte-names: bekommen automatisch den namen der Variable rangepastet
   names(werte) <- sub( paste0(name,'\\.(.*)$') , '\\1' , names(werte) )
 
   #### Skript schreiben ####
-  skript.descriptive <- table.descriptive(name=name, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz , werte=werte , var.typ='Numerisch' , skala.items=skala.items , gepoolt=TRUE)
+  skript.descriptive <- table.descriptive(name=name, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz , werte=werte , var.typ='Numerisch' , skala.items=NULL , imputations=imputations , gepoolt=TRUE)
   skript.frequencies <- table.frequencies(name=name , varue.missings.aktuell=varue.missings.aktuell , werte=werte)
 
   skript <- c(skript.descriptive,

@@ -9,6 +9,8 @@ str(gd)
 
 ## Descriptives
 inputForDescr <- createInputForDescriptives(gd)
+# Hotfix (see mail to SW):
+inputForDescr[inputForDescr$imp, "type"] <- "variable"
 descr  <- calculateDescriptives(gd, inputForDescr)
 
 ## Missings/Line Breaks

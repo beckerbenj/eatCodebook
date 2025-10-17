@@ -5,6 +5,8 @@ gd_gads   <- eatGADS::import_spss(gd_path)
 gd <- eatGADS::extractData(gd_gads)
 
 inputForDescr <- createInputForDescriptives(gd_gads, verbose = FALSE)
+# Hotfix (see mail to SW):
+inputForDescr[inputForDescr$imp, "type"] <- "variable"
 suppressWarnings(descr  <- calculateDescriptives(gd_gads, inputForDescr, verbose = FALSE))
 
 varInfo_path <- system.file("extdata", "example_varInfo.xlsx", package = "eatCodebook")
@@ -48,7 +50,7 @@ test_that("simple description for metric variable with missings", {
 
 test_that("simple description for pooled metric variable", {
   out <- table_description_variable(name = "pv_pooled", varue.info = varInfo, varue.missings = varMiss, var.typ="Numerisch", Gesamtdatensatz = gd,
-                           werte = descr$pv_pooled, skala.items = paste0("pv_", 1:5), gepoolt = TRUE)
+                           werte = descr$pv_pooled, imputations = paste0("pv_", 1:5), gepoolt = TRUE)
   expect_equal(out[1], "\\begin{tabnormallong}{Beschreibung der Variable}")
   expect_equal(out[2], "Variablenname:&pv\\_pooled\\\\")
   expect_equal(out[3], "Label:&NA\\\\")
@@ -58,7 +60,7 @@ test_that("simple description for pooled metric variable", {
 
 test_that("simple description for pooled categorical variable", {
   out <- table_description_variable(name = "pvkat_pooled", varue.info = varInfo, varue.missings = varMiss, var.typ="Numerisch", Gesamtdatensatz = gd,
-                           werte = descr$pv_pooled, skala.items = paste0("pvkat_", 1:5), gepoolt = TRUE)
+                           werte = descr$pv_pooled, imputations = paste0("pvkat_", 1:5), gepoolt = TRUE)
   expect_equal(out[1], "\\begin{tabnormallong}{Beschreibung der Variable}")
   expect_equal(out[2], "Variablenname:&pvkat\\_pooled\\\\")
   expect_equal(out[3], "Label:&NA\\\\")

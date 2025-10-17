@@ -1,7 +1,10 @@
 
 ## former table.descriptives, now just for variables (not the items of a scale!)
+## currently not in use; work needs to be picked up at some point
 
-table_description_variable <- function(name, varue.info, varue.missings=NULL, var.typ, skala.items=NULL, Gesamtdatensatz=NULL, werte=NULL,
+table_description_variable <- function(name, varue.info, varue.missings=NULL, var.typ,
+                                       skala.items=NULL, imputations=NULL,
+                                       Gesamtdatensatz=NULL, werte=NULL,
                                        show.kategorien=TRUE, gepoolt=FALSE){
   stopifnot(length(name) == 1)
 
@@ -167,11 +170,11 @@ table_description_variable <- function(name, varue.info, varue.missings=NULL, va
 
   anzahl.items <- NULL
   if(!is.null(skala.items)){
-    if(gepoolt){
-      anzahl.items <- paste0("Anzahl der Imputationen: & ", length(skala.items) , "\\\\")
-    } else {
-      anzahl.items <- paste0("Anzahl der Items: & ", length(skala.items) , "\\\\")
-    }
+    anzahl.items <- paste0("Anzahl der Items: & ", length(skala.items) , "\\\\")
+  }
+  anzahl.imputationen <- NULL
+  if(gepoolt && !is.null(imputations)){
+    anzahl.imputationen <- paste0("Anzahl der Imputationen: & ", length(imputations) , "\\\\")
   }
 
   if(tolower(var.typ)=="zeichenfolge"){
@@ -180,16 +183,17 @@ table_description_variable <- function(name, varue.info, varue.missings=NULL, va
     var.typ.entry <- NULL
   }
   skript <- c( "\\begin{tabnormallong}{Beschreibung der Variable}",
-                 paste0("Variablenname:&",nameSH,"\\\\"),
-                 paste0("Label:&",varue.info.aktuell$LabelSH,"\\\\"),
-                 var.typ.entry,
-                 anzahl.items,
-                 quelle,
-                 instruktion,
-                 kategorien,
-                 missings,
-                 anmerkung,
-                 "\\end{tabnormallong}" )
+               paste0("Variablenname:&",nameSH,"\\\\"),
+               paste0("Label:&",varue.info.aktuell$LabelSH,"\\\\"),
+               var.typ.entry,
+               anzahl.items,
+               anzahl.imputationen,
+               quelle,
+               instruktion,
+               kategorien,
+               missings,
+               anmerkung,
+               "\\end{tabnormallong}" )
 
 
   return(skript)

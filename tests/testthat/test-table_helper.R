@@ -72,7 +72,7 @@ test_that("simple description for scale variable", {
 
 test_that("simple description for pooled metric variable", {
   out <- table.descriptive(name = "pv_pooled", varue.info = varInfo, varue.missings = varMiss, var.typ="Numerisch", Gesamtdatensatz = gd,
-                           werte = descr$pv_pooled, skala.items = paste0("pv_", 1:5), gepoolt = TRUE)
+                           werte = descr$pv_pooled, imputations = paste0("pv_", 1:5), gepoolt = TRUE)
   expect_equal(out[1], "\\begin{tabnormallong}{Beschreibung der Variable}")
   expect_equal(out[2], "Variablenname:&pv\\_pooled\\\\")
   expect_equal(out[3], "Label:&NA\\\\")
@@ -82,7 +82,7 @@ test_that("simple description for pooled metric variable", {
 
 test_that("simple description for pooled categorical variable", {
   out <- table.descriptive(name = "pvkat_pooled", varue.info = varInfo, varue.missings = varMiss, var.typ="Numerisch", Gesamtdatensatz = gd,
-                           werte = descr$pv_pooled, skala.items = paste0("pvkat_", 1:5), gepoolt = TRUE)
+                           werte = descr$pv_pooled, imputations = paste0("pvkat_", 1:5), gepoolt = TRUE)
   expect_equal(out[1], "\\begin{tabnormallong}{Beschreibung der Variable}")
   expect_equal(out[2], "Variablenname:&pvkat\\_pooled\\\\")
   expect_equal(out[3], "Label:&NA\\\\")

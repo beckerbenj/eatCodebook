@@ -24,7 +24,7 @@
 # table.frequencies.items: Haeufigkeitstabelle fuer Items, die zu einer Skala gehoeren
 
 
-table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ  , skala.items=NULL , Gesamtdatensatz=NULL , werte=NULL, show.kategorien=TRUE, gepoolt=FALSE){
+table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ  , skala.items=NULL , imputations=NULL, Gesamtdatensatz=NULL , werte=NULL, show.kategorien=TRUE, gepoolt=FALSE){
   if(length(name)>1){
     varue.info.aktuell <- varue.info[varue.info$Var.Name %in% name[1],]
     varue.missings.aktuell <- varue.missings[varue.missings$Var.name %in% name,]
@@ -203,11 +203,11 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
 
   anzahl.items <- NULL
   if(!is.null(skala.items)){
-    if(gepoolt){
-      anzahl.items <- paste0('Anzahl der Imputationen: & ', length(skala.items) , '\\\\')
-    } else {
-      anzahl.items <- paste0('Anzahl der Items: & ', length(skala.items) , '\\\\')
-    }
+    anzahl.items <- paste0("Anzahl der Items: & ", length(skala.items) , "\\\\")
+  }
+  anzahl.imputationen <- NULL
+  if(gepoolt && !is.null(imputations)){
+    anzahl.imputationen <- paste0("Anzahl der Imputationen: & ", length(imputations) , "\\\\")
   }
 
   if(length(nameSH)==1){
@@ -221,6 +221,7 @@ table.descriptive <- function(name , varue.info , varue.missings=NULL , var.typ 
                  paste0('Label:&',varue.info.aktuell$LabelSH,'\\\\'),
                  var.typ.entry,
                  anzahl.items,
+                 anzahl.imputationen,
                  quelle,
                  instruktion,
                  kategorien,

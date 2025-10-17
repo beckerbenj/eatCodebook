@@ -23,6 +23,8 @@ test_that("fake scale", {
 test_that("no scales, only imputed", {
   out <- createScaleInfo(input_pisa)
   expect_equal(nrow(out), 3)
+  expect_equal(out$Imputationen[1], c("ma_pv1,ma_pv2,ma_pv3,ma_pv4,ma_pv5"))
+  expect_equal(out$Imputationen[2], c("rea_pv1,rea_pv2,rea_pv3,rea_pv4,rea_pv5"))
 })
 
 test_that("with input as list", {
