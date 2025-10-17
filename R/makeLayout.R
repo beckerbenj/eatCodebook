@@ -148,9 +148,9 @@ layout.var <- function(name , fb, double.vars , kennwerte.var = NULL, varue.info
   # Aufruf der Layout-Funktion abhaengig von Layout-typ
   if (i==0) layout.typ.var <- layout.id( name=name , varue.info=varue.info )
   if (i==1) layout.typ.var <- layout.string( name=name , varue.info=varue.info)
-  if (i==2) layout.typ.var <- layout.kategorial(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  if (i==3) layout.typ.var <- layout.ordinal(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
-  if (i==4) layout.typ.var <- layout.metrisch(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
+  if (i==2) layout.typ.var <- layout.kategorial(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz)
+  if (i==3) layout.typ.var <- layout.ordinal(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz)
+  if (i==4) layout.typ.var <- layout.metrisch(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz)
   if (i==5) layout.typ.var <- layout.skala(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
   if (i==6) layout.typ.var <- layout.gepoolt.metrisch(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info )
   if (i==7) layout.typ.var <- layout.gepoolt.kategorial(name=name , kennwerte.var=kennwerte.var, varue.info=varue.info, varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz, skalen.info=skalen.info)
