@@ -128,9 +128,13 @@ varStats <- function(GADSdat, sub.inputForDescriptives, verbose, showCallOnly = 
          }  else  {
              if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.kategorial")}
              if ( verbose) {cat("Use function 'kennwerte.gepoolt.kategorial'.\n")}
-             stats <- kennwerte.gepoolt.kategorial(datWide=GADSdat[["dat"]],
+             stats1 <- kennwerte.gepoolt.metrisch(datWide=GADSdat[["dat"]],imputedVariableCols = sub.inputForDescriptives[,"varName"])
+             stats2 <- kennwerte.gepoolt.kategorial(datWide=GADSdat[["dat"]],
                                                    imputedVariableCols = sub.inputForDescriptives[,"varName"],
                                                    verbose=verbose, value_table = value_table)
+             dopp   <- intersect(names(stats1), names(stats2))
+             if(length(dopp)>0) {stats2 <- stats2[-match(dopp, names(stats2))]}
+             stats  <- c(stats1, stats2)
          }
      }  else  {
 ### differenzieren, ob es skala (es gibt eine separate skalenvariale) oder fake.skala (es gibt keine separate skalenvariale) ist
