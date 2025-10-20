@@ -93,7 +93,7 @@ It is possible to get the following entries in the codebook for a scale and the 
 <br>  
 To get these pages the individual items must be labeled as *ordinal* and the scale as *numeric*. They must all have the same name at **group** so that they are displayed together.
 <br>  
-<img src="./pictures/input_scale.PNG" alt="input_scale_new" />  
+<img src="./pictures/input_scale.PNG" alt="input_scale" />  
 
 #### Imputation Variables
 
@@ -133,14 +133,14 @@ descStatistics[[5]]
 If you want to document several data sets in the codebook, you must go through these steps for all data sets and summarise the results in lists. These lists can then be used instead of the individual objects for the following functions. 
 
 ## Value and Missing Labels
-Another imported part of a codebook is documentation of the value labels of valid and missing values. A respective overview is created via `createMissings()`.
+Another imported part of a codebook is the documentation of the value labels of valid and missing values. A respective overview is created via `createMissings()`.
 
 ```{r create missings}
 missings <- createMissings(dat, inputForDescriptives = inputForDescriptives_edited)
 head(missings)
 ```
 
-In this case, the resulting object `missings` has to be written to `xlsx` and imported via `getMissings()`. Note that alle the `getXXX` functions perform important cleaning and preparation steps, therefore the exporting to `xlsx` is obligatory.
+In this case, the resulting object `missings` has to be written to `xlsx` and imported via `getMissings()`. Note that all the `getXXX` functions perform important cleaning and preparation steps, therefore the exporting to `xlsx` is obligatory.
 
 ```{r write missings, eval = FALSE}
 writeExcel(missings, "example_miss.xlsx", row.names = FALSE)
