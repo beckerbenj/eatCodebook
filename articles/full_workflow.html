@@ -488,11 +488,11 @@ name the upper chapters.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scaleInfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createScaleInfo.html">createScaleInfo</a></span><span class="op">(</span><span class="va">inputForDescriptives_edited</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scaleInfo</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           varName Quelle Anzahl_valider_Werte</span></span>
-<span><span class="co">#&gt; 1          skala1   &lt;NA&gt;                    -</span></span>
-<span><span class="co">#&gt; 2 skala_fake_item   &lt;NA&gt;                    -</span></span>
-<span><span class="co">#&gt; 3       pv_pooled   &lt;NA&gt;                    -</span></span>
-<span><span class="co">#&gt; 4    pvkat_pooled   &lt;NA&gt;                    -</span></span>
+<span><span class="co">#&gt;           varName Anzahl_valider_Werte</span></span>
+<span><span class="co">#&gt; 1          skala1                    -</span></span>
+<span><span class="co">#&gt; 2 skala_fake_item                    -</span></span>
+<span><span class="co">#&gt; 3       pv_pooled                    -</span></span>
+<span><span class="co">#&gt; 4    pvkat_pooled                    -</span></span>
 <span><span class="co">#&gt;                                      Items_der_Skala</span></span>
 <span><span class="co">#&gt; 1             skala1_item1,skala1_item2,skala1_item3</span></span>
 <span><span class="co">#&gt; 2 skala_fake_item1,skala_fake_item2,skala_fake_item3</span></span>
@@ -505,17 +505,11 @@ name the upper chapters.</p>
 <span><span class="co">#&gt; 4 pvkat_1,pvkat_2,pvkat_3,pvkat_4,pvkat_5</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/writeExcel.html">writeExcel</a></span><span class="op">(</span><span class="va">scaleInfo</span>, <span class="st">"example_scaleInfo.xlsx"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">scaleInfo_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getScaleInfo.html">getScaleInfo</a></span><span class="op">(</span><span class="st">"example_scaleInfo.xlsx"</span><span class="op">)</span></span>
-<span><span class="co"># workaround, should be done automatically, but currently problem with non list inputs for createScaleInfo</span></span>
-<span><span class="va">scaleInfo_final</span><span class="op">$</span><span class="va">Quelle</span> <span class="op">&lt;-</span> <span class="st">"dat"</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;        varName Quelle Anzahl_valider_Werte</span></span>
-<span><span class="co">#&gt; 1       skala1    dat                    -</span></span>
-<span><span class="co">#&gt; 2    pv_pooled    dat                    -</span></span>
-<span><span class="co">#&gt; 3 pvkat_pooled    dat                    -</span></span>
-<span><span class="co">#&gt;                          Items_der_Skala</span></span>
-<span><span class="co">#&gt; 1 skala1_item1,skala1_item2,skala1_item3</span></span>
-<span><span class="co">#&gt; 2                                       </span></span>
-<span><span class="co">#&gt; 3                                       </span></span>
+<span><span class="va">scaleInfo_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getScaleInfo.html">getScaleInfo</a></span><span class="op">(</span><span class="st">"example_scaleInfo.xlsx"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;        varName Anzahl_valider_Werte                        Items_der_Skala</span></span>
+<span><span class="co">#&gt; 1       skala1                    - skala1_item1,skala1_item2,skala1_item3</span></span>
+<span><span class="co">#&gt; 2    pv_pooled                    -                                       </span></span>
+<span><span class="co">#&gt; 3 pvkat_pooled                    -                                       </span></span>
 <span><span class="co">#&gt;                              Imputationen</span></span>
 <span><span class="co">#&gt; 1                                        </span></span>
 <span><span class="co">#&gt; 2                pv_1,pv_2,pv_3,pv_4,pv_5</span></span>

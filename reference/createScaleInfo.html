@@ -59,10 +59,7 @@ Scales, 'fake scales', and imputed variables are listed.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a <code>data.frame</code> with the following information:</p><ul><li><p><code>varName</code> The name of the variable as it occurs in the data</p></li>
-<li><p><code>Quelle</code> The name of the data set the variable belongs to.
- This is only meaningful, if <code>inputForDescriptives</code> is a list
- (meaning that the function runs for multiple data sets).</p></li>
+    <p>Returns a <code>data.frame</code> or list of <code>data.frames</code> with the following information:</p><ul><li><p><code>varName</code> The name of the variable as it occurs in the data</p></li>
 <li><p><code>Anzahl_valider_Werte</code> For a scale, how many values have to be not NA on items for a
  non NA value on the scale?</p></li>
 <li><p><code>Items_der_Skala</code> Which items or imputations belong to the scale?
