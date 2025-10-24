@@ -1,15 +1,13 @@
 
 
 test_that("data.frame", {
-  # out <- getMissings("tests/testthat/helper_missings2.xlsx")
-  out <- getMissings("helper_missings2.xlsx")
+  out <- getMissings(test_path("helper_missings2.xlsx"))
   expect_equal(dim(out), c(62, 5))
 })
 
 
 test_that("list format", {
-  # out <- getMissings("tests/testthat/helper_missings.xlsx")
-  out <- getMissings("helper_missings.xlsx")
+  out <- getMissings(test_path("helper_missings.xlsx"))
   expect_equal(length(out), 2)
   expect_equal(names(out), c("dat1", "dat2"))
 })

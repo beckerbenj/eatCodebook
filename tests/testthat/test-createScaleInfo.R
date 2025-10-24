@@ -31,14 +31,16 @@ test_that("no scales, only imputed", {
 test_that("with input as list", {
   l1 <- list(pisa = input_pisa, other = input_clean)
   out <- createScaleInfo(l1)
-  expect_equal(names(out), c("varName", "Quelle", "Anzahl_valider_Werte", "Items_der_Skala", "Imputationen"))
-  expect_equal(nrow(out), 6)
-  expect_equal(out$Quelle, c(rep("pisa", 3), rep("other", 3)))
+  expect_equal(names(out$pisa), c("varName", "Anzahl_valider_Werte", "Items_der_Skala", "Imputationen"))
+  expect_equal(nrow(out$pisa), 3)
+  expect_equal(nrow(out$other), 3)
+  expect_equal(names(out), c("pisa", "other"))
 
   l2 <- list(other1 = input_clean, other2 = input_clean)
   out2 <- createScaleInfo(l2)
-  expect_equal(nrow(out2), 6)
-  expect_equal(out2$Quelle, rep(c("other1", "other2"), each = 3))
+  expect_equal(nrow(out2$other1), 3)
+  expect_equal(nrow(out2$other2), 3)
+  expect_equal(names(out2), c("other1", "other2"))
 })
 
 test_that("imputed scale", {

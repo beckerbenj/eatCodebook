@@ -11,12 +11,9 @@
 #'
 #'@param inputForDescriptives \code{inputForDescriptives} object as created by the \code{createInputForDescriptives} function
 #'
-#'@return Returns a \code{data.frame} with the following information:
+#'@return Returns a \code{data.frame} or list of \code{data.frames} with the following information:
 #'\itemize{
 #'  \item \code{varName} The name of the variable as it occurs in the data
-#'  \item \code{Quelle} The name of the data set the variable belongs to.
-#'  This is only meaningful, if \code{inputForDescriptives} is a list
-#'  (meaning that the function runs for multiple data sets).
 #'  \item \code{Anzahl_valider_Werte} For a scale, how many values have to be not NA on items for a
 #'  non NA value on the scale?
 #'  \item \code{Items_der_Skala} Which items or imputations belong to the scale?
@@ -41,9 +38,7 @@ createScaleInfo <- function(inputForDescriptives){
 createScaleInfo.data.frame <- function(inputForDescriptives){
   inputForDescriptives <- check_inputForDescriptives(inputForDescriptives)
 
-  source <- NA
-  scaleInfo <- data.frame(varName = character(),	Quelle = character(),
-                          Anzahl_valider_Werte = character(),
+  scaleInfo <- data.frame(varName = character(), Anzahl_valider_Werte = character(),
                           Items_der_Skala = character(), Imputationen = character(),
                           stringsAsFactors = FALSE)
 
@@ -60,13 +55,11 @@ createScaleInfo.data.frame <- function(inputForDescriptives){
     single_inputForDescriptives <- inputForDescriptives[inputForDescriptives$group == scales_and_imputed[i], ]
     scaleInfo[i, "varName"] <- unique(single_inputForDescriptives$group)
     scaleInfo[i, "Anzahl_valider_Werte"] <- "-"
-    scaleInfo[i, "Quelle"] <- source
 
     # scales
     items <- single_inputForDescriptives[single_inputForDescriptives$type %in% c("item", "fake_item"), "varName"]
     scaleInfo[i, "Items_der_Skala"] <- paste(items, collapse = ",")
 
-    #browser()
     # imputations
     imputations <- single_inputForDescriptives[single_inputForDescriptives$imp, "varName"]
     scaleInfo[i, "Imputationen"] <- paste(imputations, collapse = ",")
@@ -77,12 +70,8 @@ createScaleInfo.data.frame <- function(inputForDescriptives){
 #'@export
 createScaleInfo.list <- function(inputForDescriptives){
   scaleInfo_list <- lapply(inputForDescriptives, function(x) {
-    single_scale_info <- createScaleInfo(x)
-    single_scale_info[, names(single_scale_info) != "Quelle"]
+    createScaleInfo(x)
   })
-
-  scaleInfo <- eatTools::do_call_rbind_withName(scaleInfo_list, colName = "Quelle")
-  scaleInfo[, c("varName", "Quelle", "Anzahl_valider_Werte",
-                   "Items_der_Skala", "Imputationen")]
+  scaleInfo_list
 }
 

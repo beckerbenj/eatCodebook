@@ -10,12 +10,9 @@ createScaleInfo(inputForDescriptives)
 \item{inputForDescriptives}{\code{inputForDescriptives} object as created by the \code{createInputForDescriptives} function}
 }
 \value{
-Returns a \code{data.frame} with the following information:
+Returns a \code{data.frame} or list of \code{data.frames} with the following information:
 \itemize{
  \item \code{varName} The name of the variable as it occurs in the data
- \item \code{Quelle} The name of the data set the variable belongs to.
- This is only meaningful, if \code{inputForDescriptives} is a list
- (meaning that the function runs for multiple data sets).
  \item \code{Anzahl_valider_Werte} For a scale, how many values have to be not NA on items for a
  non NA value on the scale?
  \item \code{Items_der_Skala} Which items or imputations belong to the scale?

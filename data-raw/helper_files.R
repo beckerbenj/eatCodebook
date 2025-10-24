@@ -23,6 +23,11 @@ saveRDS(clean_varinfo2, "tests/testthat/helper_varInfo_clean2.RDS")
 
 # Excel helper
 # -----------------------------------------------------------------------------------
+## scaleInfo
+scaleInfo_df <- createScaleInfo(clean_input)
+eatAnalysis::write_xlsx(scaleInfo_df, filePath = "tests/testthat/helper_scaleInfo.xlsx", row.names = FALSE)
+scaleInfo_list <- createScaleInfo(list(data1=clean_input, data2=clean_input))
+eatAnalysis::write_xlsx(scaleInfo_list, filePath = "tests/testthat/helper_scaleInfo2.xlsx", row.names = FALSE)
 ## missings
 missings <- data.frame(Var.name = c("v1", "v2"),
                        Wert = c(-99, 1),
