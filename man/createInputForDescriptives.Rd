@@ -119,7 +119,7 @@ Returns a \code{data.frame} with variable information with following columns
  \item \code{varLabel} The label of the variable as it occurs in the \code{GADSdat} label sheet
  \item \code{format} The variable format as displayed in the labels sheet of the \code{GADSdat} object
  \item \code{imp} Logical: Whether or not the variable is imputed
- \item \code{type} The type of the variable. Two possible entries, \code{variable} or \code{scale}
+ \item \code{type} The type of the variable. Three possible entries with following meanings: \code{variable} for single variables which do not belong to a scale. Variables may be imputed or not. \code{scale} for
  \item \code{scale} The scale level of the variable. Possible entries: \code{nominal}, \code{ordinal}, \code{numeric}. ID variables and character variables have missing entries in this column. Be cautious that 'ordinal' sometimes may be allocated erroneously. The resulting table should be exported to Excel for further checks.
  \item \code{group} If the variable is part of a scale with several items, a common entry in the group column indicates that these variables belong together
 }
@@ -133,7 +133,12 @@ See the details section for further information.
 The \code{eatCodebook} package aims to create a human-readable pdf codebook from a \code{GADSdat} data base object. The codebook
 contains information about the variables used in the study, including their descriptive properties. Which descriptive properties are reported
 in the codebook depends, among other things, on the scale level of the variables. For example, the mean and standard deviation are reported
-for metric variables and frequency distributions for categorical variables. For non-imputed variables, the proportion of missing values is
+for metric variables and frequency distributions for nominal variables. For ordinal variables whose categories are labeled numerically in
+ascending order, even though they represent ascending categories rather than a metric relationship, the means of the numerical categories
+and frequencies are returned. All three types (metric, nominal, and ordinal) can occur as individual variables or as scales. Scales consist
+of various individual variables that represent or operationalize a common construct. For a scale, both the individual variables that make
+up the scale and the scale value are described in the scale manual. Both individual variables and scales can be imputed or not imputed.
+For non-imputed variables, the proportion of missing values is
 also given, and for scale variables, the number of items that make up the scale and the internal consistency of the scale are given. The
 codebook is created in several steps. In the first step, the \code{createInputForDescriptives} function is used to generate an auxiliary
 object from the database that contains information on what type of descriptive information is to be reported for which variable. The object
