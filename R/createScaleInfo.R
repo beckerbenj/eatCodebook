@@ -77,13 +77,12 @@ createScaleInfo.data.frame <- function(inputForDescriptives){
 #'@export
 createScaleInfo.list <- function(inputForDescriptives){
   scaleInfo_list <- lapply(inputForDescriptives, function(x) {
-    createScaleInfo(x)
+    single_scale_info <- createScaleInfo(x)
+    single_scale_info[, names(single_scale_info) != "Quelle"]
   })
 
-  scaleInfo <- eatTools::do_call_rbind_withName(scaleInfo_list, colName = "Quelle2")[, c("varName", "Quelle2",
-                                                                                         "Anzahl_valider_Werte",
-                                                                                         "Items_der_Skala")]
-  names(scaleInfo)[2] <- "Quelle"
-  scaleInfo
+  scaleInfo <- eatTools::do_call_rbind_withName(scaleInfo_list, colName = "Quelle")
+  scaleInfo[, c("varName", "Quelle", "Anzahl_valider_Werte",
+                   "Items_der_Skala", "Imputationen")]
 }
 

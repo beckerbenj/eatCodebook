@@ -10,7 +10,8 @@ test_that("single scale", {
   expect_equal(nrow(out), 3)
   expect_equal(out$varName, c("skala1", "pv_pooled", "pv_kat_pooled"))
   expect_equal(out$Items_der_Skala[1], c("skala1_item1,skala1_item2,skala1_item3"))
-  expect_equal(out$Items_der_Skala[2], paste(paste0("pv_", 1:5), collapse = ","))
+  expect_equal(out$Items_der_Skala[2], "")
+  expect_equal(out$Imputationen[2], paste(paste0("pv_", 1:5), collapse = ","))
 })
 
 test_that("fake scale", {
@@ -30,6 +31,7 @@ test_that("no scales, only imputed", {
 test_that("with input as list", {
   l1 <- list(pisa = input_pisa, other = input_clean)
   out <- createScaleInfo(l1)
+  expect_equal(names(out), c("varName", "Quelle", "Anzahl_valider_Werte", "Items_der_Skala", "Imputationen"))
   expect_equal(nrow(out), 6)
   expect_equal(out$Quelle, c(rep("pisa", 3), rep("other", 3)))
 

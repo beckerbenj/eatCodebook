@@ -4,15 +4,19 @@ saveRDS(pisa_input, "tests/testthat/helper_inputForDescriptives_pisa.RDS")
 
 clean <- eatGADS::import_spss("tests/testthat/helper_clean.sav")
 clean_input <- createInputForDescriptives(clean, fakeItemExpr = "gibt es nicht")
+# Hotfix (see mail to SW):
+clean_input[clean_input$imp, "type"] <- "variable"
 clean_varinfo <- createVarInfo(clean, inputForDescriptives = clean_input)
 saveRDS(clean_input, "tests/testthat/helper_inputForDescriptives_clean.RDS")
 saveRDS(clean_varinfo, "tests/testthat/helper_varInfo_clean.RDS")
 
 clean2 <- eatGADS::import_spss("tests/testthat/helper_clean2.sav")
-clean2_input <- createInputForDescriptives(clean2)
-clean2_varinfo <- createVarInfo(clean2, inputForDescriptives = clean2_input)
-saveRDS(clean2_input, "tests/testthat/helper_inputForDescriptives_clean2.RDS")
-saveRDS(clean2_varinfo, "tests/testthat/helper_varInfo_clean2.RDS")
+clean_input2 <- createInputForDescriptives(clean2)
+# Hotfix (see mail to SW):
+clean_input2[clean_input2$imp, "type"] <- "variable"
+clean_varinfo2 <- createVarInfo(clean2, inputForDescriptives = clean_input2)
+saveRDS(clean_input2, "tests/testthat/helper_inputForDescriptives_clean2.RDS")
+saveRDS(clean_varinfo2, "tests/testthat/helper_varInfo_clean2.RDS")
 
 
 # usethis::use_data(DATASET, overwrite = TRUE)
