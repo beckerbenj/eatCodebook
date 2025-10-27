@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   full_workflow: full_workflow.html
   minimal_example: minimal_example.html
-last_built: 2025-10-24T13:22Z
+last_built: 2025-10-27T16:47Z
 urls:
   reference: https://beckerbenj.github.io/eatCodebook/reference
   article: https://beckerbenj.github.io/eatCodebook/articles

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eatCodebook</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Full Workflow</h1>
             
-            <h4 data-toc-skip class="date">2025-10-24</h4>
+            <h4 data-toc-skip class="date">2025-10-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/beckerbenj/eatCodebook/blob/main/vignettes/full_workflow.Rmd" class="external-link"><code>vignettes/full_workflow.Rmd</code></a></small>
       <div class="d-none name"><code>full_workflow.Rmd</code></div>
@@ -210,13 +210,13 @@ again with the function <code><a href="../reference/getInputForDescriptives.html
 <span><span class="va">showFunctions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculateDescriptives.html">calculateDescriptives</a></span><span class="op">(</span>GADSdat <span class="op">=</span> <span class="va">dat</span>, inputForDescriptives <span class="op">=</span> <span class="va">inputForDescriptives_edited</span>, showCallOnly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">showFunctions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>varName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">showFunctions</span><span class="op">)</span>, functionName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">showFunctions</span><span class="op">)</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">showFunctions</span></span>
-<span><span class="co">#&gt;           varName                 functionName</span></span>
-<span><span class="co">#&gt; 1       pv_pooled   kennwerte.gepoolt.metrisch</span></span>
-<span><span class="co">#&gt; 2    pvkat_pooled kennwerte.gepoolt.kategorial</span></span>
-<span><span class="co">#&gt; 3 skala_fake_item              kennwerte.skala</span></span>
-<span><span class="co">#&gt; 4          skala1              kennwerte.skala</span></span>
-<span><span class="co">#&gt; 5     varMetrisch           kennwerte.metrisch</span></span>
-<span><span class="co">#&gt; 6      varOrdinal            kennwerte.ordinal</span></span>
+<span><span class="co">#&gt;           varName               functionName</span></span>
+<span><span class="co">#&gt; 1       pv_pooled kennwerte.gepoolt.metrisch</span></span>
+<span><span class="co">#&gt; 2    pvkat_pooled  kennwerte.gepoolt.ordinal</span></span>
+<span><span class="co">#&gt; 3 skala_fake_item            kennwerte.skala</span></span>
+<span><span class="co">#&gt; 4          skala1            kennwerte.skala</span></span>
+<span><span class="co">#&gt; 5     varMetrisch         kennwerte.metrisch</span></span>
+<span><span class="co">#&gt; 6      varOrdinal          kennwerte.ordinal</span></span>
 <span><span class="co"># acutally calculate descriptives</span></span>
 <span><span class="va">descStatistics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculateDescriptives.html">calculateDescriptives</a></span><span class="op">(</span>GADSdat <span class="op">=</span> <span class="va">dat</span>, inputForDescriptives <span class="op">=</span> <span class="va">inputForDescriptives_edited</span>, showCallOnly <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: `report()` was deprecated in eatRep 0.15.0.</span></span>
@@ -496,8 +496,8 @@ name the upper chapters.</p>
 <span><span class="co">#&gt;                                      Items_der_Skala</span></span>
 <span><span class="co">#&gt; 1             skala1_item1,skala1_item2,skala1_item3</span></span>
 <span><span class="co">#&gt; 2 skala_fake_item1,skala_fake_item2,skala_fake_item3</span></span>
-<span><span class="co">#&gt; 3                           pv_1,pv_2,pv_3,pv_4,pv_5</span></span>
-<span><span class="co">#&gt; 4            pvkat_1,pvkat_2,pvkat_3,pvkat_4,pvkat_5</span></span>
+<span><span class="co">#&gt; 3                                                   </span></span>
+<span><span class="co">#&gt; 4                                                   </span></span>
 <span><span class="co">#&gt;                              Imputationen</span></span>
 <span><span class="co">#&gt; 1                                        </span></span>
 <span><span class="co">#&gt; 2                                        </span></span>

@@ -11,7 +11,7 @@ See the details section for further information."><meta property="og:image" cont
 
     <a class="navbar-brand me-2" href="../index.html">eatCodebook</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@ See the details section for further information.</p>
 <span>  idExpr <span class="op">=</span> <span class="st">"^ID"</span>,</span>
 <span>  impExpr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"IMPUTATION\\s+{0,1}[[:digit:]]{1,2}"</span>, <span class="st">"PV\\s+{0,1}[[:digit:]]{1,2}"</span><span class="op">)</span>,</span>
 <span>  scaleExpr <span class="op">=</span> <span class="st">"^Skala"</span>,</span>
-<span>  itemExpr <span class="op">=</span> <span class="st">"plausible|indikator"</span>,</span>
+<span>  itemExpr <span class="op">=</span> <span class="st">"indikator"</span>,</span>
 <span>  fakeItemExpr <span class="op">=</span> <span class="st">"fake"</span>,</span>
 <span>  nwExpr <span class="op">=</span> <span class="st">"IDinClass"</span>,</span>
 <span>  varNameSeparatorImp <span class="op">=</span> <span class="st">"_"</span>,</span>
@@ -199,8 +199,8 @@ defines whether the last occurrence should be used for splitting</p></dd>
 <li><p><code>varLabel</code> The label of the variable as it occurs in the <code>GADSdat</code> label sheet</p></li>
 <li><p><code>format</code> The variable format as displayed in the labels sheet of the <code>GADSdat</code> object</p></li>
 <li><p><code>imp</code> Logical: Whether or not the variable is imputed</p></li>
-<li><p><code>type</code> The type of the variable. Three possible entries with following meanings: <code>variable</code> for single variables which do not belong to a scale. Variables may be imputed or not. <code>scale</code> for</p></li>
-<li><p><code>scale</code> The scale level of the variable. Possible entries: <code>nominal</code>, <code>ordinal</code>, <code>numeric</code>. ID variables and character variables have missing entries in this column. Be cautious that 'ordinal' sometimes may be allocated erroneously. The resulting table should be exported to Excel for further checks.</p></li>
+<li><p><code>type</code> The type of the variable. Four possible entries with following meanings: <code>variable</code> for single variables which do not belong to a scale. Variables may be imputed or not. <code>item</code> for individual items that define or operationalize a common scale. <code>scale</code> for scale values formed by aggregating (averaging or summing) different items. <code>fake_item</code> for individual items that may define or operationalize a common scale, whereby the scale value is not included as an additional variable in the data set.</p></li>
+<li><p><code>scale</code> The scale level of the variable. Possible entries: <code>categorical</code>, <code>ordinal</code>, <code>numeric</code>. ID variables and character variables have missing entries in this column. Be cautious that 'ordinal' sometimes may be allocated erroneously. The resulting table should be exported to Excel for further checks. For categorical variables, only freqency tables are given in the codebook. For numeric variables, mean and standard deviation are given in the codebook. For ordinal variables, frequency tables and mean and standard deviation are given in teh codebook.</p></li>
 <li><p><code>group</code> If the variable is part of a scale with several items, a common entry in the group column indicates that these variables belong together</p></li>
 </ul></div>
     <div class="section level2">
