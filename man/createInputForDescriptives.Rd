@@ -9,7 +9,7 @@ createInputForDescriptives(
   idExpr = "^ID",
   impExpr = c("IMPUTATION\\\\s+{0,1}[[:digit:]]{1,2}", "PV\\\\s+{0,1}[[:digit:]]{1,2}"),
   scaleExpr = "^Skala",
-  itemExpr = "plausible|indikator",
+  itemExpr = "indikator",
   fakeItemExpr = "fake",
   nwExpr = "IDinClass",
   varNameSeparatorImp = "_",
@@ -119,8 +119,8 @@ Returns a \code{data.frame} with variable information with following columns
  \item \code{varLabel} The label of the variable as it occurs in the \code{GADSdat} label sheet
  \item \code{format} The variable format as displayed in the labels sheet of the \code{GADSdat} object
  \item \code{imp} Logical: Whether or not the variable is imputed
- \item \code{type} The type of the variable. Three possible entries with following meanings: \code{variable} for single variables which do not belong to a scale. Variables may be imputed or not. \code{scale} for
- \item \code{scale} The scale level of the variable. Possible entries: \code{nominal}, \code{ordinal}, \code{numeric}. ID variables and character variables have missing entries in this column. Be cautious that 'ordinal' sometimes may be allocated erroneously. The resulting table should be exported to Excel for further checks.
+ \item \code{type} The type of the variable. Four possible entries with following meanings: \code{variable} for single variables which do not belong to a scale. Variables may be imputed or not. \code{item} for individual items that define or operationalize a common scale. \code{scale} for scale values formed by aggregating (averaging or summing) different items. \code{fake_item} for individual items that may define or operationalize a common scale, whereby the scale value is not included as an additional variable in the data set.
+ \item \code{scale} The scale level of the variable. Possible entries: \code{categorical}, \code{ordinal}, \code{numeric}. ID variables and character variables have missing entries in this column. Be cautious that 'ordinal' sometimes may be allocated erroneously. The resulting table should be exported to Excel for further checks. For categorical variables, only freqency tables are given in the codebook. For numeric variables, mean and standard deviation are given in the codebook. For ordinal variables, frequency tables and mean and standard deviation are given in teh codebook.
  \item \code{group} If the variable is part of a scale with several items, a common entry in the group column indicates that these variables belong together
 }
 }

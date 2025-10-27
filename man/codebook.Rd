@@ -28,7 +28,7 @@ codebook(
 
 \item{struc}{\code{data.frame} containing the structure of the codebook, imported via \code{\link{getStructure}}.}
 
-\item{scaleInfo}{\code{data.frame} containing the information on scales, imported via \code{\link{getScaleInfo}}.}
+\item{scaleInfo}{\code{data.frame} or list of \code{data.frames} containing the information on scales, imported via \code{\link{getScaleInfo}}.}
 
 \item{register}{\code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.
 If \code{NULL}, now register is created. If there are registers for some data sets but not all, the missing registers are simply omitted.}
