@@ -45,7 +45,7 @@ test_that("normal codebook", {
                            lastpage = ""))
 
   expect_equal(latex_skript[1], "\\documentclass[paper=a4, hidelinks, twoside=false, numbers=noenddot]{scrbook}")
-  expect_equal(latex_skript[574], "\\end{document}")
+  expect_equal(latex_skript[575], "\\end{document}")
 })
 
 test_that("codebook without register", {
@@ -56,5 +56,5 @@ test_that("codebook without register", {
                                             lastpage = ""))
 
   expect_equal(latex_skript[1], "\\documentclass[paper=a4, hidelinks, twoside=false, numbers=noenddot]{scrbook}")
-  expect_equal(latex_skript[537], "\\end{document}")
+  expect_equal(latex_skript[538], "\\end{document}")
 })
