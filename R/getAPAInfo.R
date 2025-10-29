@@ -8,6 +8,8 @@
 #'
 #'@param filePath Path to the Excel file containing a sheet with the reference list. There should be exactly one reference list with two columns `Kurzangabe` (containing in-text citations) and `Langangabe` (containing the references).
 #'
+#'@param sheet Number of the sheet in the Excel file of the reference list. The default is `sheet = 2`, as it is the most common case for Bildungstrend studies.
+#'
 #'@return A \code{data.frame} with in-text citations and APA standard references. The references in the column `Langangabe` contain LaTeX syntax for italic sequences and URLs.
 #'
 #'@examples
@@ -17,28 +19,20 @@
 #'
 #'@export
 
-getAPAInfo <- function(filePath){
+getAPAInfo <- function(filePath, sheet = 2){
   # checks
   checkmate::assert_character(filePath, len = 1)
+  checkmate::assert_numeric(sheet, len = 1)
 
   # identify proper Excel sheet -------------------------------------------------
-  ref_table <- getExcel(filePath)
-
-  if(is_APAInfo(ref_table)){          # if imported Excel contains one sheet, `ref_table` is a data frame.
-    # import format information of italic input from the cells
-    ref_table_format <- tidyxl::xlsx_cells(filePath, include_blank_cells = FALSE)
-  } else if (is.list(ref_table)){                           # if it has multiple sheets, identify the (first) sheet that has the two columns `Kurzangabe` and `Langangabe`
-    for(i in 1:length(ref_table)){
-      if(is_APAInfo(ref_table[[i]])){
-        # import format information of italic input from the cells
-        ref_table_format <- tidyxl::xlsx_cells(filePath, include_blank_cells = FALSE,
-                                                sheets = i)
-        # save the proper reference sheet in `ref_table` (as a data frame)
-        ref_table <- ref_table[[i]]
-      }
-    }
-  }
+  ref_table <- getExcel(filePath) # has no sheet argument
+  ref_table <- ref_table[[sheet]]
   check_APAInfo(ref_table)
+
+  # import format information of italic input from the cells
+  ref_table_format <- tidyxl::xlsx_cells(path = filePath, sheets = sheet,
+                                         include_blank_cells = FALSE)
+
 
   # select objects with proper format: from col 2 and without "Langangabe"
   format <- ref_table_format[ref_table_format$col == 2 & !ref_table_format$character == "Langangabe",]
