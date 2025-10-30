@@ -462,7 +462,7 @@ layout.gepoolt.metrisch <- function(name , kennwerte.var = NULL, varue.info, var
   # Kennwerte
   werte <- kennwerte.var
 
-  # Items der gepoolten Variable
+  # Imputationen der gepoolten Variable
   imputations <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Imputationen' ], ',', fixed = TRUE ) ) )
 
   # Kennwerte-names: bekommen automatisch den namen der Variable rangepastet
@@ -496,6 +496,64 @@ layout.gepoolt.metrisch <- function(name , kennwerte.var = NULL, varue.info, var
 
 }
 
+layout.gepoolt.ordinal <- function(name , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
+  # INPUT
+  #	name: Character, Name der Variable, wie sie in der Varue erscheint
+  #	kennwerte.var: Character-Vektor, gelabelter Vektor mit Kennwerten im Character-Format
+  #	varue.info: data.frame, Uebersicht der Variableninformationen
+  #	varue.missings: data.frame, Variablenuebersicht der Werteinformationen
+  #	Gesamtdatensatz: data.frame, Datensatz des Fragebogens
+  #	skalen.info: data.frame, Uebersicht der Skaleninformationen
+  
+  # OUTPUT:
+  #	skript: Character-Vektor mit Skript, die fuer die Variable den Tabellenblock erstellt
+  #			Hier: Beschreibungstabelle, Haeufigkeitstabelle mit gepoolten Kennwerten und Zuordnungstabelle (s.o.)
+  
+  
+  # Hinweis:	Die Variablen, auf Grundlage derer die Kennwerte gepoolt werden, werden im Skalenhandbuch nicht extra berichtet (wie bei Skalen).
+  #			Daher werden Anmerkungen, Instruktionen etc. zu diesen Variablen bei der gepoolten Variablen eingefuegt.
+  
+  
+  #### Vorbereitung ####
+  
+  # Reduzierte Varue der Variableninformationen
+  varue.info.aktuell <- varue.info[varue.info$Var.Name %in% name,]
+  varue.missings.aktuell <-  varue.missings[varue.missings$Var.name %in% name, ]
+  
+  # Kennwerte
+  werte <- kennwerte.var
+  
+  # Imputationen der gepoolten Variable
+  imputations <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Imputationen' ], ',', fixed = TRUE ) ) )
+  
+  # Kennwerte-names: bekommen automatisch den namen der Variable rangepastet
+  names(werte) <- sub( paste0(name,'\\.(.*)$') , '\\1' , names(werte) )
+  
+  # Sonderzeichen fuer Latex
+  nameSH <- gsub( '_' , '\\_' , name , fixed = TRUE)
+  
+  if( Latex.length( nameSH , FALSE) > Latex.length('Variablenname' , TRUE) ){
+    setsizefst <- paste0('\\settowidth{\\sizefst}{',nameSH,'}')
+  } else {
+    setsizefst <- '\\settowidth{\\sizefst}{\\textbf{Variablenname}}'
+  }
+  
+  anm.tab.ordinal <- paste0('\\anmerkungen{4}{$N =$ Fallzahl; $M =$ Mittelwert; $SD =$ Standardabweichung.}')
+  
+  #### Skript schreiben ####
+  skript.descriptive <- table.descriptive(name=name, varue.info=varue.info , varue.missings=varue.missings, Gesamtdatensatz=Gesamtdatensatz , werte=werte , var.typ='Numerisch' , skala.items=NULL , imputations=imputations , gepoolt=TRUE)
+  skript.means <- table.means(name=name , werte=werte, setsizefst=setsizefst , cols=data.frame(c('N_{valid}','N.valid') , c('M','mean.valid') , c('SD','sd.valid') , stringsAsFactors=FALSE ) , anm.tab=anm.tab.ordinal)
+  skript.frequencies <- table.frequencies(name=name , varue.missings.aktuell=varue.missings.aktuell , werte=werte)
+  
+  skript <- c(skript.descriptive,
+              skript.means,
+              skript.frequencies,
+              '\\clearpage' )
+  
+  #### Output ####
+  return( skript )
+}
+
 layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, varue.info, varue.missings, Gesamtdatensatz, skalen.info) {
   # INPUT
   #	name: Character, Name der Variable, wie sie in der Varue erscheint
@@ -523,8 +581,8 @@ layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, varue.info, v
   # Kennwerte
   werte <- kennwerte.var
 
-  # Items der gepoolten Variable
-  imputations <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Items_der_Skala' ], ',', fixed = TRUE ) ) )
+  # Imputationen der gepoolten Variable
+  imputations <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Imputationen' ], ',', fixed = TRUE ) ) )
 
   # Kennwerte-names: bekommen automatisch den namen der Variable rangepastet
   names(werte) <- sub( paste0(name,'\\.(.*)$') , '\\1' , names(werte) )
@@ -543,5 +601,3 @@ layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, varue.info, v
 
 
 
-  # Imputationen der gepoolten Variable
-  imputations <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Imputationen' ], ',', fixed = TRUE ) ) )

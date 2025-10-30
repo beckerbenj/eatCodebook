@@ -35,6 +35,8 @@ descr2$skala1[[2]] <- as.data.frame(descr2$skala1[[2]])
 
 
 test_that("normal codebook", {
+  varInfo_final2[varInfo_final2$Var.Name== "pvkat_pooled", "Layout"] <- 11
+  
   suppressMessages(latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
                            scaleInfo = scaleInfo_final, register = register_final, dat = eatGADS::extractData(gd),
                            Kennwertedatensatz = descr2, chapters = chapters_final,
@@ -42,7 +44,8 @@ test_that("normal codebook", {
                            lastpage = ""))
 
   expect_equal(latex_skript[1], "\\documentclass[paper=a4, hidelinks, twoside=false, numbers=noenddot]{scrbook}")
-  expect_equal(latex_skript[603], "\\end{document}")
+  expect_equal(latex_skript[480], "Anzahl der Imputationen: & 5\\\\" )
+  expect_equal(latex_skript[611], "\\end{document}")
 })
 
 test_that("codebook without register", {
