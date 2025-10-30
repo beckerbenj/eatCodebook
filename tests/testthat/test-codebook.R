@@ -1,5 +1,4 @@
 
-
 file <- system.file("extdata", "example1_clean.sav", package = "eatCodebook")
 gd   <- eatGADS::import_spss(file)
 

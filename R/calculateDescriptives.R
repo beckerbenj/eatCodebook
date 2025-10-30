@@ -120,17 +120,25 @@ varStats <- function(GADSdat, sub.inputForDescriptives, verbose, showCallOnly = 
 
   if(nrow(sub.inputForDescriptives)>1) {
      if ( isTRUE(sub.inputForDescriptives[1,"imp"])) {
-         if ( sub.inputForDescriptives[1,"scale"] == "numeric") {
-             if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.metrisch")}
-             if ( verbose) {cat("Use function 'kennwerte.gepoolt.metrisch'.\n")}
-             stats <- kennwerte.gepoolt.metrisch(datWide=GADSdat[["dat"]],
-                                                 imputedVariableCols = sub.inputForDescriptives[,"varName"])
-         }  else  {
-             if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.ordinal")}
-             if ( verbose) {cat("Use function 'kennwerte.gepoolt.ordinal'.\n")}
-             stats <- kennwerte.gepoolt.ordinal(datWide=GADSdat[["dat"]], imputedVariableCols = sub.inputForDescriptives[,"varName"],
-                                                   verbose=verbose, value_table = value_table)
+         if ( sub.inputForDescriptives[1,"scale"] == "nominal") {
+             if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.kategorial")}
+             if ( verbose) {cat("Use function 'kennwerte.gepoolt.kategorial'.\n")}
+             stats <- kennwerte.gepoolt.kategorial(datWide=GADSdat[["dat"]],
+                                                 imputedVariableCols = sub.inputForDescriptives[,"varName"],
+                                                 verbose=verbose, value_table = value_table)
          }
+       if ( sub.inputForDescriptives[1,"scale"] == "numeric") {
+         if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.metrisch")}
+         if ( verbose) {cat("Use function 'kennwerte.gepoolt.metrisch'.\n")}
+         stats <- kennwerte.gepoolt.metrisch(datWide=GADSdat[["dat"]],
+                                             imputedVariableCols = sub.inputForDescriptives[,"varName"])
+       }
+       if ( sub.inputForDescriptives[1,"scale"] == "ordinal") {
+         if ( isTRUE(showCallOnly) ) {return("kennwerte.gepoolt.ordinal")}
+         if ( verbose) {cat("Use function 'kennwerte.gepoolt.ordinal'.\n")}
+         stats <- kennwerte.gepoolt.ordinal(datWide=GADSdat[["dat"]], imputedVariableCols = sub.inputForDescriptives[,"varName"],
+                                            verbose=verbose, value_table = value_table)
+       }
      }  else  {
 ### differenzieren, ob es skala (es gibt eine separate skalenvariale) oder fake.skala (es gibt keine separate skalenvariale) ist
 #         if ( "scale" %in% sub.inputForDescriptives[,"type"] ) {

@@ -9,8 +9,6 @@ str(gd)
 
 ## Descriptives
 inputForDescr <- createInputForDescriptives(gd)
-# Hotfix (see mail to SW):
-inputForDescr[inputForDescr$imp, "type"] <- "variable"
 descr  <- calculateDescriptives(gd, inputForDescr)
 
 ## Missings/Line Breaks
@@ -25,9 +23,9 @@ varInfo <- createVarInfo(gd, inputForDescriptives = inputForDescr)
 varInfo[4, "QuelleSH"] <- "Mueller (2019)"
 varInfo[c(3, 4, 9), "Hintergrundmodell"] <- "ja"
 varInfo[c(1, 2), "Titel"] <- c("Schueler-ID", "School-ID")
-varInfo[, "Unterteilung.im.Skalenhandbuch"] <- c(rep("BG", 5), rep("Scale", 4), rep("PVs", 12))
-varInfo[, "Gliederung"] <- c(rep("1.1", 5), rep("1.2", 4), rep("2.1", 12))
-varInfo[c(10, 16), "Titel"] <- c("Plausible Value", "categorical plausible value")
+varInfo[, "Unterteilung.im.Skalenhandbuch"] <- c(rep("BG", 5), rep("Scale", 4), rep("PVs", 18))
+varInfo[, "Gliederung"] <- c(rep("1.1", 5), rep("1.2", 4), rep("2.1", 18))
+varInfo[c(10, 16, 22), "Titel"] <- c("Plausible Value", "categorical plausible value", "nominal plausible value")
 varInfo[c(6), "rekodiert"] <- "ja"
 #eatAnalysis::write_xlsx(varInfo, "inst/extdata/example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("inst/extdata/example_varInfo.xlsx")

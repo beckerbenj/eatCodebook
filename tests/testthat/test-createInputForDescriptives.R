@@ -1,11 +1,6 @@
 
-#input <- readRDS("tests/testthat/helper_inputForDescriptives_clean.RDS")
-#input <- readRDS("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/tests/testthat/helper_inputForDescriptives_clean.RDS")
-input <- readRDS("helper_inputForDescriptives_clean.RDS")
-
-#dfSAV <- eatGADS::import_spss("tests/testthat/helper_spss.sav")
-#dfSAV <- eatGADS::import_spss("c:/Diskdrv/Winword/Psycho/IQB/Repositories/eatCodebook/tests/testthat/helper_spss.sav")
-dfSAV <- eatGADS::import_spss("helper_spss.sav")
+input <- readRDS(test_path("helper_inputForDescriptives_clean.RDS"))
+dfSAV <- eatGADS::import_spss(test_path("helper_spss.sav"))
 
 test_that("with pisa data", {
   messages <- capture_messages(out <- createInputForDescriptives(eatGADS::pisa, impExpr = "Plausible Value", nCatsForOrdinal = c(2:7)))
@@ -66,3 +61,4 @@ test_that("checkItemScaleConsistency", {
   inputForDescr2[7,"scale"] <- NA
   expect_error(out <- capture_output(checkItemScaleConsistency(inputForDescr2)))
 })
+
