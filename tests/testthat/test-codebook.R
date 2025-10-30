@@ -12,8 +12,6 @@ varInfo_final <- getVarInfo(system.file("extdata", "example_varInfo.xlsx", packa
 varInfo_final2 <- inferLayout(varInfo_final, GADSdat = gd, inputForDescriptives = inputForDescr)
 struc_final <- getStructure(system.file("extdata", "example_struc.xlsx", package = "eatCodebook"))
 scaleInfo_final <- getScaleInfo(system.file("extdata", "example_scaleInfo.xlsx", package = "eatCodebook"))
-# workaround, should be done automatically, but currently problem with non list inputs for createScaleInfo
-scaleInfo_final$Quelle <- "dat"
 
 register_final <- getRegister(system.file("extdata", "example_register.xlsx", package = "eatCodebook"))
 litInfo_final <- getLitInfo(system.file("extdata", "example_litInfo.xlsx", package = "eatCodebook"))

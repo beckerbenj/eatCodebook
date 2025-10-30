@@ -348,4 +348,12 @@ kennwerte.gepoolt.kategorial <- function( datWide, imputedVariableCols, value_ta
   return( ret.var )
 }
 
+kennwerte.gepoolt.ordinal <- function (datWide, imputedVariableCols, value_table, verbose ) {
+   ret1 <- kennwerte.gepoolt.kategorial( datWide=datWide, imputedVariableCols=imputedVariableCols, value_table=value_table, verbose=verbose )
+   ret2 <- kennwerte.gepoolt.metrisch( datWide=datWide, imputedVariableCols=imputedVariableCols )
+   weg  <- intersect(names(ret1), names(ret2))
+   if(length(weg)>0) {ret1 <- ret1[-eatTools::whereAre(weg, names(ret1), verbose=FALSE)]}
+   return(c(ret1, ret2))}
+   
+   
 

@@ -240,15 +240,11 @@ head(scaleInfo)
 ```{r write scaleInfo, eval = FALSE}
 writeExcel(scaleInfo, "example_scaleInfo.xlsx", row.names = FALSE)
 scaleInfo_final <- getScaleInfo("example_scaleInfo.xlsx")
-# workaround, should be done automatically, but currently problem with non list inputs for createScaleInfo
-scaleInfo_final$Quelle <- "dat"
 ```
 
 ```{r load scaleInfo, eval = TRUE, echo = FALSE}
 scaleInfo_file <- system.file("extdata", "example_scaleInfo.xlsx", package = "eatCodebook")
 scaleInfo_final <- getScaleInfo(scaleInfo_file)
-# workaround, should be done automatically, but currently problem with non list inputs for createScaleInfo
-scaleInfo_final$Quelle <- "dat"
 head(scaleInfo_final)
 ```
 

@@ -44,8 +44,6 @@ struc_final <- getStructure("inst/extdata/example_struc.xlsx")
 scaleInfo <- createScaleInfo(inputForDescr)
 #eatAnalysis::write_xlsx(scaleInfo, "inst/extdata/example_scaleInfo.xlsx", row.names = FALSE)
 scaleInfo_final <- getScaleInfo("inst/extdata/example_scaleInfo.xlsx")
-# workaround, should be done automatically, but currently problem with non list inputs for createScaleInfo
-scaleInfo_final$Quelle <- "dat"
 
 ## Register
 register <- createRegister(inputForDescr, keywordList = c("kw1", "kw2"))

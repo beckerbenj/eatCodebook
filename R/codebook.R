@@ -8,7 +8,7 @@
 #'@param varInfo \code{data.frame} or list of \code{data.frames} containing the variable information, imported via \code{\link{getVarInfo}}.
 #'@param missings \code{data.frame} or list of \code{data.frames} containing the missing information, imported via \code{\link{getMissings}}.
 #'@param struc \code{data.frame} containing the structure of the codebook, imported via \code{\link{getStructure}}.
-#'@param scaleInfo \code{data.frame} containing the information on scales, imported via \code{\link{getScaleInfo}}.
+#'@param scaleInfo \code{data.frame} or list of \code{data.frames} containing the information on scales, imported via \code{\link{getScaleInfo}}.
 #'@param register \code{data.frame} containing the information on the register, imported via \code{\link{getRegister}}.
 #'If \code{NULL}, now register is created. If there are registers for some data sets but not all, the missing registers are simply omitted.
 #'@param dat \code{data.frame} or list of \code{data.frames} containing the data sets, imported via \code{\link[eatGADS]{import_spss}}.
@@ -38,7 +38,8 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register = NULL, dat, 
     dat <- list(dat)
     Kennwertedatensatz <- list(Kennwertedatensatz)
     struc <- list(struc)
-    names(varInfo) <- names(missings) <- names(dat) <- names(Kennwertedatensatz) <- names(struc) <- chapters[["dataName"]]
+    scaleInfo <- list(scaleInfo)
+    names(varInfo) <- names(missings) <- names(dat) <- names(Kennwertedatensatz) <- names(struc) <- names(scaleInfo) <- chapters[["dataName"]]
   }
 
   # input validation
@@ -121,7 +122,7 @@ codebook <- function(varInfo, missings, struc, scaleInfo, register = NULL, dat, 
                              varue.info = varInfo[[d]],
                              varue.missings=missings[[d]],
                              Gesamtdatensatz=dat[[d]],
-                             skalen.info=scaleInfo[ scaleInfo$Quelle %in% d,],
+                             skalen.info=scaleInfo[[d]],
                              varue.gliederung=struc[[d]],
                              double.vars=double.vars,
                              makeCounter=make.reg[d],

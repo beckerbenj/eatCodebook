@@ -16,7 +16,7 @@ test_that("descriptives scale", {
   expect_equal(dim(vari), c(22,7))                                            ### data.frame mit 22 Zeilen, 7 Spalten
   tab  <- table(vari[,"type"])
   expect_equal(names(tab), c("item", "scale", "variable"))                    ### drei eintraege sollen vorkommen
-  expect_equal(as.vector(tab), c(13,1,8))                                     ### scale nur einmal, variable 8-mal, item 13-mal
+  expect_equal(as.vector(tab), c(3,1,18))                                     ### scale nur einmal, variable 18-mal, item 3-mal
   vari[which(vari[,"varName"] == "skalenwert_fake"),"type"] <- "scale"        ### ein eintrag in der varinfo muss jetzt haendisch geaendert werden (das geschieht spaeter fuer das
 
   vari[vari$varName %in% paste0("pv_kat", 1:5), "group"] <- "pv_kat"
