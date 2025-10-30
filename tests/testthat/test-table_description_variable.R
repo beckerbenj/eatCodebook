@@ -65,7 +65,7 @@ test_that("simple description for pooled categorical variable", {
   expect_equal(out[2], "Variablenname:&pvkat\\_pooled\\\\")
   expect_equal(out[3], "Label:&NA\\\\")
   expect_equal(out[4], "Anzahl der Imputationen: & 5\\\\")
-  expect_equal(out[5], "Kategorien:& 1~$=$~\\textit{Kompetenzstufe 1}; 2~$=$~\\textit{Kompetenzstufe 2}; 3~$=$~\\textit{Kompetenzstufe 3}; 4~$=$~\\textit{Kompetenzstufe 4}; 5~$=$~\\textit{Kompetenzstufe 5}\\\\")
+  expect_equal(out[5], "Kategorien:& 1~$=$~\\textit{Kompetenzstufe 1}; 2~$=$~\\textit{Kompetenzstufe 2}; 3~$=$~\\textit{Kompetenzstufe 3}; 4~$=$~\\textit{Kompetenzstufe 4}; 5~$=$~\\textit{Kompetenzstufe 5}; 6~$=$~\\textit{Kompetenzstufe 6}\\\\")
   expect_equal(out[6], "Fehlende Werte:& .~$=$~\\textit{kein Dateneintrag}\\\\")
   expect_equal(out[7], "\\end{tabnormallong}")
 })
