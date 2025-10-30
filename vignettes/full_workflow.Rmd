@@ -148,7 +148,7 @@ miss_final <- getMissings("example_miss.xlsx")
 ```
 
 ```{r load missings, eval = TRUE, echo = FALSE}
-miss_file <- system.file("extdata", "example_miss.xlsx", package = "eatCodebook")
+miss_file <- system.file("extdata", "example1b_miss.xlsx", package = "eatCodebook")
 miss_final <- getMissings(miss_file)
 head(miss_final)
 ```
@@ -204,7 +204,7 @@ varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, inputForDescriptives
 ```
 
 ```{r load varInfo, eval = TRUE, echo = FALSE}
-varInfo_file <- system.file("extdata", "example_varInfo.xlsx", package = "eatCodebook")
+varInfo_file <- system.file("extdata", "example1b_varInfo.xlsx", package = "eatCodebook")
 varInfo_final <- getVarInfo(varInfo_file)
 varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, inputForDescriptives = inputForDescriptives_edited)
 head(varInfo_final)
@@ -224,7 +224,7 @@ struc_final <- getStructure("example_struc.xlsx")
 ```
 
 ```{r load struc, eval = TRUE, echo = FALSE}
-struc_file <- system.file("extdata", "example_struc.xlsx", package = "eatCodebook")
+struc_file <- system.file("extdata", "example1b_struc.xlsx", package = "eatCodebook")
 struc_final <- getStructure(struc_file)
 head(struc_final)
 ```
@@ -243,7 +243,7 @@ scaleInfo_final <- getScaleInfo("example_scaleInfo.xlsx")
 ```
 
 ```{r load scaleInfo, eval = TRUE, echo = FALSE}
-scaleInfo_file <- system.file("extdata", "example_scaleInfo.xlsx", package = "eatCodebook")
+scaleInfo_file <- system.file("extdata", "example1b_scaleInfo.xlsx", package = "eatCodebook")
 scaleInfo_final <- getScaleInfo(scaleInfo_file)
 head(scaleInfo_final)
 ```
