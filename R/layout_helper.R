@@ -543,3 +543,5 @@ layout.gepoolt.kategorial <- function(name , kennwerte.var = NULL, varue.info, v
 
 
 
+  # Imputationen der gepoolten Variable
+  imputations <- gsub( '\\s', '', unlist( strsplit( skalen.info[ tolower( skalen.info$varName ) %in% tolower( name ), 'Imputationen' ], ',', fixed = TRUE ) ) )
