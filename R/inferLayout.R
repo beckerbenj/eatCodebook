@@ -53,7 +53,8 @@ inferLayout.data.frame <- function(varInfo, GADSdat, inputForDescriptives) {
         next
       }
       if(input_scale == "numeric") varInfo[i, "Layout"] <- 6 ## pooled metric
-      if(input_scale %in% c("nominal", "ordinal")) varInfo[i, "Layout"] <- 7 ## pooled categorical
+      if(input_scale == "nominal") varInfo[i, "Layout"] <- 7 ## pooled categorical
+      if(input_scale == "ordinal") varInfo[i, "Layout"] <- 11 ## pooled ordinal
       next
     }
     if(nam %in% only_sh_names && input_imp && input_scale == "nominal") {

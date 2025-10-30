@@ -45,7 +45,7 @@ test_that("normal codebook", {
 
   expect_equal(latex_skript[1], "\\documentclass[paper=a4, hidelinks, twoside=false, numbers=noenddot]{scrbook}")
   expect_equal(latex_skript[480], "Anzahl der Imputationen: & 5\\\\" )
-  expect_equal(latex_skript[611], "\\end{document}")
+  expect_equal(latex_skript[619], "\\end{document}")
 })
 
 test_that("codebook without register", {
@@ -56,5 +56,5 @@ test_that("codebook without register", {
                                             lastpage = ""))
 
   expect_equal(latex_skript[1], "\\documentclass[paper=a4, hidelinks, twoside=false, numbers=noenddot]{scrbook}")
-  expect_equal(latex_skript[563], "\\end{document}")
+  expect_equal(latex_skript[571], "\\end{document}")
 })
