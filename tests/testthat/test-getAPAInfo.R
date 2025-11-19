@@ -2,7 +2,7 @@
 ### test if proper sheet is selected (BT examples)
 
 test_that("Import Excel with one sheet, select proper sheet", {
-  references <- getAPAInfo("helper_getAPAInfo_1sheet.xlsx")
+  references <- getAPAInfo("helper_getAPAInfo_1sheet.xlsx", sheet = 1)
 
   expect_true(is.data.frame(references))
   expect_true(identical(names(references), c("Kurzangabe", "Langangabe")))
@@ -18,13 +18,33 @@ test_that("Import Excel with two sheets, select proper sheet", {
 ### tests for improper Excel files
 
 test_that("Import Excel without reference sheet", {
-  expect_error(references <- getAPAInfo("helper_getAPAInfo_error1.xlsx"))
+  expect_error(references <- getAPAInfo("helper_getAPAInfo_error1.xlsx", sheet = 1))
+  expect_error(references <- getAPAInfo("helper_getAPAInfo_error1.xlsx", sheet = 2))
 })
 
 test_that("Import Excel with two reference sheets", {
-  # file with at least 3 sheets, two reference sheets
-  expect_error(references <- getAPAInfo("helper_getAPAInfo_error2.xlsx"))
-  # file with just two reference sheets
+  ## file with at least 3 sheets, two reference sheets
+  # reference sheet
+  references <- getAPAInfo("helper_getAPAInfo_error2.xlsx", sheet = 2)
+  expect_true(is.data.frame(references))
+  expect_true(identical(names(references), c("Kurzangabe", "Langangabe")))
+  # reference sheet
+  references2 <- getAPAInfo("helper_getAPAInfo_error2.xlsx", sheet = 3)
+  expect_true(is.data.frame(references2))
+  expect_true(identical(names(references2), c("Kurzangabe", "Langangabe")))
+  # no reference sheet
+  expect_error(references3 <- getAPAInfo("helper_getAPAInfo_error2.xlsx", sheet = 1))
+
+  ## file with just two reference sheets
+  # reference sheet
+  references4 <- getAPAInfo("helper_getAPAInfo_error3.xlsx", sheet = 1)
+  expect_true(is.data.frame(references4))
+  expect_true(identical(names(references4), c("Kurzangabe", "Langangabe")))
+  # reference sheet
+  references5 <- getAPAInfo("helper_getAPAInfo_error3.xlsx", sheet = 2)
+  expect_true(is.data.frame(references5))
+  expect_true(identical(names(references5), c("Kurzangabe", "Langangabe")))
+
   references <- getAPAInfo("helper_getAPAInfo_error3.xlsx")
   ## selects first sheet
   ref <- c("Hertel, S., Hochweber, J., Mildner, D., Steinert, B. & Jude, N. (2014). \\textit{PISA 2009 Skalenhandbuch.} Waxmann. \\urlstyle{same}\\url{https://doi.org/10.25656/01:9554}",

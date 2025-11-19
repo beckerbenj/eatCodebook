@@ -15,7 +15,7 @@
 #'@examples
 #'# import reference example Excel
 #'file <- system.file("extdata", "example_literatur.xlsx", package = "eatCodebook")
-#'references <- getAPAInfo(file)
+#'references <- getAPAInfo(filePath = file, sheet = 2)
 #'
 #'@export
 
@@ -25,8 +25,14 @@ getAPAInfo <- function(filePath, sheet = 2){
   checkmate::assert_numeric(sheet, len = 1)
 
   # identify proper Excel sheet -------------------------------------------------
-  ref_table <- getExcel(filePath) # has no sheet argument
-  ref_table <- ref_table[[sheet]]
+
+  ## todo: if Excel has one sheet vs multiple this works.
+  ## if sheet has multiple sheets you can't select the first one -> fix this!
+  if(sheet == 1){
+    ref_table <- getExcel(filePath5) # Excel file with one sheet are imported as a data frame directly
+  } else if (sheet >= 1){
+    ref_table <- getExcel(filePath)[[sheet]] # for multiple sheets they are imported as a list -> sheet selects the page to be saved as a data frame
+  }
   check_APAInfo(ref_table)
 
   # import format information of italic input from the cells
@@ -94,8 +100,7 @@ addLatex_URL <- function(link){
 
 check_APAInfo <- function(ref_table) {
   #browser()
-  if(checkmate::test_list(ref_table)) stop("Excel file must contain a sheet with the two columns 'Kurzangabe' and 'Langangabe'.")
-  if(!is.data.frame(ref_table)) stop("'ref_table' must be a data frame.")
+  if(!is.data.frame(ref_table)) stop("'ref_table' must be a data frame. Select proper sheet or check your Excel file.")
   if(!identical(names(ref_table), c("Kurzangabe", "Langangabe"))) stop("Column names in 'ref_table' must be 'Kurzangabe' and 'Langangabe'.")
  NULL
 }
