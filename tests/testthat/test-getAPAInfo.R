@@ -22,7 +22,7 @@ test_that("Import Excel without reference sheet", {
   expect_error(references <- getAPAInfo("helper_getAPAInfo_error1.xlsx", sheet = 2))
 })
 
-test_that("Import Excel with two reference sheets", {
+test_that("Import Excel with two reference sheets, sheet specified", {
   ## file with at least 3 sheets, two reference sheets
   # reference sheet
   references <- getAPAInfo("helper_getAPAInfo_error2.xlsx", sheet = 2)
@@ -45,12 +45,18 @@ test_that("Import Excel with two reference sheets", {
   expect_true(is.data.frame(references5))
   expect_true(identical(names(references5), c("Kurzangabe", "Langangabe")))
 
-  references <- getAPAInfo("helper_getAPAInfo_error3.xlsx")
-  ## selects first sheet
-  ref <- c("Hertel, S., Hochweber, J., Mildner, D., Steinert, B. & Jude, N. (2014). \\textit{PISA 2009 Skalenhandbuch.} Waxmann. \\urlstyle{same}\\url{https://doi.org/10.25656/01:9554}",
-           "Lütke, B., Paetsch, J. & Dubiel, S. (2017-2019). \\textit{Selbsteingeschätztes Wissen im Bereich Sprachbildung} (unveröffentlicht). Projekt: Sprachsensibles Unterrichten fördern – Sprachliche Bildung systemisch im Vorbereitungsdienst implementieren. Bericht der wissenschaftlichen Begleitforschung.")
-  expect_equal(references$Langangabe, ref)
 })
+
+### tests for wrong sheet selected
+
+test_that("wrong sheet selected", {
+  # file with only one sheet
+  expect_error(references <- getAPAInfo("helper_getAPAInfo_1sheet.xlsx"))
+  expect_error(references <- getAPAInfo("helper_getAPAInfo_1sheet.xlsx", sheet = 2))
+  # sheet exists, but has no reference list
+  expect_error(references <- getAPAInfo("helper_getAPAInfo_2sheets.xlsx", sheet = 1))
+  })
+
 
 ### test output for getAPAInfo
 

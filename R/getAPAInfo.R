@@ -26,11 +26,12 @@ getAPAInfo <- function(filePath, sheet = 2){
 
   # identify proper Excel sheet -------------------------------------------------
 
-  ## todo: if Excel has one sheet vs multiple this works.
-  ## if sheet has multiple sheets you can't select the first one -> fix this!
   if(sheet == 1){
-    ref_table <- getExcel(filePath5) # Excel file with one sheet are imported as a data frame directly
-  } else if (sheet >= 1){
+    ref_table <- getExcel(filePath) # Excel files with one sheet are imported as a data frame directly
+    if(!is_APAInfo(ref_table)){
+      ref_table <- ref_table[[1]] # selects the first sheet for file with multiple sheets
+    }
+  } else if (sheet >= 2){
     ref_table <- getExcel(filePath)[[sheet]] # for multiple sheets they are imported as a list -> sheet selects the page to be saved as a data frame
   }
   check_APAInfo(ref_table)

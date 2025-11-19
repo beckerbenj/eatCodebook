@@ -21,6 +21,6 @@ Use case for creating a codebook: the reference list is saved in Excel, but the 
 \examples{
 # import reference example Excel
 file <- system.file("extdata", "example_literatur.xlsx", package = "eatCodebook")
-references <- getAPAInfo(file)
+references <- getAPAInfo(filePath = file, sheet = 2)
 
 }
