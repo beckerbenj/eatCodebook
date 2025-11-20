@@ -213,9 +213,7 @@ Some information may need to be modified because the function does not label it 
 
 In the **varName**, **varLabel** and **format** columns are information about the variables of the data set. You don't have to edit anything.
 
-**imp** can be set to *WAHR* or *FALSCH*. If there are several variables to be displayed on one page, this column must be set to *WAHR* for these variables and they must be assigned to the same group at **group**. That is the case for imputed variables.
-
-<!-- Verstehe die Formulierung hier nicht ganz. Sollte ich das auf WAHR für alle imputierten Variablen stellen oder auch für alle Variablen, die gruppiert werden sollen? -->
+**imp** can be set to *WAHR* or *FALSCH*. For imputed variables it needs to be set to *WAHR*. If there are several variables to be displayed on one page they must also be assigned to the same group at **group**.
 
 **type** can be set to *variable*, *scale*, *item* or *fake_item*. If you have a scale with several individual items, the scale variable is set to *scale* and the individual items to *item*. If you have several items belonging to one scale, but no scale variable, set the type to *fake_item*. All other variables should always get *variable* as an entry.
 
@@ -487,8 +485,6 @@ Open **0_main.R** again. The data sets `datalist` need to be loaded in the work 
 
 You create a new data frame with `createMissings()` and save it to Excel as `missings.xlsx`. You import it again with `getMisings()` to check the format. Usually there's no need to edit anything. 
 
-<!-- In welchen Fällen müsste man denn was editieren (anstatt direkt im Datensatz zu rekodieren)? -->
-
 ```{r create missings, eval=FALSE}
 # create missings
 missings <- createMissings(datalist, input_descriptives)
@@ -677,9 +673,7 @@ abbr_list$`Statistische Formelzeichen` <- abbr_list21$`Statistische Formelzeiche
 writeExcel(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkürzung.xlsx")
 ```
 
-When you have all the abbreviations, you can create the LaTeX code that you need directly from the Excel file.
-
-<!-- Wird die Abkürzungsliste nicht mehr am Ende in den Anhang geschrieben und muss stattdessen der LaTeX Code manuell eingefügt werden? -->
+When you have all the abbreviations, you can create the LaTeX code that you need directly from the Excel file with `makeAbbrList()` and save it in `abbr_list`:
 
 ```{r makeAbbrList, eval=FALSE}
 # creates LaTeX syntax
@@ -799,9 +793,8 @@ For the BT codebook, this column is usually left empty.
 
 If a variable has been **recoded** in the course of previous editing, this can be marked with a `ja` in the `rekodiert` column and the variable gets a corresponding note in the codebook as inverted if it is an item of a scale. 
 
-You recognize these variables by the addition `_r` in their name.
+You recognize these variables by the addition `_r` in `Var.Name`.
 
-<!-- Ist hier mit "name" der Titel der Variable gemeint? -->
 
 #### QuelleSH and Instruktionen
 
@@ -838,7 +831,7 @@ For the variable to appear in the appendix, the column `Hintergrundmodell` must 
 
 Now comes the most time consuming part of actually creating and editing the `varinfo`. 
 
-You have to create a list of data frames (one for each data set) and save it to Excel. There's a lot to add.  While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file **2_varinfo.R** to do the editing. Then you can just rerun it without having to do too much. You should check after each recreation, whether the script still worked correctly, though.
+You have to create a list of data frames (one for each data set) and save it to Excel. There's a lot to add. While working on the `varinfo` you often need to recreate it multiple times, so I recommend writing a script in the additional file **2_varinfo.R** to do the editing. Then you can just rerun it without having to do too much. You should check after each recreation, whether the script still worked correctly, though.
 
 When working on the BT codebook for IQB, you can find most Excel files containing the additional information to add on the network server *Q:*. 
 
@@ -1027,11 +1020,10 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 For the BT, you can usually find the info on the *Gliederung* (subsection numbers) and *Unterteilung im Skalenhandbuch* (subsection names) in an Excel called something like `finale Reihenfolge` on Q:. It contains the variable names, their labels and subsection info (number and name), as well as adjusted titles (if needed). Each of the data sets have their own sheet, except linking or matching data who still need subsection info for technical reasons (see [here](#linking-and-matching-data)). 
 
-This Excel file also contains the **final order** in which the variables should be displayed in the codebook, so you need to adjust the order in `varinfo` to match the one in `finale Reihenfolge` (final order). You need to do the following steps: 
+This Excel file also contains the **final order** in which the variables should be displayed in the codebook, so you need to adjust the order in `varinfo` to match the one in `finale Reihenfolge` (final order). You need to do the following steps that are explainged in more detail below: 
 
 > - import the `finale Reihenfolge` file, select proper sheet for your data set
-> - delete unnecessary rows (sections) 
-#welche sind unnötig?
+> - delete unnecessary rows (sections/`NA`) 
 > - compare variables (`varinfo` vs. final order)
 > - separate subsection names and numbers
 > - check for duplicate subsection names
@@ -1145,8 +1137,6 @@ View(varinfo$lfb_allg)
 ```
 
 To compare `varinfo$lfb_allg` and `subsections_lfb_allg` you can use any kind of check functions used so far, but it should be the same. 
-
-#gibt es eine Empfehlung wie viele Variablen pro Unterkapitel maximal enthalten sein sollten? Im fertigen PDF gibt es ab 100 Variablen das Problem, dass im Inhaltsverzeichnis die Nummerierung zu groß wird und sich mit den Kapitelnamen überschneidet.
 
 #### Linking and Matching Data
 
@@ -1436,15 +1426,13 @@ Each variable page displays the in-text citations that you can look up in the ap
 
 The function `createLitInfo()` creates one data frame containing all in-text citations form `varinfo`. You need to match the actual references from the Excel files we used earlier. You also need to add the intro references that you can get from an extra Excel file. 
 
-The references should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format. You need to add special LaTeX syntax for italic strings and URLs if you want them to show up correctly in the codebook. 
+The references should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format, e.g. there should only be one continuous part of italic text per reference in the Excel from the BT team, otherwise the function `getAPAInfo()` might not work properly. This function adds special LaTeX syntax for italic strings and URLs so they are displayed correctly in the codebook. 
 
-#ist es für eure Zwecke optional URLs und kursive Schrift korrekt darzustellen? Zusätzlich wäre es in der Praxis hilfreich Beispiele für beides mit korrekter LaTeX Syntax zu geben, um Nachfragen vorzubeugen
 
 > [!NOTE]
 > 
-> References need to be in APA format!
+> References in the Excel need to be in APA format!
 
-#ist redundant, da es den Hinweis schon im Fließtext gibt
 
 ## References To-do
 
@@ -1497,7 +1485,7 @@ literatur <- getLitInfo(".\\excel_files\\literatur.xlsx")
 
 The in-text citations might have additional info like *in Anlehnung an* (based on). But they need to be according to APA, e.g. just *Hertel et al. (2014)*. You need to make sure the punctuation is right and that there are no additions. 
 
-If you used `getLitInfo()` you might have to adjust the spelling of special characters like `&` that were escaped with `\` by the function. The `\` or `\\` is added, because otherwise TeXWorks interprets characters like `&` as a command.
+If you used `getLitInfo()` you might have to adjust the spelling of special characters like `&` that were escaped with `\` by the function. The `\` or `\\` is added, because otherwise TeXWorks interprets characters like `&` as a command. R will display four backlashes when the Excel or table viewed with `View()` will display only two, that is why there are four backslashes in the example. 
 
 ```{r lit remove additions, eval=FALSE}
 # remove latex syntax (if needed)
@@ -1535,12 +1523,14 @@ Now you import the second sheet of the reference (Quellen) Excel files that matc
 
 The *intro* to the codebook usually has separate references that you have to add *later*.
 
-`getAPAInfo()` should find the sheet with the proper format (two columns called `Kurzangabe`, `Langangabe`) by itself. 
+Import the reference list with `getAPAInfo()`. It adds the LaTeX syntax for italic text and URLs. It needs the `file path` and the `sheet` number of the reference list in the file. The default for the `sheet` argument is `2`, as it is the use case for most BT reference files. You recognize the reference list sheet by having two columns called `Kurzangabe` and `Langangabe`.
 
 ```{r lit import, eval=FALSE}
 ref_lfb_allg <- getAPAInfo("Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx")
 View(ref_lfb_allg)
 ```
+
+When you view the imported reference list, italic parts should be surrounded by `\textit{...}`, links should be surrounded by `\urlstyle{same}\url{...}`. Be mindful that R displays two backslashes in the console, but one when you use `View()`. It's supposed to be this way.
 
 You need to import the references for all data sets and save them in one data frame.
 
@@ -1560,7 +1550,6 @@ lit_ref$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",lit_ref$Kurzangabe)
 # remove (real) duplicates
 lit_ref <- unique(lit_ref)
 ```
-
 
 
 Sometimes the format or spelling is slightly different in between Excel files, so sometimes not all duplicate entries are deleted. Usually it's minor or obvious differences. For instance, when the italic string starts with the first italic letter vs. the blank space before that. You can **identify duplicated in-text citations** with `anyDuplicated()`, if the output is `0` there are no duplicates and you ignore the rest, otherwise you will get a table with all duplicated entries. Then you can check the differences between the references (`Langangaben`). 
@@ -1605,10 +1594,10 @@ View(literatur)
 
 `literatur` only has the in-text citations listed that were used in `varinfo`. we can't match references when they are not listed. So now we add additional references like the ones used in the intro or other texts. 
 
-First we **import the intro references** using `getAPAInfo()` to get a data frame including LaTeX syntax for the italic text parts. 
+First we **import the intro references** using `getAPAInfo()` to get a data frame including LaTeX syntax for the italic text parts. Don't forget to check which page the reference list is on. 
 
 ```{r ref intro import, eval=FALSE}
-ref_intro <- getAPAInfo("Q:\\filepath\\Intro_Quellen.xlsx")
+ref_intro <- getAPAInfo("Q:\\filepath\\Intro_Quellen.xlsx", sheet = 1)
 ```
 
 The data frame has probably two columns (`Kurzangabe` and `Langangabe`), but we need the third column `in_Literaturverzeichnis` so we can combine the two data frames `ref_intro` and `literatur`. So we add the additional column and set the input to `ja`, because all references we add from this Excel should show up in the codebook.
@@ -1686,9 +1675,8 @@ hgm <- makeBGM(varinfo)
 
 You can create a cover in R, but previous BTs just created a word document for the cover page that you need to save as a **pdf file**. After you created the pdf file it's easy to include it in the codebook.
 
-It's usually two pages: an actual cover page with the institute's logos, the title and author names and a second one with license and bibliography information.
+It's usually two pages: an actual cover page with the institute's logos, the title and author names and a second one with license and bibliography information. The BT team will give you either a pdf or a word document that you render to pdf.
 
-#mir wird nicht klar welche Info genau auf dem Cover sein sollte bzw. an welcher Vorlage ich mich orientieren sollte. Am besten wäre eine Vorlage mit Angaben dazu, was darauf editiert werden sollte.
 
 ## Cover To-do
 
@@ -1725,11 +1713,6 @@ The meta data is the information for the pdf file that you create at the end of 
 ![](./pictures/meta_data.PNG){width=60%}
 ![](./pictures/meta_data2.PNG){width=100%}
 
-
-## Meta Data To-do
-
-You work in **0_main.R**. You create a new data frame template with `createMetadata()` and add the following four lines. You can probably copy last BT's meta data and adjust the year and the authors. It's best to ask you supervisor or BT team what they want to be written here.
-
 > [!Note]
 > 
 > The meta data should contain the following information:
@@ -1739,7 +1722,9 @@ You work in **0_main.R**. You create a new data frame template with `createMetad
 > - **Keywords**: apropriate keywords
 > - **Subject**: apropriate subject
 
-#vermute die Anmerkung "four lines" bezieht sich hier drauf und habe es deswegen runter gezogen
+## Meta Data To-do
+
+You work in **0_main.R**. You create a new data frame template with `createMetadata()` and add information on title, author, keywords and subject.
 
 ### Create Table
 
@@ -1748,6 +1733,8 @@ meta <- createMetadata()
 ```
 
 ### Fill in Table
+
+You add the following four lines to the `meta` table. You can probably copy last BT's meta data and adjust the year and the authors. It's best to ask you supervisor or BT team what they want to be written here.
 
 ```{r add meta data, eval=FALSE}
 meta[1, "Title"] <- "IQB-Bildungstrend~2021. Skalenhandbuch zur Dokumentation der Erhebungsinstrumente in den naturwissenschaftlichen F?chern und Mathematik"
@@ -1915,7 +1902,7 @@ The cover pages will show up in the beginning as the first two pages.
 
 #### Intro
 
-The intro will be displayed after the cover and the table of content. It will also be added to the table of content. 
+The intro will be displayed after the cover and the table of contents. It will also be added to the table of contents. 
 
 #### Appendix
 
@@ -1933,9 +1920,8 @@ You can add a **lastpage** that contains information about the publication serie
 
 > [!Note]  
 >  
-> while working on the Codebook, you will create different versions. it's best not to delete them, but save them in an `archive` folder to compare different version to one another if needed.
+> while working on the Codebook, you will create different versions. it's best not to delete them, but save them in an `archive` folder to compare different versions to one another if needed.
 
-#Oder man nummeriert die Versionen
 
 ## Codebook To-do in R
 
@@ -1999,7 +1985,7 @@ codebook <- codebook(varInfo = varinfo, missings = missings, struc = gliederung,
 
 ### Save in Folder `Latex`
 
-Save the object as a `.tex` file. You also have to save the meta data you imported from the Excel file as a `.xmpdata` file. 
+Save the object as a `.tex` file. You also have to save the meta data you imported from the Excel file as a `.xmpdata` file. Before saving the new files make sure to adjust the date, so you know which one is the latest version.
 
 ```{r save codebook, eval=FALSE}
 # save codebook as .tex
@@ -2013,11 +1999,9 @@ write.table(meta_final , file = ".\\Latex\\IQB_BT2021_Skalenhandbuch_Stand2025_0
 
 ## Codebook To-do in TeXworks
 
-After you created codebook and saved it as a .tex file, you still need to render it as a pdf in *TeXWorks*. 
+After you created the codebook and saved it as a .tex file, you still need to render it as a pdf in *TeXWorks* or another LaTeX software that you can download [here](https://www.latex-project.org/get/). 
 
-### Ppen .tex File
-
-#Hier wäre eine Empfehlung für ein TeX Programm nützlich.
+### Open .tex File
 
 First you open the .tex file. You will have a very long script, but you shouldn't need to edit it. The first part of the script contains the LaTeX packages that you need for the script and then all the input from the Excel files that the function `codebook()` converted to the proper LaTeX code. The beginning might look like this:
 
@@ -2025,9 +2009,7 @@ First you open the .tex file. You will have a very long script, but you shouldn'
 
 ### Render To PDF (Twice)
 
-You have to click the green triangle to render to pdf. Remember to select the right option, so it says *pdfLaTeX*. It should render (which can take a while) and create the a pdf with the same name as the .tex file. It will also create some other new files that you can ignore. This first version will not have a *table of content*, but one of the created files contains information about it. When you render to pdf again (click the green triangle) the program creates a version with a table of content. 
-
-#Könnte ich nicht pdfLaTeX+MakeIndex+BibTeX verwenden um direkt das Inhaltsverzeichnis zu erhalten?
+You have to click the green triangle to render to pdf. Remember to select the right option, so it says *pdfLaTeX*. It should render (which can take a while) and create the a pdf with the same name as the .tex file. It will also create some other new files that you can ignore. This first version will not have a *table of contents*, but one of the created files contains information about it. When you render to pdf again (click the green triangle) the program creates a version with a table of contents. 
 
 ![](.\pictures\tex_pdf.png){width=70%}
 
