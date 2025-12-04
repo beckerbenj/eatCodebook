@@ -1015,19 +1015,19 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Structure and Subsections
 
-For the BT, you can usually find the info on the *Gliederung* (subsection numbers) and *Unterteilung im Skalenhandbuch* (subsection names) in an Excel called something like `finale Reihenfolge` on `Q:`. It contains the variable names, their labels and subsection info (number and name), as well as adjusted titles (if needed). Each of the data sets have their own sheet, except matching data who still needs subsection info for technical reasons (see [here](#linking-and-matching-data)). 
+For the BT, you can usually find the info on the *Gliederung* (subsection numbers) and *Unterteilung im Skalenhandbuch* (subsection names) in an Excel called something like `finale Reihenfolge` on `Q:`. It contains the variable names, their labels and subsection info (number and name), as well as adjusted titles (if needed). Each of the data sets have their own sheet, except matching data which still needs subsection info for technical reasons (see [here](#linking-and-matching-data)). 
 
-This Excel file also contains the **final order** in which the variables should be displayed in the codebook, so you need to adjust the order in `varinfo` to match the one in `finale Reihenfolge` (final order). You need to do the following steps that are explainged in more detail below: 
+This Excel file also contains the **final order** in which the variables should be displayed in the codebook, so you need to adjust the order in `varinfo` to match the one in `finale Reihenfolge` (final order). You need to do the following steps that are explained in more detail below: 
 
-> - import the `finale Reihenfolge` file, select proper sheet for your data set
-> - delete unnecessary rows (sections/`NA`) 
-> - compare variables (`varinfo` vs. final order)
-> - separate subsection names and numbers
-> - check for duplicate subsection names
-> - add missing subsections
-> - change order of `varinfo` to match the final order
-> - transfer subsection info in `varinfo`
-> - update titles if necessary
+> - Import the `finale Reihenfolge` file, select proper sheet for your data set
+> - Delete unnecessary rows (sections labeled as `NA`) 
+> - Compare variables (`varinfo` vs. final order)
+> - Separate subsection names and numbers
+> - Check for duplicate subsection names
+> - Add missing subsections
+> - Change order of `varinfo` to match the final order
+> - Transfer subsection info in `varinfo`
+> - Update titles if necessary
 
 > ![NOTE]
 > 
@@ -1047,9 +1047,9 @@ It might look like this:
 
 ![](pictures\varinfo_subsections.png){width=100%}
 
-`Abschnitt` starts with the section name *1 Testdesign* then with the first subsection name *1.1 identifikationsvariable* and then `NA`, then the next subsections *1.2 Testgruppenmerkmale* and *1.3 Rotation*, then the next section *2 Persönliche Angaben* and so forth. We need to clean up the table so we can match the correct subsection info to each variable in `varinfo`. 
+`Abschnitt` starts with the section name *1 Testdesign* then with the first subsection name *1.1 Identifikationsvariable* and then `NA`, then the next subsections *1.2 Testgruppenmerkmale* and *1.3 Rotation*, then the next section *2 Persönliche Angaben* and so on. We need to clean up the table so we can match the correct subsection info to each variable in `varinfo`. 
 
-#### Remove NAs in `varName`
+#### Remove NAs/sections in `varName`
 
 We need the section names that start with a single digit like *1* later (see [7. Structure](#structure)). The `finale Reihenfolge` Excel added rows between sections, so you have some `NA` entries in the column `varName`, as well. To match the input for the subsections to `varinfo` we need to delete those rows for now. 
 
@@ -1059,7 +1059,7 @@ subsections_lfb_allg <- subsections_lfb_allg[!is.na(subsections_lfb_allg$varName
 
 #### Check Variables
 
-Now we need to check if the variables in the final order file match the ones in `varinfo`. It's the same check like earlier, except this time both variables should be exactly the same, so the output should be `character(0)` both times. When you find any mismatches report back to your supervisor.
+Now we need to check if the variables in the final order file match the ones in `varinfo`. It's the same check like before, except this time both variables should be exactly the same, so the output should be `character(0)` both times. When you find any mismatches report back to your supervisor.
 
 ```{r varinfo subsection setdiff, eval=FALSE}
 setdiff(varinfo$lfb_allg$Var.Name, subsections_lfb_allg$varName)
@@ -1068,7 +1068,7 @@ setdiff(subsections_lfb_allg$varName, varinfo$lfb_allg$Var.Name)
 
 #### Seperate Subsection Names and Numbers
 
-We need the number of the subsection and their names separately, so we can 1) check for duplicates and 2) transfer them in the respective `varinfo` columns. The package `eatTools` has a practical function for that: `halveString()`, which separates any string at a specified separator into two strings. After each number there's a blank space, so that's our separator. First we save our `Abschnitt` column in a new vector, then we separate numbers from names and save them in `sep`. It returns a data frame with two columns, that we can name *subsec number* and *subsec name*. 
+We need the number of the subsection and their names separately, so we can 1) check for duplicates and 2) transfer them in the respective `varinfo` columns. The package `eatTools` has a practical function for that: `halveString()` separates any string at a specified separator into two strings. After each number there's a blank space, so that's our separator. First we save our `Abschnitt` column in a new vector, then we separate numbers from names and save them in `sep`. It returns a data frame with two columns, that we can name *subsec number* and *subsec name*. 
 
 ```{r varinfo subsection separate, eval=FALSE}
 sep <- subsections_lfb_allg$Abschnitt
