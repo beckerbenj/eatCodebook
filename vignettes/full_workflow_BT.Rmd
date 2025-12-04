@@ -1135,9 +1135,9 @@ View(varinfo$lfb_allg)
 
 To compare `varinfo$lfb_allg` and `subsections_lfb_allg` you can use any kind of check functions used so far, but it should be the same. 
 
-#### Linking and Matching Data
+#### Matching Data
 
-Linking or matching data sets are created for technical reasons and don't contain a lot of variables. The BT rarely adds subsection info to the Excel file, but due to technical reasons, they still need them. Because they don't have different subsections you can just edit the columns `Gliederung` to `1.1` and `Unterteilung.im.Skalenhandbuch` to `Linkingvariable` or `Matchingvariable` respectively, unless you are told to do otherwise. 
+Matching data sets are created for technical reasons and don't contain a lot of variables. The BT rarely adds subsection info to the Excel file, but due to technical reasons, they still need them. Because they don't have different subsections you can just edit the columns `Gliederung` to `1.1` and `Unterteilung.im.Skalenhandbuch` to `Matchingvariable`, unless you are told to do otherwise. 
 
 ```{r varinfo subsection linking data, eval=FALSE}
 varinfo$match$Unterteilung.im.Skalenhandbuch <- "Matchingvariablen"
@@ -1192,44 +1192,45 @@ varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 
 ### Add Background Model Info
 
-The background model (bgm) info is something to do for all data frames at once, as well. This info will later show up in the appendix of the codebook, not on the individual pages of the variables. You should do this after changing `varinfo` to match the final order, especially for the column `Reihenfolge.HGM`. The order of the variables in the bgm appendix should match the one in the codebook. You need to do the following steps: 
+The background model (BGM) info is something to do for all data frames at once, as well. This info will later show up in the appendix of the codebook, not on the individual pages of the variables. You should do this after changing `varinfo` to match the final order, especially for the column `Reihenfolge.HGM`. The order of the variables in the BGM appendix should either match the one in the codebook or you group them by name. Ask your supervisor what they prefer. You need to do the following steps: 
 
-> - import the Excel from Q:
-> - add new variables to `varinfo` if needed
-> - add background model info to `varinfo`
+> - Import the Excel from `Q:`
+> - Add new variables to `varinfo` if needed
+> - Add background model info to `varinfo`
 
 #### Import Excel
 
-For the BT studies, you will need access to an Excel file containing all the relevant information about the background model somewhere on Q:. Don't forget to adjust the file path. There's one sheet with a lot of columns, but you only need 2 or 3 of them: `Variablenname`, `basevar` and maybe `Variablenlabel`. `basevar` contains the info out of which variables a variable was constructed, but for most variables this columns is empty. 
+For the BT studies, you will need access to an Excel file containing all the relevant information about the background model somewhere on `Q:`. Don't forget to adjust the file path. There's one sheet with a lot of columns, but you only need 3 or 4 of them: `Variablenname`, `basevar` , `HGM` and maybe `Variablenlabel`. `basevar` contains the info out of which variables a variable was constructed, but for most variables this columns is empty. `HGM` has either the value `1` or `0`.
 
 First you import the file and save it into a data frame. 
 
-```{r varinfo bgm import, eval=FALSE}
+```{r varinfo BGM import, eval=FALSE}
 bgm <- getExcel("Q:\\BT2021\\BT\\51_Auswertung\\05_HGM\\05_VF_Imp2021\\variablen.xlsx")
 ```
 
-Then you select these three columns and delete the rest in your data frame in R and look at it. 
+Then you select these three columns and delete the rest in your data frame in R and look at it. You only need the ones that have the entry `1` in the column `HGM`.
 
-```{r varinfo bgm adjust table, eval=FALSE}
-bgm <- bgm[, c(5, 6, 16)]
+```{r varinfo BGM adjust table, eval=FALSE}
+bgm <- bgm[, c(2, 5, 6, 16)]
+bgm <- bgm[bgm$HGM == 1,]
 View(bgm)
 ```
 
 Before you can work with this data frame, you need to replace the `NA`s in the column `basevar` with `-`. 
 
-```{r varinfo bgm remove NA, eval=FALSE}
+```{r varinfo BGM remove NA, eval=FALSE}
 bgm$basevar[is.na(bgm$basevar)] <- "-"
 ```
 
 #### Add New BGM Variables to `varinfo`
 
-Before you add any bgm info to `varinfo`, you might have to add a few variables to data frames that were specially created for the bgm. These are not displayed in the codebook, but need to be listed in `varinfo`, otherwise they won't show up in the appendix. 
+Before you add any BGM info to `varinfo`, you might have to add a few variables to data frames that were created for the BGM. These are not displayed in the codebook, but need to be listed in `varinfo`, otherwise they won't show up in the appendix. 
 
-For the BT21 there were variables created with the names `X.klasse` for the student data, that were not in the data set. You can identify these variables by using `setdiff()`. If you find any variables in the bgm Excel that you can't find in any of the data frames, you probably have to add them yourself. 
+For the BT21 there were variables created with the names `X.klasse` for the student data, that were not in the data set. You can identify these variables by using `setdiff()`. If you find any variables in the BGM Excel that you can't find in any of the data frames, you probably have to add them yourself. 
 
 You start by identifying the variables in the new `hgm` table, in the example all variables that end with `.klasse` are extracted. 
 
-```{r varinfo bgm add var 1, eval=FALSE}
+```{r varinfo BGM add var 1, eval=FALSE}
 # extracting .klasse variables, labels, and basevar
 pos <- grep(".klasse", hgm$Variablenname)
 hgm_klasse <- hgm[pos,]
@@ -1238,7 +1239,7 @@ View(hgm_klasse)
 
 Then you have to find out which data frame contains the originals. You can use the `basebar` column for that. In this case there are only individual variables listed, so that makes it easier to find. You add a new column to the `hgm_klasse` data frame (called `dat`). Then you search the variable names of all data frames if they match an entry in `basevar` (the original variable) and add the name of that data frame to the column `dat`. 
 
-```{r varinfo bgm add var 2, eval=FALSE}
+```{r varinfo BGM add var 2, eval=FALSE}
 hgm_klasse <- cbind(hgm_klasse, dat = NA)
 
 for(var in hgm_klasse$basevar){
@@ -1252,13 +1253,13 @@ for(var in hgm_klasse$basevar){
 
 In this case the original variables were all in the student data (`sus`). So now you need to add new rows to the `varinfo$sus` data frame. You need to add new empty rows to `varinfo`. `pos` can give you the number of rows you need to add. 
 
-```{r varinfo bgm add var 3, eval=FALSE}
+```{r varinfo BGM add var 3, eval=FALSE}
 varinfo$sus[nrow(varinfo$sus)+length(pos),] <- NA
 ```
 
 Then you fill in the empty lines with default setting like so:
 
-```{r varinfo bgm add var 4, eval=FALSE}
+```{r varinfo BGM add var 4, eval=FALSE}
 varinfo$sus[is.na(varinfo$sus$Var.Name),]$Var.Name <- hgm_klasse$Variablenname
 
 varinfo$sus[varinfo$sus$Var.Name %in% hgm_klasse$Variablenname,c(2:17)] <- "-"
@@ -1275,16 +1276,18 @@ Make sure all variables were added and that the entries are correct. They are no
 
 #### Adding BGM Info
 
-With this loop you can identify the variables in the `bgm` table and adjust the columns in the respective data frame in `varinfo`. It works for all data frames at once. It sets the `Hintergrundmoell` to `ja`, adds the order number in `HGM.Reihenfolge` and the base variables in `basevar`. You can check if the numbers are ascending from first to last data frame with `View()`. 
+When you want to 
 
-```{r varinfo bgm add info, eval=FALSE}
+With this loop you can identify the variables in the `BGM` table and adjust the columns in the respective data frame in `varinfo`. It works for all data frames at once. It sets the `Hintergrundmoell` to `ja`, adds the order number in `HGM.Reihenfolge` and the base variables in `basevar`. You can check if the numbers are ascending from first to last data frame with `View()`. 
+
+```{r varinfo BGM add info, eval=FALSE}
 order <- 1
 for(i in 1:length(varinfo)){
   for(var in varinfo[[i]]$Var.Name){
-    if(var %in% hgm$Variablenname){
+    if(var %in% bgm$Variablenname){
       varinfo[[i]][varinfo[[i]]$Var.Name == var,]$Hintergrundmodell <- "ja"
       varinfo[[i]][varinfo[[i]]$Var.Name == var,]$HGM.Reihenfolge <- order
-      varinfo[[i]][varinfo[[i]]$Var.Name == var,]$HGM.Variable.erstellt.aus <- hgm[hgm$Variablenname == var,]$basevar
+      varinfo[[i]][varinfo[[i]]$Var.Name == var,]$HGM.Variable.erstellt.aus <- bgm[bgm$Variablenname == var,]$basevar
       order <- order + 1
     }
   }
@@ -1292,11 +1295,27 @@ for(i in 1:length(varinfo)){
 View(varinfo)
 ```
 
+Alternatively you can reorder the `bgm` object by adding column `order` and give each variable the numerical order in which they should show up in the appendix. Then you can use the following loop: 
+
+```{r}
+for(i in 1:length(varinfo)){
+  for(var in varinfo[[i]]$Var.Name){
+    if(var %in% bgm_order$Variablenname){
+      varinfo[[i]][varinfo[[i]]$Var.Name == var,]$Hintergrundmodell <- "ja"
+      varinfo[[i]][varinfo[[i]]$Var.Name == var,]$HGM.Reihenfolge <- bgm_order[bgm_order$Variablenname == var,]$order
+      varinfo[[i]][varinfo[[i]]$Var.Name == var,]$HGM.Variable.erstellt.aus <- bgm[bgm$Variablenname == var,]$basevar
+    }
+  }
+}
+View(varinfo)
+
+```
+
 #### Save Progress
 
 When everything turned out correct, save your progress and import the Excel with `getVarInfo()`.
 
-```{r varinfo bgm save, eval=FALSE}
+```{r varinfo BGM save, eval=FALSE}
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
@@ -1324,8 +1343,7 @@ Now we create another Excel file that orders and names the sections and subsecti
 
 ## About the Structure
 
-The function `createStructure()` will read the subsection info from `varinfo` and create a new list list of data frames (one for each data set) that needs to be saved to Excel, as well. You still need to **add the section names** that we ignored earlier. Again the BT might only give you section names for data sets with content variables, so you might add them yourself for linking or matching data like before. 
-
+The function `createStructure()` will read the subsection info from `varinfo` and create a new list list of data frames (one for each data set) that needs to be saved to Excel, as well. You still need to **add the section names** that we ignored earlier. Again the BT might only give you section names for data sets with content variables, so you might add them yourself for matching data like before. 
 #### Example Table
 
 When we create a new `gliederung` with the info from `varinfo` we get the following list of data frames:
@@ -1392,11 +1410,10 @@ But now you only need the `name` info. You **add** that to the empty spaces in `
 gliederung$sus$Titel[is.na(gliederung$sus$Titel)] <- sep[, "name"]
 ```
 
-**Linking and matching data** probably won't have any names in the `finale Reihenfolge` Excel, so you add the names `Matchingvariable` or `Linkingvariable` like before:
+**Matching data** probably won't have any names in the `finale Reihenfolge` Excel, so you add the name `Matchingvariable` like before:
 
 ```{r gliederung matching, eval=FALSE}
 gliederung$match$Titel <- "Matchingvariablen"
-gliederung$linking$Titel <- "Linkingvariablen"
 ```
 
 
@@ -1435,13 +1452,13 @@ The references should be in [APA](https://apastyle.apa.org/style-grammar-guideli
 
 You open **4_literatur.R**. You need the in-text citation info from `varinfo` (*QuelleSH*) and the references info from each of the Excel files used before, as well as the intro reference Excel. You need to do the following steps: 
 
-> - create `litInfo` template from `varinfo`
-> - clean up duplicates and spelling
-> - import (data set) references from Excel files
-> - clean up duplicates and spelling
-> - add (data set) references to their in-text citations
-> - add intro references separately
-> - final clean up
+> - Create the `litInfo` template from `varinfo`
+> - Clean up duplicates and spelling
+> - Import (data set) references from Excel files
+> - Clean up duplicates and spelling
+> - Add (data set) references to their in-text citations
+> - Add intro references separately
+> - Final clean up
 
 ### Setup
 
@@ -1482,7 +1499,7 @@ literatur <- getLitInfo(".\\excel_files\\literatur.xlsx")
 
 The in-text citations might have additional info like *in Anlehnung an* (based on). But they need to be according to APA, e.g. just *Hertel et al. (2014)*. You need to make sure the punctuation is right and that there are no additions. 
 
-If you used `getLitInfo()` you might have to adjust the spelling of special characters like `&` that were escaped with `\` by the function. The `\` or `\\` is added, because otherwise TeXWorks interprets characters like `&` as a command. R will display four backlashes when the Excel or table viewed with `View()` will display only two, that is why there are four backslashes in the example. 
+If you used `getLitInfo()` you might have to adjust the spelling of special characters like `&` that were escaped with `\` by the function. The `\` or `\\` is added, because otherwise TeXWorks (a LaTeX program) interprets characters like `&` as a command. R will display four backlashes when the Excel or table viewed with `View()` will display only two, that is why there are four backslashes in the example. 
 
 ```{r lit remove additions, eval=FALSE}
 # remove latex syntax (if needed)
@@ -1659,7 +1676,7 @@ You can add a list of all variables relevant for the background model in the app
 
 You go back to **0_main.R**, make sure that `varinfo` is loaded into your environment. Then you can just create the background model info with this one line, no need to edit or save anything:
 
-```{r create bgm, eval=FALSE}
+```{r create BGM, eval=FALSE}
 hgm <- makeBGM(varinfo)
 ```
 
@@ -1687,7 +1704,7 @@ pdf_cover <- '\\includepdf[pages=-]{.\\Texte\\cover_page.pdf}'
 
 ### Create a Cover
 
-Alternatively you can create you own cover in R with the function `makeCover()`. 
+Alternatively you can create your own cover in R with the function `makeCover()`. 
 
 ```{r create cover, eval=FALSE}
 cover <- makeCover(logoFile = NULL,
@@ -1714,10 +1731,10 @@ The meta data is the information for the pdf file that you create at the end of 
 > 
 > The meta data should contain the following information:
 >
-> - **Title**: the title of the codebook
-> - **Authors**: the authors of the codebook and everyone involved in creating the data for it in the order of the authors listed on the cover page.
-> - **Keywords**: apropriate keywords
-> - **Subject**: apropriate subject
+> - **Title**: The title of the codebook
+> - **Authors**: The authors of the codebook and everyone involved in creating the data for it in the order of the authors listed on the cover page.
+> - **Keywords**: Apropriate keywords
+> - **Subject**: Apropriate subject
 
 ## Meta Data To-do
 
@@ -1772,7 +1789,6 @@ Each data set gets its own chapter. Each chapter has several sections (1, 2, etc
 > - **lfb_spez**: Lehrkräfte lerngruppenspezifisch
 > - **slfb**: Schulleitungen
 > - **match**: Matching
-> - **linking**: Linkingfehler-Objekte
 
 
 ## Chapters To-do
@@ -1789,11 +1805,11 @@ chapters <- createChapters(varinfo)
 
 ### Edit Chapters
 
-You just need to add the names (see [About Chapters](#about-chapters)) in the second column. Make sure the order matches the order of `dataName`. 
+You just need to add the names in the second column. Make sure the order matches the order of `dataName`. 
 
 ```{r add chapters, eval=FALSE}
 chapters$chapterName <- c("Schüler:innen", "Lehrkräfte allgemein", "Lehrkräfte lerngruppenspezifisch", 
-                          "Schulleitungen", "Matching", "Linkingfehler-Objekte")
+                          "Schulleitungen", "Matching")
 ```
 
 ### Save in Excel
@@ -1814,7 +1830,7 @@ There are two more optional files you can add to the `codebook()` function: *int
 
 ## About Intro
 
-You will probably get a Word file with the intro text and tables that you need to convert to a .tex file with all the correct LaTeX code for different parts of the intro like italic text parts, lists or graphics, and footnotes, etc. You can find a example script in **5_latex_intro.R**. You can also do it manually in TexWorks, whatever works best for you. Either way it's a lot of work.
+You will probably get a Word file with the intro text and tables that you need to convert to a .tex file with all the correct LaTeX code for different parts of the intro like italic text parts, lists or graphics, and footnotes, etc. You can find a example script in **5_latex_intro.R**. You can also do it manually in TexWorks, whatever works best for you. Either way it can be a lot of work.
 
 ## Intro To-do
 
@@ -1837,7 +1853,9 @@ intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
 The last pages of the codebook usually contains information about the series of publications called *Schriftenreihe des Institutes zur Qualitätsentwicklung im Bildungswesen* in the BT studies. It's a list of all codebooks from previous Bildungstrend studies: 
 
 ![](.\pictures\lastpage_codebook.png)
+
 You need a .tex file with the following beginning: the LaTeX setup for the page, the title of the page in bold (`\textbf{}`), and then all publications of the series. 
+
 
 ![](.\pictures\lastpage_latex.png)
 `lastpage` are the last pages in the codebook. There won't be any mention of it in the table of contents.
@@ -1846,7 +1864,7 @@ You need a .tex file with the following beginning: the LaTeX setup for the page,
 
 ### Copy Last Years Publication List
 
-You open the folder of last year's BT on Q: and go to a folder named *Texte* or *08_Einleitungstexte*. You copy the file `Latex_lastpage.tex` or `Latex_lastpage_snippet.tex` into your work space in the folder *Texte*. 
+You open the folder of last year's BT on `Q:` and go to a folder named *Texte* or *08_Einleitungstexte*. You copy the file `Latex_lastpage.tex` or `Latex_lastpage_snippet.tex` into your work space in the folder *Texte*. 
 
 ### Add New Publication
 
@@ -1917,7 +1935,7 @@ You can add a **lastpage** that contains information about the publication serie
 
 > [!Note]  
 >  
-> while working on the Codebook, you will create different versions. it's best not to delete them, but save them in an `archive` folder to compare different versions to one another if needed.
+> While working on the Codebook, you will create different versions. it's best not to delete them, but save them in an `archive` folder to compare different versions to one another if needed.
 
 
 ## Codebook To-do in R
@@ -1982,7 +2000,7 @@ codebook <- codebook(varInfo = varinfo, missings = missings, struc = gliederung,
 
 ### Save in Folder `Latex`
 
-Save the object as a `.tex` file. You also have to save the meta data you imported from the Excel file as a `.xmpdata` file. Before saving the new files make sure to adjust the date, so you know which one is the latest version.
+Save the object as a `.tex` file. You also have to save the meta data you imported from the Excel file as a `.xmpdata` file. Before saving the new files make sure to adjust the date in the file path, so you know which one is the latest version.
 
 ```{r save codebook, eval=FALSE}
 # save codebook as .tex
