@@ -1,0 +1,102 @@
+# Package index
+
+## All functions
+
+- [`calculateDescriptives()`](https://beckerbenj.github.io/eatCodebook/reference/calculateDescriptives.md)
+  : Calculate descriptive statistics.
+
+- [`checkScaleConsistency()`](https://beckerbenj.github.io/eatCodebook/reference/checkScaleConsistency.md)
+  : Check whether the mean of a scale variable equals the pooled mean of
+  single items
+
+- [`codebook()`](https://beckerbenj.github.io/eatCodebook/reference/codebook.md)
+  : Create codebook script.
+
+- [`createAbbrList()`](https://beckerbenj.github.io/eatCodebook/reference/createAbbrList.md)
+  : Create abbreviation list template.
+
+- [`createChapters()`](https://beckerbenj.github.io/eatCodebook/reference/createChapters.md)
+  : Create chapter template.
+
+- [`createInputForDescriptives()`](https://beckerbenj.github.io/eatCodebook/reference/createInputForDescriptives.md)
+  : Create input data.frame for subsequent calculation of descriptives
+
+- [`createLitInfo()`](https://beckerbenj.github.io/eatCodebook/reference/createLitInfo.md)
+  : Create literature template.
+
+- [`createMetadata()`](https://beckerbenj.github.io/eatCodebook/reference/createMetadata.md)
+  : Create meta data template.
+
+- [`createMissings()`](https://beckerbenj.github.io/eatCodebook/reference/createMissings.md)
+  : Create missing value information.
+
+- [`createRegister()`](https://beckerbenj.github.io/eatCodebook/reference/createRegister.md)
+  : Create register template.
+
+- [`createScaleInfo()`](https://beckerbenj.github.io/eatCodebook/reference/createScaleInfo.md)
+  : Create scale information.
+
+- [`createStructure()`](https://beckerbenj.github.io/eatCodebook/reference/createStructure.md)
+  : Create structure template.
+
+- [`createVarInfo()`](https://beckerbenj.github.io/eatCodebook/reference/createVarInfo.md)
+  : Create variable information template.
+
+- [`embedLatexSnippet()`](https://beckerbenj.github.io/eatCodebook/reference/embedLatexSnippet.md)
+  : Embed a Latex Snippet.
+
+- [`getAbbrList()`](https://beckerbenj.github.io/eatCodebook/reference/getAbbrList.md)
+  : Import abbreviation list.
+
+- [`getChapters()`](https://beckerbenj.github.io/eatCodebook/reference/getChapters.md)
+  : Import chapter structure information.
+
+- [`getExcel()`](https://beckerbenj.github.io/eatCodebook/reference/getExcel.md)
+  : Import data from Excel.
+
+- [`getInputForDescriptives()`](https://beckerbenj.github.io/eatCodebook/reference/getInputForDescriptives.md)
+  : Import input for descriptives information.
+
+- [`getLitInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getLitInfo.md)
+  : Import literature information.
+
+- [`getMissings()`](https://beckerbenj.github.io/eatCodebook/reference/getMissings.md)
+  : Get value information.
+
+- [`getRegister()`](https://beckerbenj.github.io/eatCodebook/reference/getRegister.md)
+  : Import register excel.
+
+- [`getScaleInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getScaleInfo.md)
+  : Get scale information.
+
+- [`getStructure()`](https://beckerbenj.github.io/eatCodebook/reference/getStructure.md)
+  : Import structure information.
+
+- [`getVarInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getVarInfo.md)
+  : Import variable information.
+
+- [`inferLayout()`](https://beckerbenj.github.io/eatCodebook/reference/inferLayout.md)
+  : Infer layout column in a variable information.
+
+- [`makeAbbrList()`](https://beckerbenj.github.io/eatCodebook/reference/makeAbbrList.md)
+  : Create abbreviation list.
+
+- [`makeBGM()`](https://beckerbenj.github.io/eatCodebook/reference/makeBGM.md)
+  : Create background model information.
+
+- [`makeCover()`](https://beckerbenj.github.io/eatCodebook/reference/makeCover.md)
+  : Create cover page.
+
+- [`makeLit()`](https://beckerbenj.github.io/eatCodebook/reference/makeLit.md)
+  : Create literature latex snippet.
+
+- [`makeMetadata()`](https://beckerbenj.github.io/eatCodebook/reference/makeMetadata.md)
+  : Create meta data snippet.
+
+- [`makeRegister()`](https://beckerbenj.github.io/eatCodebook/reference/makeRegister.md)
+  : Create register.
+
+- [`writeExcel()`](https://beckerbenj.github.io/eatCodebook/reference/writeExcel.md)
+  :
+
+  Save to `.xlsx`.
