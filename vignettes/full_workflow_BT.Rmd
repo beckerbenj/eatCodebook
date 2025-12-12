@@ -1297,7 +1297,7 @@ View(varinfo)
 
 Alternatively you can reorder the `bgm` object by adding column `order` and give each variable the numerical order in which they should show up in the appendix. Then you can use the following loop: 
 
-```{r}
+```{r varinfo BGM add info2, eval=FALSE}
 for(i in 1:length(varinfo)){
   for(var in varinfo[[i]]$Var.Name){
     if(var %in% bgm_order$Variablenname){
