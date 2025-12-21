@@ -57,9 +57,9 @@ Before we start, we need to setup a proper work space. Creating a codebook takes
 First set up a new private repository in the [`iqb-research` project](https://github.com/orgs/iqb-research/repositories) and use the template `SHB_Erstellung_Vorlage`. when you don't have access to this repository, ask the package developer for help or create your own repository. 
 
 
-![](.\pictures\repo_template.PNG){width=50%}
+![](.\pictures\repo_template.png){width=50%}
 <br>
-<img src="./pictures/repo_template.PNG" alt="repo_template" />  
+<img src="./pictures/repo_template.png" alt="repo_template" />  
 <br>  
 
 
@@ -237,13 +237,13 @@ The entry in Excel or the data frame must look like this:
 
 Variables with **nominal** scales should display only the frequency distribution of the labeled categories. The page would be displayed like this:   
 <br>
-<img src="./pictures/codebook_nominal.PNG" alt="codebook_nominal" />  
+<img src="./pictures/codebook_nominal.png" alt="codebook_nominal" />  
 <br>  
 
 The example data set doesn't have any nominal variables at the moment. If your data set has nominal variables, you can create that page with the following input:  
 
 <br>
-<img src="./pictures/input_nominal.PNG" alt="input_nominal" />  
+<img src="./pictures/input_nominal.png" alt="input_nominal" />  
 <br>  
 
 ### Categorial Variables and Statistical Parameters
@@ -294,7 +294,7 @@ Sometimes several items make up a scale, but the data set doesn't have a matchin
 To display fake scales like a real one, you need to group them like a real scale, but in the **type** column you need to write **fake_item**, so it looks like this:  
 
 <br>
-<img src="./pictures/input_fakeScale.PNG" alt="input_fakeScale" />  
+<img src="./pictures/input_fakeScale.png" alt="input_fakeScale" />  
 <br>  
 
 The function `createScaleInfo()` should add these fake scales to the data frame as well. But without the scale variable the information which variables belong to that scale might be lost. The individual variables might need to be added manually. See [Scales](#add-fake-scales) for more information. 
@@ -364,7 +364,7 @@ View(descriptives_sus)
 
 It should look somethings like this:
 
-![](.\pictures\R_view(descriptives).PNG)
+![](.\pictures\R_view(descriptives).png)
 
 Now you have to check, whether everything is the way you need it to be. If not, you have to either make changes in the Excel file manually or directly in R. If you write a script that changes the data frame in R, you can easily rerun it if you need to recreate the descriptives later (which is often the case). After that you should save your changes under `descriptives_sus_edited.xlsx`, so you don't need to recreate the original Excel later if needed.
 
@@ -589,13 +589,13 @@ You don't need this object for the minimal version of the codebook, so you can s
 View(abbr_list)
 ```
 
-![](.\pictures\abbr_list_R.PNG)
+![](.\pictures\abbr_list_R.png)
 
 In Excel: First sheet `Akronyme`, second sheet `statistische Formelzeichen`
 
-![](.\pictures\abbr_list_akronym.PNG)
+![](.\pictures\abbr_list_akronym.png)
 
-![](.\pictures\abbr_list_statFormula.PNG)
+![](.\pictures\abbr_list_statFormula.png)
 
 > Be mindful to use LaTeX syntax when you want to display special characters or italic letters, especially in the formula sheet!
 
@@ -647,7 +647,7 @@ LaTeX can't display Greek characters when you just use the letter by itself. You
 abbr_list$`Statistische Formelzeichen`$Symbol[1] <- "$\alpha$"
 ```
 
-![](.\pictures\abbr_list_alpha.PNG)
+![](.\pictures\abbr_list_alpha.png)
 
 Italic letters or subscript/superscript also need special LaTeX code. The code `$_{pw}$` makes the *pw* in subscript. Use `$^{2}$` for supercript the 2 or `\textit{M}` to print italic text or letters.
 
@@ -868,7 +868,7 @@ View(varinfo$slfb)
 
 This is what the list of data frames `varinfo` can look like: 
 
-![](pictures\varinfo_object.PNG)
+![](pictures\varinfo_object.png)
 
 You can either save it directly as an Excel file or do the layout first. 
 
@@ -915,7 +915,7 @@ View(quellen_sus)
 
 The data frame should look something like this. 
 
-![](pictures\varinfo_quellen.PNG){width=100%}
+![](pictures\varinfo_quellen.png){width=100%}
 
 #### Check Variables
 
@@ -1030,7 +1030,7 @@ View(subsections_lfb_allg)
 
 It might look like this: 
 
-![](pictures\varinfo_subsections.PNG){width=100%}
+![](pictures\varinfo_subsections.png){width=100%}
 
 `Abschnitt` starts with the section name *1 Testdesign* then with the first subsection name *1.1 Identifikationsvariable* and then `NA`, then the next subsections *1.2 Testgruppenmerkmale* and *1.3 Rotation*, then the next section *2 Persönliche Angaben* and so on. We need to clean up the table so we can match the correct subsection info to each variable in `varinfo`. 
 
@@ -1069,7 +1069,7 @@ View(subsections_lfb_allg)
 
 It should look something like this now:
 
-![](pictures\varinfo_subsections_sep.PNG){width=100%}
+![](pictures\varinfo_subsections_sep.png){width=100%}
 
 #### Check for Duplicates
 
@@ -1337,12 +1337,12 @@ When we create a new `gliederung` with the info from `varinfo` we get the follow
 gliederung <- createStructure(varinfo)
 ```
 
-![](.\pictures\gliederung_list.PNG){width=100%}
+![](.\pictures\gliederung_list.png){width=100%}
 
 
 The data frames should look like this: subsection names and numbers from `varinfo` are added, but the section names with the full numbers (1, 2, etc.) are empty. You need to add them for each data frame separately. 
 
-![](.\pictures\gliederung_sus.PNG){width=50%}
+![](.\pictures\gliederung_sus.png){width=50%}
 
 ## Structure To-do
 
@@ -1652,7 +1652,7 @@ You should add the last line `literatur_final <- makeLit(literatur)` to your scr
 You can add a list of all variables relevant for the background model in the appendix. For that you need to add the respective information in `varinfo` in the columns `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` (see [6. Varinfo](#background-model-hgm)). With that you can create an object that adds the relevant info to the appendix that looks like this:
 
 <br>
-<img src="./pictures/hgm.PNG" alt="hgm" /><img src="./pictures/hgm2.PNG" alt="hgm2" />
+<img src="./pictures/hgm.png" alt="hgm" /><img src="./pictures/hgm2.png" alt="hgm2" />
 <br>  
 
 ## BGM To-do
@@ -1707,8 +1707,8 @@ cover <- makeCover(logoFile = NULL,
 
 The meta data is the information for the pdf file that you create at the end of this vignette. It contains information about the *title*, the *authors*, the *keywords* and the *subject* of the pdf. When you work with adobe, you can find the meta data under `Menü` and `Dokumenteneigenschaften`:
 
-![](./pictures/meta_data.PNG){width=60%}
-![](./pictures/meta_data2.PNG){width=100%}
+![](./pictures/meta_data.png){width=60%}
+![](./pictures/meta_data2.png){width=100%}
 
 > The meta data should contain the following information:
 >
@@ -1831,12 +1831,12 @@ intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
 
 The last pages of the codebook usually contains information about the series of publications called *Schriftenreihe des Institutes zur Qualitätsentwicklung im Bildungswesen* in the BT studies. It's a list of all codebooks from previous Bildungstrend studies: 
 
-![](.\pictures\lastpage_codebook.PNG)
+![](.\pictures\lastpage_codebook.png)
 
 You need a .tex file with the following beginning: the LaTeX setup for the page, the title of the page in bold (`\textbf{}`), and then all publications of the series. 
 
 
-![](.\pictures\lastpage_latex.PNG)
+![](.\pictures\lastpage_latex.png)
 `lastpage` are the last pages in the codebook. There won't be any mention of it in the table of contents.
 
 ## Lastpage To-do
@@ -1849,11 +1849,11 @@ You open the folder of last year's BT on `Q:` and go to a folder named *Texte* o
 
 You open the file in TeXWorks and add the current publication you are working on. You take the publication information from the cover file's second page:
 
-![](.\pictures\lastpage_newSeries.PNG)
+![](.\pictures\lastpage_newSeries.png)
 
 ... and add this new *Band* to the .tex file. Be mindful of escaping special characters like `&` or umlauts. It should look something like this: 
 
-![](.\pictures\lastpage_newSeries_latex.PNG)
+![](.\pictures\lastpage_newSeries_latex.png)
 
 Then save the file and name it `Latex_lastpage.tex`. 
 
@@ -1997,13 +1997,13 @@ After you created the codebook and saved it as a .tex file, you still need to re
 
 First you open the .tex file. You will have a very long script, but you shouldn't need to edit it. The first part of the script contains the LaTeX packages that you need for the script and then all the input from the Excel files that the function `codebook()` converted to the proper LaTeX code. The beginning might look like this:
 
-![](.\pictures\tex1.PNG){width=100%}
+![](.\pictures\tex1.png){width=100%}
 
 ### Render To PDF (Twice)
 
 You have to click the green triangle to render to pdf. Remember to select the right option, so it says *pdfLaTeX*. It should render (which can take a while) and create the a pdf with the same name as the .tex file. It will also create some other new files that you can ignore. This first version will not have a *table of contents*, but one of the created files contains information about it. When you render to pdf again (click the green triangle) the program creates a version with a table of contents. 
 
-![](.\pictures\tex_pdf.PNG){width=70%}
+![](.\pictures\tex_pdf.png){width=70%}
 
 ### Dealing with Errors
 
@@ -2013,10 +2013,10 @@ If the rendering doesn't work you will get an error message in the console of *T
 
 To update the packages in *TeXWorks* you need to open your MikTeX console. 
 
-![](.\pictures\miktex_console.PNG){width=50%}
+![](.\pictures\miktex_console.png){width=50%}
 
 It should open to a page where you can click on the button *nach Updates suchen*.
 
-![](.\pictures\miktex_updates.PNG){width=50%}
+![](.\pictures\miktex_updates.png){width=50%}
 
 If all packages are up do date, nothing happens. Otherwise it should look for updates and carry them out.  
