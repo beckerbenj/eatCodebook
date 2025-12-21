@@ -166,6 +166,9 @@ they would need to be stored locally. The BT codebook works with
 multiple data sets that are stored in a list. But the process should
 also work if you have only one data set.
 
+> The same variable name cannot be used more than once across the data
+> sets!
+
 The data sets can be stored in `GADSdat` objects, containing two data
 frames: one for the variables and the actual data, the other contains
 the meta data or labels for the variables.
@@ -177,7 +180,7 @@ order in which the variables are displayed in the codebook. It’s best to
 choose the order you want right away, so you don’t have to make changes
 later.
 
-> $$!NOTE$$ In the past the BT data sets were ordered like this:
+> In the past the BT data sets were ordered like this:
 >
 > - **data_sus**: student questionnaire
 > - **data_lfb_allg**: general teacher questionnaire
@@ -288,8 +291,6 @@ label it correctly. For this, it is necessary to understand the
 functionality and check the variable entries. We will come back to how
 to actually edit the table in R.
 
-> \[!TIP\]
->
 > Here is a brief overview of the different columns in the
 > `inputForDescriptives` object:
 >
@@ -351,6 +352,7 @@ distribution of the labeled categories. The page would be displayed like
 this:  
   
 ![codebook_nominal](./pictures/codebook_nominal.PNG)  
+  
 
 The example data set doesn’t have any nominal variables at the moment.
 If your data set has nominal variables, you can create that page with
@@ -369,6 +371,7 @@ deviation). The page would be displayed like this:
 
   
 ![codebook_ordinal](pictures/codebook_ordinal.PNG)  
+  
 
 The entry in Excel or the data frame must look like this:  
   
@@ -402,6 +405,7 @@ It is possible to get the following entries in the codebook for a
 
   
 ![codebook_scale1](pictures/codebook_scale1.PNG)![codebook_scale2](pictures/codebook_scale2.PNG)![codebook_scale3](pictures/codebook_scale3.PNG)  
+  
 
 To get these pages the individual items must be labeled as **ordinal**
 and **item**, and the scale as **numeric** and **scale**. They must all
@@ -911,8 +915,6 @@ In Excel: First sheet `Akronyme`, second sheet
 
 ![](.%5Cpictures%5Cabbr_list_statFormula.PNG)
 
-> \[!CAUTION\]
->
 > Be mindful to use LaTeX syntax when you want to display special
 > characters or italic letters, especially in the formula sheet!
 
@@ -1094,8 +1096,6 @@ head(varinfo)
 
 Now we will look at the function of each column.
 
-> \[!TIP\]
->
 > Here is a brief overview of the different columns in *varinfo*:
 >
 > - **Var.Name**: The name of the variable
@@ -1130,8 +1130,6 @@ Each variable name has to be **unique** across data sets. You can’t have
 a variable in data set 2 called `IDBL` if there’s an `IDBL` in data set
 1 already.
 
-> \[!CAUTION\]
->
 > Across data sets, variables can’t have the same name!
 
 ##### in.DS.und.SH
@@ -1144,8 +1142,6 @@ the data set but does not get its own page (*ds*), whether it appears
 both in the codebook and in the data set (*ja*), whether it only appears
 in the codebook (*sh*) or neither (*nein*).
 
-> \[!NOTE\]
->
 > When to assign what label:
 >
 > - **ds**: for example, for the items of the **scale variables**, as
@@ -1180,8 +1176,6 @@ Mathematik* and *Unterricht in Deutsch* can’t both have a subsection
 called *Selbstkonzept* - it should say something like *Selbstkonzept
 Mathematik* and *Selbstkonzept Deutsch*.
 
-> \[!CAUTION\]
->
 > Across data sets, subsections or sections can’t have the same name!
 
 ##### Layout
@@ -1267,8 +1261,6 @@ variable’s label, e.g. the content of the background variable.
 There are three columns in `varinfo` that you need to edit for variables
 to show up in the appendix.
 
-> \[!TIP\]
->
 > - **Hintergrundmodell**: Indication of whether the variable is in the
 >   background model.
 > - **HGM.Reihenfolge**: The order for the background model (in the
@@ -1622,8 +1614,6 @@ need to do the following steps that are explained in more detail below:
 > - Transfer subsection info in `varinfo`
 > - Update titles if necessary
 
-> \![NOTE\]
->
 > Each subsection name has to be unique.
 
 ##### Import `finale Reihenfolge`
@@ -2201,8 +2191,6 @@ reference in the Excel from the BT team, otherwise the function
 syntax for italic strings and URLs so they are displayed correctly in
 the codebook.
 
-> \[!NOTE\]
->
 > References in the Excel need to be in APA format!
 
 ### References To-do
@@ -2588,8 +2576,6 @@ with adobe, you can find the meta data under `Menü` and
 
 ![](./pictures/meta_data.PNG)![](./pictures/meta_data2.PNG)
 
-> \[!Note\]
->
 > The meta data should contain the following information:
 >
 > - **Title**: The title of the codebook
@@ -2653,8 +2639,6 @@ Each data set gets its own chapter. Each chapter has several sections
 (1, 2, etc.) and several subsections (1.1, 1.2, etc.), each subsection
 can have multiple variables. Previous BTs named the data sets like this:
 
-> \[!Note\]
->
 > - **sus**: Schüler:innen
 > - **lfb_allg**: Lehrkräfte allgemein
 > - **lfb_spez**: Lehrkräfte lerngruppenspezifisch
@@ -2856,8 +2840,6 @@ publication series.
 
 #### Versions
 
-> \[!Note\]
->
 > While working on the Codebook, you will create different versions.
 > it’s best not to delete them, but save them in an `archive` folder to
 > compare different versions to one another if needed.

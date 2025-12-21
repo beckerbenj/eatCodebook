@@ -154,7 +154,7 @@ documents to maintain overview.</p>
 project</a> and use the template <code>SHB_Erstellung_Vorlage</code>.
 when you don’t have access to this repository, ask the package developer
 for help or create your own repository.</p>
-<p><img src=".%5Cpictures%5Crepo_template.PNG" style="width:50.0%"><br><img src="./pictures/repo_template.PNG" alt="repo_template" width="50%"><br><br></p>
+<p><img src=".%5Cpictures%5Crepo_template.PNG" style="width:50.0%"><br><img src="./pictures/repo_template.PNG" alt="repo_template"><br><br></p>
 <p>You now have all the .R templates that you need, but you might have
 to create the issues yourself. The To-dos should be apparent from this
 vignette or you can copy the issues from the template repo by hand. You
@@ -295,6 +295,10 @@ probably too large to upload to Github, so they would need to be stored
 locally. The BT codebook works with multiple data sets that are stored
 in a list. But the process should also work if you have only one data
 set.</p>
+<blockquote>
+<p>The same variable name cannot be used more than once across the data
+sets!</p>
+</blockquote>
 <p>The data sets can be stored in <code>GADSdat</code> objects,
 containing two data frames: one for the variables and the actual data,
 the other contains the meta data or labels for the variables.</p>
@@ -306,8 +310,7 @@ the order in which the variables are displayed in the codebook. It’s
 best to choose the order you want right away, so you don’t have to make
 changes later.</p>
 <blockquote>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>!</mi><mi>N</mi><mi>O</mi><mi>T</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">!NOTE</annotation></semantics></math>
-In the past the BT data sets were ordered like this:</p>
+<p>In the past the BT data sets were ordered like this:</p>
 <ul>
 <li>
 <strong>data_sus</strong>: student questionnaire</li>
@@ -419,7 +422,6 @@ not label it correctly. For this, it is necessary to understand the
 functionality and check the variable entries. We will come back to how
 to actually edit the table in R.</p>
 <blockquote>
-<p>[!TIP]</p>
 <p>Here is a brief overview of the different columns in the
 <code>inputForDescriptives</code> object:</p>
 <ul>
@@ -484,7 +486,7 @@ The entry in Excel or the data frame must look like this:<br><br><img src="pictu
 </h4>
 <p>Variables with <strong>nominal</strong> scales should display only
 the frequency distribution of the labeled categories. The page would be
-displayed like this:<br><br><img src="./pictures/codebook_nominal.PNG" alt="codebook_nominal"><br></p>
+displayed like this:<br><br><img src="./pictures/codebook_nominal.PNG" alt="codebook_nominal"><br><br></p>
 <p>The example data set doesn’t have any nominal variables at the
 moment. If your data set has nominal variables, you can create that page
 with the following input:</p>
@@ -498,7 +500,7 @@ frequency distribution of the labeled categories as well as the
 statistical parameters <em>N</em> (number of participants), <em>M</em>
 (mean) and <em>SD</em> (standard deviation). The page would be displayed
 like this:</p>
-<p><br><img src="pictures/codebook_ordinal.PNG" alt="codebook_ordinal"><br></p>
+<p><br><img src="pictures/codebook_ordinal.PNG" alt="codebook_ordinal"><br><br></p>
 <p>The entry in Excel or the data frame must look like this:<br><br><img src="pictures/input_ordinal.PNG" alt="input_ordinal"><br><br></p>
 </div>
 <div class="section level4">
@@ -521,7 +523,7 @@ this:</p>
 </h4>
 <p>It is possible to get the following entries in the codebook for a
 <strong>scale</strong> and the <strong>items</strong> it is made of:</p>
-<p><br><img src="pictures/codebook_scale1.PNG" alt="codebook_scale1"><img src="pictures/codebook_scale2.PNG" alt="codebook_scale2"><img src="pictures/codebook_scale3.PNG" alt="codebook_scale3"><br></p>
+<p><br><img src="pictures/codebook_scale1.PNG" alt="codebook_scale1"><img src="pictures/codebook_scale2.PNG" alt="codebook_scale2"><img src="pictures/codebook_scale3.PNG" alt="codebook_scale3"><br><br></p>
 <p>To get these pages the individual items must be labeled as
 <strong>ordinal</strong> and <strong>item</strong>, and the scale as
 <strong>numeric</strong> and <strong>scale</strong>. They must all have
@@ -972,7 +974,6 @@ symbols and their meaning. It should look something like this:</p>
 <p><img src=".%5Cpictures%5Cabbr_list_akronym.PNG"></p>
 <p><img src=".%5Cpictures%5Cabbr_list_statFormula.PNG"></p>
 <blockquote>
-<p>[!CAUTION]</p>
 <p>Be mindful to use LaTeX syntax when you want to display special
 characters or italic letters, especially in the formula sheet!</p>
 </blockquote>
@@ -1140,7 +1141,6 @@ Chapter and section information can be adjusted in a later step.</p>
 <span><span class="co">#&gt; 6             -                                nein</span></span></code></pre></div>
 <p>Now we will look at the function of each column.</p>
 <blockquote>
-<p>[!TIP]</p>
 <p>Here is a brief overview of the different columns in
 <em>varinfo</em>:</p>
 <ul>
@@ -1202,7 +1202,6 @@ title</li>
 sets. You can’t have a variable in data set 2 called <code>IDBL</code>
 if there’s an <code>IDBL</code> in data set 1 already.</p>
 <blockquote>
-<p>[!CAUTION]</p>
 <p>Across data sets, variables can’t have the same name!</p>
 </blockquote>
 </div>
@@ -1219,7 +1218,6 @@ only appears in the data set but does not get its own page
 set (<em>ja</em>), whether it only appears in the codebook (<em>sh</em>)
 or neither (<em>nein</em>).</p>
 <blockquote>
-<p>[!NOTE]</p>
 <p>When to assign what label:</p>
 <ul>
 <li>
@@ -1260,7 +1258,6 @@ can’t both have a subsection called <em>Selbstkonzept</em> - it should
 say something like <em>Selbstkonzept Mathematik</em> and
 <em>Selbstkonzept Deutsch</em>.</p>
 <blockquote>
-<p>[!CAUTION]</p>
 <p>Across data sets, subsections or sections can’t have the same
 name!</p>
 </blockquote>
@@ -1352,7 +1349,6 @@ label, e.g. the content of the background variable.</p>
 <p>There are three columns in <code>varinfo</code> that you need to edit
 for variables to show up in the appendix.</p>
 <blockquote>
-<p>[!TIP]</p>
 <ul>
 <li>
 <strong>Hintergrundmodell</strong>: Indication of whether the
@@ -1736,7 +1732,6 @@ for your data set</li>
 </ul>
 </blockquote>
 <blockquote>
-<p>![NOTE]</p>
 <p>Each subsection name has to be unique.</p>
 </blockquote>
 <div class="section level5">
@@ -2260,7 +2255,6 @@ reference in the Excel from the BT team, otherwise the function
 special LaTeX syntax for italic strings and URLs so they are displayed
 correctly in the codebook.</p>
 <blockquote>
-<p>[!NOTE]</p>
 <p>References in the Excel need to be in APA format!</p>
 </blockquote>
 </div>
@@ -2616,7 +2610,6 @@ meta data under <code>Menü</code> and
 <code>Dokumenteneigenschaften</code>:</p>
 <p><img src="./pictures/meta_data.PNG" style="width:60.0%"><img src="./pictures/meta_data2.PNG" style="width:100.0%"></p>
 <blockquote>
-<p>[!Note]</p>
 <p>The meta data should contain the following information:</p>
 <ul>
 <li>
@@ -2687,7 +2680,6 @@ proper LaTeX syntax for the codebook.</p>
 can have multiple variables. Previous BTs named the data sets like
 this:</p>
 <blockquote>
-<p>[!Note]</p>
 <ul>
 <li>
 <strong>sus</strong>: Schüler:innen</li>
@@ -2902,7 +2894,6 @@ about the publication series.</p>
 <h4 id="versions">Versions<a class="anchor" aria-label="anchor" href="#versions"></a>
 </h4>
 <blockquote>
-<p>[!Note]</p>
 <p>While working on the Codebook, you will create different versions.
 it’s best not to delete them, but save them in an <code>archive</code>
 folder to compare different versions to one another if needed.</p>
