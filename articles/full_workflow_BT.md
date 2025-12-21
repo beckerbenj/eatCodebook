@@ -85,7 +85,7 @@ template `SHB_Erstellung_Vorlage`. when you don’t have access to this
 repository, ask the package developer for help or create your own
 repository.
 
-![](.%5Cpictures%5Crepo_template.png)  
+  
 ![repo_template](pictures/repo_template.png)  
   
 
@@ -549,7 +549,9 @@ View(descriptives_sus)
 
 It should look somethings like this:
 
-![](.%5Cpictures%5CR_view(descriptives).png)
+  
+![R_view(descriptives)](pictures/R_view(descriptives).png)  
+  
 
 Now you have to check, whether everything is the way you need it to be.
 If not, you have to either make changes in the Excel file manually or
@@ -906,14 +908,20 @@ formula symbols and their meaning. It should look something like this:
 View(abbr_list)
 ```
 
-![](.%5Cpictures%5Cabbr_list_R.png)
+  
+![abbr_list_R](pictures/abbr_list_R.png)  
+  
 
 In Excel: First sheet `Akronyme`, second sheet
 `statistische Formelzeichen`
 
-![](.%5Cpictures%5Cabbr_list_akronym.png)
+  
+![abbr_list_akronym](pictures/abbr_list_akronym.png)  
+  
 
-![](.%5Cpictures%5Cabbr_list_statFormula.png)
+  
+![abbr_list_statFormula](pictures/abbr_list_statFormula.png)  
+  
 
 > Be mindful to use LaTeX syntax when you want to display special
 > characters or italic letters, especially in the formula sheet!
@@ -979,7 +987,9 @@ and should be printed like the image shows.
 abbr_list$`Statistische Formelzeichen`$Symbol[1] <- "$\alpha$"
 ```
 
-![](.%5Cpictures%5Cabbr_list_alpha.png)
+  
+![abbr_list_alpha](pictures/abbr_list_alpha.png)  
+  
 
 Italic letters or subscript/superscript also need special LaTeX code.
 The code `$_{pw}$` makes the *pw* in subscript. Use `$^{2}$` for
@@ -1256,7 +1266,9 @@ variable, `Erstellt aus` the variable(s) the (new) variable was created
 from (if any), and `Inhalt der Hintergrundvariable` contains the
 variable’s label, e.g. the content of the background variable.
 
-![BGM](pictures/BGM.PNG)
+  
+![BGM](pictures/BGM.PNG)  
+  
 
 There are three columns in `varinfo` that you need to edit for variables
 to show up in the appendix.
@@ -1373,7 +1385,9 @@ View(varinfo$slfb)
 
 This is what the list of data frames `varinfo` can look like:
 
-![](pictures%5Cvarinfo_object.png)
+  
+![varinfo_object](pictures/varinfo_object.png)  
+  
 
 You can either save it directly as an Excel file or do the layout first.
 
@@ -1443,7 +1457,9 @@ View(quellen_sus)
 
 The data frame should look something like this.
 
-![](pictures%5Cvarinfo_quellen.png)
+  
+![varinfo_quellen](pictures/varinfo_quellen.png)  
+  
 
 ##### Check Variables
 
@@ -1630,7 +1646,9 @@ View(subsections_lfb_allg)
 
 It might look like this:
 
-![](pictures%5Cvarinfo_subsections.png)
+  
+![varinfo_subsections](pictures/varinfo_subsections.png)  
+  
 
 `Abschnitt` starts with the section name *1 Testdesign* then with the
 first subsection name *1.1 Identifikationsvariable* and then `NA`, then
@@ -1693,7 +1711,9 @@ View(subsections_lfb_allg)
 
 It should look something like this now:
 
-![](pictures%5Cvarinfo_subsections_sep.png)
+  
+![varinfo_subsections_sep](pictures/varinfo_subsections_sep.png)  
+  
 
 ##### Check for Duplicates
 
@@ -2068,13 +2088,17 @@ the following list of data frames:
 gliederung <- createStructure(varinfo)
 ```
 
-![](.%5Cpictures%5Cgliederung_list.png)
+  
+![gliederung_list](pictures/gliederung_list.png)  
+  
 
 The data frames should look like this: subsection names and numbers from
 `varinfo` are added, but the section names with the full numbers (1, 2,
 etc.) are empty. You need to add them for each data frame separately.
 
-![](.%5Cpictures%5Cgliederung_sus.png)
+  
+![gliederung_sus](pictures/gliederung_sus.png)  
+  
 
 ### Structure To-do
 
@@ -2574,7 +2598,8 @@ end of this vignette. It contains information about the *title*, the
 with adobe, you can find the meta data under `Menü` and
 `Dokumenteneigenschaften`:
 
-![](pictures/meta_data.png)![](pictures/meta_data2.png)
+  
+![meta_data](pictures/meta_data.png)![meta_data2](pictures/meta_data2.png)  
 
 > The meta data should contain the following information:
 >
@@ -2731,14 +2756,20 @@ series of publications called *Schriftenreihe des Institutes zur
 Qualitätsentwicklung im Bildungswesen* in the BT studies. It’s a list of
 all codebooks from previous Bildungstrend studies:
 
-![](.%5Cpictures%5Clastpage_codebook.png)
+  
+![lastpage_codebook](pictures/lastpage_codebook.png)  
+  
 
 You need a .tex file with the following beginning: the LaTeX setup for
 the page, the title of the page in bold (`\textbf{}`), and then all
 publications of the series.
 
-![](.%5Cpictures%5Clastpage_latex.png)`lastpage` are the last pages in
-the codebook. There won’t be any mention of it in the table of contents.
+  
+![lastpage_latex](pictures/lastpage_latex.png)  
+  
+
+`lastpage` are the last pages in the codebook. There won’t be any
+mention of it in the table of contents.
 
 ### Lastpage To-do
 
@@ -2755,13 +2786,17 @@ You open the file in TeXWorks and add the current publication you are
 working on. You take the publication information from the cover file’s
 second page:
 
-![](.%5Cpictures%5Clastpage_newSeries.png)
+  
+![lastpage_newSeries](pictures/lastpage_newSeries.png)  
+  
 
 … and add this new *Band* to the .tex file. Be mindful of escaping
 special characters like `&` or umlauts. It should look something like
 this:
 
-![](.%5Cpictures%5Clastpage_newSeries_latex.png)
+  
+![lastpage_newSeries_latex](pictures/lastpage_newSeries_latex.png)  
+  
 
 Then save the file and name it `Latex_lastpage.tex`.
 
@@ -2947,7 +2982,9 @@ the Excel files that the function
 [`codebook()`](https://beckerbenj.github.io/eatCodebook/reference/codebook.md)
 converted to the proper LaTeX code. The beginning might look like this:
 
-![](.%5Cpictures%5Ctex1.png)
+  
+![tex1](pictures/tex1.png)  
+  
 
 #### Render To PDF (Twice)
 
@@ -2960,7 +2997,9 @@ created files contains information about it. When you render to pdf
 again (click the green triangle) the program creates a version with a
 table of contents.
 
-![](.%5Cpictures%5Ctex_pdf.png)
+  
+![tex_pdf](pictures/tex_pdf.png)  
+  
 
 #### Dealing with Errors
 
@@ -2976,12 +3015,16 @@ files to contain proper LaTeX syntax.
 To update the packages in *TeXWorks* you need to open your MikTeX
 console.
 
-![](.%5Cpictures%5Cmiktex_console.png)
+  
+![miktex_console](pictures/miktex_console.png)  
+  
 
 It should open to a page where you can click on the button *nach Updates
 suchen*.
 
-![](.%5Cpictures%5Cmiktex_updates.png)
+  
+![miktex_updates](pictures/miktex_updates.png)  
+  
 
 If all packages are up do date, nothing happens. Otherwise it should
 look for updates and carry them out.

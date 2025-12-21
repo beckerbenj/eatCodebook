@@ -154,7 +154,7 @@ documents to maintain overview.</p>
 project</a> and use the template <code>SHB_Erstellung_Vorlage</code>.
 when you don’t have access to this repository, ask the package developer
 for help or create your own repository.</p>
-<p><img src=".%5Cpictures%5Crepo_template.png" style="width:50.0%"><br><img src="pictures/repo_template.png" alt="repo_template"><br><br></p>
+<p><br><img src="pictures/repo_template.png" alt="repo_template" style="width:50%;"><br><br></p>
 <p>You now have all the .R templates that you need, but you might have
 to create the issues yourself. The To-dos should be apparent from this
 vignette or you can copy the issues from the template repo by hand. You
@@ -640,7 +640,7 @@ manually or by opening them in RStudio with <code><a href="https://rdrr.io/r/uti
 <span><span class="co"># BT example code</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">descriptives_sus</span><span class="op">)</span></span></code></pre></div>
 <p>It should look somethings like this:</p>
-<p><img src=".%5Cpictures%5CR_view(descriptives).png"></p>
+<p><br><img src="pictures/R_view(descriptives).png" alt="R_view(descriptives)"><br><br></p>
 <p>Now you have to check, whether everything is the way you need it to
 be. If not, you have to either make changes in the Excel file manually
 or directly in R. If you write a script that changes the data frame in
@@ -968,11 +968,11 @@ and their meaning. The second should contain all statistical formula
 symbols and their meaning. It should look something like this:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">abbr_list</span><span class="op">)</span></span></code></pre></div>
-<p><img src=".%5Cpictures%5Cabbr_list_R.png"></p>
+<p><br><img src="pictures/abbr_list_R.png" alt="abbr_list_R"><br><br></p>
 <p>In Excel: First sheet <code>Akronyme</code>, second sheet
 <code>statistische Formelzeichen</code></p>
-<p><img src=".%5Cpictures%5Cabbr_list_akronym.png"></p>
-<p><img src=".%5Cpictures%5Cabbr_list_statFormula.png"></p>
+<p><br><img src="pictures/abbr_list_akronym.png" alt="abbr_list_akronym"><br><br></p>
+<p><br><img src="pictures/abbr_list_statFormula.png" alt="abbr_list_statFormula"><br><br></p>
 <blockquote>
 <p>Be mindful to use LaTeX syntax when you want to display special
 characters or italic letters, especially in the formula sheet!</p>
@@ -1034,7 +1034,7 @@ LaTeX code and should be printed like the image shows.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># edit one entry</span></span>
 <span><span class="va">abbr_list</span><span class="op">$</span><span class="va">`Statistische Formelzeichen`</span><span class="op">$</span><span class="va">Symbol</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"$\alpha$"</span></span></code></pre></div>
-<p><img src=".%5Cpictures%5Cabbr_list_alpha.png"></p>
+<p><br><img src="pictures/abbr_list_alpha.png" alt="abbr_list_alpha"><br><br></p>
 <p>Italic letters or subscript/superscript also need special LaTeX code.
 The code <code>$_{pw}$</code> makes the <em>pw</em> in subscript. Use
 <code>$^{2}$</code> for supercript the 2 or <code>\textit{M}</code> to
@@ -1345,7 +1345,7 @@ contains the variable, <code>Erstellt aus</code> the variable(s) the
 (new) variable was created from (if any), and
 <code>Inhalt der Hintergrundvariable</code> contains the variable’s
 label, e.g. the content of the background variable.</p>
-<p><img src="pictures/BGM.PNG" alt="BGM"></p>
+<p><br><img src="pictures/BGM.PNG" alt="BGM"><br><br></p>
 <p>There are three columns in <code>varinfo</code> that you need to edit
 for variables to show up in the appendix.</p>
 <blockquote>
@@ -1499,7 +1499,7 @@ at each data frame separately:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">varinfo</span><span class="op">$</span><span class="va">slfb</span><span class="op">)</span></span></code></pre></div>
 <p>This is what the list of data frames <code>varinfo</code> can look
 like:</p>
-<p><img src="pictures%5Cvarinfo_object.png"></p>
+<p><br><img src="pictures/varinfo_object.png" alt="varinfo_object"><br><br></p>
 <p>You can either save it directly as an Excel file or do the layout
 first.</p>
 </div>
@@ -1566,7 +1566,7 @@ the proper file path. Then select the right sheet, usually
 <span><span class="va">quellen_sus</span> <span class="op">&lt;-</span> <span class="va">quellen_sus</span><span class="op">$</span><span class="va">`Sheet 1`</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">quellen_sus</span><span class="op">)</span></span></code></pre></div>
 <p>The data frame should look something like this.</p>
-<p><img src="pictures%5Cvarinfo_quellen.png" style="width:100.0%"></p>
+<p><br><img src="pictures/varinfo_quellen.png" alt="varinfo_quellen" style="width:100%;"><br><br></p>
 </div>
 <div class="section level5">
 <h5 id="check-variables">Check Variables<a class="anchor" aria-label="anchor" href="#check-variables"></a>
@@ -1746,7 +1746,7 @@ need to be separated later.</p>
 <span><span class="va">subsections_lfb_allg</span> <span class="op">&lt;-</span> <span class="va">subsections</span><span class="op">$</span><span class="va">LFB_allg</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">subsections_lfb_allg</span><span class="op">)</span></span></code></pre></div>
 <p>It might look like this:</p>
-<p><img src="pictures%5Cvarinfo_subsections.png" style="width:100.0%"></p>
+<p><br><img src="pictures/varinfo_subsections.png" alt="varinfo_subsections" style="width:100%;"><br><br></p>
 <p><code>Abschnitt</code> starts with the section name <em>1
 Testdesign</em> then with the first subsection name <em>1.1
 Identifikationsvariable</em> and then <code>NA</code>, then the next
@@ -1802,7 +1802,7 @@ name</em>.</p>
 <code class="sourceCode R"><span><span class="va">subsections_lfb_allg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">subsections_lfb_allg</span>, <span class="va">sep</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">subsections_lfb_allg</span><span class="op">)</span></span></code></pre></div>
 <p>It should look something like this now:</p>
-<p><img src="pictures%5Cvarinfo_subsections_sep.png" style="width:100.0%"></p>
+<p><br><img src="pictures/varinfo_subsections_sep.png" alt="varinfo_subsections_sep" style="width:100%;"><br><br></p>
 </div>
 <div class="section level5">
 <h5 id="check-for-duplicates">Check for Duplicates<a class="anchor" aria-label="anchor" href="#check-for-duplicates"></a>
@@ -2149,12 +2149,12 @@ like before. #### Example Table</p>
 <code>varinfo</code> we get the following list of data frames:</p>
 <div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gliederung</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createStructure.html">createStructure</a></span><span class="op">(</span><span class="va">varinfo</span><span class="op">)</span></span></code></pre></div>
-<p><img src=".%5Cpictures%5Cgliederung_list.png" style="width:100.0%"></p>
+<p><br><img src="pictures/gliederung_list.png" alt="gliederung_list" style="width:100%;"><br><br></p>
 <p>The data frames should look like this: subsection names and numbers
 from <code>varinfo</code> are added, but the section names with the full
 numbers (1, 2, etc.) are empty. You need to add them for each data frame
 separately.</p>
-<p><img src=".%5Cpictures%5Cgliederung_sus.png" style="width:50.0%"></p>
+<p><br><img src="pictures/gliederung_sus.png" alt="gliederung_sus" style="width:50%;"><br><br></p>
 </div>
 <div class="section level3">
 <h3 id="structure-to-do">Structure To-do<a class="anchor" aria-label="anchor" href="#structure-to-do"></a>
@@ -2608,7 +2608,7 @@ the end of this vignette. It contains information about the
 <em>subject</em> of the pdf. When you work with adobe, you can find the
 meta data under <code>Menü</code> and
 <code>Dokumenteneigenschaften</code>:</p>
-<p><img src="pictures/meta_data.png" style="width:60.0%"><img src="pictures/meta_data2.png" style="width:100.0%"></p>
+<p><br><img src="pictures/meta_data.png" alt="meta_data" style="width:60%;"><img src="pictures/meta_data2.png" alt="meta_data2" style="width:60%;"><br></p>
 <blockquote>
 <p>The meta data should contain the following information:</p>
 <ul>
@@ -2781,13 +2781,13 @@ space, you can add this line to <strong>0_main.R</strong> and
 series of publications called <em>Schriftenreihe des Institutes zur
 Qualitätsentwicklung im Bildungswesen</em> in the BT studies. It’s a
 list of all codebooks from previous Bildungstrend studies:</p>
-<p><img src=".%5Cpictures%5Clastpage_codebook.png"></p>
+<p><br><img src="pictures/lastpage_codebook.png" alt="lastpage_codebook"><br><br></p>
 <p>You need a .tex file with the following beginning: the LaTeX setup
 for the page, the title of the page in bold (<code>\textbf{}</code>),
 and then all publications of the series.</p>
-<p><img src=".%5Cpictures%5Clastpage_latex.png"><code>lastpage</code> are
-the last pages in the codebook. There won’t be any mention of it in the
-table of contents.</p>
+<p><br><img src="pictures/lastpage_latex.png" alt="lastpage_latex"><br><br></p>
+<p><code>lastpage</code> are the last pages in the codebook. There won’t
+be any mention of it in the table of contents.</p>
 </div>
 <div class="section level3">
 <h3 id="lastpage-to-do">Lastpage To-do<a class="anchor" aria-label="anchor" href="#lastpage-to-do"></a>
@@ -2807,11 +2807,11 @@ folder <em>Texte</em>.</p>
 <p>You open the file in TeXWorks and add the current publication you are
 working on. You take the publication information from the cover file’s
 second page:</p>
-<p><img src=".%5Cpictures%5Clastpage_newSeries.png"></p>
+<p><br><img src="pictures/lastpage_newSeries.png" alt="lastpage_newSeries"><br><br></p>
 <p>… and add this new <em>Band</em> to the .tex file. Be mindful of
 escaping special characters like <code>&amp;</code> or umlauts. It
 should look something like this:</p>
-<p><img src=".%5Cpictures%5Clastpage_newSeries_latex.png"></p>
+<p><br><img src="pictures/lastpage_newSeries_latex.png" alt="lastpage_newSeries_latex"><br><br></p>
 <p>Then save the file and name it <code>Latex_lastpage.tex</code>.</p>
 </div>
 <div class="section level4">
@@ -2999,7 +2999,7 @@ you shouldn’t need to edit it. The first part of the script contains the
 LaTeX packages that you need for the script and then all the input from
 the Excel files that the function <code><a href="../reference/codebook.html">codebook()</a></code> converted to
 the proper LaTeX code. The beginning might look like this:</p>
-<p><img src=".%5Cpictures%5Ctex1.png" style="width:100.0%"></p>
+<p><br><img src="pictures/tex1.png" alt="tex1" style="width:100%;"><br><br></p>
 </div>
 <div class="section level4">
 <h4 id="render-to-pdf-twice">Render To PDF (Twice)<a class="anchor" aria-label="anchor" href="#render-to-pdf-twice"></a>
@@ -3012,7 +3012,7 @@ This first version will not have a <em>table of contents</em>, but one
 of the created files contains information about it. When you render to
 pdf again (click the green triangle) the program creates a version with
 a table of contents.</p>
-<p><img src=".%5Cpictures%5Ctex_pdf.png" style="width:70.0%"></p>
+<p><br><img src="pictures/tex_pdf.png" alt="tex_pdf" style="width:70%;"><br><br></p>
 </div>
 <div class="section level4">
 <h4 id="dealing-with-errors">Dealing with Errors<a class="anchor" aria-label="anchor" href="#dealing-with-errors"></a>
@@ -3028,10 +3028,10 @@ Excel files to contain proper LaTeX syntax.</p>
 </h5>
 <p>To update the packages in <em>TeXWorks</em> you need to open your
 MikTeX console.</p>
-<p><img src=".%5Cpictures%5Cmiktex_console.png" style="width:50.0%"></p>
+<p><br><img src="pictures/miktex_console.png" alt="miktex_console" style="width:50%;"><br><br></p>
 <p>It should open to a page where you can click on the button <em>nach
 Updates suchen</em>.</p>
-<p><img src=".%5Cpictures%5Cmiktex_updates.png" style="width:50.0%"></p>
+<p><br><img src="pictures/miktex_updates.png" alt="miktex_updates" style="width:50%;"><br><br></p>
 <p>If all packages are up do date, nothing happens. Otherwise it should
 look for updates and carry them out.</p>
 </div>
