@@ -85,7 +85,9 @@ template `SHB_Erstellung_Vorlage`. when you don’t have access to this
 repository, ask the package developer for help or create your own
 repository.
 
-![](.%5Cpictures%5Crepo_template.png)
+![](.%5Cpictures%5Crepo_template.png)  
+![repo_template](pictures/repo_template.png)  
+  
 
 You now have all the .R templates that you need, but you might have to
 create the issues yourself. The To-dos should be apparent from this
@@ -164,8 +166,8 @@ they would need to be stored locally. The BT codebook works with
 multiple data sets that are stored in a list. But the process should
 also work if you have only one data set.
 
-> \[!NOTE\] The same variable name cannot be used more than once across
-> the data sets!
+The same variable name cannot be used more than once across the data
+sets!
 
 The data sets can be stored in `GADSdat` objects, containing two data
 frames: one for the variables and the actual data, the other contains
