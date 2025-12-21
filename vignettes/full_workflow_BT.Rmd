@@ -59,7 +59,7 @@ First set up a new private repository in the [`iqb-research` project](https://gi
 
 ![](.\pictures\repo_template.PNG){width=50%}
 <br>
-<img src="./pictures/repo_template.PNG" alt="repo_template" width=50% />  
+<img src="./pictures/repo_template.PNG" alt="repo_template" />  
 <br>  
 
 
@@ -122,11 +122,7 @@ The first step is the data import.
 
 The BT studies usually have several SPSS data files (`.sav`) that you can import with `import_spss()`, but you can also import `.RDS` files with `readRDS()`. If you work with Github, the data sets are probably too large to upload to Github, so they would need to be stored locally. The BT codebook works with multiple data sets that are stored in a list. But the process should also work if you have only one data set. 
 
-
-```{=gfm}
-> [!NOTE]
 > The same variable name cannot be used more than once across the data sets!  
-```
 
 
 The data sets can be stored in `GADSdat` objects, containing two data frames: one for the variables and the actual data, the other contains the meta data or labels for the variables. 
@@ -135,7 +131,6 @@ The data sets can be stored in `GADSdat` objects, containing two data frames: on
 
 You have to save all the data sets in one list that also determines the order in which the variables are displayed in the codebook. It's best to choose the order you want right away, so you don't have to make changes later. 
 
-> \[!NOTE\]
 > In the past the BT data sets were ordered like this: 
 >
 > - **data_sus**: student questionnaire
@@ -206,8 +201,6 @@ writeExcel(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
 
 Some information may need to be modified because the function does not label it correctly. For this, it is necessary to understand the functionality and check the variable entries. We will come back to how to actually edit the table in R. 
 
-> [!TIP]
-> 
 > Here is a brief overview of the different columns in the `inputForDescriptives` object:
 >
 > - **varName**: The name of the variable of the GADS-object
@@ -244,7 +237,7 @@ The entry in Excel or the data frame must look like this:
 
 Variables with **nominal** scales should display only the frequency distribution of the labeled categories. The page would be displayed like this:   
 <br>
-<img src="./pictures/codebook_nominal.PNG" alt="codebook_nominal" />
+<img src="./pictures/codebook_nominal.PNG" alt="codebook_nominal" />  
 <br>  
 
 The example data set doesn't have any nominal variables at the moment. If your data set has nominal variables, you can create that page with the following input:  
@@ -258,7 +251,7 @@ The example data set doesn't have any nominal variables at the moment. If your d
 Variables with **ordinal** scales should display the frequency distribution of the labeled categories as well as the statistical parameters *N* (number of participants), *M* (mean) and *SD* (standard deviation). The page would be displayed like this:  
 
 <br>
-<img src="./pictures/codebook_ordinal.PNG" alt="codebook_ordinal" />
+<img src="./pictures/codebook_ordinal.PNG" alt="codebook_ordinal" />  
 <br>  
 
 The entry in Excel or the data frame must look like this:  
@@ -284,7 +277,7 @@ The entry in Excel or the data frame must look like this:
 It is possible to get the following entries in the codebook for a **scale** and the **items** it is made of:  
 
 <br>
-<img src="./pictures/codebook_scale1.PNG" alt="codebook_scale1" /><img src="./pictures/codebook_scale2.PNG" alt="codebook_scale2" /><img src="./pictures/codebook_scale3.PNG" alt="codebook_scale3" />
+<img src="./pictures/codebook_scale1.PNG" alt="codebook_scale1" /><img src="./pictures/codebook_scale2.PNG" alt="codebook_scale2" /><img src="./pictures/codebook_scale3.PNG" alt="codebook_scale3" />  
 <br>  
 
 To get these pages the individual items must be labeled as **ordinal** and **item**, and the scale as **numeric** and **scale**. They must all have the same name at **group** so that they are displayed together.  
@@ -604,8 +597,6 @@ In Excel: First sheet `Akronyme`, second sheet `statistische Formelzeichen`
 
 ![](.\pictures\abbr_list_statFormula.PNG)
 
-> [!CAUTION]
-> 
 > Be mindful to use LaTeX syntax when you want to display special characters or italic letters, especially in the formula sheet!
 
 
@@ -712,8 +703,6 @@ head(varinfo)
 
 Now we will look at the function of each column. 
 
-> [!TIP]
-> 
 > Here is a brief overview of the different columns in *varinfo*:
 >
 > - **Var.Name**: The name of the variable
@@ -738,8 +727,6 @@ Now we will look at the function of each column.
 
 Each variable name has to be **unique** across data sets. You can't have a variable in data set 2 called `IDBL` if there's an `IDBL` in data set 1 already. 
 
-> [!CAUTION]
-> 
 > Across data sets, variables can't have the same name!  
 
 
@@ -749,8 +736,6 @@ Each variable name has to be **unique** across data sets. You can't have a varia
 
 The **in.DS.und.SH** column indicates whether a variable only appears in the data set but does not get its own page (*ds*), whether it appears both in the codebook and in the data set (*ja*), whether it only appears in the codebook (*sh*) or neither (*nein*). 
 
-> [!NOTE]
-> 
 > When to assign what label:
 >
 > - **ds**: for example, for the items of the **scale variables**, as they do not receive their own page
@@ -769,8 +754,6 @@ You need to add the `Gliederung` as well as the `Unterteilung.im.Skalenhandbuch`
 
 You can't have duplicated subsection names. The sections *Unterricht in Mathematik* and *Unterricht in Deutsch* can't both have a subsection called *Selbstkonzept* - it should say something like *Selbstkonzept Mathematik* and *Selbstkonzept Deutsch*. 
 
-> [!CAUTION]
-> 
 > Across data sets, subsections or sections can't have the same name!  
 
 #### Layout
@@ -820,8 +803,6 @@ The appendix should look like this: `Hintergrundvariable` contains the variable,
 
 There are three columns in `varinfo` that you need to edit for variables to show up in the appendix. 
 
-> [!TIP]
->
 > - **Hintergrundmodell**: Indication of whether the variable is in the background model.
 > - **HGM.Reihenfolge**: The order for the background model (in the appendix)
 > - **HGM.Variable.erstellt.aus**: Indication for the background model from which variables the variable was created
@@ -1035,8 +1016,6 @@ This Excel file also contains the **final order** in which the variables should 
 > - Transfer subsection info in `varinfo`
 > - Update titles if necessary
 
-> ![NOTE]
-> 
 > Each subsection name has to be unique. 
 
 #### Import `finale Reihenfolge`
@@ -1449,8 +1428,6 @@ The function `createLitInfo()` creates one data frame containing all in-text cit
 The references should be in [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples) format, e.g. there should only be one continuous part of italic text per reference in the Excel from the BT team, otherwise the function `getAPAInfo()` might not work properly. This function adds special LaTeX syntax for italic strings and URLs so they are displayed correctly in the codebook. 
 
 
-> [!NOTE]
-> 
 > References in the Excel need to be in APA format!
 
 
@@ -1733,8 +1710,6 @@ The meta data is the information for the pdf file that you create at the end of 
 ![](./pictures/meta_data.PNG){width=60%}
 ![](./pictures/meta_data2.PNG){width=100%}
 
-> [!Note]
-> 
 > The meta data should contain the following information:
 >
 > - **Title**: The title of the codebook
@@ -1788,8 +1763,6 @@ Now we still need to name the chapters properly.
 
 Each data set gets its own chapter. Each chapter has several sections (1, 2, etc.) and several subsections (1.1, 1.2, etc.), each subsection can have multiple variables. Previous BTs named the data sets like this: 
 
-> [!Note]
->
 > - **sus**: Schüler:innen
 > - **lfb_allg**: Lehrkräfte allgemein
 > - **lfb_spez**: Lehrkräfte lerngruppenspezifisch
@@ -1939,8 +1912,6 @@ You can add a **lastpage** that contains information about the publication serie
 
 ### Versions
 
-> [!Note]  
->  
 > While working on the Codebook, you will create different versions. it's best not to delete them, but save them in an `archive` folder to compare different versions to one another if needed.
 
 
