@@ -21,6 +21,6 @@ createMetadata
 #>     data.frame(Title = character(), Author = character(), Keywords = character(), 
 #>         Subject = character())
 #> }
-#> <bytecode: 0x55f5693f6fe8>
+#> <bytecode: 0x556c2e34fb98>
 #> <environment: namespace:eatCodebook>
 ```

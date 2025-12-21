@@ -166,9 +166,6 @@ they would need to be stored locally. The BT codebook works with
 multiple data sets that are stored in a list. But the process should
 also work if you have only one data set.
 
-The same variable name cannot be used more than once across the data
-sets!
-
 The data sets can be stored in `GADSdat` objects, containing two data
 frames: one for the variables and the actual data, the other contains
 the meta data or labels for the variables.
@@ -180,7 +177,7 @@ order in which the variables are displayed in the codebook. It’s best to
 choose the order you want right away, so you don’t have to make changes
 later.
 
-> \[!NOTE\] In the past the BT data sets were ordered like this:
+> $$!NOTE$$ In the past the BT data sets were ordered like this:
 >
 > - **data_sus**: student questionnaire
 > - **data_lfb_allg**: general teacher questionnaire
