@@ -18,8 +18,10 @@ test_that("Import Excel with two sheets, select proper sheet", {
 ### tests for improper Excel files
 
 test_that("Import Excel without reference sheet", {
-  expect_error(references <- getAPAInfo("helper_getAPAInfo_error1.xlsx", sheet = 1))
-  expect_error(references <- getAPAInfo("helper_getAPAInfo_error1.xlsx", sheet = 2))
+  expect_error(getAPAInfo("helper_getAPAInfo_error1.xlsx", sheet = 1),
+               "Column names in 'ref_table' must be 'Kurzangabe' and 'Langangabe'.")
+  expect_error(getAPAInfo("helper_getAPAInfo_error1.xlsx", sheet = 2),
+               "Column names in 'ref_table' must be 'Kurzangabe' and 'Langangabe'.")
 })
 
 test_that("Import Excel with two reference sheets, sheet specified", {
@@ -33,7 +35,8 @@ test_that("Import Excel with two reference sheets, sheet specified", {
   expect_true(is.data.frame(references2))
   expect_true(identical(names(references2), c("Kurzangabe", "Langangabe")))
   # no reference sheet
-  expect_error(references3 <- getAPAInfo("helper_getAPAInfo_error2.xlsx", sheet = 1))
+  expect_error(references3 <- getAPAInfo("helper_getAPAInfo_error2.xlsx", sheet = 1),
+               "Column names in 'ref_table' must be 'Kurzangabe' and 'Langangabe'.")
 
   ## file with just two reference sheets
   # reference sheet
@@ -54,7 +57,8 @@ test_that("wrong sheet selected", {
   expect_error(references <- getAPAInfo("helper_getAPAInfo_1sheet.xlsx"))
   expect_error(references <- getAPAInfo("helper_getAPAInfo_1sheet.xlsx", sheet = 2))
   # sheet exists, but has no reference list
-  expect_error(references <- getAPAInfo("helper_getAPAInfo_2sheets.xlsx", sheet = 1))
+  expect_error(references <- getAPAInfo("helper_getAPAInfo_2sheets.xlsx", sheet = 1),
+               "Column names in 'ref_table' must be 'Kurzangabe' and 'Langangabe'.")
   })
 
 
