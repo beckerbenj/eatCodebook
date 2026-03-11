@@ -61,7 +61,7 @@
                         <h4 data-toc-skip class="author">Edna
 Grewers</h4>
             
-            <h4 data-toc-skip class="date">2025-12-21</h4>
+            <h4 data-toc-skip class="date">2026-03-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/beckerbenj/eatCodebook/blob/main/vignettes/full_workflow_BT.Rmd" class="external-link"><code>vignettes/full_workflow_BT.Rmd</code></a></small>
       <div class="d-none name"><code>full_workflow_BT.Rmd</code></div>
@@ -2251,7 +2251,7 @@ Excel file.</p>
 <p>The references should be in <a href="https://apastyle.apa.org/style-grammar-guidelines/references/examples" class="external-link">APA</a>
 format, e.g. there should only be one continuous part of italic text per
 reference in the Excel from the BT team, otherwise the function
-<code>getAPAInfo()</code> might not work properly. This function adds
+<code><a href="../reference/getAPAInfo.html">getAPAInfo()</a></code> might not work properly. This function adds
 special LaTeX syntax for italic strings and URLs so they are displayed
 correctly in the codebook.</p>
 <blockquote>
@@ -2372,13 +2372,13 @@ files that matched the references to the variables. The second sheet
 contains all in-text citations used per data set and their references.
 They should already have the right APA format (with italic parts). If we
 use <code><a href="../reference/getExcel.html">getExcel()</a></code> like before this information will be lost.
-So we use <code>getAPAInfo()</code> which imports the Excel data and
+So we use <code><a href="../reference/getAPAInfo.html">getAPAInfo()</a></code> which imports the Excel data and
 adds the proper LaTeX syntax for italic input
 (<code>\textit{...}</code>) and URLs
 (<code>\urlstyle{same}\url{...}</code>).</p>
 <p>The <em>intro</em> to the codebook usually has separate references
 that you have to add <em>later</em>.</p>
-<p>Import the reference list with <code>getAPAInfo()</code>. It adds the
+<p>Import the reference list with <code><a href="../reference/getAPAInfo.html">getAPAInfo()</a></code>. It adds the
 LaTeX syntax for italic text and URLs. It needs the
 <code>file path</code> and the <code>sheet</code> number of the
 reference list in the file. The default for the <code>sheet</code>
@@ -2386,7 +2386,7 @@ argument is <code>2</code>, as it is the use case for most BT reference
 files. You recognize the reference list sheet by having two columns
 called <code>Kurzangabe</code> and <code>Langangabe</code>.</p>
 <div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ref_lfb_allg</span> <span class="op">&lt;-</span> <span class="fu">getAPAInfo</span><span class="op">(</span><span class="st">"Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ref_lfb_allg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getAPAInfo.html">getAPAInfo</a></span><span class="op">(</span><span class="st">"Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">ref_lfb_allg</span><span class="op">)</span></span></code></pre></div>
 <p>When you view the imported reference list, italic parts should be
 surrounded by <code>\textit{...}</code>, links should be surrounded by
@@ -2465,11 +2465,11 @@ were used in <code>varinfo</code>. we can’t match references when they
 are not listed. So now we add additional references like the ones used
 in the intro or other texts.</p>
 <p>First we <strong>import the intro references</strong> using
-<code>getAPAInfo()</code> to get a data frame including LaTeX syntax for
+<code><a href="../reference/getAPAInfo.html">getAPAInfo()</a></code> to get a data frame including LaTeX syntax for
 the italic text parts. Don’t forget to check which page the reference
 list is on.</p>
 <div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ref_intro</span> <span class="op">&lt;-</span> <span class="fu">getAPAInfo</span><span class="op">(</span><span class="st">"Q:\\filepath\\Intro_Quellen.xlsx"</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ref_intro</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getAPAInfo.html">getAPAInfo</a></span><span class="op">(</span><span class="st">"Q:\\filepath\\Intro_Quellen.xlsx"</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p>The data frame has probably two columns (<code>Kurzangabe</code> and
 <code>Langangabe</code>), but we need the third column
 <code>in_Literaturverzeichnis</code> so we can combine the two data
@@ -3045,7 +3045,7 @@ look for updates and carry them out.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Benjamin Becker, Sebastian Weirich, Felix Milles, Johanna Busse.</p>
+  <p>Developed by Benjamin Becker, Sebastian Weirich, Felix Milles.</p>
 </div>
 
 <div class="pkgdown-footer-right">

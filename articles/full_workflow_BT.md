@@ -2211,9 +2211,9 @@ The references should be in
 [APA](https://apastyle.apa.org/style-grammar-guidelines/references/examples)
 format, e.g. there should only be one continuous part of italic text per
 reference in the Excel from the BT team, otherwise the function
-`getAPAInfo()` might not work properly. This function adds special LaTeX
-syntax for italic strings and URLs so they are displayed correctly in
-the codebook.
+[`getAPAInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getAPAInfo.md)
+might not work properly. This function adds special LaTeX syntax for
+italic strings and URLs so they are displayed correctly in the codebook.
 
 > References in the Excel need to be in APA format!
 
@@ -2338,19 +2338,21 @@ that matched the references to the variables. The second sheet contains
 all in-text citations used per data set and their references. They
 should already have the right APA format (with italic parts). If we use
 [`getExcel()`](https://beckerbenj.github.io/eatCodebook/reference/getExcel.md)
-like before this information will be lost. So we use `getAPAInfo()`
+like before this information will be lost. So we use
+[`getAPAInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getAPAInfo.md)
 which imports the Excel data and adds the proper LaTeX syntax for italic
 input (`\textit{...}`) and URLs (`\urlstyle{same}\url{...}`).
 
 The *intro* to the codebook usually has separate references that you
 have to add *later*.
 
-Import the reference list with `getAPAInfo()`. It adds the LaTeX syntax
-for italic text and URLs. It needs the `file path` and the `sheet`
-number of the reference list in the file. The default for the `sheet`
-argument is `2`, as it is the use case for most BT reference files. You
-recognize the reference list sheet by having two columns called
-`Kurzangabe` and `Langangabe`.
+Import the reference list with
+[`getAPAInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getAPAInfo.md).
+It adds the LaTeX syntax for italic text and URLs. It needs the
+`file path` and the `sheet` number of the reference list in the file.
+The default for the `sheet` argument is `2`, as it is the use case for
+most BT reference files. You recognize the reference list sheet by
+having two columns called `Kurzangabe` and `Langangabe`.
 
 ``` r
 ref_lfb_allg <- getAPAInfo("Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx")
@@ -2446,9 +2448,10 @@ View(literatur)
 add additional references like the ones used in the intro or other
 texts.
 
-First we **import the intro references** using `getAPAInfo()` to get a
-data frame including LaTeX syntax for the italic text parts. Don’t
-forget to check which page the reference list is on.
+First we **import the intro references** using
+[`getAPAInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getAPAInfo.md)
+to get a data frame including LaTeX syntax for the italic text parts.
+Don’t forget to check which page the reference list is on.
 
 ``` r
 ref_intro <- getAPAInfo("Q:\\filepath\\Intro_Quellen.xlsx", sheet = 1)

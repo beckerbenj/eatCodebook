@@ -102,8 +102,9 @@ dat   <- eatGADS::import_spss(file)
 varInfo <- createInputForDescriptives(dat, impExpr = "plausible value")
 # calculate descriptives
 descr <- calculateDescriptives(dat, varInfo)
-#> Warning: the ‘isNested’ function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainter to do so.
-#> This warning is displayed once per session.
+#> Registered S3 method overwritten by 'car':
+#>   method           from
+#>   na.action.merMod lme4
 #> Warning: `report()` was deprecated in eatRep 0.15.0.
 #> ℹ For the original behavior of report() please use eatRep version 0.14.7:
 #>   'https://cran.r-project.org/src/contrib/Archive/eatRep/'

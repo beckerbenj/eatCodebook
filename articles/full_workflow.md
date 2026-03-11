@@ -176,14 +176,15 @@ showFunctions
 #> 6      varOrdinal          kennwerte.ordinal
 # acutally calculate descriptives
 descStatistics <- calculateDescriptives(GADSdat = dat, inputForDescriptives = inputForDescriptives_edited, showCallOnly = FALSE)
-#> Warning: the 'isNested' function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainter to do so.
-#> This warning is displayed once per session.
+#> Registered S3 method overwritten by 'car':
+#>   method           from
+#>   na.action.merMod lme4
 #> Warning: `report()` was deprecated in eatRep 0.15.0.
 #> ℹ For the original behavior of report() please use eatRep version 0.14.7:
 #>   'https://cran.r-project.org/src/contrib/Archive/eatRep/'
 #> ℹ The deprecated feature was likely used in the eatCodebook package.
 #>   Please report the issue to the authors.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 descStatistics[[5]]

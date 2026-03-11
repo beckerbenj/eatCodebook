@@ -45,6 +45,9 @@
 - [`embedLatexSnippet()`](https://beckerbenj.github.io/eatCodebook/reference/embedLatexSnippet.md)
   : Embed a Latex Snippet.
 
+- [`getAPAInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getAPAInfo.md)
+  : Import APA references from an Excel sheet.
+
 - [`getAbbrList()`](https://beckerbenj.github.io/eatCodebook/reference/getAbbrList.md)
   : Import abbreviation list.
 
