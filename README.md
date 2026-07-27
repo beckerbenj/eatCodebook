@@ -1,4 +1,3 @@
-
 # eatCodebook <a href="https://beckerbenj.github.io/eatCodebook/"><img src="man/figures/logo.png" align="right" height="120" alt="eatCodebook website" /></a>
 
 <!-- badges: start -->
