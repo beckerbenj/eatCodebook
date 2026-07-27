@@ -9,5 +9,6 @@ allows the automatic creation of a nicely formatted codebook via
 You can install the development version of eatCodebook from Github with
 
 ``` r
+
 remotes::install_github("beckerbenj/eatCodebook")
 ```

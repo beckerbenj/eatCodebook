@@ -10,6 +10,7 @@ function from the `eatGADS` package which adds `SPSS` format information
 to the meta data of the data set.
 
 ``` r
+
 library(eatCodebook)
 dat <- eatGADS::import_DF(iris)
 #> Sepal.Length has been renamed to Sepal_Length
@@ -35,6 +36,7 @@ creates a template to provide the information that is needed to
 calculate the descriptive statistics for an `GADSdat` object.
 
 ``` r
+
 inputForDescriptives <- createInputForDescriptives(GADSdat = dat)
 head(inputForDescriptives)
 #>              varName varLabel format   imp     type   scale        group
@@ -49,6 +51,7 @@ The template should be exported to `.xlsx`, modified and reimported to
 `R`.
 
 ``` r
+
 writeExcel(inputForDescriptives, "inputForDescriptives.xlsx")
 inputForDescriptives_edited <- getInputForDescriptives("inputForDescriptives.xlsx")
 ```
@@ -57,6 +60,7 @@ This input is then used to calculate descriptive statistics via
 [`calculateDescriptives()`](https://beckerbenj.github.io/eatCodebook/reference/calculateDescriptives.md).
 
 ``` r
+
 # calculate descriptives
 descStatistics <- calculateDescriptives(GADSdat = dat, 
                                         inputForDescriptives = inputForDescriptives_edited)
@@ -74,6 +78,7 @@ labels of valid and missing values. A respective overview is created via
 [`createMissings()`](https://beckerbenj.github.io/eatCodebook/reference/createMissings.md).
 
 ``` r
+
 missings <- createMissings(dat, inputForDescriptives = inputForDescriptives_edited)
 head(missings)
 #>   Var.name Wert missing    LabelSH Zeilenumbruch_vor_Wert
@@ -89,6 +94,7 @@ Note that all the `getXXX` functions perform important cleaning and
 preparation steps, therefore the exporting to `xlsx` is obligatory.
 
 ``` r
+
 writeExcel(missings, "example_miss.xlsx", row.names = FALSE)
 miss_final <- getMissings("example_miss.xlsx")
 ```
@@ -104,6 +110,7 @@ A key element of the `eatCodebook` package is that various forms of
 variable information can be supplied.
 
 ``` r
+
 varInfo <- createVarInfo(dat, inputForDescriptives = inputForDescriptives_edited)
 head(varInfo)
 #>       Var.Name in.DS.und.SH Unterteilung.im.Skalenhandbuch Layout LabelSH
@@ -133,6 +140,7 @@ head(varInfo)
 ```
 
 ``` r
+
 writeExcel(varInfo, "example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("example_varInfo.xlsx")
 varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, 
@@ -170,6 +178,7 @@ A key element of the `eatCodebook` package is that various forms of
 variable information can be supplied.
 
 ``` r
+
 struc <- createStructure(varInfo_final)
 head(struc)
 #>     Titel Ebene
@@ -181,6 +190,7 @@ head(struc)
 ```
 
 ``` r
+
 writeExcel(struc, "example_struc.xlsx", row.names = FALSE)
 struc_final <- getStructure("example_struc.xlsx")
 ```
@@ -198,6 +208,7 @@ A key element of the `eatCodebook` package is that various forms of
 variable information can be supplied.
 
 ``` r
+
 scaleInfo <- createScaleInfo(inputForDescriptives_edited)
 head(scaleInfo)
 #> [1] varName              Anzahl_valider_Werte Items_der_Skala     
@@ -206,6 +217,7 @@ head(scaleInfo)
 ```
 
 ``` r
+
 writeExcel(scaleInfo, "example_scaleInfo.xlsx", row.names = FALSE)
 scaleInfo_final <- getScaleInfo("example_scaleInfo.xlsx")
 ```
@@ -219,6 +231,7 @@ scaleInfo_final <- getScaleInfo("example_scaleInfo.xlsx")
 Meta data can be added to the codebook.
 
 ``` r
+
 meta <- createMetadata()
 meta[1, "Title"] <- "Codebook Test"
 meta[1, "Author"] <- "Anna Muster"
@@ -227,6 +240,7 @@ meta[1, "Subject"] <- "test"
 ```
 
 ``` r
+
 writeExcel(meta, "example_meta.xlsx", row.names = FALSE)
 meta_final <- makeMetadata("example_meta.xlsx")
 ```
@@ -236,6 +250,7 @@ meta_final <- makeMetadata("example_meta.xlsx")
 Create the chapter structure.
 
 ``` r
+
 chapters <- createChapters(varInfo_final2)
 chapters[1, 2] <- "Iris Datensatz"
 ```
@@ -247,6 +262,7 @@ Now we create the actual codebook script via calling the
 function.
 
 ``` r
+
 latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
                          scaleInfo = scaleInfo_final, dat = eatGADS::extractData(dat),
                          Kennwertedatensatz = descStatistics, chapters = chapters)
@@ -274,6 +290,7 @@ The resulting object and the meta data are then separately save to the
 hard drive. Both objects should be saved into the same folder.
 
 ``` r
+
 write.table(latex_skript , file = "minimal_example.tex" , fileEncoding="UTF-8" ,
             col.names=FALSE , row.names=FALSE , quote = FALSE )
 write.table(meta_final , file = "minimal_example_meta.xmpdata", fileEncoding="UTF-8" ,

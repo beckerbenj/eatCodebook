@@ -13,6 +13,7 @@ categorical, pooled variables, scales). We import the data set using the
 is installed.
 
 ``` r
+
 library(eatCodebook)
 file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
 dat <- eatGADS::import_spss(file)
@@ -99,24 +100,24 @@ will find the following files:
 There are several files and folders. The .R files contain example
 scripts and to-dos, that you need to adjust and add to.
 
-| R File                | Description                                                                                                                                                                                                                                                                               |
-|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `0_main.R`            | The main file you work in. You can work with just this file and ignore the others, if you want. I recommend using this file for smaller changes and the separate files for more complex changes. With this file, you can create Excel files which you then have to edit manually or in R. |
-| `1_kennwerte.R`       | Create and edit the `inputForDescriptives` files. This might not be needed, when you don’t have to adjust anything here.                                                                                                                                                                  |
-| `2_varinfo.R`         | Create and edit the `varinfo` file. This file contains the **core** content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc..                                        |
-| `3_gliederung.R`      | The information read from `varinfo` is usually incomplete, so you have to add missing section names.                                                                                                                                                                                      |
-| `4_literatur.R`       | Create and edit the reference list. You have to match in-text citations to their respective references.                                                                                                                                                                                   |
-| `5_latex_intro.R`     | A template to create a .tex file with LaTeX syntax out of a Word .docx document. You need this later when creating the intro.                                                                                                                                                             |
-| `6_Erstellung_kurz.R` | A short script which can create a new codebook version after you created all the necessary Excel files.                                                                                                                                                                                   |
+| R File | Description |
+|----|----|
+| `0_main.R` | The main file you work in. You can work with just this file and ignore the others, if you want. I recommend using this file for smaller changes and the separate files for more complex changes. With this file, you can create Excel files which you then have to edit manually or in R. |
+| `1_kennwerte.R` | Create and edit the `inputForDescriptives` files. This might not be needed, when you don’t have to adjust anything here. |
+| `2_varinfo.R` | Create and edit the `varinfo` file. This file contains the **core** content of the codebook. `eatCodebook()` creates the table structure with variable names and labels on its own, but you have to add structure, references, instructions, etc.. |
+| `3_gliederung.R` | The information read from `varinfo` is usually incomplete, so you have to add missing section names. |
+| `4_literatur.R` | Create and edit the reference list. You have to match in-text citations to their respective references. |
+| `5_latex_intro.R` | A template to create a .tex file with LaTeX syntax out of a Word .docx document. You need this later when creating the intro. |
+| `6_Erstellung_kurz.R` | A short script which can create a new codebook version after you created all the necessary Excel files. |
 
 You need to make sure that there are three folders and create them if
 not.
 
-| Folder        | Description                                                                                                                                                  |
-|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `excel_files` | Here you save all of the created Excel files to save the progress. In this vignette you also save two `.RDS` files in this folder.                           |
-| `Latex`       | Here you save the .tex files and pdfs of the finished LaTeX script for the codebook. You can add the folder `archive` to keep different versions to compare. |
-| `Texte`       | Here you can save the intro text, cover and other texts.                                                                                                     |
+| Folder | Description |
+|----|----|
+| `excel_files` | Here you save all of the created Excel files to save the progress. In this vignette you also save two `.RDS` files in this folder. |
+| `Latex` | Here you save the .tex files and pdfs of the finished LaTeX script for the codebook. You can add the folder `archive` to keep different versions to compare. |
+| `Texte` | Here you can save the intro text, cover and other texts. |
 
 Pull the repo and start with the file **0_main.R**. You usually don’t
 need to copy any code from this vignette, because the template already
@@ -129,6 +130,7 @@ The packages you need are usually at the top of the files in `setup`. To
 save time you can install them before you start your work.
 
 ``` r
+
 # main
 remotes::install_github("beckerbenj/eatCodebook")
 library(eatCodebook)
@@ -210,6 +212,7 @@ them in a meaningful manner. Here you have an example syntax, where you
 would need to adjust the **file name**.
 
 ``` r
+
 data_sus      <- eatGADS::import_spss("Q:\\filepath\\Daten_sus.sav")
 data_lfb_allg <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb_allg.sav")
 data_lfb_spez <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb_spez.sav")
@@ -224,6 +227,7 @@ The order determines the order in which they are displayed in the
 codebook. The names should be consistent throughout.
 
 ``` r
+
 datalist <- list(sus = data_sus,
                  lfb_allg = data_lfb_allg, lfb_spez = data_lfb_spez,
                  slfb = data_slfb, match = data_match)
@@ -254,6 +258,7 @@ Here you can see an example how the object should look like and what the
 different columns mean.
 
 ``` r
+
 inputForDescriptives <- createInputForDescriptives(GADSdat = dat)
 #> Warning in FUN(data[x, , drop = FALSE], ...): Identification of fake scales
 #> cannot be done completely automatically. Please check if the assignment of
@@ -279,6 +284,7 @@ You can look at the template data frame either in R or save it in a new
 Excel file.
 
 ``` r
+
 # look at it in R
 View(inputForDescriptives)
 
@@ -502,6 +508,7 @@ according to your data sets like `descriptives_sus` or
 (e.g. `data_sus`) and returns a data frame.
 
 ``` r
+
 # example dat from eatCodebook
 inputForDescriptives <- createInputForDescriptives(GADSdat = dat, nCatsForOrdinal = 4)
 
@@ -518,6 +525,7 @@ adjust the file path. Remember adjusting the file names when you copy
 and paste the code for the other data sets.
 
 ``` r
+
 writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus.xlsx")
 writeExcel(descriptives_lfb_allg, ".\\excel_files\\descriptives_lfb_allg.xlsx")
 ```
@@ -532,6 +540,7 @@ All `getX()` functions check for proper format and run important
 cleaning functions.
 
 ``` r
+
 descriptives_sus <- getInputForDescriptives(".\\excel_files\\descriptives_sus.xlsx")
 ```
 
@@ -540,6 +549,7 @@ or by opening them in RStudio with
 [`View()`](https://rdrr.io/r/utils/View.html).
 
 ``` r
+
 # eatCodebook example
 View(inputForDescriptives)
 
@@ -588,6 +598,7 @@ With the position of the variables, you can change multiple variables at
 the same time. You can also change other columns this way.
 
 ``` r
+
 # extracting the position of variables skala1_item1 - skala1_item3
 pos <- grep("skala1_", inputForDescriptives$varName)
 # adjusting the input for the column `scale`
@@ -597,6 +608,7 @@ inputForDescriptives$scale[pos] <- "ordinal"
 You can also adjust their **group** this way.
 
 ``` r
+
 # adjusting the input for the column `group`
 inputForDescriptives$group[pos] <- "skala1"
 ```
@@ -612,6 +624,7 @@ label. The loop identifies all variables with matching `group` labels
 that have the wrong `type` label.
 
 ``` r
+
 # identifying all scale variables
 group <- inputForDescriptives[inputForDescriptives$type == "scale",]$group
 # adjusting the item variables
@@ -630,6 +643,7 @@ file name. Then import the new Excel again to make sure the format is
 still right and load it into a new object with the ending `_edited`.
 
 ``` r
+
 # save changes
 writeExcel(descriptives_sus, ".\\excel_files\\descriptives_sus_edited.xlsx")
 # import changes
@@ -647,6 +661,7 @@ descriptives file. Be mindful of warnings or errors, they might indicate
 something that will cause problems later.
 
 ``` r
+
 check_scale <- checkScaleConsistency(data_sus, descriptives_sus_edited.xlsx, 1:nrow(descriptives_sus_edited.xlsx))
 ```
 
@@ -659,6 +674,7 @@ for each data set separately. Depending on how large the data set is,
 this can take a while.
 
 ``` r
+
 kennwerte_sus <- calculateDescriptives(GADSdat = data_sus, inputForDescriptives = descriptives_sus_edited, showCallOnly = FALSE)
 kennwerte_lfb_allg <- calculateDescriptives(GADSdat = data_lfb_allg, inputForDescriptives = descriptives_lfb_allg_edited, showCallOnly = FALSE)
 ```
@@ -672,6 +688,7 @@ order of `datalist`, the list of the raw data sets, the names should
 also match the `datalist` names.
 
 ``` r
+
 # inputForDescriptives list
 input_descriptives <- list(sus = descriptives_sus_edited,
                            lfb_allg = descriptives_lfb_allg_edited,
@@ -688,6 +705,7 @@ Then save them in two `.RDS` files with
 [`readRDS()`](https://rdrr.io/r/base/readRDS.html).
 
 ``` r
+
 # save files
 saveRDS(input_descriptives, ".\\excel_files\\input_descriptives.RDS")
 saveRDS(kennwerte, ".\\excel_files\\kennwerte.RDS")
@@ -717,6 +735,7 @@ labels used in the data sets.
 Here you can see what the `missings` data frame should look like.
 
 ``` r
+
 missings <- createMissings(dat, inputForDescriptives = inputForDescriptives)
 head(missings)
 #>      Var.name Wert missing       LabelSH Zeilenumbruch_vor_Wert
@@ -741,6 +760,7 @@ and save it to Excel as `missings.xlsx`. You import it again with
 anything.
 
 ``` r
+
 # create missings
 missings <- createMissings(datalist, input_descriptives)
 # save to Excel
@@ -772,6 +792,7 @@ sheet after saving to Excel). This is what the scale info should look
 like:
 
 ``` r
+
 scaleInfo <- createScaleInfo(inputForDescriptives)
 head(scaleInfo)
 #>           varName Anzahl_valider_Werte
@@ -821,6 +842,7 @@ reads the information about scales out of the descriptives list, and
 creates a new list of data frames.
 
 ``` r
+
 skalen <- createScaleInfo(input_descriptives)
 ```
 
@@ -830,6 +852,7 @@ You need to look at the object to make sure all scales are displayed
 correctly.
 
 ``` r
+
 View(skalen)
 ```
 
@@ -843,6 +866,7 @@ Then save the data frame to Excel and import again with
 to check for errors and format.
 
 ``` r
+
 # save to Excel
 writeExcel(df_list = skalen, row.names = FALSE, filePath = ".\\excel_files\\skalen.xlsx")
 # import to check
@@ -863,6 +887,7 @@ You can identify fake scales in the descriptives files by their label
 add them to the `skalen` data frame.
 
 ``` r
+
 fakeItems <- inputForDescriptives[inputForDescriptives$type == "fake_item",]
 fakeItems[,c(1,7)] # look at the names and group
 ```
@@ -905,6 +930,7 @@ codebook and their meaning. The second should contain all statistical
 formula symbols and their meaning. It should look something like this:
 
 ``` r
+
 View(abbr_list)
 ```
 
@@ -942,6 +968,7 @@ already labeled correctly. You can edit it in R or save it to Excel as
 `abkürzung.xlsx` in the folder *excel_files* and edit it manually.
 
 ``` r
+
 abbr_list <- createAbbrList()
 # save in Excel
 writeExcel(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkürzung.xlsx")
@@ -954,6 +981,7 @@ your work space and update it if necessary. You would need to update
 your `file path` for that.
 
 ``` r
+
 abbr_list <- getExcel("Q:\\filepath\\abkuerzung.xlsx")
 # save in Excel
 writeExcel(df_list = abbr_list, row.names = FALSE, filePath = ".\\excel_files\\abkürzung.xlsx")
@@ -967,6 +995,7 @@ with
 [`writeExcel()`](https://beckerbenj.github.io/eatCodebook/reference/writeExcel.md).
 
 ``` r
+
 # add a new line
 abbr_list$`Statistische Formelzeichen`[nrow(abbr_list$`Statistische Formelzeichen`) + 1,] = c("α", "Cronbachs Alpha")
 # add multiple lines
@@ -983,6 +1012,7 @@ itself. You might need to adjust the spelling. `$\alpha$` is LaTeX code
 and should be printed like the image shows.
 
 ``` r
+
 # edit one entry
 abbr_list$`Statistische Formelzeichen`$Symbol[1] <- "$\alpha$"
 ```
@@ -996,6 +1026,7 @@ The code `$_{pw}$` makes the *pw* in subscript. Use `$^{2}$` for
 supercript the 2 or `\textit{M}` to print italic text or letters.
 
 ``` r
+
 # new line with correct syntax
 abbr_list$`Statistische Formelzeichen`[nrow(abbr_list$`Statistische Formelzeichen`) + 1,] = c("r$_{pw}$", "Part-whole-korrigierte Korrelation")
 ```
@@ -1012,6 +1043,7 @@ Make sure you only have two columns per sheet/data frame and delete any
 others, if necessary.
 
 ``` r
+
 # edit abbr_list
 abbr_list$Akronyme <- abbr_list21$Akronyme[,1:2]
 abbr_list$`Statistische Formelzeichen` <- abbr_list21$`Statistische Formelzeichen`[,1:2]
@@ -1025,6 +1057,7 @@ you need directly from the Excel file with
 and save it in `abbr_list`:
 
 ``` r
+
 # creates LaTeX syntax
 abbr_list <- makeAbbrList(".\\excel_files\\abkürzung.xlsx")
 ```
@@ -1065,6 +1098,7 @@ information can be adjusted in a later step.
 Here is in example what that can look like.
 
 ``` r
+
 varinfo <- createVarInfo(dat, inputForDescriptives = inputForDescriptives)
 head(varinfo)
 #>       Var.Name in.DS.und.SH Unterteilung.im.Skalenhandbuch Layout
@@ -1315,13 +1349,13 @@ descriptives in order to create `varinfo`. After the setup you need to
 add the following information. The order in which you add them is up to
 you, but it makes sense to keep to the order in this vignette.
 
-| Column in Varinfo                                                      | Where to get the Information from                                                                          |
-|------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| `QuelleSH` and `Instruktionen`                                         | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set    |
-| `Gliederung` and `Unterteilung.im.Skalenhandbuch`                      | Often in one file called something like `Reihenfolge_Variable_final.xlsx`, contains one sheet per data set |
-| `rekodiert`                                                            | Info in the `Var.Name`: all with `_r` at the end                                                           |
-| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | In an extra Excel file, you might have to ask about it or also on `Q:`                                     |
-| optional: `Anmerkung.Var`                                              | In a file on `Q:`                                                                                          |
+| Column in Varinfo | Where to get the Information from |
+|----|----|
+| `QuelleSH` and `Instruktionen` | Both usually in the same file under `Q:/filepath/04_Instruktionen_Quellen`, one Excel file per data set |
+| `Gliederung` and `Unterteilung.im.Skalenhandbuch` | Often in one file called something like `Reihenfolge_Variable_final.xlsx`, contains one sheet per data set |
+| `rekodiert` | Info in the `Var.Name`: all with `_r` at the end |
+| `Hintergrundmodell`, `HGM.Reihenfolge` and `HGM.Variable.erstellt.aus` | In an extra Excel file, you might have to ask about it or also on `Q:` |
+| optional: `Anmerkung.Var` | In a file on `Q:` |
 
 The order of the variables when you first create `varinfo` depends on
 the order from the data sets. However, the final order of the variables
@@ -1341,6 +1375,7 @@ After you created and edited the `varinfo.xlsx`, you need to add this
 line to your **0_main.R** file.
 
 ``` r
+
 varinfo <- getVarInfo(".\\excel_files\\varinfo_edited.xlsx")
 ```
 
@@ -1360,6 +1395,7 @@ from the input for descriptives list you created out of that
 (`input_descriptives`):
 
 ``` r
+
 varinfo <- createVarInfo(datalist, input_descriptives)
 ```
 
@@ -1374,6 +1410,7 @@ takes those names to name the different data frames. You can look at
 `varinfo` as a list or at each data frame separately:
 
 ``` r
+
 # View varinfo list object
 View(varinfo)
 # View data frames in varinfo
@@ -1399,6 +1436,7 @@ You need the newly created `varinfo` object, the `datalist` and
 `input_descriptives`.
 
 ``` r
+
 varinfo <- inferLayout(varinfo, datalist, input_descriptives)
 ```
 
@@ -1411,6 +1449,7 @@ Now save to Excel `varinfo.xlsx` as a template, and
 [`getVarInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getVarInfo.md).
 
 ``` r
+
 # save to Excel
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo.xlsx")
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\excel_files\\varinfo_edited.xlsx")
@@ -1450,6 +1489,7 @@ you need to add the proper file path. Then select the right sheet,
 usually `sheet 1`, and look at the data frame.
 
 ``` r
+
 quellen_sus <- getExcel("filepath\\Instruktionen_Quellen.xlsx")
 quellen_sus <- quellen_sus$`Sheet 1`
 View(quellen_sus)
@@ -1473,6 +1513,7 @@ probably have to clean up the data frames first, before doing the next
 steps.
 
 ``` r
+
 setdiff(varinfo$sus$Var.Name, quellen_sus$Variable)
 setdiff(quellen_sus$Variable, varinfo$sus$Var.Name)
 ```
@@ -1507,6 +1548,7 @@ spelling. This is a case where it might be easier to update the
 references Excel file, but you could also do this in your script:
 
 ``` r
+
 quellen_lfb_spez$Variable[quellen_lfb_spez$Variable == "LFACH"] <- "Fach"
 ```
 
@@ -1521,6 +1563,7 @@ might be easier to adjust the Excel file on `Q:`, but only after you
 asked about that.
 
 ``` r
+
 # identify position of variable "IDBL"
 mismatch <- c("IDSCH", "IDBL", "LVERSION")
 for(var in mismatch){
@@ -1536,6 +1579,7 @@ there are none (`character(0)`), you can go to the next step. Output
 from the first line can still be ignored.
 
 ``` r
+
 setdiff(varinfo$sus$Var.Name, quellen_sus$Variable)
 setdiff(quellen_sus$Variable, varinfo$sus$Var.Name)
 ```
@@ -1551,6 +1595,7 @@ compares two character vectors - for instance `quellen_sus$Variable` and
 `varinfo$sus$Var.Name` which both contain the variable’s names.
 
 ``` r
+
 pos <- match(quellen_sus$Variable, varinfo$sus$Var.Name)
 pos
 ```
@@ -1575,6 +1620,7 @@ in-text citations and instructions should be matched to the proper
 variable in `varinfo`.
 
 ``` r
+
 varinfo$sus$QuelleSH[pos] <- quellen_sus$Quelle
 varinfo$sus$Instruktionen[pos] <- quellen_sus$Instruktion
 ```
@@ -1587,6 +1633,7 @@ all variables with [`View()`](https://rdrr.io/r/utils/View.html) or a
 random set of variables and look at the respective columns.
 
 ``` r
+
 # compares variables 1 to 10:
 quellen_sus[1:10, c(1, 3, 4)]
 varinfo$sus[1:10, c(1, 11:12)]
@@ -1600,6 +1647,7 @@ Excel with
 to check for format errors.
 
 ``` r
+
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
@@ -1639,6 +1687,7 @@ your data set (`lfb_allg` for example). The column `Abschnitt` contains
 the subsection numbers and names, that need to be separated later.
 
 ``` r
+
 subsections <- getExcel("Q:\\BT2021\\BT\\90_Skalenhandbuch\\Reihenfolge_Variablen_final.xlsx")
 subsections_lfb_allg <- subsections$LFB_allg
 View(subsections_lfb_allg)
@@ -1666,6 +1715,7 @@ rows between sections, so you have some `NA` entries in the column
 we need to delete those rows for now.
 
 ``` r
+
 subsections_lfb_allg <- subsections_lfb_allg[!is.na(subsections_lfb_allg$varName),]
 ```
 
@@ -1678,6 +1728,7 @@ both variables should be exactly the same, so the output should be
 your supervisor.
 
 ``` r
+
 setdiff(varinfo$lfb_allg$Var.Name, subsections_lfb_allg$varName)
 setdiff(subsections_lfb_allg$varName, varinfo$lfb_allg$Var.Name)
 ```
@@ -1696,6 +1747,7 @@ from names and save them in `sep`. It returns a data frame with two
 columns, that we can name *subsec number* and *subsec name*.
 
 ``` r
+
 sep <- subsections_lfb_allg$Abschnitt
 sep <- eatTools::halveString(sep, " ", colnames = c("subsec number", "subsec name"))
 ```
@@ -1705,6 +1757,7 @@ Then we can add these two new columns to the existing data frame with
 worked with [`View()`](https://rdrr.io/r/utils/View.html).
 
 ``` r
+
 subsections_lfb_allg <- cbind(subsections_lfb_allg, sep)
 View(subsections_lfb_allg)
 ```
@@ -1734,6 +1787,7 @@ column. [`duplicated()`](https://rdrr.io/r/base/duplicated.html) returns
 a logical vector of all entries, `TRUE` indicates duplicated entries.
 
 ``` r
+
 anyDuplicated(subsections_lfb_allg$`subsec name`[!is.na(subsections_lfb_allg$`subsec name`)])
 duplicated(subsections_lfb_allg$`subsec name`[!is.na(subsections_lfb_allg$`subsec name`)])
 ```
@@ -1753,6 +1807,7 @@ the entry before it. After the loop you should check the columns with
 `finale Reihenfolge`.
 
 ``` r
+
 for(i in 1:nrow(subsections_lfb_allg)){
   if (is.na(subsections_lfb_allg$`subsec number`[i])){
     subsections_lfb_allg[, 5:6][i,] <- subsections_lfb_allg[, 5:6][i-1,]
@@ -1774,6 +1829,7 @@ The first object needs to be the variables in the order we want from
 check again with [`View()`](https://rdrr.io/r/utils/View.html).
 
 ``` r
+
 order_new <- match(subsections_lfb_allg$varName, varinfo$lfb_allg$Var.Name)
 varinfo$lfb_allg <- varinfo$lfb_allg[order_new,]
 ```
@@ -1787,6 +1843,7 @@ with a matched order, we can finally transfer the subsection info into
 `varinfo`.
 
 ``` r
+
 varinfo$lfb_allg$Unterteilung.im.Skalenhandbuch <- subsections_lfb_allg$`subsec name`
 varinfo$lfb_allg$Gliederung <- subsections_lfb_allg$`subsec number`
 View(varinfo$lfb_allg)
@@ -1805,6 +1862,7 @@ have different subsections you can just edit the columns `Gliederung` to
 you are told to do otherwise.
 
 ``` r
+
 varinfo$match$Unterteilung.im.Skalenhandbuch <- "Matchingvariablen"
 varinfo$match$Gliederung <- "1.1"
 ```
@@ -1824,6 +1882,7 @@ can just transfer the column in `varinfo$data$Titel` like you did with
 the subsection info.
 
 ``` r
+
 varinfo$lfb_allg$Titel <- subsections_lfb_allg$`Titel.(Ebene.3)`
 ```
 
@@ -1834,6 +1893,7 @@ Excel with
 [`getVarInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getVarInfo.md).
 
 ``` r
+
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
@@ -1848,6 +1908,7 @@ writes `ja` in the column `rekodiert` for the respective variable. That
 is all. This changes all data frames in `varinfo`.
 
 ``` r
+
 for(i in 1:length(varinfo)){
   varinfo[[i]]$rekodiert[grep("*_r", varinfo[[i]]$Var.Name)] <- "ja"
 }
@@ -1857,6 +1918,7 @@ You can check if it worked with the following line (for each data frame
 separately):
 
 ``` r
+
 varinfo$lfb_allg[,c(1,10)]
 ```
 
@@ -1867,6 +1929,7 @@ Excel with
 [`getVarInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getVarInfo.md).
 
 ``` r
+
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
@@ -1899,6 +1962,7 @@ columns is empty. `HGM` has either the value `1` or `0`.
 First you import the file and save it into a data frame.
 
 ``` r
+
 bgm <- getExcel("Q:\\BT2021\\BT\\51_Auswertung\\05_HGM\\05_VF_Imp2021\\variablen.xlsx")
 ```
 
@@ -1907,6 +1971,7 @@ frame in R and look at it. You only need the ones that have the entry
 `1` in the column `HGM`.
 
 ``` r
+
 bgm <- bgm[, c(2, 5, 6, 16)]
 bgm <- bgm[bgm$HGM == 1,]
 View(bgm)
@@ -1916,6 +1981,7 @@ Before you can work with this data frame, you need to replace the `NA`s
 in the column `basevar` with `-`.
 
 ``` r
+
 bgm$basevar[is.na(bgm$basevar)] <- "-"
 ```
 
@@ -1936,6 +2002,7 @@ You start by identifying the variables in the new `hgm` table, in the
 example all variables that end with `.klasse` are extracted.
 
 ``` r
+
 # extracting .klasse variables, labels, and basevar
 pos <- grep(".klasse", hgm$Variablenname)
 hgm_klasse <- hgm[pos,]
@@ -1951,6 +2018,7 @@ search the variable names of all data frames if they match an entry in
 the column `dat`.
 
 ``` r
+
 hgm_klasse <- cbind(hgm_klasse, dat = NA)
 
 for(var in hgm_klasse$basevar){
@@ -1968,12 +2036,14 @@ frame. You need to add new empty rows to `varinfo`. `pos` can give you
 the number of rows you need to add.
 
 ``` r
+
 varinfo$sus[nrow(varinfo$sus)+length(pos),] <- NA
 ```
 
 Then you fill in the empty lines with default setting like so:
 
 ``` r
+
 varinfo$sus[is.na(varinfo$sus$Var.Name),]$Var.Name <- hgm_klasse$Variablenname
 
 varinfo$sus[varinfo$sus$Var.Name %in% hgm_klasse$Variablenname,c(2:17)] <- "-"
@@ -2002,6 +2072,7 @@ adds the order number in `HGM.Reihenfolge` and the base variables in
 data frame with [`View()`](https://rdrr.io/r/utils/View.html).
 
 ``` r
+
 order <- 1
 for(i in 1:length(varinfo)){
   for(var in varinfo[[i]]$Var.Name){
@@ -2021,6 +2092,7 @@ and give each variable the numerical order in which they should show up
 in the appendix. Then you can use the following loop:
 
 ``` r
+
 for(i in 1:length(varinfo)){
   for(var in varinfo[[i]]$Var.Name){
     if(var %in% bgm_order$Variablenname){
@@ -2040,6 +2112,7 @@ Excel with
 [`getVarInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getVarInfo.md).
 
 ``` r
+
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
@@ -2059,6 +2132,7 @@ Excel with
 [`getVarInfo()`](https://beckerbenj.github.io/eatCodebook/reference/getVarInfo.md).
 
 ``` r
+
 writeExcel(df_list = varinfo, row.names = FALSE, filePath = ".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 varinfo <- getVarInfo(".\\07_SH_Erstellung\\varinfo_edited.xlsx")
 ```
@@ -2085,6 +2159,7 @@ When we create a new `gliederung` with the info from `varinfo` we get
 the following list of data frames:
 
 ``` r
+
 gliederung <- createStructure(varinfo)
 ```
 
@@ -2114,6 +2189,7 @@ you might need to adjust the path file of the structure info Excel,
 though.
 
 ``` r
+
 # packages
 library(eatCodebook)
 library(eatGADS)
@@ -2132,6 +2208,7 @@ You create the new list with
 and look at it with [`View()`](https://rdrr.io/r/utils/View.html):
 
 ``` r
+
 gliederung <- createStructure(varinfo)
 View(gliederung)
 ```
@@ -2146,6 +2223,7 @@ by their `NA` entries in `varName` and save them in the object
 `section_names`.
 
 ``` r
+
 section_names <- subsections$TR_SFB_EFB$Abschnitt[is.na(subsections$TR_SFB_EFB$varName)]
 ```
 
@@ -2153,6 +2231,7 @@ They have both section number and name, so you need to **separate** that
 info like before:
 
 ``` r
+
 sep <- eatTools::halveString(section_names, " ", colnames = c("number", "name"))
 ```
 
@@ -2160,6 +2239,7 @@ But now you only need the `name` info. You **add** that to the empty
 spaces in `gliederung`:
 
 ``` r
+
 gliederung$sus$Titel[is.na(gliederung$sus$Titel)] <- sep[, "name"]
 ```
 
@@ -2168,6 +2248,7 @@ gliederung$sus$Titel[is.na(gliederung$sus$Titel)] <- sep[, "name"]
 before:
 
 ``` r
+
 gliederung$match$Titel <- "Matchingvariablen"
 ```
 
@@ -2178,6 +2259,7 @@ and check for correct format with
 [`getStructure()`](https://beckerbenj.github.io/eatCodebook/reference/getStructure.md):
 
 ``` r
+
 writeExcel(df_list = gliederung, row.names = FALSE, filePath = ".\\excel_files\\gliederung.xlsx")
 gliederung <- getStructure(".\\excel_files\\gliederung.xlsx")
 ```
@@ -2237,6 +2319,7 @@ the following steps:
 Make sure the packages and `varinfo` are loaded.
 
 ``` r
+
 # packages
 library(eatCodebook)
 library(eatGADS)
@@ -2252,6 +2335,7 @@ Then we create a template data frame with all the in-text citations in
 `varinfo`:
 
 ``` r
+
 literatur <- createLitInfo(varinfo)
 literatur
 ```
@@ -2269,6 +2353,7 @@ column `in_Literaturverzeichnis` to either contain the input `ja` or
 will throw an error.
 
 ``` r
+
 literatur$in_Literaturverzeichnis <- "nein"
 # save to Excel
 writeExcel(df_list = literatur, row.names = FALSE, filePath = ".\\excel_files\\literatur.xlsx")
@@ -2293,6 +2378,7 @@ viewed with [`View()`](https://rdrr.io/r/utils/View.html) will display
 only two, that is why there are four backslashes in the example.
 
 ``` r
+
 # remove latex syntax (if needed)
 literatur$Kurzangabe <- gsub("\\\\&", "&", literatur$Kurzangabe)
 # removes additions before the strings
@@ -2311,6 +2397,7 @@ them by the semicolon `;`. We use the
 function to separate these entries.
 
 ``` r
+
 View(literatur)
 # example reference
 literatur$Kurzangabe <- "Wagner et al. (2009); Henschel & Roick (2017)"
@@ -2328,6 +2415,7 @@ When variables from different data sets reference the same publication,
 there will be **duplicated** entries that you need to remove.
 
 ``` r
+
 literatur <- unique(literatur)
 ```
 
@@ -2355,6 +2443,7 @@ most BT reference files. You recognize the reference list sheet by
 having two columns called `Kurzangabe` and `Langangabe`.
 
 ``` r
+
 ref_lfb_allg <- getAPAInfo("Q:\\BT2021\\BT\\90_Skalenhandbuch\\04_Instruktionen_Quellen\\LFB_allg_Instruktionen_Quellen_BT21.xlsx")
 View(ref_lfb_allg)
 ```
@@ -2370,6 +2459,7 @@ You need to import the references for all data sets and save them in one
 data frame.
 
 ``` r
+
 lit_ref <- rbind.data.frame(ref_sus, ref_lfb_allg, 
                              ref_lfb_spez, ref_slfb)
 ```
@@ -2380,6 +2470,7 @@ Then you also need to adjust this merged data frame. First we **remove
 additions** from the in-text citations and **remove duplicates**:
 
 ``` r
+
 # removes additions before the strings
 lit_ref$Kurzangabe <- gsub("^.*?in Anlehnung an ","",lit_ref$Kurzangabe)
 lit_ref$Kurzangabe <-  gsub("^.*?In Anlehnung an ","",lit_ref$Kurzangabe)
@@ -2398,6 +2489,7 @@ you will get a table with all duplicated entries. Then you can check the
 differences between the references (`Langangaben`).
 
 ``` r
+
 # find duplicates
 anyDuplicated(lit_ref$Kurzangabe)
 # identify duplicates
@@ -2414,6 +2506,7 @@ is missing, you should keep the reference with the most amount of
 information.
 
 ``` r
+
 # delete all duplicates
 lit_ref <- lit_ref[!pos,]
 # delete specific rows example
@@ -2425,6 +2518,7 @@ Then you test once more, if there are any duplicates left, the output
 should be `0`.
 
 ``` r
+
 anyDuplicated(View(lit_ref)$Kurzangabe)
 ```
 
@@ -2436,6 +2530,7 @@ both in-text citations and their references. Now you need to transfer
 the references to **literatur**.
 
 ``` r
+
 pos <- match(literatur$Kurzangabe, lit_ref$Kurzangabe)
 literatur$Langangabe <- lit_ref$Langangabe[pos]
 View(literatur)
@@ -2454,6 +2549,7 @@ to get a data frame including LaTeX syntax for the italic text parts.
 Don’t forget to check which page the reference list is on.
 
 ``` r
+
 ref_intro <- getAPAInfo("Q:\\filepath\\Intro_Quellen.xlsx", sheet = 1)
 ```
 
@@ -2464,6 +2560,7 @@ additional column and set the input to `ja`, because all references we
 add from this Excel should show up in the codebook.
 
 ``` r
+
 ref_intro$in_Literaturverzeichnis <- "ja"
 ```
 
@@ -2471,6 +2568,7 @@ Now we can just combine the two data frames and check if everything
 worked with [`View()`](https://rdrr.io/r/utils/View.html).
 
 ``` r
+
 literatur <- rbind(literatur, ref_intro)
 View(literatur)
 ```
@@ -2481,6 +2579,7 @@ also check for duplicates with
 sure.
 
 ``` r
+
 literatur <- unique(literatur)
 anyDuplicated(literatur) # should be 0
 ```
@@ -2493,6 +2592,7 @@ the order to be **alphabetical**. Every entry with a proper reference
 should be displayed and set to `ja`.
 
 ``` r
+
 # in Literaturverzeichnis
 literatur$in_Literaturverzeichnis[!is.na(literatur$Langangabe)] <- "ja"
 # alphabetical order
@@ -2511,6 +2611,7 @@ converts the Excel table into the proper LaTeX syntax for the function
 [`codebook()`](https://beckerbenj.github.io/eatCodebook/reference/codebook.md).
 
 ``` r
+
 writeExcel(literatur, row.names = FALSE, filePath = ".\\excel_files\\literatur.xlsx")
 literatur <- getLitInfo(".\\excel_files\\literatur.xlsx")
 
@@ -2543,6 +2644,7 @@ your environment. Then you can just create the background model info
 with this one line, no need to edit or save anything:
 
 ``` r
+
 hgm <- makeBGM(varinfo)
 ```
 
@@ -2571,6 +2673,7 @@ string with the proper path file in the object `pdf_cover` that we need
 later.
 
 ``` r
+
 pdf_cover <- '\\includepdf[pages=-]{.\\Texte\\cover_page.pdf}'
 ```
 
@@ -2580,6 +2683,7 @@ Alternatively you can create your own cover in R with the function
 [`makeCover()`](https://beckerbenj.github.io/eatCodebook/reference/makeCover.md).
 
 ``` r
+
 cover <- makeCover(logoFile = NULL,
                    maintitle = "Study of Achievement",
                    subtitle = "Codebook of Study of Achievement",
@@ -2622,6 +2726,7 @@ and add information on title, author, keywords and subject.
 #### Create Table
 
 ``` r
+
 meta <- createMetadata()
 ```
 
@@ -2632,6 +2737,7 @@ copy last BT’s meta data and adjust the year and the authors. It’s best
 to ask you supervisor or BT team what they want to be written here.
 
 ``` r
+
 meta[1, "Title"] <- "IQB-Bildungstrend~2021. Skalenhandbuch zur Dokumentation der Erhebungsinstrumente in den naturwissenschaftlichen F?chern und Mathematik"
 meta[1, "Author"] <- "Jule H. Burblies \\sep Edna Grewers \\sep Benjamin Becker \\sep Florian Enke \\sep Nicklas J. Hafiz \\sep Rebecca Schneider \\sep Karoline A. Sachse \\sep Sebastian Weirich \\sep Stefan Schipolowski"
 meta[1, "Keywords"] <- "Bildungstrend 2021\\sep IQB, Skalenhandbuch\\sep Erhebungsinstrumente Sekundarstufe I"
@@ -2641,6 +2747,7 @@ meta[1, "Subject"] <- "Skalenhandbuch zum Bildungstrend 2021"
 #### Save to Excel
 
 ``` r
+
 writeExcel(meta, ".\\excel_files\\meta.xlsx", row.names = FALSE)
 ```
 
@@ -2652,6 +2759,7 @@ from the Excel file with
 to create the proper LaTeX syntax for the codebook.
 
 ``` r
+
 meta_final <- makeMetadata(".\\excel_files\\meta.xlsx")
 ```
 
@@ -2686,6 +2794,7 @@ lfb_allg, etc.) which are not very intelligible. `chapterName` is empty
 for now.
 
 ``` r
+
 chapters <- createChapters(varinfo)
 ```
 
@@ -2695,6 +2804,7 @@ You just need to add the names in the second column. Make sure the order
 matches the order of `dataName`.
 
 ``` r
+
 chapters$chapterName <- c("Schüler:innen", "Lehrkräfte allgemein", "Lehrkräfte lerngruppenspezifisch", 
                           "Schulleitungen", "Matching")
 ```
@@ -2706,6 +2816,7 @@ Then you need to save the data frame to Excel and import it again with
 to check the format.
 
 ``` r
+
 writeExcel(chapters, ".\\excel_files\\chapters.xlsx", row.names = FALSE)
 chapters <- getChapters(".\\excel_files\\chapters.xlsx")
 ```
@@ -2749,6 +2860,7 @@ If you saved your .tex file in the folder *Texte* in your work space,
 you can add this line to **0_main.R** and **6_Erstellung_kurz.R**.
 
 ``` r
+
 intro_pages <- readLines(".\\Texte\\Latex_Intro.tex")
 ```
 
@@ -2809,6 +2921,7 @@ If you saved your .tex file in the folder *Texte* in your work space,
 you can add this line to **0_main.R** and **6_Erstellung_kurz.R**.
 
 ``` r
+
 lastpage <- readLines(".\\Texte\\Latex_lastpage.tex")
 ```
 
@@ -2840,6 +2953,7 @@ information (the core) `varinfo`, and information about scales
 the command would look like this:
 
 ``` r
+
 codebook <- codebook(varInfo = varinfo, missings = missings, struc = gliederung,
                      scaleInfo = skalen, register = NULL, dat = lapply(datalist, eatGADS::extractData),
                      Kennwertedatensatz = kennwerte, chapters = chapters)
@@ -2902,6 +3016,7 @@ that you need to create the codebook. Make sure that the packages
 `eatCodebook` and `eatGADS` are loaded.
 
 ``` r
+
 # load data
 data_sus      <- eatGADS::import_spss("Q:\\filepath\\Daten_sus.sav")
 data_lfb_allg <- eatGADS::import_spss("Q:\\filepath\\Daten_lfb_allg.sav")
@@ -2946,6 +3061,7 @@ Then you can use the function
 to create the LaTeX Script. This may take a while.
 
 ``` r
+
 codebook <- codebook(varInfo = varinfo, missings = missings, struc = gliederung,
                      scaleInfo = skalen, register = NULL, dat = lapply(datenliste, eatGADS::extractData),
                      Kennwertedatensatz = kennwerte,
@@ -2961,6 +3077,7 @@ new files make sure to adjust the date in the file path, so you know
 which one is the latest version.
 
 ``` r
+
 # save codebook as .tex
 write.table(codebook_new, file = ".\\Latex\\IQB_BT2021_Skalenhandbuch_Stand2025_04_03.tex" , fileEncoding="UTF-8" ,
             col.names=FALSE , row.names=FALSE , quote = FALSE )

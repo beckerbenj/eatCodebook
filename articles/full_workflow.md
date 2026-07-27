@@ -8,6 +8,7 @@ variables, scales). We import the data set using the `eatGADS` package,
 which is automatically installed when `eatCodebook` is installed.
 
 ``` r
+
 library(eatCodebook)
 file <- system.file("extdata", "example2_clean.sav", package = "eatCodebook")
 dat <- eatGADS::import_spss(file)
@@ -26,6 +27,7 @@ function has some arguments you can use to get a better result and less
 manual editing in the next step.
 
 ``` r
+
 inputForDescriptives <- createInputForDescriptives(GADSdat = dat)
 #> Warning in FUN(data[x, , drop = FALSE], ...): Identification of fake scales
 #> cannot be done completely automatically. Please check if the assignment of
@@ -53,6 +55,7 @@ not label it correctly. For this, it is necessary to understand the
 functionality and check the variable entries.
 
 ``` r
+
 writeExcel(inputForDescriptives, "file_path/inputForDescriptives.xlsx")
 ```
 
@@ -156,6 +159,7 @@ with the function
 [`getInputForDescriptives()`](https://beckerbenj.github.io/eatCodebook/reference/getInputForDescriptives.md).
 
 ``` r
+
 inputForDescriptives_edited <- getInputForDescriptives("file_path/inputForDescriptives.xlsx")
 ```
 
@@ -163,6 +167,7 @@ This input is then used to calculate descriptive statistics via
 [`calculateDescriptives()`](https://beckerbenj.github.io/eatCodebook/reference/calculateDescriptives.md).
 
 ``` r
+
 # just show function calls
 showFunctions <- calculateDescriptives(GADSdat = dat, inputForDescriptives = inputForDescriptives_edited, showCallOnly = TRUE)
 showFunctions <- data.frame(varName = names(showFunctions), functionName = as.vector(showFunctions), stringsAsFactors = FALSE)
@@ -206,6 +211,7 @@ labels of valid and missing values. A respective overview is created via
 [`createMissings()`](https://beckerbenj.github.io/eatCodebook/reference/createMissings.md).
 
 ``` r
+
 missings <- createMissings(dat, inputForDescriptives = inputForDescriptives_edited)
 head(missings)
 #>      Var.name Wert missing       LabelSH Zeilenumbruch_vor_Wert
@@ -224,6 +230,7 @@ Note that all the `getXXX` functions perform important cleaning and
 preparation steps, therefore the exporting to `xlsx` is obligatory.
 
 ``` r
+
 writeExcel(missings, "example_miss.xlsx", row.names = FALSE)
 miss_final <- getMissings("example_miss.xlsx")
 ```
@@ -243,6 +250,7 @@ With
 the most important part of the codebook is created.
 
 ``` r
+
 varInfo <- createVarInfo(dat, inputForDescriptives = inputForDescriptives_edited)
 head(varInfo)
 #>       Var.Name in.DS.und.SH Unterteilung.im.Skalenhandbuch Layout
@@ -360,6 +368,7 @@ make up the variable in question. These are then displayed in the
 position marked yellow in the image.
 
 ``` r
+
 writeExcel(varInfo, "example_varInfo.xlsx", row.names = FALSE)
 varInfo_final <- getVarInfo("example_varInfo.xlsx")
 varInfo_final2 <- inferLayout(varInfo_final, GADSdat = dat, inputForDescriptives = inputForDescriptives_edited)
@@ -409,6 +418,7 @@ VarInfo. The function
 is needed to name the upper chapters.
 
 ``` r
+
 struc <- createStructure(varInfo_final)
 head(struc)
 #>     Titel Ebene
@@ -420,6 +430,7 @@ head(struc)
 ```
 
 ``` r
+
 writeExcel(struc, "example_struc.xlsx", row.names = FALSE)
 struc_final <- getStructure("example_struc.xlsx")
 ```
@@ -437,6 +448,7 @@ In order to display the scales correctly, it also needs the function
 [`createScaleInfo()`](https://beckerbenj.github.io/eatCodebook/reference/createScaleInfo.md).
 
 ``` r
+
 scaleInfo <- createScaleInfo(inputForDescriptives_edited)
 head(scaleInfo)
 #>           varName Anzahl_valider_Werte
@@ -457,6 +469,7 @@ head(scaleInfo)
 ```
 
 ``` r
+
 writeExcel(scaleInfo, "example_scaleInfo.xlsx", row.names = FALSE)
 scaleInfo_final <- getScaleInfo("example_scaleInfo.xlsx")
 ```
@@ -484,6 +497,7 @@ within the codebook. It builds on the references mentioned in the
 VarInfo. The latex code must also be used here.
 
 ``` r
+
 litInfo <- createLitInfo(varInfo_final)
 head(litInfo)
 #>       Kurzangabe Langangabe in_Literaturverzeichnis
@@ -491,6 +505,7 @@ head(litInfo)
 ```
 
 ``` r
+
 writeExcel(litInfo, "example_litInfo.xlsx", row.names = FALSE)
 litInfo_final <- getLitInfo("example_litInfo.xlsx")
 ```
@@ -505,6 +520,7 @@ statistical symbols used throughout the codebook. The latex code must
 also be used here.
 
 ``` r
+
 abbrList <- createAbbrList()
 abbrList
 #> $Akronyme
@@ -517,6 +533,7 @@ abbrList
 ```
 
 ``` r
+
 writeExcel(abbrList, "example_abbrList.xlsx", row.names = FALSE)
 abbrList_final <- makeAbbrList("example_abbrList.xlsx")
 ```
@@ -527,6 +544,7 @@ A cover page can be added to the codebook. On the one hand, there is
 this possibility.
 
 ``` r
+
 cover <- makeCover(logoFile = NULL,
                    maintitle = "Study of Achievement",
                    subtitle = "Codebook of Study of Achievement",
@@ -544,6 +562,7 @@ This must simply be assigned to the object.
 Meta data can be added to the codebook.
 
 ``` r
+
 meta <- createMetadata()
 meta[1, "Title"] <- "Codebook Test"
 meta[1, "Author"] <- "Anna Muster"
@@ -552,6 +571,7 @@ meta[1, "Subject"] <- "test"
 ```
 
 ``` r
+
 writeExcel(abbrList, "example_meta.xlsx", row.names = FALSE)
 meta_final <- makeMetadata("example_meta.xlsx")
 ```
@@ -562,6 +582,7 @@ Finally, the previously prepared bibliography and background model still
 need to be finalised. This is done using the following syntax.
 
 ``` r
+
 lit <- makeLit(litInfo_final)
 hint <- makeBGM(varInfo_final)
 #> Es liegen keine numerischen Angaben für die Reihenfolge vor. Durch das Einlesen mithilfe von getVarInfo() kann sich die Variablen-Reihenfolge geändert haben. Diese wird nun als Grundlage genutzt.
@@ -573,6 +594,7 @@ Create the chapter structure. Furthermore, the name of the top chapter
 is assigned here. The name of the data set.
 
 ``` r
+
 chapters <- createChapters(varInfo_final2)
 chapters[, 2] <- "Datensatz"
 ```
@@ -586,6 +608,7 @@ function. Here, latex code can also be inserted at **intro** and
 last page.
 
 ``` r
+
 descStatistics2 <- descStatistics
 descStatistics2$skala1[[2]] <- as.data.frame(descStatistics2$skala1[[2]])
 latex_skript <- codebook(varInfo = varInfo_final2, missings = miss_final, struc = struc_final,
